@@ -4,354 +4,2148 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Kado by Visyaa — Interactive Gift Builder V7 ♡</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Comfortaa:wght@500;700&family=Dancing+Script:wght@700&family=Fredoka:wght@400;600&family=Gaegu:wght@700&family=Itim&family=Mali:wght@600&family=Pacifico&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@400;500;600;700&family=Quicksand:wght@500;700&family=Sacramento&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
-:root{--bg:#fff7fb;--text:#5d5061;--primary:#9b76a7;--accent:#e8b5ca;--card:#fff;--radius:18px;--font:'Poppins',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font);background:#f1eaf4;color:var(--text);overflow:hidden;min-height:100vh}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}input,textarea,select{width:100%;border:1px solid #e5d9e8;border-radius:10px;padding:9px 10px;background:#fff;color:var(--text);outline:0;margin-bottom:9px;font-size:12px}input:focus,textarea:focus,select:focus{border-color:#b58ac0;box-shadow:0 0 0 3px #b58ac01a}textarea{min-height:70px;resize:vertical}.top{height:60px;background:#fff;border-bottom:1px solid #eadfeb;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:relative;z-index:50}.brand{font-weight:700;color:#866394;font-size:14px;display:flex;align-items:center;gap:8px}.save{font-size:10px;background:#f4edf6;padding:4px 8px;border-radius:20px}.actions{display:flex;gap:7px}.btn{padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700;background:#f4edf7;color:#76577d}.btn.primary{background:var(--primary);color:white}.btn.green{background:#5da486;color:#fff}.btn.danger{background:#fff0f3;color:#c46b7c}.app{display:grid;grid-template-columns:minmax(360px,450px) minmax(0,1fr);height:calc(100vh - 60px);min-height:0}.sidebar{background:#fff;border-right:1px solid #eadfeb;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0}.tabs{display:flex;overflow-x:auto;background:#faf5fc;border-bottom:1px solid #eadfeb}.tabs button{padding:12px 13px;background:transparent;color:#78667d;font-size:10px;font-weight:700;white-space:nowrap;border-bottom:2px solid transparent}.tabs button.active{color:#8d6798;border-top:2px solid #8d6798;border-bottom-color:transparent;background:#fff;margin-top:-1px}.pane{display:none;padding:16px;overflow:auto}.pane.active{display:block}.title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#745a7b;margin:12px 0 8px;display:flex;justify-content:space-between;align-items:center}.card{background:#faf6fb;border:1px solid #eee2f0;border-radius:12px;padding:10px;margin-bottom:9px}.mini{font-size:10px;color:#8c7c90;line-height:1.45}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.library{display:grid;gap:7px}.libbtn{background:#f7f0f9;border:1px solid #eaddec;border-radius:10px;padding:9px;text-align:left;color:#715877;font-size:11px;font-weight:600}.libbtn:hover{background:#eee1f1}.search{margin-bottom:8px}.previewArea{padding:20px;overflow:auto;background:#e9deed;min-width:0;min-height:0}.previewTop{max-width:900px;margin:0 auto 9px;display:flex;justify-content:space-between;align-items:center}.previewLabel{font-size:11px;color:#806d84}.previewWrap{max-width:900px;margin:auto;transition:.25s}.previewWrap.mobile{max-width:375px}.gift{min-height:850px;background:var(--bg);color:var(--text);border-radius:22px;overflow:hidden;position:relative;box-shadow:0 18px 45px #64466c1c}.float{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}.p{position:absolute;bottom:-50px;animation:rise linear infinite;opacity:.7;filter:drop-shadow(0 2px 4px #0001)}@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.7}100%{transform:translateY(-110vh) rotate(260deg);opacity:0}}@keyframes driftSide{0%{transform:translate3d(0,20px,0) rotate(0) scale(var(--scale));opacity:0}15%{opacity:.7}50%{transform:translate3d(var(--drift),-50vh,0) rotate(var(--rot)) scale(1)}100%{transform:translate3d(calc(var(--drift)*-1),-110vh,0) rotate(calc(var(--rot)*1.4)) scale(.75);opacity:0}}@keyframes swirlFloat{0%{transform:translate3d(0,30px,0) rotate(0) scale(var(--scale));opacity:0}20%{opacity:.7}35%{transform:translate3d(var(--drift),-25vh,0) rotate(100deg) scale(1)}65%{transform:translate3d(calc(var(--drift)*-0.7),-65vh,0) rotate(220deg) scale(.9)}100%{transform:translate3d(var(--drift),-110vh,0) rotate(var(--rot)) scale(.65);opacity:0}}@keyframes fallParticle{0%{transform:translate3d(0,-20vh,0) rotate(0) scale(var(--scale));opacity:0}15%{opacity:.7}100%{transform:translate3d(var(--drift),115vh,0) rotate(var(--rot)) scale(.8);opacity:0}}.hero{min-height:390px;padding:55px 22px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:2}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.75;margin-bottom:10px}.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.2;margin-bottom:12px}.hero p{max-width:530px;font-size:13px;line-height:1.7}.open{margin-top:22px;padding:12px 23px;border-radius:30px;background:var(--primary);color:white;font-weight:700;box-shadow:0 8px 25px #0002;animation:pulse 2s infinite}@keyframes pulse{50%{transform:scale(1.04)}}.section{padding:30px 18px;text-align:center;position:relative;z-index:2;background:#ffffff80;border-top:1px solid #ffffff99;backdrop-filter:blur(5px)}.section h2{font-size:18px;color:var(--primary);margin-bottom:12px}.block{max-width:600px;margin:10px auto;background:var(--card);border-radius:var(--radius);padding:17px;box-shadow:0 6px 20px #0000000b}.photo{width:100%;max-height:360px;object-fit:cover;border-radius:12px}.polaroid{display:inline-block;background:#fff;padding:11px 11px 24px;box-shadow:0 10px 25px #0002;transform:rotate(-2deg);max-width:280px}.polaroid img{width:100%;height:210px;object-fit:cover}.hand{font-family:'Caveat',cursive;font-size:18px}.film{display:flex;gap:7px;overflow:auto;background:#171717;padding:12px;border-radius:10px}.film img{height:105px;width:105px;object-fit:cover;flex:0 0 auto;border:2px solid #fff}.ticket{border:2px dashed var(--primary);padding:15px;border-radius:13px}.ticket img{width:100%;height:170px;object-fit:cover;border-radius:8px}.chat{background:#e8ddd6;border-radius:12px;padding:12px;text-align:left;max-width:360px;margin:auto}.bubble{background:#dcf8c6;padding:8px 10px;border-radius:9px;margin-top:6px}.newspaper{background:#f3ead7;padding:15px;font-family:'Playfair Display',serif}.newspaper h3{font-size:20px;border-bottom:2px solid #333;padding-bottom:5px}.newspaper img{width:100%;height:180px;object-fit:cover;margin:8px 0}.reveal{position:relative;cursor:pointer;overflow:hidden;border-radius:12px}.reveal img{width:100%;height:220px;object-fit:cover;filter:blur(16px);transition:.5s}.reveal.open img{filter:none}.reveal span{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:#0005;font-weight:700}.reveal.open span{display:none}.heartImg{width:190px;height:190px;border-radius:50%;object-fit:cover;border:5px solid var(--accent)}.story{text-align:left}.storyStep{padding:12px 0;border-left:2px solid var(--accent);padding-left:14px;margin-left:8px}.gameArea{display:grid;gap:10px}.gameBtn{padding:10px 14px;background:var(--primary);color:white;border-radius:10px;font-weight:700}.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{padding:10px;background:#f4edf7;border:1px solid #e5d8e8;border-radius:10px;color:#6e5574}.result{min-height:20px;font-size:12px;font-weight:700;color:var(--primary)}.heartGame{height:230px;position:relative;overflow:hidden;background:linear-gradient(#fff,#fff7fc);border-radius:12px}.fall{position:absolute;font-size:27px;cursor:pointer;animation:fall linear forwards}@keyframes fall{from{top:-40px}to{top:260px}}.bubbleGame{height:220px;position:relative;overflow:hidden;background:#f3f7ff;border-radius:14px}.bubble{position:absolute;border-radius:50%;background:#cfe8ff99;border:1px solid #9ccfff;animation:drift 5s linear forwards;cursor:pointer}.calmCircle{width:100px;height:100px;border-radius:50%;margin:15px auto;background:#e6d8f0;display:grid;place-items:center;animation:breathe 4s ease-in-out infinite}@keyframes breathe{50%{transform:scale(1.55);background:#e6d8f080}}.memoryGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.memoryCard{aspect-ratio:1;background:#eee4f0;border-radius:99px;display:grid;place-items:center;font-size:23px;cursor:pointer}.memoryCard.flipped{background:#fff;border:1px solid #dfd0e4}.scratch{height:130px;background:#c8c8c8;border-radius:12px;display:grid;place-items:center;cursor:pointer;position:relative;overflow:hidden}.scratch.cover:after{content:'🖐️ TAP TO REVEAL';position:absolute;inset:0;display:grid;place-items:center;background:#b9b9b9;color:#555;font-weight:800}.wheel{width:150px;height:150px;border-radius:50%;margin:8px auto;background:conic-gradient(#e9bfd1 0 25%,#cbb7e5 25% 50%,#b8d9d1 50% 75%,#f1d7a9 75%);border:7px solid white;box-shadow:0 5px 20px #0002;transition:1s}.responseBox{background:#fff;border:1px solid #eaddea;border-radius:14px;padding:14px;max-width:600px;margin:0 auto;text-align:left}.responseBox h3{text-align:center;color:var(--primary);margin-bottom:8px}.responseActions{display:flex;gap:7px;flex-wrap:wrap}.responseActions button{flex:1;min-width:120px}.footer{padding:35px 20px;text-align:center;position:relative;z-index:2}.modal{position:fixed;inset:0;background:#0007;backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:100}.modal.active{display:flex}.modalCard{background:white;border-radius:20px;padding:22px;max-width:520px;width:92%;max-height:85vh;overflow:auto}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:#5f4966;color:#fff;padding:10px 15px;border-radius:20px;font-size:11px;z-index:9999;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.receiver .top,.receiver .sidebar{display:none}.receiver .app{display:block;height:100vh}.receiver .previewArea{padding:0;height:100vh}.receiver .previewWrap{max-width:100%}.receiver .gift{min-height:100vh;border-radius:0;box-shadow:none}.receiver .previewTop{display:none}.hidden{display:none!important}@media(max-width:850px){body{overflow:auto}.app{grid-template-columns:1fr;height:auto}.sidebar{height:auto;max-height:65vh}.previewArea{padding:10px}.top{position:sticky;top:0}.actions .btn:not(.primary){display:none}.choices{grid-template-columns:1fr}.memoryGrid{grid-template-columns:repeat(3,1fr)}}
-
-/* V5 QUALITY LAYER */
-:root{--panel:#fff;--line:#eadfec;--muted:#8f8193}
-html{scroll-behavior:smooth}.sidebar{box-shadow:8px 0 30px rgba(91,64,99,.05)}
-.sidebar{position:relative;min-height:0}.tabs{order:2;flex:0 0 auto;display:flex;overflow-x:auto;background:#faf5fc;border-top:1px solid #eadfeb;border-bottom:0;scrollbar-width:none;position:relative;z-index:20;box-shadow:0 -5px 16px #6b4b7410;padding-bottom:env(safe-area-inset-bottom)}.tabs::-webkit-scrollbar{display:none}.tabs button{min-width:max-content;padding:13px 14px}.pane{order:1;flex:1 1 auto;min-height:0;overflow:auto}.pane.active{display:block}
-.pane{padding:18px 16px 28px}.pane::-webkit-scrollbar,.previewArea::-webkit-scrollbar{width:8px}.pane::-webkit-scrollbar-thumb,.previewArea::-webkit-scrollbar-thumb{background:#dccde1;border-radius:99px}
-label{display:block;font-size:10px;font-weight:700;color:#806c86;margin:8px 0 5px}.card{box-shadow:0 3px 12px rgba(83,58,90,.035);transition:.2s}.card:hover{border-color:#decbe3;box-shadow:0 7px 20px rgba(83,58,90,.07)}
-.libbtn{transition:.18s;display:flex;align-items:center;justify-content:space-between;gap:8px}.libbtn:active{transform:scale(.98)}
-.moduleCard{position:relative;padding-left:13px}.moduleCard .moduleHead{display:flex;align-items:center;gap:7px;margin-bottom:8px}.moduleBadge{font-size:9px;padding:4px 7px;border-radius:999px;background:#eee4f2;color:#795c80;font-weight:800}.moduleTools{display:flex;gap:4px}.moduleTools .btn{padding:5px 8px}.dragHint{font-size:9px;color:#9a8b9e}
-.previewArea{background:radial-gradient(circle at 20% 10%,#fff9ff 0,#eadff0 38%,#e4d7e9 100%)}.previewWrap{padding-bottom:40px}.previewTop{position:sticky;top:8px;z-index:15;background:#ffffffc9;backdrop-filter:blur(12px);padding:8px 10px;border:1px solid #ffffffaa;border-radius:14px;box-shadow:0 5px 18px #5d476010}
-.gift{isolation:isolate}.hero{background:radial-gradient(circle at 50% 15%,#ffffffcc,transparent 55%)}
-.gameCard{background:linear-gradient(180deg,#fff,#fffafd);border:1px solid #eee2f0;box-shadow:0 10px 28px rgba(86,59,92,.07)}.gameIntro{font-size:11px;color:#8a798d;margin-bottom:10px}.gameHud{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:#7c687f;margin-bottom:8px}.gameStage{min-height:230px;border-radius:16px;border:1px solid #eadff0;background:linear-gradient(145deg,#fbf7ff,#fff);position:relative;overflow:hidden;padding:14px}.gameStage button{user-select:none}.gameSuccess{padding:12px;border-radius:12px;background:#eef8f2;color:#4f8b6e;font-weight:700;margin-top:10px}.gameFail{padding:10px;border-radius:12px;background:#fff2f4;color:#b86b7a;margin-top:10px}
-.letterPaper{background:#fffdf8;border:1px solid #eee1cb;border-radius:12px;padding:18px;text-align:left;line-height:1.8;box-shadow:inset 0 0 35px #b8944210}.letterPiece{padding:10px 12px;border-radius:10px;background:#f6edf8;margin:6px 0;cursor:pointer;transition:.2s}.letterPiece:hover{transform:translateX(3px);background:#eee0f2}.letterPiece.used{opacity:.45;pointer-events:none}.wordSlots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0}.slot{width:34px;height:40px;border:2px dashed #d8c7df;border-radius:99px;display:grid;place-items:center;font-weight:800;background:#fff}.wordKeys{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.wordKey{width:38px;height:38px;border-radius:9px;background:#f1e8f4;color:#76577d;font-weight:800}.wordKey.used{opacity:.3}.choice.big{min-height:52px}.choice.correct{background:#eaf7ef;border-color:#acd5bc}.choice.wrong{background:#fff0f3;border-color:#edb6c2}.timerBar{height:7px;background:#eee5f1;border-radius:99px;overflow:hidden}.timerBar i{display:block;height:100%;width:100%;background:var(--primary);transform-origin:left;transition:width .2s linear}
-.tapTarget{position:absolute;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 7px 18px #6b4b7425;border:1px solid #ead8ef;cursor:pointer;font-size:25px}.bubbleTarget{position:absolute;border-radius:50%;display:grid;place-items:center;background:#dff0ffbb;border:1px solid #a9d5ff;cursor:pointer;box-shadow:0 5px 16px #79b7e520}.starField{position:absolute;inset:0}.wishInput{min-height:90px}
-.responseForm{max-width:620px}.responseForm textarea{min-height:110px}.responseForm .sendRow{display:flex;gap:8px}.responseForm .sendRow button{flex:1}.fileHint{font-size:9px;color:#998b9d;margin-top:-3px;margin-bottom:8px}.sectionDivider{height:1px;background:linear-gradient(90deg,transparent,#eaddec,transparent);margin:4px 0 15px}
-@media(max-width:850px){.app{display:flex;flex-direction:column}.sidebar{order:2;max-height:none;border-right:0;border-top:1px solid var(--line)}.previewArea{order:1;min-height:70vh}.previewTop{position:relative;top:auto}.pane{max-height:none;min-height:0}.tabs{position:relative;order:2}.top{position:relative}.hero{min-height:330px}.gameStage{min-height:210px}}
-
-.shareWarning{color:#8a6470;border:1px solid #ead5dd}
-.shareReady{color:#6d5874;border:1px solid #eadff0}
-</style>
-<style>
-/* FINAL UI POLISH */
-.top{gap:12px;flex-wrap:nowrap}
-.brand{min-width:0;white-space:nowrap}
-.actions{align-items:center;flex-wrap:nowrap}
-.previewArea{overscroll-behavior:contain}
-.pane{scrollbar-gutter:stable}
-.tabs button{transition:.18s;background:transparent}
-.tabs button:hover{background:#f3ebf6}
-.btn{transition:.16s;white-space:nowrap}
-.btn:hover{filter:brightness(.98);transform:translateY(-1px)}
-input[type=color]{height:38px;padding:4px}
-input[type=range]{padding:0;border:0;box-shadow:none;background:transparent}
-.section{overflow:hidden}
-.block,.gameCard,.responseBox{overflow:hidden}
-@media(max-width:1100px) and (min-width:851px){
-  .app{grid-template-columns:380px minmax(0,1fr)}
-  .top{padding:0 12px}
-  .actions .btn{padding:7px 9px;font-size:10px}
+:root{
+ --bg:#fff7fb;
+ --text:#5d5061;
+ --primary:#9b76a7;
+ --accent:#e8b5ca;
+ --card:#fff;
+ --radius:18px;
+ --font:'Poppins',sans-serif
 }
-@media(max-width:850px){
-  body{overflow:auto}
-  .app{display:flex;flex-direction:column;height:auto;min-height:calc(100vh - 60px)}
-  .previewArea{order:1;padding:10px;min-height:70vh;overflow:visible}
-  .sidebar{order:2;border-right:0;border-top:1px solid var(--line);overflow:visible}
-  .pane{overflow:visible}
-  .top{height:auto;min-height:60px;padding:9px 10px}
-  .actions .btn:not(.primary){display:none}
-  .brand{font-size:12px}
-}
-@media(max-width:520px){
-  .top{align-items:flex-start}
-  .actions{margin-left:auto}
-  .save{display:none}
-  .previewWrap{width:100%}
-  .gift{border-radius:16px}
-}
-</style>
 
-</head>
-<body>
-<header class="top"><div class="brand">🎁 Kado by Visyaa <span class="save" id="saveStatus">✓ Tersimpan</span></div><div class="actions"><button class="btn green" onclick="openPublish()">🔗 Bagikan</button><button class="btn" onclick="downloadGiftLinkDirect()">📥 Download Link</button><button class="btn" onclick="toggleReceiver()">👀 Preview Penerima</button><button class="btn green" onclick="openPublish()">🚀 Publish</button></div></header>
-<div class="app">
-<aside class="sidebar">
-<div class="tabs"><button class="active" onclick="tab(this,'content')">Utama</button><button onclick="tab(this,'theme')">Tema</button><button onclick="tab(this,'photos')">📸 Foto</button><button onclick="tab(this,'games')">🎮 Games</button><button onclick="tab(this,'responses')">💬 Balasan</button><button onclick="tab(this,'modules')">⚙️ Isi</button></div>
-<div class="pane active" id="content">
-<div class="title">✏️ Isi Utama</div><label>Nama Penerima</label><input id="recipient" value="Seseorang yang Spesial" oninput="change()"><label>Eyebrow</label><input id="eyebrow" value="✦ Sebuah kejutan kecil ✦" oninput="change()"><label>Judul</label><input id="title" value="Ada Sesuatu Untukmu ♡" oninput="change()"><label>Pesan Pembuka</label><textarea id="intro" oninput="change()">Aku bikin sudut kecil di internet ini khusus buat kamu.</textarea><label>Teks Tombol</label><input id="openText" value="🎁 Buka Kejutanmu" oninput="change()"><label>Pesan Penutup</label><textarea id="final" oninput="change()">Makasih sudah sampai di sini. Semoga kamu senyum sedikit hari ini. 🤍</textarea>
-<div class="title">🎵 Musik</div><input id="music" placeholder="URL MP3/audio atau YouTube" oninput="change()"><div class="mini">Untuk YouTube/Spotify, gunakan link resmi/embed. Autoplay bisa diblokir browser sehingga penerima mungkin perlu menekan play.</div>
-<div class="title">➕ Tambahkan</div><div class="grid2"><button class="btn" onclick="addCustomPhoto()">📸 Foto</button><button class="btn" onclick="addGame('letter_unlock')">💌 Letter Game</button><button class="btn" onclick="addGame('quiz')">❓ Quiz</button><button class="btn" onclick="addResponse('letter')">💬 Forum Balasan</button></div>
-</div>
-<div class="pane" id="theme">
-<div class="title">🎨 Warna</div><div class="grid2"><div><label>Background</label><input type="color" id="bg" value="#fff7fb" oninput="change()"></div><div><label>Teks</label><input type="color" id="text" value="#5d5061" oninput="change()"></div><div><label>Primary</label><input type="color" id="primary" value="#9b76a7" oninput="change()"></div><div><label>Accent</label><input type="color" id="accent" value="#e8b5ca" oninput="change()"></div></div>
-<div class="title">🔤 Font</div><select id="font" onchange="change()"><option value="'Poppins',sans-serif">Poppins</option><option value="'Quicksand',sans-serif">Quicksand</option><option value="'Fredoka',sans-serif">Fredoka</option><option value="'Caveat',cursive">Caveat</option><option value="'Dancing Script',cursive">Dancing Script</option><option value="'Playfair Display',serif">Playfair</option><option value="'Comfortaa',sans-serif">Comfortaa</option></select>
-<div class="title">✨ Particle Library</div><select id="particle" onchange="change()"><option value="mix">🌈 Dreamy Mix</option><option value="romantic">💗 Romantic Mix</option><option value="nature">🌿 Nature Mix</option><option value="sparkle">✨ Sparkle Mix</option><option value="soft">☁️ Soft & Calm</option><option value="festive">🎀 Party Mix</option><option value="♡">💕 Hearts</option><option value="♥">❤️ Love Hearts</option><option value="💖">💖 Heart Burst</option><option value="✨">✨ Sparkles</option><option value="✦">✦ Stars</option><option value="🌟">🌟 Glowing Stars</option><option value="⭐">⭐ Stars</option><option value="🌸">🌸 Petals</option><option value="🌺">🌺 Flowers</option><option value="🌷">🌷 Tulips</option><option value="🍃">🍃 Leaves</option><option value="🍂">🍂 Falling Leaves</option><option value="🦋">🦋 Butterflies</option><option value="🐚">🐚 Shells</option><option value="☁️">☁️ Clouds</option><option value="☁">☁ Cloud Puff</option><option value="🫧">🫧 Bubbles</option><option value="💫">💫 Comets</option><option value="🌙">🌙 Moon</option><option value="🌙✨">🌙 Moon & Stars</option><option value="🎀">🎀 Ribbons</option><option value="🎵">🎵 Music Notes</option><option value="🎶">🎶 Music Notes 2</option><option value="🪽">🪽 Wings</option><option value="🕊️">🕊️ Doves</option><option value="🪷">🪷 Lotus</option><option value="🌼">🌼 Daisies</option><option value="🌻">🌻 Sunflowers</option><option value="🍀">🍀 Lucky Leaves</option><option value="🩷">🩷 Pink Hearts</option><option value="🤍">🤍 White Hearts</option><option value="💜">💜 Purple Hearts</option><option value="🪻">🪻 Lavender</option><option value="🎊">🎊 Confetti</option><option value="🎈">🎈 Balloons</option></select><label>Jumlah partikel</label><input type="range" id="particleCount" min="10" max="180" value="60" oninput="change()"><div class="grid2"><div><label>Kecepatan</label><input type="range" id="particleSpeed" min="5" max="24" value="11" oninput="change()"></div><div><label>Ukuran</label><input type="range" id="particleSize" min="6" max="28" value="17" oninput="change()"></div></div><div class="grid2"><div><label>Opacity</label><input type="range" id="particleOpacity" min="20" max="100" value="70" oninput="change()"></div><div><label>Drift</label><select id="particleDrift" onchange="change()"><option value="float">Float Up</option><option value="side">Side Drift</option><option value="swirl">Swirl</option><option value="fall">Fall Down</option></select></div></div><div class="mini">✨ Bisa sampai 180 partikel. Setiap partikel dibuat dengan ukuran, arah, delay, rotasi, durasi, dan opacity yang berbeda supaya hasilnya tidak terlihat repetitif.</div>
-</div>
-<div class="pane" id="photos"><input class="search" id="photoSearch" placeholder="🔍 Cari style foto..." oninput="filterLibrary('photoSearch','.photoLib')"><div class="title">📸 Photo Blocks</div><div class="library" id="photoLibrary"></div><div class="card"><b>🌐 Sumber foto</b><p class="mini" style="margin:6px 0">Upload foto sendiri atau tempel direct image URL. Untuk Pinterest/Google, gunakan URL gambar yang memang bisa diakses publik atau download/upload fotonya sendiri; browser tidak selalu mengizinkan mengambil gambar langsung dari halaman mereka.</p><input type="file" accept="image/*" multiple onchange="filesToBlocks(this.files)"><input placeholder="Tempel link Pinterest / Google / website lalu tekan Enter..." onkeydown="if(event.key==='Enter'){addWebPhoto(this.value);this.value=''}"><div class="mini">Pinterest: tempel link Pin biasa. Sistem mencoba mengambil gambar cover/OG image otomatis. Jika sumber menolak akses, pakai direct image URL atau upload foto.</div></div></div>
-<div class="pane" id="games"><input class="search" id="gameSearch" placeholder="🔍 Cari game..." oninput="filterLibrary('gameSearch','.gameLib')"><div class="title">🎮 Game Library · 60 Games</div><div class="library" id="gameLibrary"></div></div>
-<div class="pane" id="responses"><div class="title">💬 Response / Forum Library</div><p class="mini" style="margin-bottom:10px">Pilih format balasan yang nanti akan muncul di bagian akhir gift.</p><div class="library" id="responseLibrary"></div><div class="card"><b>📬 Catatan</b><p class="mini">Versi ini menyimpan balasan di browser penerima. Agar balasan benar-benar terkirim ke Creator lintas perangkat, nanti perlu database/backend (mis. Supabase/Firebase).</p></div></div>
-<div class="pane" id="modules"><div class="title">⚙️ Modul Terpasang</div><div id="moduleList"></div></div>
-</aside>
-<main class="previewArea"><div class="previewTop"><span class="previewLabel">👀 Real-time Receiver Preview</span><div><button class="btn" onclick="device('desktop')">💻</button><button class="btn" onclick="device('mobile')">📱</button></div></div><div class="previewWrap" id="previewWrap"><div class="gift" id="gift"><div class="float" id="float"></div><div id="musicPlayer" class="hidden" style="position:fixed;top:70px;right:20px;z-index:20;background:#fff;padding:7px 12px;border-radius:20px;box-shadow:0 4px 15px #0002;cursor:pointer" onclick="toggleMusic()">🎵 <span id="musicState">Putar</span></div><audio id="audio" loop></audio><section class="hero"><div class="eyebrow" id="pvEyebrow"></div><h1 id="pvTitle"></h1><p id="pvIntro"></p><button class="open" id="pvOpen" onclick="surprise()"></button></section><div id="contentOut"></div><section class="footer"><div style="font-size:25px">🤍</div><p id="pvFinal"></p></section></div></div></main>
-</div>
-<div class="modal" id="publishModal"><div class="modalCard"><h2>🚀 Gift siap dibagikan!</h2><div id="shareNote" class="shareReady" style="font-size:11px;line-height:1.5;margin:8px 0 10px;padding:9px 10px;border-radius:10px;background:#faf4fc"></div><p class="mini" style="margin:8px 0 12px">Preview publish saat ini memakai data di link. Untuk link pendek dan balasan yang benar-benar masuk ke Creator dari perangkat lain, kita tinggal sambungkan backend/database.</p>
-<label>⚙️ Pengaturan Akses Link:</label>
-<select id="sharePermission" onchange="updateShareUrlByPermission()">
-<option value="view">Hanya Bisa Lihat (Receiver Preview Mode)</option>
-<option value="edit">Boleh Edit (Editor Builder Mode)</option>
-<option value="fill">Hanya Bisa Ngisi / Balas (Direct Response Mode)</option>
-</select>
-<input id="shareUrl" readonly><div id="qr" style="display:flex;justify-content:center;margin:14px"></div><div class="grid2"><button class="btn green" onclick="copyLink()">🔗 Salin / Bagikan</button><button class="btn" onclick="closeModal()">Tutup</button></div><button class="btn" style="width:100%;margin-top:8px" onclick="downloadGift()">📥 Download Gift HTML</button><button class="btn primary" style="width:100%;margin-top:8px" onclick="downloadGiftLinkDirect()">📥 Download Link Text (.txt)</button></div></div><div class="toast" id="toast"></div>
-<script>
-const photoStyles={polaroid:'📸 Polaroid',letter:'💌 Photo + Letter',film:'🎞️ Film Strip',scrap:'🎨 Scrapbook',ticket:'🎟️ Memory Ticket',chat:'📱 Fake Chat',news:'📰 Newspaper',reveal:'🔍 Photo Reveal',heart:'💗 Heart Frame',story:'📖 Photo Story',gallery:'🖼️ Gallery Wall',gift:'🎁 Gift Box',carousel:'🌙 Carousel',sticker:'🧸 Cute Sticker',before:'🕰️ Before → After',classic:'🖼️ Classic',album:'💿 Album'};
-const games={
-letter_unlock:'💌 Unlock My Letter',letter_puzzle:'🧩 Letter Puzzle',open_when:'✉️ Open When...',secret_message:'🔐 Secret Message',complete_letter:'✍️ Complete My Letter',hidden_words:'🔎 Find Hidden Words',seven_messages:'💗 7 Little Messages',final_unlock:'🔓 Final Unlock',quiz:'❓ How Well Do You Know Me?',this_that:'⚖️ This or That?',memory_quiz:'📖 Our Memories Quiz',guess_answer:'💭 Guess My Answer',who_said:'🗣️ Who Said It?',favorites:'⭐ Guess My Favorite',would_rather:'🤔 Would You Rather?',firsts:'🗓️ Our Firsts',timeline:'⌛ Our Timeline',compatibility:'💘 Love Compatibility',flag:'🚩 Red or Green Flag?',inside_joke:'🤫 Inside Joke',guess_gift:'🎁 Guess the Gift',door:'🚪 Pick a Door',envelope:'✉️ Mystery Envelope',wheel:'🎡 Lucky Wheel',scratch:'🎫 Scratch Card',treasure:'🗺️ Treasure Hunt',password:'🔑 Secret Password',word:'🔤 Unscramble Word',memory:'🧠 Memory Cards',difference:'🔍 Find the Difference',photo_puzzle:'🧩 Photo Puzzle',pop:'💗 Pop the Hearts',catch:'💕 Catch My Hearts',love_meter:'💖 Love Meter',balloon:'🎈 Pop Balloons',breathing:'🧘 Breathing Bubble',firefly:'✨ Firefly Garden',stars:'⭐ Catch the Stars',flower:'🌷 Grow a Flower',wish:'🌠 Make a Wish',bubbles:'🫧 Pop the Bubbles',letter_chain:'🔗 Chain the Letter',missing_word:'📝 Missing Word',message_bottle:'🍾 Message in a Bottle',secret_sentence:'🕵️ Secret Sentence',letter_memory:'🧠 Letter Memory',one_question:'❓ One Last Question',collect_hearts:'💗 Collect the Hearts',unlock_chapters:'📖 Unlock Chapters',emoji_decode:'🔐 Decode the Emojis',photo_reveal_game:'📸 Guess the Blurred Photo',reaction:'⚡ Reaction Challenge',avoid_wrong:'🚫 Avoid the Wrong Heart',tap_love:'💞 Tap for Love',catch_kiss:'💋 Catch the Kisses',keep_heart:'❤️ Keep the Heart Alive',key_maze:'🗝️ Find the Key',number_lock:'🔢 Number Lock',sequence_memory:'🧠 Remember the Sequence',heart_sequence:'💓 Heart Sequence'};
-const responses={letter:'💌 Love Letter',guest:'📖 Guestbook',qa:'❓ Question & Answer',three:'🫶 Three Things',wish:'🌷 A Wish For Us',memory:'📸 My Memory',rating:'⭐ Rate This Gift',photo:'📷 Send Me a Photo',choice:'💭 How Are You Feeling?',free:'📝 Free Response',voice:'🎤 Voice Note (UI)'};
-let items=[];let responseItems=[];let audioPlaying=false;let particleTimer;
-function $(id){return document.getElementById(id)}
-function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
-function tab(btn,id){document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));btn.classList.add('active');$(id).classList.add('active');}
-function change(){render();save()}
-function save(){localStorage.setItem('kadoV5',JSON.stringify(payload()));$('saveStatus').textContent='✓ Tersimpan'}
-function payload(){return{recipient:$('recipient').value,eyebrow:$('eyebrow').value,title:$('title').value,intro:$('intro').value,openText:$('openText').value,final:$('final').value,music:$('music').value,bg:$('bg').value,text:$('text').value,primary:$('primary').value,accent:$('accent').value,font:$('font').value,particle:$('particle').value,count:+$('particleCount').value,speed:+$('particleSpeed').value,size:+$('particleSize').value,opacity:+$('particleOpacity').value,drift:$('particleDrift').value,items,responseItems}}
-function apply(d){if(!d)return;['recipient','eyebrow','title','intro','openText','final','music','bg','text','primary','accent','font','particle','particleCount','particleSpeed','particleSize','particleOpacity','particleDrift'].forEach(k=>{if(d[k]!==undefined)$(k).value=d[k]});items=d.items||[];responseItems=d.responseItems||[];render();renderLists()}
-function addPhoto(style){items.push({id:crypto.randomUUID(),kind:'photo',style,title:photoStyles[style],url:'',caption:'Kenangan kecil yang aku suka 🤍',date:'',location:''});renderLists();change()}
-function addWebPhoto(url){if(!url)return;items.push({id:crypto.randomUUID(),kind:'photo',style:'classic',title:'📸 Foto dari Web',url:url,caption:'Kenangan dari web 🤍',date:'',location:'',resolvedFrom:''});renderLists();change();resolvePhotoURL(items.length-1,url)}
-function addCustomPhoto(){addPhoto('classic')}
-function filesToBlocks(files){[...files].forEach(file=>{const r=new FileReader();r.onload=e=>{items.push({id:crypto.randomUUID(),kind:'photo',style:'polaroid',title:'📸 Foto Kita',url:e.target.result,caption:'Simpan momen ini baik-baik 🤍',date:'',location:''});renderLists();change()};r.readAsDataURL(file)});toast('Foto ditambahkan ✨')}
-function addGame(type){items.push({id:crypto.randomUUID(),kind:'game',type,title:games[type],question:'Pertanyaan untuk kamu...',a:'Pilihan A',b:'Pilihan B',answer:'a',message:'Yay! Kamu berhasil! 🤍',pass:'1202',word:'LOVE',target:8,seconds:15,emoji:'♡',letter:'Aku punya sesuatu yang ingin kusampaikan...',sequence:'⭐💗🌸',numbers:'2468'});renderLists();change()}
-function addResponse(type){responseItems.push({id:crypto.randomUUID(),type,title:responses[type],prompt:defaultPrompt(type),button:'Kirim 🤍',after:'Makasih sudah cerita. Aku baca ya 🤍'});renderLists();change()}
-function defaultPrompt(t){return{letter:'Tulis surat kecil untukku...',guest:'Tinggalkan satu pesan di guestbook...',qa:'Apa satu hal yang ingin kamu bilang?',three:'Tulis 3 hal yang kamu suka dari kita.',wish:'Satu harapan kecil untuk kita...',memory:'Ceritakan satu memori favoritmu.',rating:'Seberapa kamu suka gift ini?',photo:'Kirim satu foto untukku.',choice:'Kamu sekarang lagi merasa apa?',free:'Cerita apa pun yang ingin kamu ceritakan...',voice:'Rekam pesan suara untukku (demo UI).'}[t]||'Cerita aja di sini...'}
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0
+}
+
+body{
+ font-family:var(--font);
+ background:#f1eaf4;
+ color:var(--text);
+ overflow:hidden;
+ min-height:100vh
+}
+
+button,input,textarea,select{
+ font:inherit
+}
+
+button{
+ cursor:pointer;
+ border:0
+}
+
+input,textarea,select{
+ width:100%;
+ border:1px solid #e5d9e8;
+ border-radius:10px;
+ padding:9px 10px;
+ background:#fff;
+ color:var(--text);
+ outline:0;
+ margin-bottom:9px;
+ font-size:12px
+}
+
+input:focus,textarea:focus,select:focus{
+ border-color:#b58ac0;
+ box-shadow:0 0 0 3px #b58ac01a
+}
+
+textarea{
+ min-height:70px;
+ resize:vertical
+}
+
+.top{
+ height:60px;
+ background:#fff;
+ border-bottom:1px solid #eadfeb;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 18px;
+ position:relative;
+ z-index:50
+}
+
+.brand{
+ font-weight:700;
+ color:#866394;
+ font-size:14px;
+ display:flex;
+ align-items:center;
+ gap:8px
+}
+
+.save{
+ font-size:10px;
+ background:#f4edf6;
+ padding:4px 8px;
+ border-radius:20px
+}
+
+.actions{
+ display:flex;
+ gap:7px
+}
+
+.btn{
+ padding:8px 12px;
+ border-radius:10px;
+ font-size:11px;
+ font-weight:700;
+ background:#f4edf7;
+ color:#76577d
+}
+
+.btn.primary{
+ background:var(--primary);
+ color:white
+}
+
+.btn.green{
+ background:#5da486;
+ color:#fff
+}
+
+.btn.danger{
+ background:#fff0f3;
+ color:#c46b7c
+}
+
+.app{
+ display:grid;
+ grid-template-columns:minmax(360px,450px) minmax(0,1fr);
+ height:calc(100vh - 60px);
+ min-height:0
+}
+
+.sidebar{
+ background:#fff;
+ border-right:1px solid #eadfeb;
+ display:flex;
+ flex-direction:column;
+ overflow:hidden;
+ min-width:0;
+ min-height:0
+}
+
+.tabs{
+ display:flex;
+ overflow-x:auto;
+ background:#faf5fc;
+ border-bottom:1px solid #eadfeb
+}
+
+.tabs button{
+ padding:12px 13px;
+ background:transparent;
+ color:#78667d;
+ font-size:10px;
+ font-weight:700;
+ white-space:nowrap;
+ border-bottom:2px solid transparent
+}
+
+.tabs button.active{
+ color:#8d6798;
+ border-top:2px solid #8d6798;
+ border-bottom-color:transparent;
+ background:#fff;
+ margin-top:-1px
+}
+
+.pane{
+ display:none;
+ padding:16px;
+ overflow:auto
+}
+
+.pane.active{
+ display:block
+}
+
+.title{
+ font-size:10px;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:.5px;
+ color:#745a7b;
+ margin:12px 0 8px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.card{
+ background:#faf6fb;
+ border:1px solid #eee2f0;
+ border-radius:12px;
+ padding:10px;
+ margin-bottom:9px
+}
+
+.mini{
+ font-size:10px;
+ color:#8c7c90;
+ line-height:1.45
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px
+}
+
+.library{
+ display:grid;
+ gap:7px
+}
+
+.libbtn{
+ background:#f7f0f9;
+ border:1px solid #eaddec;
+ border-radius:10px;
+ padding:9px;
+ text-align:left;
+ color:#715877;
+ font-size:11px;
+ font-weight:600
+}
+
+.libbtn:hover{
+ background:#eee1f1
+}
+
+.search{
+ margin-bottom:8px
+}
+
+.previewArea{
+ padding:20px;
+ overflow:auto;
+ background:#e9deed;
+ min-width:0;
+ min-height:0
+}
+
+.previewTop{
+ max-width:900px;
+ margin:0 auto 9px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.previewLabel{
+ font-size:11px;
+ color:#806d84
+}
+
+.previewWrap{
+ max-width:900px;
+ margin:auto;
+ transition:.25s
+}
+
+.previewWrap.mobile{
+ max-width:375px
+}
+
+.gift{
+ min-height:850px;
+ background:var(--bg);
+ color:var(--text);
+ border-radius:22px;
+ overflow:hidden;
+ position:relative;
+ box-shadow:0 18px 45px #64466c1c
+}
+
+.float{
+ position:absolute;
+ inset:0;
+ overflow:hidden;
+ pointer-events:none;
+ z-index:1
+}
+
+.p{
+ position:absolute;
+ bottom:-50px;
+ animation:rise linear infinite;
+ opacity:.7;
+ filter:drop-shadow(0 2px 4px #0001)
+}
+
+@keyframes rise{
+ 0%{
+  transform:translateY(0) rotate(0);
+  opacity:0
+ }
+ 15%{
+  opacity:.7
+ }
+ 100%{
+  transform:translateY(-110vh) rotate(260deg);
+  opacity:0
+ }
+}
+
+@keyframes driftSide{
+ 0%{
+  transform:translate3d(0,20px,0) rotate(0) scale(var(--scale));
+  opacity:0
+ }
+ 15%{
+  opacity:.7
+ }
+ 50%{
+  transform:translate3d(var(--drift),-50vh,0) rotate(var(--rot)) scale(1)
+ }
+ 100%{
+  transform:translate3d(calc(var(--drift)*-1),-110vh,0) rotate(calc(var(--rot)*1.4)) scale(.75);
+  opacity:0
+ }
+}
+
+@keyframes swirlFloat{
+ 0%{
+  transform:translate3d(0,30px,0) rotate(0) scale(var(--scale));
+  opacity:0
+ }
+ 20%{
+  opacity:.7
+ }
+ 35%{
+  transform:translate3d(var(--drift),-25vh,0) rotate(100deg) scale(1)
+ }
+ 65%{
+  transform:translate3d(calc(var(--drift)*-0.7),-65vh,0) rotate(220deg) scale(.9)
+ }
+ 100%{
+  transform:translate3d(var(--drift),-110vh,0) rotate(var(--rot)) scale(.65);
+  opacity:0
+ }
+}
+
+@keyframes fallParticle{
+ 0%{
+  transform:translate3d(0,-20vh,0) rotate(0) scale(var(--scale));
+  opacity:0
+ }
+ 15%{
+  opacity:.7
+ }
+ 100%{
+  transform:translate3d(var(--drift),115vh,0) rotate(var(--rot)) scale(.8);
+  opacity:0
+ }
+}
+
+.hero{
+ min-height:390px;
+ padding:55px 22px 40px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ position:relative;
+ z-index:2
+}
+
+.eyebrow{
+ font-size:11px;
+ letter-spacing:2px;
+ text-transform:uppercase;
+ opacity:.75;
+ margin-bottom:10px
+}
+
+.hero h1{
+ font-size:clamp(28px,5vw,46px);
+ line-height:1.2;
+ margin-bottom:12px
+}
+
+.hero p{
+ max-width:530px;
+ font-size:13px;
+ line-height:1.7
+}
+
+.open{
+ margin-top:22px;
+ padding:12px 23px;
+ border-radius:30px;
+ background:var(--primary);
+ color:white;
+ font-weight:700;
+ box-shadow:0 8px 25px #0002;
+ animation:pulse 2s infinite
+}
+
+@keyframes pulse{
+ 50%{
+  transform:scale(1.04)
+ }
+}
+
+.section{
+ padding:30px 18px;
+ text-align:center;
+ position:relative;
+ z-index:2;
+ background:#ffffff80;
+ border-top:1px solid #ffffff99;
+ backdrop-filter:blur(5px)
+}
+
+.section h2{
+ font-size:18px;
+ color:var(--primary);
+ margin-bottom:12px
+}
+
+.block{
+ max-width:600px;
+ margin:10px auto;
+ background:var(--card);
+ border-radius:var(--radius);
+ padding:17px;
+ box-shadow:0 6px 20px #0000000b
+}
+
+.photo{
+ width:100%;
+ max-height:360px;
+ object-fit:cover;
+ border-radius:12px
+}
+
+.polaroid{
+ display:inline-block;
+ background:#fff;
+ padding:11px 11px 24px;
+ box-shadow:0 10px 25px #0002;
+ transform:rotate(-2deg);
+ max-width:280px
+}
+
+.polaroid img{
+ width:100%;
+ height:210px;
+ object-fit:cover
+}
+
+.hand{
+ font-family:'Caveat',cursive;
+ font-size:18px
+}
+
+.film{
+ display:flex;
+ gap:7px;
+ overflow:auto;
+ background:#171717;
+ padding:12px;
+ border-radius:10px
+}
+
+.film img{
+ height:105px;
+ width:105px;
+ object-fit:cover;
+ flex:0 0 auto;
+ border:2px solid #fff
+}
+
+.ticket{
+ border:2px dashed var(--primary);
+ padding:15px;
+ border-radius:13px
+}
+
+.ticket img{
+ width:100%;
+ height:170px;
+ object-fit:cover;
+ border-radius:8px
+}
+
+.chat{
+ background:#e8ddd6;
+ border-radius:12px;
+ padding:12px;
+ text-align:left;
+ max-width:360px;
+ margin:auto
+}
+
+.bubble{
+ background:#dcf8c6;
+ padding:8px 10px;
+ border-radius:9px;
+ margin-top:6px
+}
+
+.newspaper{
+ background:#f3ead7;
+ padding:15px;
+ font-family:'Playfair Display',serif
+}
+
+.newspaper h3{
+ font-size:20px;
+ border-bottom:2px solid #333;
+ padding-bottom:5px
+}
+
+.newspaper img{
+ width:100%;
+ height:180px;
+ object-fit:cover;
+ margin:8px 0
+}
+
+.reveal{
+ position:relative;
+ cursor:pointer;
+ overflow:hidden;
+ border-radius:12px
+}
+
+.reveal img{
+ width:100%;
+ height:220px;
+ object-fit:cover;
+ filter:blur(16px);
+ transition:.5s
+}
+
+.reveal.open img{
+ filter:none
+}
+
+.reveal span{
+ position:absolute;
+ inset:0;
+ display:grid;
+ place-items:center;
+ color:#fff;
+ background:#0005;
+ font-weight:700
+}
+
+.reveal.open span{
+ display:none
+}
+
+.heartImg{
+ width:190px;
+ height:190px;
+ border-radius:50%;
+ object-fit:cover;
+ border:5px solid var(--accent)
+}
+
+.story{
+ text-align:left
+}
+
+.storyStep{
+ padding:12px 0;
+ border-left:2px solid var(--accent);
+ padding-left:14px;
+ margin-left:8px
+}
+
+.gameArea{
+ display:grid;
+ gap:10px
+}
+
+.gameBtn{
+ padding:10px 14px;
+ background:var(--primary);
+ color:white;
+ border-radius:10px;
+ font-weight:700
+}
+
+.choices{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px
+}
+
+.choice{
+ padding:10px;
+ background:#f4edf7;
+ border:1px solid #e5d8e8;
+ border-radius:10px;
+ color:#6e5574
+}
+
+.result{
+ min-height:20px;
+ font-size:12px;
+ font-weight:700;
+ color:var(--primary)
+}
+
+.heartGame{
+ height:230px;
+ position:relative;
+ overflow:hidden;
+ background:linear-gradient(#fff,#fff7fc);
+ border-radius:12px
+}
+
+.fall{
+ position:absolute;
+ font-size:27px;
+ cursor:pointer;
+ animation:fall linear forwards
+}
+
+@keyframes fall{
+ from{
+  top:-40px
+ }
+ to{
+  top:260px
+ }
+}
+
+.bubbleGame{
+ height:220px;
+ position:relative;
+ overflow:hidden;
+ background:#f3f7ff;
+ border-radius:14px
+}
+
+.bubble{
+ position:absolute;
+ border-radius:50%;
+ background:#cfe8ff99;
+ border:1px solid #9ccfff;
+ animation:drift 5s linear forwards;
+ cursor:pointer
+}
+
+.calmCircle{
+ width:100px;
+ height:100px;
+ border-radius:50%;
+ margin:15px auto;
+ background:#e6d8f0;
+ display:grid;
+ place-items:center;
+ animation:breathe 4s ease-in-out infinite
+}
+
+@keyframes breathe{
+ 50%{
+  transform:scale(1.55);
+  background:#e6d8f080
+ }
+}
+
+.memoryGrid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:7px
+}
+
+.memoryCard{
+ aspect-ratio:1;
+ background:#eee4f0;
+ border-radius:99px;
+ display:grid;
+ place-items:center;
+ font-size:23px;
+ cursor:pointer
+}
+
+.memoryCard.flipped{
+ background:#fff;
+ border:1px solid #dfd0e4
+}
+
+.scratch{
+ height:130px;
+ background:#c8c8c8;
+ border-radius:12px;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+ position:relative;
+ overflow:hidden
+}
+
+.scratch.cover:after{
+ content:'🖐️ TAP TO REVEAL';
+ position:absolute;
+ inset:0;
+ display:grid;
+ place-items:center;
+ background:#b9b9b9;
+ color:#555;
+ font-weight:800
+}
+
+.wheel{
+ width:150px;
+ height:150px;
+ border-radius:50%;
+ margin:8px auto;
+ background:conic-gradient(
+  #e9bfd1 0 25%,
+  #cbb7e5 25% 50%,
+  #b8d9d1 50% 75%,
+  #f1d7a9 75%
+ );
+ border:7px solid white;
+ box-shadow:0 5px 20px #0002;
+ transition:1s
+}
+
+.responseBox{
+ background:#fff;
+ border:1px solid #eaddea;
+ border-radius:14px;
+ padding:14px;
+ max-width:600px;
+ margin:0 auto;
+ text-align:left
+}
+
+.responseBox h3{
+ text-align:center;
+ color:var(--primary);
+ margin-bottom:8px
+}
+
+.responseActions{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap
+}
+
+.responseActions button{
+ flex:1;
+ min-width:120px
+}
+
+.footer{
+ padding:35px 20px;
+ text-align:center;
+ position:relative;
+ z-index:2
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:#0007;
+ backdrop-filter:blur(5px);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ z-index:100
+}
+  }
+ Object.entries(map).forEach(([from,to])=>{
+  if(d[from]!==undefined && $(to))$(to).value=d[from];
+ });
+ items=Array.isArray(d.items)?d.items:[];
+ responseItems=Array.isArray(d.responseItems)?d.responseItems:[];
+ render();
+ renderLists();
+}
+
+function addPhoto(style){
+ items.push({
+  id:crypto.randomUUID(),
+  kind:'photo',
+  style,
+  title:photoStyles[style],
+  url:'',
+  caption:'Kenangan kecil yang aku suka 🤍',
+  date:'',
+  location:''
+ });
+ renderLists();
+ change()
+}
+
+function addWebPhoto(url){
+ if(!url)return;
+ items.push({
+  id:crypto.randomUUID(),
+  kind:'photo',
+  style:'classic',
+  title:'📸 Foto dari Web',
+  url:url,
+  caption:'Kenangan dari web 🤍',
+  date:'',
+  location:'',
+  resolvedFrom:''
+ });
+ renderLists();
+ change();
+ resolvePhotoURL(items.length-1,url)
+}
+
+function addCustomPhoto(){
+ addPhoto('classic')
+}
+
+function filesToBlocks(files){
+ [...files].forEach(file=>{
+  const r=new FileReader();
+  r.onload=e=>{
+   items.push({
+    id:crypto.randomUUID(),
+    kind:'photo',
+    style:'polaroid',
+    title:'📸 Foto Kita',
+    url:e.target.result,
+    caption:'Simpan momen ini baik-baik 🤍',
+    date:'',
+    location:''
+   });
+   renderLists();
+   change()
+  };
+  r.readAsDataURL(file)
+ });
+ toast('Foto ditambahkan ✨')
+}
+
+function addGame(type){
+ items.push({
+  id:crypto.randomUUID(),
+  kind:'game',
+  type,
+  title:games[type],
+  question:'Pertanyaan untuk kamu...',
+  a:'Pilihan A',
+  b:'Pilihan B',
+  answer:'a',
+  message:'Yay! Kamu berhasil! 🤍',
+  pass:'1202',
+  word:'LOVE',
+  target:8,
+  seconds:15,
+  emoji:'♡',
+  letter:'Aku punya sesuatu yang ingin kusampaikan...',
+  sequence:'⭐💗🌸',
+  numbers:'2468'
+ });
+ renderLists();
+ change()
+}
+
+function addResponse(type){
+ responseItems.push({
+  id:crypto.randomUUID(),
+  type,
+  title:responses[type],
+  prompt:defaultPrompt(type),
+  button:'Kirim 🤍',
+  after:'Makasih sudah cerita. Aku baca ya 🤍'
+ });
+ renderLists();
+ change()
+}
+
+function defaultPrompt(t){
+ return {
+  letter:'Tulis surat kecil untukku...',
+  guest:'Tinggalkan satu pesan di guestbook...',
+  qa:'Apa satu hal yang ingin kamu bilang?',
+  three:'Tulis 3 hal yang kamu suka dari kita.',
+  wish:'Satu harapan kecil untuk kita...',
+  memory:'Ceritakan satu memori favoritmu.',
+  rating:'Seberapa kamu suka gift ini?',
+  photo:'Kirim satu foto untukku.',
+  choice:'Kamu sekarang lagi merasa apa?',
+  free:'Cerita apa pun yang ingin kamu ceritakan...',
+  voice:'Rekam pesan suara untukku (demo UI).'
+ }[t]||'Cerita aja di sini...'
+}
+
 function renderLists(){
-$('photoLibrary').innerHTML=Object.entries(photoStyles).map(([k,v])=>`<button class="libbtn photoLib" data-name="${v.toLowerCase()}" onclick="addPhoto('${k}')">${v} ➕</button>`).join('');
-$('gameLibrary').innerHTML=Object.entries(games).map(([k,v])=>`<button class="libbtn gameLib" data-name="${v.toLowerCase()}" onclick="addGame('${k}')">${v} ➕</button>`).join('');
-$('responseLibrary').innerHTML=Object.entries(responses).map(([k,v])=>`<button class="libbtn" onclick="addResponse('${k}')">${v} ➕</button>`).join('');
-renderModuleList();}
-function filterLibrary(input,selector){const q=$(input).value.toLowerCase();document.querySelectorAll(selector).forEach(x=>x.style.display=x.dataset.name.includes(q)?'block':'none')}
-function renderModuleList(){const list=$('moduleList');list.innerHTML='';items.forEach((it,i)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="display:flex;gap:5px;align-items:center"><b style="flex:1">${esc(it.title)}</b><button class="btn" onclick="move(${i},-1)">↑</button><button class="btn" onclick="move(${i},1)">↓</button><button class="btn danger" onclick="del(${i})">×</button></div>${it.kind==='photo'?photoEditor(it,i):gameEditor(it,i)}`;list.appendChild(c)});responseItems.forEach((it,i)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="display:flex;gap:5px"><b style="flex:1">${esc(it.title)}</b><button class="btn danger" onclick="delResponse(${i})">×</button></div><label>Judul</label><input value="${escAttr(it.title)}" oninput="updResponse(${i},'title',this.value)"><label>Pertanyaan / prompt</label><textarea oninput="updResponse(${i},'prompt',this.value)">${esc(it.prompt)}</textarea><label>Tombol</label><input value="${escAttr(it.button)}" oninput="updResponse(${i},'button',this.value)"><label>Pesan setelah kirim</label><input value="${escAttr(it.after)}" oninput="updResponse(${i},'after',this.value)">`;list.appendChild(c)})}
-function photoEditor(it,i){return`<label>Judul</label><input value="${escAttr(it.title)}" oninput="upd(${i},'title',this.value)"><label>Link foto / Pinterest / web</label><input value="${escAttr(it.url)}" placeholder="Tempel link Pinterest / gambar di sini..." oninput="upd(${i},'url',this.value)" onblur="resolvePhotoURL(${i},this.value)"><div class="mini" id="photo-status-${it.id}">${it.resolvedFrom?('✓ Gambar ditemukan dari '+esc(it.resolvedFrom)):'Tempel URL lalu klik di luar kolom — sistem akan mencoba menemukan gambar otomatis.'}</div><label>Caption</label><input value="${escAttr(it.caption)}" oninput="upd(${i},'caption',this.value)"><div class="grid2"><input value="${escAttr(it.date)}" placeholder="Tanggal" oninput="upd(${i},'date',this.value)"><input value="${escAttr(it.location)}" placeholder="Lokasi" oninput="upd(${i},'location',this.value)"></div>`}
+ $('photoLibrary').innerHTML=Object.entries(photoStyles)
+  .map(([k,v])=>
+   `<button class="libbtn photoLib"
+   data-name="${v.toLowerCase()}"
+   onclick="addPhoto('${k}')">${v} ➕</button>`
+  ).join('');
+
+ $('gameLibrary').innerHTML=Object.entries(games)
+  .map(([k,v])=>
+   `<button class="libbtn gameLib"
+   data-name="${v.toLowerCase()}"
+   onclick="addGame('${k}')">${v} ➕</button>`
+  ).join('');
+
+ $('responseLibrary').innerHTML=Object.entries(responses)
+  .map(([k,v])=>
+   `<button class="libbtn"
+   onclick="addResponse('${k}')">${v} ➕</button>`
+  ).join('');
+
+ renderModuleList();
+}
+
+function filterLibrary(input,selector){
+ const q=$(input).value.toLowerCase();
+
+ document.querySelectorAll(selector).forEach(x=>
+  x.style.display=x.dataset.name.includes(q)?'block':'none'
+ )
+}
+
+function renderModuleList(){
+ const list=$('moduleList');
+ list.innerHTML='';
+
+ items.forEach((it,i)=>{
+  const c=document.createElement('div');
+  c.className='card';
+
+  c.innerHTML=`
+   <div style="display:flex;gap:5px;align-items:center">
+    <b style="flex:1">${esc(it.title)}</b>
+    <button class="btn" onclick="move(${i},-1)">↑</button>
+    <button class="btn" onclick="move(${i},1)">↓</button>
+    <button class="btn danger" onclick="del(${i})">×</button>
+   </div>
+   ${it.kind==='photo'?photoEditor(it,i):gameEditor(it,i)}
+  `;
+
+  list.appendChild(c)
+ });
+
+ responseItems.forEach((it,i)=>{
+  const c=document.createElement('div');
+  c.className='card';
+
+  c.innerHTML=`
+   <div style="display:flex;gap:5px">
+    <b style="flex:1">${esc(it.title)}</b>
+    <button class="btn danger" onclick="delResponse(${i})">×</button>
+   </div>
+
+   <label>Judul</label>
+   <input
+    value="${escAttr(it.title)}"
+    oninput="updResponse(${i},'title',this.value)"
+   >
+
+   <label>Pertanyaan / prompt</label>
+   <textarea
+    oninput="updResponse(${i},'prompt',this.value)"
+   >${esc(it.prompt)}</textarea>
+
+   <label>Tombol</label>
+   <input
+    value="${escAttr(it.button)}"
+    oninput="updResponse(${i},'button',this.value)"
+   >
+
+   <label>Pesan setelah kirim</label>
+   <input
+    value="${escAttr(it.after)}"
+    oninput="updResponse(${i},'after',this.value)"
+   >
+  `;
+
+  list.appendChild(c)
+ })
+}
+
+function photoEditor(it,i){
+ return`
+  <label>Judul</label>
+  <input
+   value="${escAttr(it.title)}"
+   oninput="upd(${i},'title',this.value)"
+  >
+
+  <label>Link foto / Pinterest / web</label>
+  <input
+   value="${escAttr(it.url)}"
+   placeholder="Tempel link Pinterest / gambar di sini..."
+   oninput="upd(${i},'url',this.value)"
+   onblur="resolvePhotoURL(${i},this.value)"
+  >
+
+  <div class="mini" id="photo-status-${it.id}">
+   ${
+    it.resolvedFrom
+     ? '✓ Gambar ditemukan dari '+esc(it.resolvedFrom)
+     : 'Tempel URL lalu klik di luar kolom — sistem akan mencoba menemukan gambar otomatis.'
+   }
+  </div>
+
+  <label>Caption</label>
+  <input
+   value="${escAttr(it.caption)}"
+   oninput="upd(${i},'caption',this.value)"
+  >
+
+  <div class="grid2">
+   <input
+    value="${escAttr(it.date)}"
+    placeholder="Tanggal"
+    oninput="upd(${i},'date',this.value)"
+   >
+
+   <input
+    value="${escAttr(it.location)}"
+    placeholder="Lokasi"
+    oninput="upd(${i},'location',this.value)"
+   >
+  </div>
+ `
+}
+
 function gameEditor(it,i){
  const t=it.type;
  let extra='';
- if(['quiz','this_that','memory_quiz','guess_answer','who_said','favorites','would_rather','firsts','flag'].includes(t)) extra=`<div class="grid2"><div><label>Opsi A</label><input value="${escAttr(it.a)}" oninput="upd(${i},'a',this.value)"></div><div><label>Opsi B</label><input value="${escAttr(it.b)}" oninput="upd(${i},'b',this.value)"></div></div><label>Jawaban benar</label><select onchange="upd(${i},'answer',this.value)"><option value="a" ${it.answer==='a'?'selected':''}>A</option><option value="b" ${it.answer==='b'?'selected':''}>B</option></select>`;
- if(['letter_unlock','secret_message','final_unlock','password'].includes(t)) extra=`<label>Kode / Password</label><input value="${escAttr(it.pass)}" oninput="upd(${i},'pass',this.value)"><label>Isi surat / pesan rahasia</label><textarea oninput="upd(${i},'letter',this.value)">${esc(it.letter)}</textarea>`;
- if(['word','hidden_words','complete_letter'].includes(t)) extra+=`<label>Kata / jawaban target</label><input value="${escAttr(it.word)}" oninput="upd(${i},'word',this.value)">`;
- if(['pop','catch','balloon','bubbles','firefly','stars'].includes(t)) extra=`<div class="grid2"><div><label>Target</label><input type="number" min="3" max="30" value="${it.target||8}" oninput="upd(${i},'target',+this.value)"></div><div><label>Durasi (detik)</label><input type="number" min="5" max="60" value="${it.seconds||15}" oninput="upd(${i},'seconds',+this.value)"></div></div><label>Emoji target</label><input value="${escAttr(it.emoji||'♡')}" oninput="upd(${i},'emoji',this.value)">`;
- if(t==='letter_puzzle') extra=`<label>Kata rahasia</label><input value="${escAttr(it.word||'SAYANG')}" oninput="upd(${i},'word',this.value)"><div class="mini">Penerima menyusun huruf untuk membuka pesan.</div>`;
- if(t==='seven_messages') extra=`<label>7 pesan (pisahkan dengan | )</label><textarea oninput="upd(${i},'messages',this.value)">${esc(it.messages||'Aku bangga sama kamu.|Makasih sudah hadir.|Jangan lupa istirahat.|Kamu cukup.|Aku selalu senang lihat kamu bahagia.|Semoga hari ini lembut buat kamu.|Satu peluk dari jauh 🤍')}</textarea>`;
- if(t==='photo_puzzle') extra=`<label>URL foto puzzle</label><input value="${escAttr(it.image||'')}" placeholder="https://..." oninput="upd(${i},'image',this.value)">`;
- if(['letter_chain','missing_word','message_bottle','secret_sentence','letter_memory','one_question','unlock_chapters'].includes(t)) extra+=`<label>Isi pesan / target</label><textarea oninput="upd(${i},'letter',this.value)">${esc(it.letter||'Aku punya pesan khusus untukmu 🤍')}</textarea>`;
- if(t==='emoji_decode') extra+=`<label>Kode emoji</label><input value="${escAttr(it.sequence||'🌙💗⭐')}" oninput="upd(${i},'sequence',this.value)"><label>Jawaban</label><input value="${escAttr(it.word||'LOVE')}" oninput="upd(${i},'word',this.value)">`;
- if(t==='number_lock') extra+=`<label>Kode angka</label><input value="${escAttr(it.numbers||'2468')}" oninput="upd(${i},'numbers',this.value)">`;
- if(t==='sequence_memory') extra+=`<label>Urutan</label><input value="${escAttr(it.sequence||'⭐💗🌸')}" oninput="upd(${i},'sequence',this.value)">`;
- if(['collect_hearts','reaction','avoid_wrong','tap_love','catch_kiss','keep_heart','key_maze'].includes(t)) extra+=`<div class="grid2"><div><label>Target</label><input type="number" min=3 max=40 value="${it.target||8}" oninput="upd(${i},'target',+this.value)"></div><div><label>Durasi</label><input type="number" min=5 max=60 value="${it.seconds||15}" oninput="upd(${i},'seconds',+this.value)"></div></div>`;
- return `<div class="moduleCard"><div class="dragHint">${games[t]||'Game'} · bisa dimainkan penerima</div><label>Judul</label><input value="${escAttr(it.title)}" oninput="upd(${i},'title',this.value)"><label>Instruksi</label><textarea oninput="upd(${i},'question',this.value)">${esc(it.question)}</textarea>${extra}<label>Pesan berhasil</label><input value="${escAttr(it.message)}" oninput="upd(${i},'message',this.value)"></div>`;
-}
-function upd(i,p,v){items[i][p]=v;render();save()}function updResponse(i,p,v){responseItems[i][p]=v;render();save()}function del(i){items.splice(i,1);renderLists();change()}function delResponse(i){responseItems.splice(i,1);renderLists();change()}function move(i,d){const j=i+d;if(j<0||j>=items.length)return;[items[i],items[j]]=[items[j],items[i]];renderLists();change()}
-function esc(s){return String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}function escAttr(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
-function render(){const r=document.documentElement.style;r.setProperty('--bg',$('bg').value);r.setProperty('--text',$('text').value);r.setProperty('--primary',$('primary').value);r.setProperty('--accent',$('accent').value);r.setProperty('--font',$('font').value);$('pvEyebrow').textContent=$('eyebrow').value;$('pvTitle').textContent=$('title').value;$('pvIntro').textContent=$('intro').value;$('pvOpen').textContent=$('openText').value;$('pvFinal').textContent=$('final').value;updateMusic();renderParticles();$('contentOut').innerHTML='';items.forEach(it=>{const sec=document.createElement('section');sec.className='section';sec.innerHTML=it.kind==='photo'?photoHTML(it):gameHTML(it);$('contentOut').appendChild(sec)});if(responseItems.length){const sec=document.createElement('section');sec.className='section';sec.innerHTML=`<h2>💬 Sekarang Giliranmu</h2>${responseItems.map(responseHTML).join('')}`;$('contentOut').appendChild(sec)}}
-function photoHTML(it){const img=it.url||'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80';const cap=esc(it.caption);if(it.style==='polaroid')return`<h2>${esc(it.title)}</h2><div class="polaroid"><img src="${escAttr(img)}"><div class="hand">${cap}</div><small>${esc(it.date)}</small></div>`;if(it.style==='letter')return`<h2>${esc(it.title)}</h2><div class="block" style="display:flex;gap:12px;align-items:center;text-align:left"><img class="photo" style="width:45%;height:170px" src="${escAttr(img)}"><p>${cap}</p></div>`;if(it.style==='film')return`<h2>${esc(it.title)}</h2><div class="film"><img src="${escAttr(img)}"><img src="${escAttr(img)}"><img src="${escAttr(img)}"></div>`;if(it.style==='ticket')return`<h2>${esc(it.title)}</h2><div class="block ticket"><small>MEMORY TICKET · ${esc(it.date||'TODAY')}</small><img src="${escAttr(img)}"><b>${cap}</b><small>${esc(it.location)}</small></div>`;if(it.style==='chat')return`<h2>${esc(it.title)}</h2><div class="chat"><b>You ❤️</b><div class="bubble">Lihat foto ini deh 🥹<img class="photo" src="${escAttr(img)}"></div><div style="margin-top:7px">${cap}</div></div>`;if(it.style==='news')return`<h2>${esc(it.title)}</h2><div class="newspaper"><h3>BREAKING NEWS</h3><img src="${escAttr(img)}"><p>${cap}</p></div>`;if(it.style==='reveal')return`<h2>${esc(it.title)}</h2><div class="reveal" onclick="this.classList.toggle('open')"><img src="${escAttr(img)}"><span>🔍 Klik untuk reveal</span></div><p style="margin-top:7px">${cap}</p>`;if(it.style==='heart')return`<h2>${esc(it.title)}</h2><img class="heartImg" src="${escAttr(img)}"><p style="margin-top:8px">${cap}</p>`;if(it.style==='scrap')return`<h2>${esc(it.title)}</h2><div class="block" style="background:#fffdf3;border:1px dashed #c8b68d"><div style="font-size:22px">📌</div><img class="photo" src="${escAttr(img)}"><p class="hand">${cap}</p></div>`;if(it.style==='gift')return`<h2>${esc(it.title)}</h2><div class="block"><button class="gameBtn" onclick="this.nextElementSibling.classList.remove('hidden');this.classList.add('hidden');confetti()">🎁 Open Gift</button><img class="photo hidden" src="${escAttr(img)}"><p style="margin-top:8px">${cap}</p></div>`;return`<h2>${esc(it.title)}</h2><div class="block"><img class="photo" src="${escAttr(img)}"><p style="margin-top:8px">${cap}</p><small>${esc(it.location)} ${it.date?'· '+esc(it.date):''}</small></div>`}
-function responseHTML(it){const id=it.id;let control='';if(it.type==='letter'||it.type==='guest'||it.type==='qa'||it.type==='three'||it.type==='wish'||it.type==='memory'||it.type==='free')control=`<textarea id="resp-${id}" placeholder="${escAttr(it.prompt)}"></textarea>`;else if(it.type==='rating')control=`<div class="choices"><button class="choice" onclick="pickResp('${id}','😐')">😐</button><button class="choice" onclick="pickResp('${id}','🙂')">🙂</button><button class="choice" onclick="pickResp('${id}','🥹')">🥹</button><button class="choice" onclick="pickResp('${id}','😭🤍')">😭🤍</button></div><input type="hidden" id="resp-${id}">`;else if(it.type==='choice')control=`<div class="choices"><button class="choice" onclick="pickResp('${id}','Senang 🤍')">Senang 🤍</button><button class="choice" onclick="pickResp('${id}','Kangen 🥹')">Kangen 🥹</button><button class="choice" onclick="pickResp('${id}','Capek 😭')">Capek 😭</button><button class="choice" onclick="pickResp('${id}','Bingung 🫠')">Bingung 🫠</button></div><input type="hidden" id="resp-${id}">`;else if(it.type==='photo')control=`<input type="file" accept="image/*" id="resp-${id}" onchange="photoResponse('${id}',this.files[0])">`;else control=`<button class="gameBtn" onclick="toast('🎤 Demo voice-note: sambungkan recorder/backend untuk menerima audio lintas perangkat.')">🎤 Rekam Pesan</button>`;return`<div class="responseBox"><h3>${esc(it.title)}</h3><p style="font-size:12px;margin-bottom:8px">${esc(it.prompt)}</p>${control}<button class="gameBtn" style="margin-top:8px;width:100%" onclick="submitResponse('${id}','${escAttr(it.after)}')">${esc(it.button)}</button><div class="result" id="res-${id}"></div></div>`}
-function pickResp(id,v){$('resp-'+id).value=v}
-function photoResponse(id,file){if(!file)return;const r=new FileReader();r.onload=e=>{$('resp-'+id).dataset.value=e.target.result;$('resp-'+id).value='Foto siap dikirim 📸'};r.readAsDataURL(file)}
-function submitResponse(id,after){const el=$('resp-'+id);const value=el?.dataset.value||el?.value||'';if(!value){$('res-'+id).textContent='Tulis/isi dulu ya 🤍';return}const all=JSON.parse(localStorage.getItem('kadoV4_responses')||'[]');all.push({id,time:new Date().toISOString(),value});localStorage.setItem('kadoV4_responses',JSON.stringify(all));$('res-'+id).textContent=after;confetti({particleCount:35,spread:45});}
-function gameHTML(it){
- const id=it.id,t=it.type, msg=escAttr(it.message||'Yay! Berhasil 🤍');
- let body='';
- const choiceTypes=['quiz','this_that','memory_quiz','guess_answer','who_said','favorites','would_rather','firsts','flag'];
- if(choiceTypes.includes(t)) body=`<div class="gameIntro">${esc(it.question)}</div><div class="choices"><button class="choice big" id="${id}-a" onclick="answerChoice('${id}','a','${escAttr(it.answer||'a')}','${msg}')">${esc(it.a)}</button><button class="choice big" id="${id}-b" onclick="answerChoice('${id}','b','${escAttr(it.answer||'a')}','${msg}')">${esc(it.b)}</button></div><div class="result" id="gr-${id}"></div>`;
- else if(t==='letter_unlock'||t==='secret_message'||t==='final_unlock'||t==='password') body=`<div class="gameIntro">${esc(it.question)}</div><input id="gp-${id}" placeholder="Masukkan kode rahasia..." autocomplete="off"><button class="gameBtn" onclick="unlock('${id}','${escAttr(it.pass)}','${escAttr(it.letter||'')}','${msg}')">🔓 Buka</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='letter_puzzle') body=letterPuzzle(it);
- else if(t==='open_when') body=`<div class="choices"><button class="choice big" onclick="openWhen('${id}','lagi sedih','${msg}')">Saat aku lagi sedih</button><button class="choice big" onclick="openWhen('${id}','kangen','${msg}')">Saat aku kangen</button><button class="choice big" onclick="openWhen('${id}','capek','${msg}')">Saat aku capek</button></div><div class="result" id="gr-${id}"></div>`;
- else if(t==='complete_letter') body=`<div class="letterPaper"><p>${esc(it.letter||'Aku ingin bilang sesuatu...')}</p><p style="margin-top:12px">${esc(it.question)}</p></div><input id="cl-${id}" placeholder="Lengkapi kalimatnya..."><button class="gameBtn" onclick="completeLetter('${id}','${escAttr(it.word||'sayang')}','${msg}')">💌 Kirim jawabanku</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='hidden_words') body=hiddenWords(it);
- else if(t==='seven_messages') body=sevenMessages(it);
- else if(t==='word') body=unscramble(it);
- else if(t==='scratch') body=`<div class="scratch cover" id="sc-${id}" onclick="revealScratch('${id}','${msg}')">🎫 <b>Gosok untuk membuka</b></div><div class="result" id="gr-${id}"></div>`;
- else if(t==='wheel') body=`<div class="wheel" id="wheel-${id}"></div><button class="gameBtn" onclick="spinWheel('${id}','${msg}')">🎡 Putar!</button><div class="result" id="gr-${id}"></div>`;
- else if(['door','envelope','guess_gift'].includes(t)) body=`<div class="gameIntro">${esc(it.question)}</div><div class="choices"><button class="choice big" onclick="mysteryPick('${id}',0,'${msg}')">🎁 Pilihan A</button><button class="choice big" onclick="mysteryPick('${id}',1,'${msg}')">💌 Pilihan B</button><button class="choice big" onclick="mysteryPick('${id}',2,'${msg}')">✨ Pilihan C</button></div><div class="result" id="gr-${id}"></div>`;
- else if(['pop','catch','balloon','bubbles','firefly','stars'].includes(t)) body=`<div class="gameHud"><span>Target: ${it.target||8}</span><span>Waktu: <b id="time-${id}">${it.seconds||15}</b>s</span></div><div class="timerBar"><i id="bar-${id}"></i></div><div class="gameStage" id="play-${id}"></div><button class="gameBtn" onclick="startArcade('${id}','${t}',${it.target||8},${it.seconds||15},'${escAttr(it.emoji||'♡')}','${msg}')">▶ Mulai Game</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='love_meter') body=`<div class="gameStage"><input id="lm-${id}" type="range" min="0" max="100" value="50" oninput="document.getElementById('lv-${id}').textContent=this.value+'%'" style="accent-color:var(--primary)"><div style="font-size:34px;font-weight:800;color:var(--primary);margin:12px" id="lv-${id}">50%</div><button class="gameBtn" onclick="meter('${id}','${msg}')">💖 Kunci Jawaban</button></div><div class="result" id="gr-${id}"></div>`;
- else if(t==='breathing') body=`<div class="gameStage"><div class="calmCircle">tarik<br>napas</div><p>Tarik napas saat lingkaran membesar, hembuskan saat mengecil.</p><button class="gameBtn" onclick="breathStart('${id}','${msg}')">🌿 Mulai 30 detik</button><div class="result" id="gr-${id}"></div></div>`;
- else if(t==='firefly') body=`<div class="gameStage" id="play-${id}"></div><button class="gameBtn" onclick="startArcade('${id}','firefly',${it.target||8},${it.seconds||15},'✨','${msg}')">✨ Mulai menangkap kunang-kunang</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='flower') body=`<div class="gameStage" style="text-align:center"><div style="font-size:78px" id="flower-${id}">🌱</div><p>Rawat bunga ini sampai mekar.</p><button class="gameBtn" onclick="grow('${id}','${msg}')">💧 Siram</button><div class="result" id="gr-${id}"></div></div>`;
- else if(t==='wish') body=`<textarea class="wishInput" id="wish-${id}" placeholder="Tulis satu harapan kecil..."></textarea><button class="gameBtn" onclick="wish('${id}','${msg}')">🌠 Titipkan ke bintang</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='memory') body=memoryGame(id,it.message);
- else if(t==='difference') body=differenceGame(it);
- else if(t==='photo_puzzle') body=`<div class="gameStage"><img class="photo" src="${escAttr(it.image||'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=700&q=80')}" style="filter:blur(18px);transition:.8s" id="pz-${id}"><button class="gameBtn" onclick="solvePhotoPuzzle('${id}','${msg}')">🧩 Susun & buka</button><div class="result" id="gr-${id}"></div></div>`;
- else if(t==='letter_chain') body=`<div class="gameIntro">Klik kata-kata dalam urutan yang benar.</div><div class="choices" id="lc-${id}">${['Aku','punya','sesuatu','untukmu'].map((x,i)=>`<button class="choice" onclick="chainLetter('${id}',${i},this,'${escAttr(it.letter||'💌 Ini surat kecil untukmu')}')">${x}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`;
- else if(t==='missing_word') body=`<div class="letterPaper">Aku cuma ingin bilang... aku <b>____</b> sama kamu 🤍</div><input id="mw-${id}" placeholder="Isi kata yang hilang"><button class="gameBtn" onclick="missingWord('${id}','${escAttr(it.word||'sayang')}','${msg}')">Cek</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='message_bottle') body=`<button class="gameBtn" onclick="bottle('${id}','${escAttr(it.letter||'Ada pesan rahasia di dalam botol ini 🤍')}')">🍾 Pecahkan botol</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='secret_sentence') body=`<div class="gameIntro">Pilih potongan kalimat dalam urutan yang benar.</div><div class="choices" id="ss-${id}">${['Aku','selalu','senang','punya kamu'].map((x,i)=>`<button class="choice" onclick="sentencePick('${id}',${i},this,'${escAttr(it.letter||'Kalimat rahasianya terbuka 🤍')}')">${x}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`;
- else if(t==='letter_memory') body=memoryGame(id,it.message);
- else if(t==='one_question') body=`<textarea id="oq-${id}" placeholder="Jawab sejujur-jujurnya..."></textarea><button class="gameBtn" onclick="oneQuestion('${id}','${msg}')">💌 Jawab & lanjut</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='unlock_chapters') body=`<div class="choices">${['Chapter 1','Chapter 2','Chapter 3'].map((x,i)=>`<button class="choice" onclick="chapter('${id}',${i},'${escAttr(it.letter||'Bab ini terbuka 🤍')}')">📖 ${x}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`;
- else if(t==='emoji_decode') body=`<div style="font-size:32px;margin:8px">${esc(it.sequence||'🌙💗⭐')}</div><input id="ed-${id}" placeholder="Tebak kata rahasianya"><button class="gameBtn" onclick="emojiDecode('${id}','${escAttr(it.word||'LOVE')}','${msg}')">🔐 Buka</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='number_lock') body=`<input id="nl-${id}" inputmode="numeric" maxlength="8" placeholder="Kode angka..."><button class="gameBtn" onclick="numberLock('${id}','${escAttr(it.numbers||'2468')}','${msg}')">🔓 Unlock</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='sequence_memory') body=`<div class="gameIntro">Ingat urutan ini: <b>${esc(it.sequence||'⭐💗🌸')}</b></div><input id="sm-${id}" placeholder="Ketik kembali urutannya"><button class="gameBtn" onclick="sequenceCheck('${id}','${escAttr(it.sequence||'⭐💗🌸')}','${msg}')">🧠 Cek</button><div class="result" id="gr-${id}"></div>`;
- else if(t==='heart_sequence') body=`<div class="gameIntro">Klik hati mengikuti urutan 1 → 2 → 3 → 4.</div><div class="choices" id="hs-${id}">${[1,2,3,4].map(n=>`<button class="choice" onclick="heartSequence('${id}',${n},this,'${msg}')">💗 ${n}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`;
- else if(t==='photo_reveal_game') body=`<div class="gameStage"><img class="photo" src="${escAttr(it.image||it.url||'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=700&q=80')}" style="filter:blur(22px);transition:.6s" id="pr-${id}"><button class="gameBtn" onclick="revealPhotoGame('${id}','${msg}')">📸 Reveal</button><div class="result" id="gr-${id}"></div></div>`;
- else if(['collect_hearts','reaction','avoid_wrong','tap_love','catch_kiss','keep_heart','key_maze'].includes(t)) body=`<div class="gameHud"><span>Target: ${it.target||8}</span><span>Waktu: <b id="time-${id}">${it.seconds||15}</b>s</span></div><div class="timerBar"><i id="bar-${id}"></i></div><div class="gameStage" id="play-${id}"></div><button class="gameBtn" onclick="startSpecialArcade('${id}','${t}',${it.target||8},${it.seconds||15},'${msg}')">▶ Mulai</button><div class="result" id="gr-${id}"></div>`;
- else body=`<button class="gameBtn" onclick="gameChoice('${id}','a','${msg}')">🎮 Mainkan</button><div class="result" id="gr-${id}"></div>`;
- return `<h2>${esc(it.title)}</h2><div class="block gameCard gameArea">${body}</div>`;
-}
-function letterPuzzle(it){const id=it.id,word=(it.word||'SAYANG').toUpperCase().replace(/[^A-Z]/g,'');let arr=[...word].sort(()=>Math.random()-.5);return `<div class="gameIntro">Susun huruf ini menjadi kata yang benar.</div><div class="wordSlots" id="slots-${id}">${[...word].map(()=>'<div class="slot"></div>').join('')}</div><div class="wordKeys" id="keys-${id}">${arr.map((c,i)=>`<button class="wordKey" onclick="pickLetter('${id}',${i},'${c}')">${c}</button>`).join('')}</div><button class="gameBtn" onclick="checkLetterPuzzle('${id}','${escAttr(word)}','${escAttr(it.message)}')">Cek Jawaban</button><div class="result" id="gr-${id}"></div>`}
-function hiddenWords(it){const id=it.id,word=(it.word||'LOVE').toUpperCase();return `<div class="gameIntro">Temukan kata rahasia: <b>${esc(word)}</b></div><div class="wordKeys" id="hw-${id}">${[...word].map((c,i)=>`<button class="wordKey" onclick="this.classList.toggle('used');hiddenWordPick('${id}',${i},'${c}','${escAttr(word)}','${escAttr(it.message)}')">${c}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`}
-function sevenMessages(it){const id=it.id,arr=(it.messages||'Satu|Dua|Tiga|Empat|Lima|Enam|Tujuh').split('|').slice(0,7);return `<div class="gameIntro">Buka satu per satu 🤍</div><div class="choices">${arr.map((m,i)=>`<button class="choice" onclick="openMessage('${id}',${i},'${escAttr(m)}',this)">💌 Pesan ${i+1}</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`}
-function unscramble(it){const id=it.id,w=(it.word||'LOVE').toUpperCase();const mix=[...w].sort(()=>Math.random()-.5).join('');return `<div class="gameIntro">Susun kata: <b>${esc(mix)}</b></div><input id="uw-${id}" placeholder="Jawabanmu"><button class="gameBtn" onclick="wordGame('${id}','${escAttr(w)}','${escAttr(it.message)}')">Cek</button><div class="result" id="gr-${id}"></div>`}
-function differenceGame(it){const id=it.id;return `<div class="gameIntro">Cari satu simbol yang berbeda.</div><div class="choices" id="diff-${id}">${Array.from({length:12},(_,i)=>`<button class="choice" onclick="diffPick('${id}',${i},${i===7})">♡</button>`).join('')}</div><div class="result" id="gr-${id}"></div>`}
-function answerChoice(id,pick,answer,msg){const a=document.getElementById(id+'-a'),b=document.getElementById(id+'-b');if(a.disabled)return;[a,b].forEach(x=>x.disabled=true);const chosen=pick==='a'?a:b,correct=answer==='a'?a:b;chosen.classList.add('wrong');correct.classList.remove('wrong');correct.classList.add('correct');document.getElementById('gr-'+id).textContent=pick===answer?msg:'Belum tepat — tapi pilihanmu tetap valid 🤍';if(pick===answer)confetti({particleCount:55,spread:55})}
-function pickLetter(id,i,c){const b=document.querySelector(`#keys-${id} .wordKey:nth-child(${i+1})`);if(b.classList.contains('used'))return;b.classList.add('used');const slots=[...document.querySelectorAll(`#slots-${id} .slot`)];const n=slots.findIndex(x=>!x.textContent);if(n>=0)slots[n].textContent=c}
-function checkLetterPuzzle(id,word,msg){const got=[...document.querySelectorAll(`#slots-${id} .slot`)].map(x=>x.textContent).join('');document.getElementById('gr-'+id).textContent=got===word?msg:'Belum benar, coba susun lagi 🤍';if(got===word)confetti({particleCount:70,spread:65})}
-function openWhen(id,kind,msg){document.getElementById('gr-'+id).innerHTML=`💌 <b>Open when ${kind}:</b><br>${msg}`;confetti({particleCount:30})}
-function completeLetter(id,target,msg){const v=document.getElementById('cl-'+id).value.trim().toLowerCase();document.getElementById('gr-'+id).textContent=v===target.toLowerCase()?msg:'Jawabannya belum pas — coba pakai kata yang paling jujur menurutmu 🤍';if(v===target.toLowerCase())confetti()}
-function hiddenWordPick(id,i,c,target,msg){const box=document.getElementById('hw-'+id);const got=[...box.querySelectorAll('.used')].map(x=>x.textContent).join('');if(got.length===target.length)document.getElementById('gr-'+id).textContent=got===target?msg:'Hurufnya terkumpul, tapi belum membentuk kata rahasia.'}
-function openMessage(id,i,m,el){el.classList.add('correct');document.getElementById('gr-'+id).innerHTML=esc(m);if(document.querySelectorAll(`#gr-${id}`).length)confetti({particleCount:15})}
-function revealScratch(id,msg){const el=document.getElementById('sc-'+id);el.classList.remove('cover');el.innerHTML=`🎉 <b>${msg}</b>`;confetti({particleCount:45})}
-function mysteryPick(id,n,msg){const r=document.getElementById('gr-'+id);r.innerHTML=n===1?`💌 ${msg}`:'✨ Hampir! Pilihan ini menyimpan sesuatu, coba pilihan lain.';if(n===1)confetti({particleCount:60})}
-function solvePhotoPuzzle(id,msg){document.getElementById('pz-'+id).style.filter='none';document.getElementById('gr-'+id).textContent=msg;confetti({particleCount:50})}
-function diffPick(id,n,correct){const r=document.getElementById('gr-'+id);if(correct){r.textContent='🔍 Ketemu! Mata kamu jeli banget 🤍';confetti({particleCount:45})}else r.textContent='Belum, cari yang berbeda ✨'}
-function openMessage(id,i,m,el){el.classList.add('correct');document.getElementById('gr-'+id).innerHTML=`💌 ${esc(m)}`;confetti({particleCount:18})}
-function heartSequence(id,n,el,msg){const box=document.getElementById('hs-'+id);const next=[...box.querySelectorAll('.correct')].length+1;if(n!==next){document.getElementById('gr-'+id).textContent='Ups, urutannya mulai lagi dari 1 🤍';box.querySelectorAll('button').forEach(b=>b.classList.remove('correct'));return}el.classList.add('correct');el.disabled=true;if(n===4){document.getElementById('gr-'+id).textContent=msg;confetti({particleCount:55})}}
-function resolvePhotoURL(i,url){const it=items[i];if(!it||!url)return;const status=document.getElementById('photo-status-'+it.id);const direct=/\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i.test(url)||/i\.pinimg\.com/i.test(url);if(direct){it.url=url;it.resolvedFrom=/pinterest/i.test(url)?'Pinterest image URL':'Direct image URL';if(status)status.textContent='✓ URL gambar siap ditampilkan';render();save();return}if(status)status.textContent='⏳ Mencari gambar dari halaman...';fetch('https://api.microlink.io/?url='+encodeURIComponent(url)).then(r=>r.json()).then(d=>{const image=d?.data?.image?.url;if(!image)throw new Error('no image');it.url=image;it.resolvedFrom=/pinterest/i.test(url)?'Pinterest':'Web page';if(status)status.textContent='✓ Gambar ditemukan otomatis';render();save();toast('📸 Gambar berhasil ditemukan!')}).catch(()=>{if(status)status.textContent='⚠️ Gagal mengambil gambar otomatis. Coba direct image URL atau upload fotonya.';toast('Link ini tidak menyediakan gambar yang bisa diambil otomatis.')})}
-function chainLetter(id,i,el,msg){const box=document.getElementById('lc-'+id);el.disabled=true;el.classList.add('correct');if([...box.querySelectorAll('.correct')].length===4){document.getElementById('gr-'+id).innerHTML='💌 '+esc(msg);confetti({particleCount:60})}}
-function missingWord(id,target,msg){const v=document.getElementById('mw-'+id).value.trim().toLowerCase();document.getElementById('gr-'+id).textContent=v===target.toLowerCase()?msg:'Belum tepat 🤍';if(v===target.toLowerCase())confetti({particleCount:45})}
-function bottle(id,msg){document.getElementById('gr-'+id).innerHTML='🍾 '+esc(msg);confetti({particleCount:35})}
-function sentencePick(id,i,el,msg){el.disabled=true;el.classList.add('correct');const n=document.querySelectorAll('#ss-'+id+' .correct').length;document.getElementById('gr-'+id).textContent=n>=4?msg:'Potongan tersimpan...';if(n>=4)confetti({particleCount:45})}
-function oneQuestion(id,msg){const v=document.getElementById('oq-'+id).value.trim();document.getElementById('gr-'+id).textContent=v?msg:'Tulis jawabanmu dulu 🤍';if(v)confetti({particleCount:30})}
-function chapter(id,n,msg){document.getElementById('gr-'+id).innerHTML='📖 <b>Chapter '+(n+1)+' terbuka</b><br>'+esc(msg);confetti({particleCount:25})}
-function emojiDecode(id,target,msg){const v=document.getElementById('ed-'+id).value.trim().toLowerCase();document.getElementById('gr-'+id).textContent=v===target.toLowerCase()?msg:'Coba lagi ✨';if(v===target.toLowerCase())confetti({particleCount:50})}
-function numberLock(id,target,msg){const v=document.getElementById('nl-'+id).value.trim();document.getElementById('gr-'+id).textContent=v===target?msg:'Kode belum cocok 🔐';if(v===target)confetti({particleCount:55})}
-function sequenceCheck(id,target,msg){const v=document.getElementById('sm-'+id).value.trim();document.getElementById('gr-'+id).textContent=v===target?msg:'Urutannya belum tepat 🤍';if(v===target)confetti({particleCount:50})}
-function revealPhotoGame(id,msg){const im=document.getElementById('pr-'+id);im.style.filter='none';document.getElementById('gr-'+id).textContent=msg;confetti({particleCount:45})}
-function startSpecialArcade(id,type,target,seconds,msg){const box=document.getElementById('play-'+id);box.innerHTML='';let score=0,ended=false,time=seconds;const icons={collect_hearts:'💗',reaction:'⚡',avoid_wrong:'💚',tap_love:'💖',catch_kiss:'💋',keep_heart:'❤️',key_maze:'🗝️'};const icon=icons[type]||'♡';const timer=setInterval(()=>{time--;const t=document.getElementById('time-'+id);if(t)t.textContent=time;const bar=document.getElementById('bar-'+id);if(bar)bar.style.width=Math.max(0,time/seconds*100)+'%';if(time<=0)finish(false)},1000);function spawn(){if(ended)return;const b=document.createElement('button');b.className='tapTarget';b.textContent=type==='avoid_wrong'?(Math.random()>.25?'💚':'💔'):icon;b.style.left=(5+Math.random()*82)+'%';b.style.top=(5+Math.random()*75)+'%';b.style.fontSize='25px';b.style.width='50px';b.style.height='50px';b.onclick=()=>{if(type==='avoid_wrong'&&b.textContent==='💔'){finish(false);return}score++;b.remove();if(score>=target)finish(true);else spawn()};box.appendChild(b)}function finish(ok){if(ended)return;ended=true;clearInterval(timer);box.innerHTML=ok?'✨':'🤍';document.getElementById('gr-'+id).innerHTML=ok?`<div class="gameSuccess">${esc(msg)}<br>Skor ${score}/${target}</div>`:`<div class="gameFail">Waktu habis — skor ${score}/${target}. Coba lagi 🤍</div>`;if(ok)confetti({particleCount:80,spread:70})}for(let i=0;i<2;i++)spawn()}
-function startArcade(id,type,target,seconds,emoji,msg){const box=document.getElementById('play-'+id);box.innerHTML='';let score=0,ended=false,time=seconds;const icon=emoji||({balloon:'🎈',stars:'⭐',firefly:'✨',bubbles:'🫧',pop:'♡',catch:'💕'}[type]||'♡');const timer=setInterval(()=>{time--;const t=document.getElementById('time-'+id);if(t)t.textContent=time;const bar=document.getElementById('bar-'+id);if(bar)bar.style.width=Math.max(0,time/seconds*100)+'%';if(time<=0)finish(false)},1000);function spawn(){if(ended)return;const b=document.createElement('button');b.className=type==='bubbles'?'bubbleTarget':'tapTarget';b.textContent=icon;b.style.left=(5+Math.random()*82)+'%';b.style.top=(5+Math.random()*78)+'%';const size=type==='bubbles'?42+Math.random()*35:42;b.style.width=size+'px';b.style.height=size+'px';b.onclick=()=>{score++;b.remove();if(score>=target)finish(true);else spawn()};box.appendChild(b)}function finish(ok){if(ended)return;ended=true;clearInterval(timer);box.innerHTML=ok?'🎉':'🤍';document.getElementById('gr-'+id).innerHTML=ok?`<div class="gameSuccess">${msg}<br>Skor ${score}/${target}</div>`:`<div class="gameFail">Waktu habis — skor ${score}/${target}. Coba lagi ya 🤍</div>`;if(ok)confetti({particleCount:85,spread:75})}for(let i=0;i<Math.min(3,target);i++)spawn()}
-function breathStart(id,msg){const r=document.getElementById('gr-'+id);let n=0;r.textContent='Ikuti lingkarannya...';const timer=setInterval(()=>{n++;if(n>=30){clearInterval(timer);r.textContent=msg;confetti({particleCount:18})}},1000)}
 
-function memoryGame(id,msg){return`<div class="memoryGrid" id="mem-${id}">${['♡','⭐','🌸','🎀','♡','⭐','🌸','🎀'].sort(()=>Math.random()-.5).map((x,i)=>`<div class="memoryCard" onclick="flipMem(this,'${id}','${escAttr(msg)}')" data-v="${x}">?</div>`).join('')}</div><div class="result" id="gr-${id}"></div>`}
-let memState={};function flipMem(el,id,msg){if(el.classList.contains('flipped')||memState[id]?.busy)return;el.classList.add('flipped');el.textContent=el.dataset.v;memState[id]??={open:[]};memState[id].open.push(el);if(memState[id].open.length===2){memState[id].busy=true;const [a,b]=memState[id].open;if(a.dataset.v===b.dataset.v){memState[id].open=[];memState[id].busy=false;if(document.querySelectorAll('#mem-'+id+' .flipped').length===8){$('gr-'+id).textContent=msg;confetti()}}else setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');a.textContent='?';b.textContent='?';memState[id].open=[];memState[id].busy=false},600)}}
-function gameChoice(id,choice,msg){$('gr-'+id).textContent=msg||'Hehe, kamu pilih ini 🤍';confetti({particleCount:25,spread:40})}
-function unlock(id,pass,letter,msg){const v=$('gp-'+id).value;if(v===pass){$('gr-'+id).innerHTML=(letter?esc(letter)+'<br><br>':'')+esc(msg);confetti({particleCount:60,spread:60})}else $('gr-'+id).textContent='Belum benar 😭 coba lagi.'}
-function wordGame(id,w,msg){const el=$('gw-'+id)||$('uw-'+id);if(el && el.value.trim().toUpperCase()===w.toUpperCase()){$('gr-'+id).textContent=msg;confetti()}else$('gr-'+id).textContent='Masih belum 😭'}
-function spinWheel(id,msg){const w=$('wheel-'+id);w.style.transform='rotate('+(720+Math.random()*720)+'deg)';setTimeout(()=>{$('gr-'+id).textContent=msg;confetti()},1100)}function revealChoice(id,n,msg){$('gr-'+id).textContent=n===1?msg:'Belum ini 😭 coba pilih lagi!';if(n===1)confetti()}
-function arcade(id,type,target,msg){const box=$('play-'+id);box.innerHTML='';let score=0;const timer=setInterval(()=>{const x=document.createElement('button');x.className='fall';x.textContent=type==='balloon'?'🎈':type==='stars'?'⭐':type==='firefly'?'✨':type==='bubbles'?'🫧':'♡';x.style.left=Math.random()*90+'%';x.style.animationDuration=(2+Math.random()*2)+'s';x.onclick=()=>{score++;x.remove();if(score>=target){clearInterval(timer);box.innerHTML='🎉';$('gr-'+id).textContent=msg;confetti({particleCount:60})}};box.appendChild(x);setTimeout(()=>x.remove(),4000)},650);setTimeout(()=>{clearInterval(timer);if(score<target)$('gr-'+id).textContent=`Skor ${score}/${target}. Coba lagi 🤍`},12000)}
-function meter(id,msg){$('gr-'+id).textContent='1000% — terlalu sayang untuk dihitung 💖 '+msg;confetti({particleCount:50})}function calmDone(id,msg){$('gr-'+id).textContent=msg;confetti({particleCount:20})}function grow(id,msg){const f=$('flower-'+id);f.textContent=f.textContent==='🌱'?'🌿':f.textContent==='🌿'?'🌷':'🌸';if(f.textContent==='🌸'){$('gr-'+id).textContent=msg;confetti()}}function wish(id,msg){const v=$('wish-'+id).value;if(!v){$('gr-'+id).textContent='Tulis harapan dulu 🤍';return}$('gr-'+id).textContent='🌠 Harapanmu sudah dititipkan ke bintang. '+msg;confetti()}
-function surprise(){confetti({particleCount:100,spread:80,origin:{y:.6}});toast('🎉 Kejutannya dimulai!')}
-function renderParticles(){clearTimeout(particleTimer);const box=$('float');if(!box)return;box.innerHTML='';const preset=$('particle').value;const sets={mix:['♡','✨','🌸','🦋','☁️','🫧','⭐','🎀','🎵','🌙','💫','🪽','🍃'],romantic:['♡','♥','💖','🩷','🤍','💜','🎀','🌸','✨'],nature:['🌸','🌺','🌷','🍃','🍂','🦋','🪷','🌼','🌻','🍀','🪻'],sparkle:['✨','✦','🌟','⭐','💫','🎵','🎶','🌙','🌙✨'],soft:['☁️','☁','🫧','🪽','🤍','🪻','🌸','💫'],festive:['🎀','🎊','🎈','✨','⭐','🎵','🎶','💖'], '🌙✨':['🌙','✨','⭐','💫']};const symbols=sets[preset]||[preset];const n=Math.min(180,Math.max(10,+$('particleCount').value||60));const speed=+$('particleSpeed').value||11;const baseSize=+$('particleSize').value||17;const opacity=(+$('particleOpacity').value||70)/100;const drift=$('particleDrift').value||'float';for(let i=0;i<n;i++){const p=document.createElement('span');p.className='p';p.textContent=symbols[Math.floor(Math.random()*symbols.length)];const x=Math.random()*100;const size=Math.max(6,baseSize*(.55+Math.random()*.9));const duration=speed*(.65+Math.random()*.9);const delay=-Math.random()*duration;p.style.left=x+'%';p.style.fontSize=size+'px';p.style.animationDuration=duration+'s';p.style.animationDelay=delay+'s';p.style.opacity=Math.max(.12,opacity*(.55+Math.random()*.45));p.style.setProperty('--drift',((Math.random()-.5)*140)+'px');p.style.setProperty('--rot',(Math.random()*520-260)+'deg');p.style.setProperty('--scale',(0.65+Math.random()*.7).toFixed(2));if(drift==='side')p.style.animationName='driftSide';else if(drift==='swirl')p.style.animationName='swirlFloat';else if(drift==='fall')p.style.animationName='fallParticle';else p.style.animationName='rise';box.appendChild(p)}}
-function updateMusic(){const u=$('music').value.trim(),player=$('musicPlayer'),a=$('audio');if(!u){player.classList.add('hidden');a.pause();return}player.classList.remove('hidden');if(/\.(mp3|wav|ogg|m4a)(\?|$)/i.test(u)){a.src=u}else a.removeAttribute('src')}
-function toggleMusic(){const a=$('audio');if(!a.src){toast('Untuk musik web, gunakan direct audio URL/MP3.');return}if(audioPlaying){a.pause();audioPlaying=false;$('musicState').textContent='Putar'}else{a.play().then(()=>{audioPlaying=true;$('musicState').textContent='Diputar ♪'}).catch(()=>toast('Klik lagi untuk mengizinkan musik.'))}}
-function device(m){$('previewWrap').classList.toggle('mobile',m==='mobile')}
-function toggleReceiver(){document.body.classList.toggle('receiver')}
+ if([
+  'quiz',
+  'this_that',
+  'memory_quiz',
+  'guess_answer',
+  'who_said',
+  'favorites',
+  'would_rather',
+  'firsts',
+  'flag'
+ ].includes(t)){
+  extra=`
+   <div class="grid2">
+    <div>
+     <label>Opsi A</label>
+     <input
+      value="${escAttr(it.a)}"
+      oninput="upd(${i},'a',this.value)"
+     >
+    </div>
+
+    <div>
+     <label>Opsi B</label>
+     <input
+      value="${escAttr(it.b)}"
+      oninput="upd(${i},'b',this.value)"
+     >
+    </div>
+   </div>
+
+   <label>Jawaban benar</label>
+   <select onchange="upd(${i},'answer',this.value)">
+    <option value="a" ${it.answer==='a'?'selected':''}>A</option>
+    <option value="b" ${it.answer==='b'?'selected':''}>B</option>
+   </select>
+  `
+ }
+
+ if([
+  'letter_unlock',
+  'secret_message',
+  'final_unlock',
+  'password'
+ ].includes(t)){
+  extra=`
+   <label>Kode / Password</label>
+   <input
+    value="${escAttr(it.pass)}"
+    oninput="upd(${i},'pass',this.value)"
+   >
+
+   <label>Isi surat / pesan rahasia</label>
+   <textarea
+    oninput="upd(${i},'letter',this.value)"
+   >${esc(it.letter)}</textarea>
+  `
+ }
+
+ if([
+  'word',
+  'hidden_words',
+  'complete_letter'
+ ].includes(t)){
+  extra+=`
+   <label>Kata / jawaban target</label>
+   <input
+    value="${escAttr(it.word)}"
+    oninput="upd(${i},'word',this.value)"
+   >
+  `
+ }
+
+ if([
+  'pop',
+  'catch',
+  'balloon',
+  'bubbles',
+  'firefly',
+  'stars'
+ ].includes(t)){
+  extra=`
+   <div class="grid2">
+    <div>
+     <label>Target</label>
+     <input
+      type="number"
+      min="3"
+      max="30"
+      value="${it.target||8}"
+      oninput="upd(${i},'target',+this.value)"
+     >
+    </div>
+
+    <div>
+     <label>Durasi (detik)</label>
+     <input
+      type="number"
+      min="5"
+      max="60"
+      value="${it.seconds||15}"
+      oninput="upd(${i},'seconds',+this.value)"
+     >
+    </div>
+   </div>
+
+   <label>Emoji target</label>
+   <input
+    value="${escAttr(it.emoji||'♡')}"
+    oninput="upd(${i},'emoji',this.value)"
+   >
+  `
+ }
+
+ if(t==='letter_puzzle'){
+  extra=`
+   <label>Kata rahasia</label>
+   <input
+    value="${escAttr(it.word||'SAYANG')}"
+    oninput="upd(${i},'word',this.value)"
+   >
+
+   <div class="mini">
+    Penerima menyusun huruf untuk membuka pesan.
+   </div>
+  `
+ }
+
+ if(t==='seven_messages'){
+  extra=`
+   <label>7 pesan (pisahkan dengan | )</label>
+   <textarea
+    oninput="upd(${i},'messages',this.value)"
+   >${esc(it.messages||'Aku bangga sama kamu.|Makasih sudah hadir.|Jangan lupa istirahat.|Kamu cukup.|Aku selalu senang lihat kamu bahagia.|Semoga hari ini lembut buat kamu.|Satu peluk dari jauh 🤍')}</textarea>
+  `
+ }
+
+ if(t==='photo_puzzle'){
+  extra=`
+   <label>URL foto puzzle</label>
+   <input
+    value="${escAttr(it.image||'')}"
+    placeholder="https://..."
+    oninput="upd(${i},'image',this.value)"
+   >
+  `
+ }
+
+ if([
+  'letter_chain',
+  'missing_word',
+  'message_bottle',
+  'secret_sentence',
+  'letter_memory',
+  'one_question',
+  'unlock_chapters'
+ ].includes(t)){
+  extra+=`
+   <label>Isi pesan / target</label>
+   <textarea
+    oninput="upd(${i},'letter',this.value)"
+   >${esc(it.letter||'Aku punya pesan khusus untukmu 🤍')}</textarea>
+  `
+ }
+
+ if(t==='emoji_decode'){
+  extra+=`
+   <label>Kode emoji</label>
+   <input
+    value="${escAttr(it.sequence||'🌙💗⭐')}"
+    oninput="upd(${i},'sequence',this.value)"
+   >
+
+   <label>Jawaban</label>
+   <input
+    value="${escAttr(it.word||'LOVE')}"
+    oninput="upd(${i},'word',this.value)"
+   >
+  `
+ }
+
+ if(t==='number_lock'){
+  extra+=`
+   <label>Kode angka</label>
+   <input
+    value="${escAttr(it.numbers||'2468')}"
+    oninput="upd(${i},'numbers',this.value)"
+   >
+  `
+ }
+
+ if(t==='sequence_memory'){
+  extra+=`
+   <label>Urutan</label>
+   <input
+    value="${escAttr(it.sequence||'⭐💗🌸')}"
+    oninput="upd(${i},'sequence',this.value)"
+   >
+  `
+ }
+
+ if([
+  'collect_hearts',
+  'reaction',
+  'avoid_wrong',
+  'tap_love',
+  'catch_kiss',
+  'keep_heart',
+  'key_maze'
+ ].includes(t)){
+  extra+=`
+   <div class="grid2">
+    <div>
+     <label>Target</label>
+     <input
+      type="number"
+      min="3"
+      max="40"
+      value="${it.target||8}"
+      oninput="upd(${i},'target',+this.value)"
+     >
+    </div>
+
+    <div>
+     <label>Durasi</label>
+     <input
+      type="number"
+      min="5"
+      max="60"
+      value="${it.seconds||15}"
+      oninput="upd(${i},'seconds',+this.value)"
+     >
+    </div>
+   </div>
+  `
+ }
+
+ return `
+  <div class="moduleCard">
+   <div class="dragHint">
+    ${games[t]||'Game'} · bisa dimainkan penerima
+   </div>
+
+   <label>Judul</label>
+   <input
+    value="${escAttr(it.title)}"
+    oninput="upd(${i},'title',this.value)"
+   >
+
+   <label>Instruksi</label>
+   <textarea
+    oninput="upd(${i},'question',this.value)"
+   >${esc(it.question)}</textarea>
+
+   ${extra}
+
+   <label>Pesan berhasil</label>
+   <input
+    value="${escAttr(it.message)}"
+    oninput="upd(${i},'message',this.value)"
+   >
+  </div>
+ `
+}
+
+function upd(i,p,v){
+ items[i][p]=v;
+ render();
+ save()
+}
+
+function updResponse(i,p,v){
+ responseItems[i][p]=v;
+ render();
+ save()
+}
+
+function del(i){
+ items.splice(i,1);
+ renderLists();
+ change()
+}
+
+function delResponse(i){
+ responseItems.splice(i,1);
+ renderLists();
+ change()
+}
+
+function move(i,d){
+ const j=i+d;
+
+ if(j<0||j>=items.length)return;
+
+ [items[i],items[j]]=[items[j],items[i]];
+
+ renderLists();
+ change()
+}
+
+function esc(s){
+ return String(s??'').replace(
+  /[&<>]/g,
+  c=>({
+   '&':'&amp;',
+   '<':'&lt;',
+   '>':'&gt;'
+  }[c])
+ )
+}
+
+function escAttr(s){
+ return esc(s)
+  .replace(/"/g,'&quot;')
+  .replace(/'/g,'&#39;')
+}
+
+function render(){
+ const r=document.documentElement.style;
+
+ r.setProperty('--bg',$('bg').value);
+ r.setProperty('--text',$('text').value);
+ r.setProperty('--primary',$('primary').value);
+ r.setProperty('--accent',$('accent').value);
+ r.setProperty('--font',$('font').value);
+
+ $('pvEyebrow').textContent=$('eyebrow').value;
+ $('pvTitle').textContent=$('title').value;
+ $('pvIntro').textContent=$('intro').value;
+ $('pvOpen').textContent=$('openText').value;
+ $('pvFinal').textContent=$('final').value;
+
+ const gift=$('gift');
+ gift.style.fontFamily=$('font').value;
+
+ renderParticles();
+ renderModules();
+ renderResponses();
+
+ $('music').value=$('music').value||'';
+
+ save()
+}
+
+function renderParticles(){
+ const box=$('float');
+
+ if(!box)return;
+
+ const count=+$('particleCount').value||25;
+ const size=+$('particleSize').value||18;
+ const opacity=+$('particleOpacity').value||.7;
+ const drift=+$('particleDrift').value||60;
+ const speed=+$('particleSpeed').value||12;
+
+ box.innerHTML='';
+
+ const chars={
+  hearts:['♡','♥','💗','💖'],
+  stars:['✦','✧','⭐','✨'],
+  flowers:['✿','❀','🌸','🌷'],
+  bubbles:['○','◌','◯','🫧'],
+  snow:['❄','❅','❆'],
+  mix:['♡','✦','🌸','✨','○']
+ };
+
+ const arr=chars[$('particle').value]||chars.mix;
+
+ for(let i=0;i<count;i++){
+  const p=document.createElement('span');
+
+  p.className='p';
+  p.textContent=arr[Math.floor(Math.random()*arr.length)];
+
+  p.style.left=Math.random()*100+'%';
+  p.style.fontSize=(size*(.65+Math.random()*.7))+'px';
+  p.style.opacity=opacity;
+  p.style.animationDuration=(speed*(.7+Math.random()*.7))+'s';
+  p.style.animationDelay=(-Math.random()*speed)+'s';
+  p.style.setProperty('--drift',(Math.random()>.5?1:-1)*drift+'px');
+
+  box.appendChild(p)
+ }
+}
+function meter(id,msg){
+ $('gr-'+id).textContent='1000% — terlalu sayang untuk dihitung 💖 '+msg;
+ confetti({particleCount:50})
+}
+
+function calmDone(id,msg){
+ $('gr-'+id).textContent=msg;
+ confetti({particleCount:20})
+}
+
+function grow(id,msg){
+ const f=$('flower-'+id);
+
+ f.textContent=
+  f.textContent==='🌱'?'🌿':
+  f.textContent==='🌿'?'🌷':'🌸';
+
+ if(f.textContent==='🌸'){
+  $('gr-'+id).textContent=msg;
+  confetti()
+ }
+}
+
+function wish(id,msg){
+ const v=$('wish-'+id).value;
+
+ if(!v){
+  $('gr-'+id).textContent='Tulis harapan dulu 🤍';
+  return
+ }
+
+ $('gr-'+id).textContent=
+  '🌠 Harapanmu sudah dititipkan ke bintang. '+msg;
+
+ confetti()
+}
+
+function surprise(){
+ confetti({
+  particleCount:100,
+  spread:80,
+  origin:{y:.6}
+ });
+
+ toast('🎉 Kejutannya dimulai!')
+}
+
+function renderParticles(){
+ clearTimeout(particleTimer);
+
+ const box=$('float');
+
+ if(!box)return;
+
+ box.innerHTML='';
+
+ const preset=$('particle').value;
+
+ const sets={
+  mix:['♡','✨','🌸','🦋','☁️','🫧','⭐','🎀','🎵','🌙','💫','🪽','🍃'],
+  romantic:['♡','♥','💖','🩷','🤍','💜','🎀','🌸','✨'],
+  nature:['🌸','🌺','🌷','🍃','🍂','🦋','🪷','🌼','🌻','🍀','🪻'],
+  sparkle:['✨','✦','🌟','⭐','💫','🎵','🎶','🌙','🌙✨'],
+  soft:['☁️','☁','🫧','🪽','🤍','🪻','🌸','💫'],
+  festive:['🎀','🎊','🎈','✨','⭐','🎵','🎶','💖'],
+  '🌙✨':['🌙','✨','⭐','💫']
+ };
+
+ const symbols=sets[preset]||[preset];
+
+ const n=Math.min(
+  180,
+  Math.max(10,+$('particleCount').value||60)
+ );
+
+ const speed=+$('particleSpeed').value||11;
+ const baseSize=+$('particleSize').value||17;
+ const opacity=(+$('particleOpacity').value||70)/100;
+ const drift=$('particleDrift').value||'float';
+
+ for(let i=0;i<n;i++){
+
+  const p=document.createElement('span');
+
+  p.className='p';
+
+  p.textContent=
+   symbols[Math.floor(Math.random()*symbols.length)];
+
+  const x=Math.random()*100;
+
+  const size=Math.max(
+   6,
+   baseSize*(.55+Math.random()*.9)
+  );
+
+  const duration=
+   speed*(.65+Math.random()*.9);
+
+  const delay=-Math.random()*duration;
+
+  p.style.left=x+'%';
+  p.style.fontSize=size+'px';
+  p.style.animationDuration=duration+'s';
+  p.style.animationDelay=delay+'s';
+  p.style.opacity=
+   Math.max(.12,opacity*(.55+Math.random()*.45));
+
+  p.style.setProperty(
+   '--drift',
+   ((Math.random()-.5)*140)+'px'
+  );
+
+  p.style.setProperty(
+   '--rot',
+   (Math.random()*520-260)+'deg'
+  );
+
+  p.style.setProperty(
+   '--scale',
+   (0.65+Math.random()*.7).toFixed(2)
+  );
+
+  if(drift==='side')
+   p.style.animationName='driftSide';
+  else if(drift==='swirl')
+   p.style.animationName='swirlFloat';
+  else if(drift==='fall')
+   p.style.animationName='fallParticle';
+  else
+   p.style.animationName='rise';
+
+  box.appendChild(p)
+ }
+}
+
+function updateMusic(){
+ const u=$('music').value.trim();
+ const player=$('musicPlayer');
+ const a=$('audio');
+
+ if(!u){
+  player.classList.add('hidden');
+  a.pause();
+  return
+ }
+
+ player.classList.remove('hidden');
+
+ if(/\.(mp3|wav|ogg|m4a)(\?|$)/i.test(u)){
+  a.src=u
+ }else{
+  a.removeAttribute('src')
+ }
+}
+
+function toggleMusic(){
+ const a=$('audio');
+
+ if(!a.src){
+  toast('Untuk musik web, gunakan direct audio URL/MP3.');
+  return
+ }
+
+ if(audioPlaying){
+  a.pause();
+  audioPlaying=false;
+  $('musicState').textContent='Putar'
+ }else{
+  a.play()
+   .then(()=>{
+    audioPlaying=true;
+    $('musicState').textContent='Diputar ♪'
+   })
+   .catch(()=>{
+    toast('Klik lagi untuk mengizinkan musik.')
+   })
+ }
+}
+
+function device(m){
+ $('previewWrap').classList.toggle(
+  'mobile',
+  m==='mobile'
+ )
+}
+
+function toggleReceiver(){
+ document.body.classList.toggle('receiver')
+}
+
+
+/* =========================
+   ENCODE DATA GIFT
+========================= */
+
+function encodeGiftData(data){
+
+ const json=JSON.stringify(data);
+
+ const bytes=new TextEncoder().encode(json);
+
+ let binary='';
+
+ const chunk=0x8000;
+
+ for(
+  let i=0;
+  i<bytes.length;
+  i+=chunk
+ ){
+  binary+=String.fromCharCode(
+   ...bytes.subarray(i,i+chunk)
+  );
+ }
+
+ return btoa(binary)
+  .replace(/\+/g,'-')
+  .replace(/\//g,'_')
+  .replace(/=+$/,'');
+}
+
+
+/* =========================
+   DECODE DATA GIFT
+========================= */
+
+function decodeGiftData(encoded){
+
+ encoded=encoded
+  .replace(/-/g,'+')
+  .replace(/_/g,'/');
+
+ while(encoded.length%4)
+  encoded+='=';
+
+ const binary=atob(encoded);
+
+ const bytes=Uint8Array.from(
+  binary,
+  c=>c.charCodeAt(0)
+ );
+
+ return JSON.parse(
+  new TextDecoder('utf-8').decode(bytes)
+ )
+}
+
+
+/* =========================
+   GENERATE SHARE URL
+========================= */
 
 function generateShareUrl(mode){
- const data=btoa(unescape(encodeURIComponent(JSON.stringify(payload()))));
- const baseUrl=location.href.split('#')[0];
- if(mode==='edit') return baseUrl+'#edit='+data;
- if(mode==='fill') return baseUrl+'#fill='+data;
+
+ const data=encodeGiftData(
+  payload()
+ );
+
+ const baseUrl=
+  location.href.split('#')[0];
+
+ if(mode==='edit')
+  return baseUrl+'#edit='+data;
+
+ if(mode==='fill')
+  return baseUrl+'#fill='+data;
+
  return baseUrl+'#gift='+data;
 }
 
+
+/* =========================
+   UPDATE SHARE URL
+========================= */
+
 function updateShareUrlByPermission(){
- const perm=$('sharePermission')?$('sharePermission').value:'view';
+
+ const perm=$('sharePermission')
+  ?$('sharePermission').value
+  :'view';
+
  const url=generateShareUrl(perm);
+
  const share=$('shareUrl');
- if(share){share.value=url;share.removeAttribute('disabled');share.style.cursor='text';}
+
+ if(share){
+  share.value=url;
+  share.removeAttribute('disabled');
+  share.style.cursor='text';
+ }
+
  const qr=$('qr');
+
  if(qr){
+
   qr.innerHTML='';
+
   if(typeof QRCode!=='undefined'){
-   try{new QRCode(qr,{text:url,width:140,height:140});}
-   catch(e){qr.innerHTML='<div style=\"font-size:10px;color:#8f8193\">QR belum tersedia, tapi link tetap bisa disalin.</div>';}
+
+   try{
+
+    new QRCode(qr,{
+     text:url,
+     width:140,
+     height:140
+    });
+
+   }catch(e){
+
+    qr.innerHTML=
+     '<div style="font-size:10px;color:#8f8193">'+
+     'QR belum tersedia, tapi link tetap bisa disalin.'+
+     '</div>';
+
+   }
+
   }else{
-   qr.innerHTML='<div style=\"font-size:10px;color:#8f8193\">QR belum tersedia, tapi link tetap bisa disalin.</div>';
+
+   qr.innerHTML=
+    '<div style="font-size:10px;color:#8f8193">'+
+    'QR belum tersedia, tapi link tetap bisa disalin.'+
+    '</div>';
+
   }
  }
+
  return url;
 }
 
+
+/* =========================
+   OPEN PUBLISH MODAL
+========================= */
+
 function openPublish(){
+
  try{
-  if($('sharePermission'))$('sharePermission').value='view';
+
+  if($('sharePermission'))
+   $('sharePermission').value='view';
+
   updateShareUrlByPermission();
+
   const note=$('shareNote');
+
   if(note){
-   note.textContent=location.protocol==='file:'
-    ? '⚠️ File ini masih dibuka dari komputer. Agar link bisa dibuka teman di HP/perangkat lain, upload HTML ini ke hosting (mis. GitHub Pages/Netlify) terlebih dahulu.'
-    : '💗 Tinggal salin link ini dan kirim ke teman.';
-   note.className=location.protocol==='file:'?'shareWarning':'shareReady';
+
+   note.textContent=
+    location.protocol==='file:'
+     ?
+     '⚠️ File ini masih dibuka dari komputer. Agar link bisa dibuka teman di HP/perangkat lain, upload HTML ini ke hosting (mis. GitHub Pages/Netlify) terlebih dahulu.'
+     :
+     '💗 Tinggal salin link ini dan kirim ke teman.';
+
+   note.className=
+    location.protocol==='file:'
+     ?
+     'shareWarning'
+     :
+     'shareReady';
   }
-  $('publishModal').classList.add('active');
+
+  $('publishModal')
+   .classList.add('active');
+
  }catch(e){
-  console.error('openPublish error:',e);
+
+  console.error(
+   'openPublish error:',
+   e
+  );
+
   const modal=$('publishModal');
-  if(modal)modal.classList.add('active');
-  toast('Menu bagikan dibuka. Jika link belum muncul, muat ulang halaman.');
+
+  if(modal)
+   modal.classList.add('active');
+
+  toast(
+   'Menu bagikan dibuka. Jika link belum muncul, muat ulang halaman.'
+  );
  }
 }
 
-function closeModal(){$('publishModal').classList.remove('active')}
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeModal(){
+ $('publishModal')
+  .classList.remove('active')
+}
+
+
+/* =========================
+   COPY LINK
+========================= */
+
 async function copyLink(){
+
  const share=$('shareUrl');
- const url=share?share.value:'';
- if(!url){toast('Link belum siap, coba buka menu Bagikan lagi 💗');return;}
+
+ const url=share
+  ?share.value
+  :'';
+
+ if(!url){
+
+  toast(
+   'Link belum siap, coba buka menu Bagikan lagi 💗'
+  );
+
+  return;
+ }
+
  try{
-  if(navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
-   await navigator.share({title:'Kado by Visyaa 💗',text:'Ada kado kecil buat kamu 💌',url});
+
+  if(
+   navigator.share &&
+   /Mobi|Android|iPhone|iPad/i
+    .test(navigator.userAgent)
+  ){
+
+   await navigator.share({
+    title:'Kado by Visyaa 💗',
+    text:'Ada kado kecil buat kamu 💌',
+    url
+   });
+
    return;
   }
-  if(navigator.clipboard && window.isSecureContext){
+
+  if(
+   navigator.clipboard &&
+   window.isSecureContext
+  ){
+
    await navigator.clipboard.writeText(url);
+
   }else{
-   const ta=document.createElement('textarea');
-   ta.value=url;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';
-   document.body.appendChild(ta);ta.focus();ta.select();
-   const ok=document.execCommand('copy');
+
+   const ta=
+    document.createElement('textarea');
+
+   ta.value=url;
+
+   ta.setAttribute(
+    'readonly',
+    ''
+   );
+
+   ta.style.position='fixed';
+   ta.style.left='-9999px';
+
+   document.body.appendChild(ta);
+
+   ta.focus();
+   ta.select();
+
+   const ok=
+    document.execCommand('copy');
+
    ta.remove();
-   if(!ok)throw new Error('copy command failed');
+
+   if(!ok)
+    throw new Error(
+     'copy command failed'
+    );
   }
-  toast('Link berhasil disalin 📋');
+
+  toast(
+   'Link berhasil disalin 📋'
+  );
+
  }catch(e){
-  if(e && e.name==='AbortError') return;
-  if(share){share.focus();share.select();}
-  toast('Link sudah dipilih — tekan Ctrl+C untuk menyalin 💗');
+
+  if(
+   e &&
+   e.name==='AbortError'
+  )
+   return;
+
+  if(share){
+
+   share.focus();
+   share.select();
+
+  }
+
+  toast(
+   'Link sudah dipilih — tekan Ctrl+C untuk menyalin 💗'
+  );
  }
 }
 
+
+/* =========================
+   DOWNLOAD SHARE LINK
+========================= */
+
 function downloadGiftLinkDirect(){
- const perm=$('sharePermission')?$('sharePermission').value:'view';
- const url=generateShareUrl(perm);
- const blob=new Blob([url],{type:'text/plain'});
- const a=document.createElement('a');
- a.href=URL.createObjectURL(blob);
- a.download='kado-share-link.txt';
+
+ const perm=$('sharePermission')
+  ?$('sharePermission').value
+  :'view';
+
+ const url=
+  generateShareUrl(perm);
+
+ const blob=
+  new Blob(
+   [url],
+   {type:'text/plain'}
+  );
+
+ const a=
+  document.createElement('a');
+
+ a.href=
+  URL.createObjectURL(blob);
+
+ a.download=
+  'kado-share-link.txt';
+
  a.click();
- toast('Link berhasil diunduh (.txt) 📋');
+
+ toast(
+  'Link berhasil diunduh (.txt) 📋'
+ );
 }
 
-function downloadGift(){const clone=document.documentElement.cloneNode(true);clone.querySelectorAll('.modal,.toast').forEach(x=>x.remove());const html='<!doctype html>'+clone.outerHTML;const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='kado-by-visyaa.html';a.click();toast('HTML siap diunduh ✨')}
+
+/* =========================
+   DOWNLOAD GIFT
+========================= */
+
+function downloadGift(){
+
+ const clone=
+  document.documentElement.cloneNode(true);
+
+ clone
+  .querySelectorAll(
+   '.modal,.toast'
+  )
+  .forEach(x=>x.remove());
+
+ const html=
+  '<!doctype html>'+
+  clone.outerHTML;
+
+ const blob=
+  new Blob(
+   [html],
+   {type:'text/html'}
+  );
+
+ const a=
+  document.createElement('a');
+
+ a.href=
+  URL.createObjectURL(blob);
+
+ a.download=
+  'kado-by-visyaa.html';
+
+ a.click();
+
+ toast(
+  'HTML siap diunduh ✨'
+ );
+}
+
+
+/* =========================
+   LOAD DATA DARI HASH
+========================= */
 
 function loadHash(){
+
  const h=location.hash;
+
  if(!h)return;
+
  try{
-  if(h.startsWith('#gift=')){
-   const d=JSON.parse(decodeURIComponent(escape(atob(h.slice(6)))));
-   apply(d);
-   document.body.classList.add('receiver');
-  }else if(h.startsWith('#edit=')){
-   const d=JSON.parse(decodeURIComponent(escape(atob(h.slice(6)))));
-   apply(d);
-   document.body.classList.remove('receiver');
-  }else if(h.startsWith('#fill=')){
-   const d=JSON.parse(decodeURIComponent(escape(atob(h.slice(6)))));
-   apply(d);
-   document.body.classList.add('receiver');
+
+  let mode='';
+  let encoded='';
+
+  if(
+   h.startsWith('#gift=')
+  ){
+
+   mode='gift';
+   encoded=h.slice(6);
+
+  }else if(
+   h.startsWith('#edit=')
+  ){
+
+   mode='edit';
+   encoded=h.slice(6);
+
+  }else if(
+   h.startsWith('#fill=')
+  ){
+
+   mode='fill';
+   encoded=h.slice(6);
+
+  }else{
+
+   return;
+  }
+
+
+  /*
+   * Decode data gift menggunakan
+   * decoder UTF-8 yang baru.
+   */
+
+  const d=
+   decodeGiftData(encoded);
+
+
+  /*
+   * Masukkan data ke editor / gift.
+   */
+
+  apply(d);
+
+
+  /*
+   * Mode penerima.
+   */
+
+  if(mode==='gift'){
+
+   document.body
+    .classList.add('receiver');
+
+  }
+
+
+  /*
+   * Mode editor.
+   */
+
+  else if(mode==='edit'){
+
+   document.body
+    .classList.remove('receiver');
+
+  }
+
+
+  /*
+   * Mode isi / response.
+   */
+
+  else if(mode==='fill'){
+
+   document.body
+    .classList.add('receiver');
+
    setTimeout(()=>{
-    const rSec=document.querySelector('.responseBox');
-    if(rSec)rSec.scrollIntoView({behavior:'smooth'});
+
+    const rSec=
+     document.querySelector(
+      '.responseBox'
+     );
+
+    if(rSec){
+
+     rSec.scrollIntoView({
+      behavior:'smooth'
+     });
+
+    }
+
    },500);
   }
- }catch(e){toast('Data gift tidak bisa dibaca')}
+
+ }catch(e){
+
+  console.error(
+   'Gagal membaca data gift:',
+   e
+  );
+
+  toast(
+   'Data gift tidak bisa dibaca'
+  );
+ }
 }
-window.addEventListener('DOMContentLoaded',()=>{renderLists();const saved=localStorage.getItem('kadoV5');if(saved)try{apply(JSON.parse(saved))}catch(e){}render();loadHash()});
+
+
+/* =========================
+   INITIALIZE APP
+========================= */
+
+window.addEventListener(
+ 'DOMContentLoaded',
+ ()=>{
+
+  renderLists();
+
+  const saved=
+   localStorage.getItem(
+    'kadoV5'
+   );
+
+  if(saved){
+
+   try{
+
+    apply(
+     JSON.parse(saved)
+    );
+
+   }catch(e){}
+
+  }
+
+  render();
+
+  loadHash();
+
+ }
+);
+
 </script>
+
 </body>
 </html>
