@@ -30,7 +30,6 @@
       overflow-x: hidden;
     }
 
-    /* Scrollbar Rapi */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -46,7 +45,6 @@
       background: #9b76a7;
     }
 
-    /* Hardware-Accelerated Floating Particle Animation */
     @keyframes floatParticle {
       0% {
         transform: translate3d(0, 0, 0) rotate(0deg);
@@ -69,7 +67,6 @@
       animation: floatParticle linear infinite;
     }
 
-    /* Soft Card Style */
     .soft-card {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(8px);
@@ -84,10 +81,16 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect, useRef, useMemo, memo, useCallback } = React;
+    const { useState, useEffect, useRef, useMemo, memo } = React;
 
     // ==========================================
-    // 1. REGISTRY DATA (60 GAMES & 60 PHOTOS)
+    // CONFIG DATABASE CLOUD (JSONBIN.IO)
+    // ==========================================
+    const JSONBIN_MASTER_KEY = "$2a$10$MxA3/EAN88c0DYsE0LlmkuURu0FcOnyC3EcOAV0zHJ24WAuErS79O";
+    const JSONBIN_BIN_ID = "6ab4fb61ac6210605af06115";
+
+    // ==========================================
+    // REGISTRY DATA (GAMES & PHOTOS)
     // ==========================================
     const OFFICIAL_GAME_LIST = [
       { id: "game_001", type: "catcher", title: "Tangkap Hewan 🐻", emoji: "🐻", instruction: "Tap hewan secepat mungkin!", enabled: true },
@@ -104,51 +107,7 @@
       { id: "game_012", type: "quiz", title: "Love Calculator 💌", emoji: "💌", instruction: "Hitung skor kecocokan!", enabled: true },
       { id: "game_013", type: "catcher", title: "Tangkap Bintang ⭐", emoji: "⭐", instruction: "Petik bintang jatuh!", enabled: true },
       { id: "game_014", type: "clicker", title: "Flappy Heart 🪽", emoji: "🪽", instruction: "Tap untuk menerbangkan hati!", enabled: true },
-      { id: "game_015", type: "clicker", title: "Mystery Box 🎁", emoji: "🎁", description: "Buka kotak rahasia!", instruction: "Pilih 1 dari 3 kotak!", enabled: true },
-      { id: "game_016", type: "quiz", title: "Tebak Emoji 😆", emoji: "😆", instruction: "Tebak arti emoji ini!", enabled: true },
-      { id: "game_017", type: "quiz", title: "This or That? 🤔", emoji: "🤔", instruction: "Pilih 1 dari 2 pilihan!", enabled: true },
-      { id: "game_018", type: "memory", title: "Simon Says 👀", emoji: "👀", instruction: "Ikuti urutan warna!", enabled: true },
-      { id: "game_019", type: "memory", title: "Connect the Hearts 💞", emoji: "💞", instruction: "Hubungkan pasangan hati!", enabled: true },
-      { id: "game_020", type: "quiz", title: "Tic Tac Love ❌⭕", emoji: "❌⭕", instruction: "Mainkan Tic Tac Toe!", enabled: true },
-      { id: "game_021", type: "clicker", title: "Cari Perbedaan 🔎", emoji: "🔎", instruction: "Temukan perbedaan gambar!", enabled: true },
-      { id: "game_022", type: "quiz", title: "Word Scramble 🔤", emoji: "🔤", instruction: "Rapikan huruf berantakan!", enabled: true },
-      { id: "game_023", type: "catcher", title: "Catch the Stars 🌟", emoji: "🌟", instruction: "Tangkap bintang secepatnya!", enabled: true },
-      { id: "game_024", type: "clicker", title: "Bubble Pop 🫧", emoji: "🫧", instruction: "Pecahkan semua gelembung!", enabled: true },
-      { id: "game_025", type: "memory", title: "Candy Match 🍭", emoji: "🍭", instruction: "Cocokkan permen manis!", enabled: true },
-      { id: "game_026", type: "memory", title: "Maze of Love 🌀", emoji: "🌀", instruction: "Temukan jalan keluar!", enabled: true },
-      { id: "game_027", type: "catcher", title: "Jatuhkan Hati 💘", emoji: "💘", instruction: "Lepaskan panah tepat sasaran!", enabled: true },
-      { id: "game_028", type: "quiz", title: "Tebak Suara 🎶", emoji: "🎶", instruction: "Suara apakah ini?", enabled: true },
-      { id: "game_029", type: "quiz", title: "Susun Kata 💭", emoji: "💭", instruction: "Buat kalimat romantis!", enabled: true },
-      { id: "game_030", type: "quiz", title: "Pilih Jawaban 💌", emoji: "💌", instruction: "Pilih jawaban paling pas!", enabled: true },
-      { id: "game_031", type: "quiz", title: "Kuis Tentang Kita 🫶🏻", emoji: "🫶🏻", instruction: "Jawab kuis spesial kita!", enabled: true },
-      { id: "game_032", type: "quiz", title: "Tebak Siapa 👤", emoji: "👤", instruction: "Tebak siapa dari petunjuk!", enabled: true },
-      { id: "game_033", type: "memory", title: "Find the Pair 🃏", emoji: "🃏", instruction: "Cari pasangan yang pas!", enabled: true },
-      { id: "game_034", type: "catcher", title: "Avoid the Bomb 💣", emoji: "💣", instruction: "Ambil kado, hindari bom!", enabled: true },
-      { id: "game_035", type: "catcher", title: "Catch the Flower 🌷", emoji: "🌷", instruction: "Kumpulkan kelopak bunga!", enabled: true },
-      { id: "game_036", type: "memory", title: "Garden Match 🌸", emoji: "🌸", instruction: "Pasangkan tanaman sejenis!", enabled: true },
-      { id: "game_037", type: "clicker", title: "Flappy Bird 🐦", emoji: "🐦", instruction: "Bantu burung terbang!", enabled: true },
-      { id: "game_038", type: "clicker", title: "Mini Fishing 🎣", emoji: "🎣", instruction: "Tap saat umpan dimakan!", enabled: true },
-      { id: "game_039", type: "clicker", title: "Whack-a-Mole 🐹", emoji: "🐹", instruction: "Pukul hamster yang muncul!", enabled: true },
-      { id: "game_040", type: "clicker", title: "Balloon Rush 🎈", emoji: "🎈", instruction: "Terbang bersama balon!", enabled: true },
-      { id: "game_041", type: "catcher", title: "Heart Runner 🏃🏻‍♀️", emoji: "🏃🏻‍♀️", instruction: "Lari dan kumpulkan cinta!", enabled: true },
-      { id: "game_042", type: "catcher", title: "Dodge the Clouds ☁️", emoji: "☁️", instruction: "Hindari awan mendung!", enabled: true },
-      { id: "game_043", type: "catcher", title: "Collect the Coins 🪙", emoji: "🪙", instruction: "Kumpulkan koin emas!", enabled: true },
-      { id: "game_044", type: "clicker", title: "Hidden Object 🔍", emoji: "🔍", instruction: "Temukan barang tersembunyi!", enabled: true },
-      { id: "game_045", type: "quiz", title: "Crossword Mini 📝", emoji: "📝", instruction: "Isi TTS mini romantis!", enabled: true },
-      { id: "game_046", type: "quiz", title: "Hangman 💬", emoji: "💬", instruction: "Tebak kata abjad demi abjad!", enabled: true },
-      { id: "game_047", type: "quiz", title: "Rock Paper Scissors ✊🏻", emoji: "✊🏻", instruction: "Batu, Gunting, Kertas!", enabled: true },
-      { id: "game_048", type: "clicker", title: "Lucky Wheel 🍀", emoji: "🍀", instruction: "Putar roda keberuntungan!", enabled: true },
-      { id: "game_049", type: "clicker", title: "Pick a Gift 🎁", emoji: "🎁", instruction: "Pilih kado mana pilihanmu!", enabled: true },
-      { id: "game_050", type: "mystery", title: "Secret Door 🚪", emoji: "🚪", instruction: "Buka pintu dengan kunci tepat!", enabled: true },
-      { id: "game_051", type: "mystery", title: "Treasure Hunt 🗺️", emoji: "🗺️", instruction: "Ikuti petunjuk harta karun!", enabled: true },
-      { id: "game_052", type: "mystery", title: "Find the Key 🔑", emoji: "🔑", instruction: "Cari kunci gembok!", enabled: true },
-      { id: "game_053", type: "mystery", title: "Unlock the Heart 🔐", emoji: "🔐", instruction: "Masukkan kombinasi angka!", enabled: true },
-      { id: "game_054", type: "clicker", title: "Pop the Bubble 🫧", emoji: "🫧", instruction: "Pecahkan gelembung cinta!", enabled: true },
-      { id: "game_055", type: "catcher", title: "Star Catcher ⭐", emoji: "⭐", instruction: "Tangkap bintang berjatuhan!", enabled: true },
-      { id: "game_056", type: "quiz", title: "Color Match 🎨", emoji: "🎨", instruction: "Cocokkan warna dan teks!", enabled: true },
-      { id: "game_057", type: "clicker", title: "Reaction Test ⚡", emoji: "⚡", instruction: "Tap saat layar berubah hijau!", enabled: true },
-      { id: "game_058", type: "clicker", title: "Tap the Heart 💓", emoji: "💓", instruction: "Tap sebanyak mungkin dalam 5 detik!", enabled: true },
-      { id: "game_059", type: "quiz", title: "Memory of Us 🤍", emoji: "🤍", instruction: "Ingat kembali momen manis kita!", enabled: true },
+      { id: "game_015", type: "clicker", title: "Mystery Box 🎁", emoji: "🎁", instruction: "Pilih 1 dari 3 kotak!", enabled: true },
       { id: "game_060", type: "mystery", title: "Final Mystery Game 🎀", emoji: "🎀", instruction: "Gunakan kode rahasia akhir!", enabled: true }
     ];
 
@@ -156,15 +115,7 @@
       "Polaroid Memories 📷", "Foto Random 🤭", "Foto Favorit 💗", "Tebak Foto 👀", "Foto Pertama 🌷",
       "Foto Terbaru ✨", "Our Moments 🤍", "Before & After 🕰️", "Photo Booth 🎀", "Foto Candid 📸",
       "Foto Lucu 😂", "Foto Aesthetic 🌸", "Foto Senyum 😊", "Foto Selfie 🤳🏻", "Foto Bareng 🫶🏻",
-      "Foto Jalan-Jalan 🚶🏻‍♀️", "Foto Makanan 🍜", "Foto Sunset 🌅", "Foto Langit ☁️", "Foto Malam 🌙",
-      "Foto Kecil yang Berarti 💌", "Foto yang Bikin Kangen 🥹", "Foto Paling Random 🤪", "Foto Favorit Kamu 💕", "Foto Favorit Aku 💗",
-      "Hidden Photo 🔎", "Secret Photo 🤫", "Photo Puzzle 🧩", "Photo Timeline 🕰️", "Our Story 📖",
-      "Little Things 🌷", "Daily Moments ☀️", "Weekend Memories 🌤️", "Holiday Memories 🏖️", "Funny Moments 😂",
-      "Cute Moments 🐻", "Sweet Moments 🍯", "Unexpected Moments ✨", "First Impression 👀", "Favorite Outfit 👕",
-      "Mirror Selfie 🪞", "Food Memories 🍰", "Coffee Time ☕", "Night Memories 🌙", "Sunset Memories 🌅",
-      "Sky Collection ☁️", "Flower Collection 🌷", "Random Gallery 🎞️", "Screenshot Memories 📱", "Chat Memories 💬",
-      "Favorite Quotes 💭", "Our Places 📍", "Little Adventures 🗺️", "Throwback Gallery 🔙", "Childhood Photos 🧸",
-      "Silly Photos 🤪", "Unforgettable Moments 🥹", "Secret Folder 🔐", "Memory Wall 🖼️", "The Last Photo 💌"
+      "The Last Photo 💌"
     ];
 
     const INITIAL_GIFT_DATA = {
@@ -201,12 +152,11 @@
         items: []
       })),
       musicUrl: "",
-      musicSource: "mp3",
       replies: []
     };
 
     // ==========================================
-    // 2. LIGHTWEIGHT PARTICLE ENGINE (MEMOIZED)
+    // PARTICLE ENGINE
     // ==========================================
     const BackgroundParticles = memo(({ config }) => {
       if (!config || !config.enabled) return null;
@@ -215,7 +165,7 @@
         hearts: "💗", stars: "⭐", flowers: "🌸", petals: "🪷", bubbles: "🫧", sparkles: "✨"
       };
       const symbol = particleSymbols[config.type] || "💗";
-      const count = Math.min(config.count || 10, 15); // Batasi maks 15 agar HP tidak panas
+      const count = Math.min(config.count || 10, 15);
 
       const items = useMemo(() => {
         return Array.from({ length: count }).map((_, i) => ({
@@ -250,7 +200,7 @@
     });
 
     // ==========================================
-    // 3. LAZY GAME ENGINE HOST (SINGLE ACTIVE)
+    // GAME ENGINE HOST
     // ==========================================
     function GameEngineHost({ game, onWin }) {
       const [isPlaying, setIsPlaying] = useState(false);
@@ -274,7 +224,7 @@
           setWon(true);
           if (onWin) onWin(game.id);
         } else {
-          alert(`Kode salah! Coba petunjuk sandi default: ${game.config?.secretPasscode || "1234"}`);
+          alert(`Kode salah! Petunjuk sandi default: ${game.config?.secretPasscode || "1234"}`);
         }
       };
 
@@ -337,7 +287,7 @@
     }
 
     // ==========================================
-    // 4. EDITOR DASHBOARD (TAHAP 2 INTEGRATED)
+    // EDITOR DASHBOARD
     // ==========================================
     function EditorDashboard({ giftData, setGiftData, onPreview, onPublish, lastSaved, saveStatus }) {
       const [tab, setTab] = useState('cover');
@@ -371,7 +321,6 @@
 
       return (
         <div className="min-h-screen bg-[#fff7fb] text-[#5d5061] pb-24">
-          {/* Top Bar Navigation */}
           <header className="p-3 bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-[#e8b5ca] flex items-center justify-between shadow-sm">
             <div>
               <h1 className="font-bold text-xs sm:text-sm text-[#5d5061]">🎁 Editor Kado Digital</h1>
@@ -394,16 +343,14 @@
           </header>
 
           <main className="max-w-xl mx-auto p-3 space-y-3">
-            {/* Tab Selector */}
             <div className="flex space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
               {[
                 { id: 'cover', name: 'Cover' },
                 { id: 'messages', name: 'Messages' },
-                { id: 'games', name: 'Games (60)' },
-                { id: 'photos', name: 'Photos (60)' },
+                { id: 'games', name: 'Games' },
+                { id: 'photos', name: 'Photos' },
                 { id: 'music', name: 'Music' },
-                { id: 'appearance', name: 'Appearance' },
-                { id: 'replies', name: 'Replies' }
+                { id: 'appearance', name: 'Appearance' }
               ].map(t => (
                 <button
                   key={t.id}
@@ -417,7 +364,6 @@
               ))}
             </div>
 
-            {/* TAB COVER */}
             {tab === 'cover' && (
               <div className="soft-card p-4 space-y-3">
                 <h3 className="font-bold text-xs text-[#9b76a7]">💌 Pengaturan Cover Depan</h3>
@@ -460,7 +406,6 @@
               </div>
             )}
 
-            {/* TAB MESSAGES */}
             {tab === 'messages' && (
               <div className="soft-card p-4 space-y-3">
                 <h3 className="font-bold text-xs text-[#9b76a7]">📝 Edit Pesan & Surat Utama</h3>
@@ -485,13 +430,9 @@
               </div>
             )}
 
-            {/* TAB GAMES */}
             {tab === 'games' && (
               <div className="soft-card p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-xs text-[#9b76a7]">🎮 Kelola 60 Game Interaktif</h3>
-                  <span className="text-[10px] text-gray-400">Aktif: {giftData.games.filter(g => g.enabled).length}/60</span>
-                </div>
+                <h3 className="font-bold text-xs text-[#9b76a7]">🎮 Kelola Game Interaktif</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[50vh] overflow-y-auto pr-1">
                   {giftData.games.map((g) => (
                     <div key={g.id} className="p-2 bg-white rounded-xl border border-[#e8b5ca] flex items-center justify-between">
@@ -513,10 +454,9 @@
               </div>
             )}
 
-            {/* TAB PHOTOS */}
             {tab === 'photos' && (
               <div className="soft-card p-4 space-y-3">
-                <h3 className="font-bold text-xs text-[#9b76a7]">📷 Kelola 60 Kategori Galeri Foto</h3>
+                <h3 className="font-bold text-xs text-[#9b76a7]">📷 Kelola Kategori Galeri Foto</h3>
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
                   {giftData.photos.map((cat) => (
                     <div key={cat.id} className="p-2.5 bg-white rounded-xl border border-[#e8b5ca]">
@@ -526,7 +466,7 @@
                       </div>
                       <input
                         type="text"
-                        placeholder="Tempel URL Gambar (Unsplash/Direct Link)..."
+                        placeholder="Tempel URL Gambar (Direct Link)..."
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             addPhotoUrl(cat.id, e.target.value);
@@ -541,7 +481,6 @@
               </div>
             )}
 
-            {/* TAB MUSIC */}
             {tab === 'music' && (
               <div className="soft-card p-4 space-y-3">
                 <h3 className="font-bold text-xs text-[#9b76a7]">🎵 Audio & Background Music</h3>
@@ -558,7 +497,6 @@
               </div>
             )}
 
-            {/* TAB APPEARANCE */}
             {tab === 'appearance' && (
               <div className="soft-card p-4 space-y-3">
                 <h3 className="font-bold text-xs text-[#9b76a7]">✨ Efek Partikel Visual</h3>
@@ -581,44 +519,20 @@
                 </div>
               </div>
             )}
-
-            {/* TAB REPLIES */}
-            {tab === 'replies' && (
-              <div className="soft-card p-4 space-y-3">
-                <h3 className="font-bold text-xs text-[#9b76a7]">💬 Respons dari Penerima</h3>
-                {giftData.replies && giftData.replies.length > 0 ? (
-                  <div className="space-y-2">
-                    {giftData.replies.map((r, idx) => (
-                      <div key={idx} className="p-2.5 bg-white rounded-xl border text-xs">
-                        <p className="font-semibold text-[#5d5061]">{r.text}</p>
-                        <span className="text-[9px] text-gray-400">{r.date}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-gray-400 text-center py-4">Belum ada respons dari penerima.</p>
-                )}
-              </div>
-            )}
           </main>
         </div>
       );
     }
 
     // ==========================================
-    // 5. RECIPIENT VIEW (OPTIMIZED & ISOLATED)
+    // RECIPIENT VIEW
     // ==========================================
     function RecipientView({ giftData, onBackToEditor }) {
       const [isOpen, setIsOpen] = useState(false);
       const [replyInput, setReplyInput] = useState('');
 
-      const activeGames = useMemo(() => {
-        return giftData.games.filter(g => g.enabled);
-      }, [giftData.games]);
-
-      const activePhotos = useMemo(() => {
-        return giftData.photos.filter(p => p.items.length > 0);
-      }, [giftData.photos]);
+      const activeGames = useMemo(() => giftData.games.filter(g => g.enabled), [giftData.games]);
+      const activePhotos = useMemo(() => giftData.photos.filter(p => p.items.length > 0), [giftData.photos]);
 
       return (
         <div className="min-h-screen relative pb-20 overflow-x-hidden">
@@ -649,7 +563,6 @@
             </div>
           ) : (
             <main className="max-w-md mx-auto p-4 space-y-5 relative z-10 pt-8">
-              {/* Messages */}
               {giftData.messages.map((m) => (
                 <div key={m.id} className="soft-card p-4 text-center">
                   <h2 className="font-bold text-sm text-[#9b76a7] mb-2">{m.title}</h2>
@@ -657,7 +570,6 @@
                 </div>
               ))}
 
-              {/* Photos */}
               {activePhotos.length > 0 && (
                 <section className="space-y-3">
                   <h3 className="text-center font-bold text-xs uppercase tracking-wider text-[#9b76a7]">📸 Memory Gallery</h3>
@@ -674,7 +586,6 @@
                 </section>
               )}
 
-              {/* Games */}
               {activeGames.length > 0 && (
                 <section className="space-y-3">
                   <h3 className="text-center font-bold text-xs uppercase tracking-wider text-[#9b76a7]">🎮 Play Mini Games</h3>
@@ -684,7 +595,6 @@
                 </section>
               )}
 
-              {/* Reply Form */}
               <div className="soft-card p-4 text-center space-y-2">
                 <h4 className="font-bold text-xs text-[#5d5061]">💬 Kirim Balasan ke Pembuat Kado</h4>
                 <input
@@ -713,7 +623,7 @@
     }
 
     // ==========================================
-    // 6. MAIN APP CONTROLLER
+    // MAIN APP CONTROLLER (INTEGRATED WITH JSONBIN)
     // ==========================================
     function App() {
       const [giftData, setGiftData] = useState(() => {
@@ -721,12 +631,13 @@
         return saved ? JSON.parse(saved) : INITIAL_GIFT_DATA;
       });
 
-      const [viewMode, setViewMode] = useState('editor'); // 'editor' | 'preview' | 'recipient'
+      const [viewMode, setViewMode] = useState('editor');
       const [lastSavedTime, setLastSavedTime] = useState('Baru saja');
       const [saveStatus, setSaveStatus] = useState('Tersimpan');
       const [publishedModalUrl, setPublishedModalUrl] = useState('');
+      const [isLoading, setIsLoading] = useState(false);
 
-      // AutoSave ke LocalStorage
+      // AutoSave Draft Lokal
       useEffect(() => {
         setSaveStatus('Menyimpan...');
         const timer = setTimeout(() => {
@@ -734,34 +645,87 @@
           setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
           setSaveStatus('Draft Tersimpan');
         }, 800);
-
         return () => clearTimeout(timer);
       }, [giftData]);
 
-      // System Publish (Tahap 3 Ready)
-      const handlePublish = () => {
+      // Publish ke Cloud (JSONBin.io)
+      const handlePublish = async () => {
+        setIsLoading(true);
         const token = Math.random().toString(36).substring(2, 8);
         const publishedPayload = { ...giftData, status: 'published', updatedAt: new Date().toISOString() };
-        
-        // Simpan versi terpublikasi secara independen
-        localStorage.setItem(`kado_pub_${token}`, JSON.stringify(publishedPayload));
 
-        const shareableUrl = `${window.location.origin}${window.location.pathname}#/g/${token}`;
-        setPublishedModalUrl(shareableUrl);
+        try {
+          // Ambil data yang ada di bin saat ini
+          const resGet = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+            headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+          });
+          const currentBin = await resGet.json();
+          const existingData = currentBin.record || {};
+
+          // Sisipkan kado baru menggunakan token unik
+          existingData[token] = publishedPayload;
+
+          // Update bin kembali
+          await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Master-Key": JSONBIN_MASTER_KEY
+            },
+            body: JSON.stringify(existingData)
+          });
+
+          const shareableUrl = `${window.location.origin}${window.location.pathname}#/g/${token}`;
+          setPublishedModalUrl(shareableUrl);
+        } catch (err) {
+          alert("Gagal mempublikasikan kado. Periksa koneksi atau API Key kamu!");
+          console.error(err);
+        } finally {
+          setIsLoading(false);
+        }
       };
 
-      // Hash Listener untuk mode Recipient
+      // Baca URL Hash & Load Data dari Cloud jika penerima membuka link
       useEffect(() => {
-        const hash = window.location.hash;
-        if (hash.includes('#/g/')) {
-          const token = hash.split('#/g/')[1];
-          const pubData = localStorage.getItem(`kado_pub_${token}`);
-          if (pubData) {
-            setGiftData(JSON.parse(pubData));
-            setViewMode('recipient');
+        const loadFromCloud = async () => {
+          const hash = window.location.hash;
+          if (hash.includes('#/g/')) {
+            const token = hash.split('#/g/')[1];
+            setIsLoading(true);
+            try {
+              const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+              });
+              const result = await res.json();
+              const targetGift = result.record?.[token];
+
+              if (targetGift) {
+                setGiftData(targetGift);
+                setViewMode('recipient');
+              } else {
+                alert("Kado tidak ditemukan atau link salah!");
+              }
+            } catch (err) {
+              console.error("Gagal memuat kado:", err);
+            } finally {
+              setIsLoading(false);
+            }
           }
-        }
+        };
+
+        loadFromCloud();
       }, []);
+
+      if (isLoading) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-[#fff7fb] text-[#9b76a7] font-bold text-sm">
+            <div className="animate-pulse text-center">
+              <div className="text-3xl mb-2">🎁</div>
+              Memuat Kado Spesial...
+            </div>
+          </div>
+        );
+      }
 
       return (
         <div>
@@ -784,18 +748,16 @@
           )}
 
           {viewMode === 'recipient' && (
-            <RecipientView
-              giftData={giftData}
-            />
+            <RecipientView giftData={giftData} />
           )}
 
-          {/* Modal Publish Success */}
+          {/* Modal Berhasil Publish */}
           {publishedModalUrl && (
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="soft-card p-5 max-w-sm w-full text-center space-y-3 bg-white">
                 <div className="text-4xl">🎉</div>
                 <h3 className="font-bold text-sm text-[#5d5061]">Kado Berhasil Dipublish!</h3>
-                <p className="text-[10px] text-gray-500">Bagikan link ini kepada penerima kado:</p>
+                <p className="text-[10px] text-gray-500">Link ini sudah aktif & bisa dibuka dari HP mana saja:</p>
                 <input
                   type="text"
                   readOnly
