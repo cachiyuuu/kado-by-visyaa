@@ -1,715 +1,3384 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Little World 💗</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scraply — Digital Scrapbook</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&family=Patrick+Hand&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --pink:#f3c4d7;
+    --pink-light:#fff0f5;
+    --pink-soft:#fde5ed;
+    --purple:#9b76a7;
+    --purple-light:#eee5f3;
+    --cream:#fffaf3;
+    --paper:#fffdf9;
+    --text:#5d5061;
+    --muted:#978b96;
+    --border:#eadde4;
+    --shadow:0 12px 35px rgba(88,67,83,.12);
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"DM Sans",sans-serif;
+    background:#fff7fb;
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+
+/* =========================================================
+   LANDING
+========================================================= */
+
+#landing{
+    min-height:100vh;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        radial-gradient(circle at 15% 20%,rgba(246,199,218,.6),transparent 25%),
+        radial-gradient(circle at 85% 75%,rgba(210,193,229,.55),transparent 28%),
+        linear-gradient(135deg,#fff8fb,#fffaf5);
+}
+
+.landing-content{
+    width:min(720px,92%);
+    text-align:center;
+    position:relative;
+    z-index:20;
+    padding:40px 20px;
+}
+
+.landing-mini{
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#9b8994;
+    margin-bottom:20px;
+}
+
+.logo{
+    font-family:"Pacifico",cursive;
+    font-size:clamp(58px,11vw,110px);
+    line-height:1;
+    color:var(--purple);
+    text-shadow:
+        4px 5px 0 #f1dce7,
+        8px 9px 0 rgba(155,118,167,.08);
+}
+
+.landing-content h1{
+    font-family:"Patrick Hand",cursive;
+    font-size:clamp(30px,5vw,48px);
+    margin-top:25px;
+    font-weight:400;
+}
+
+.landing-content p{
+    max-width:550px;
+    margin:15px auto 0;
+    line-height:1.8;
+    color:#857783;
+}
+
+.create-main{
+    margin-top:32px;
+    padding:16px 30px;
+    border-radius:999px;
+    background:var(--purple);
+    color:white;
+    box-shadow:0 12px 30px rgba(155,118,167,.3);
+    transition:.3s;
+}
+
+.create-main:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 35px rgba(155,118,167,.38);
+}
+
+
+/* =========================================================
+   LANDING DECOR
+========================================================= */
+
+.cloud{
+    position:absolute;
+    width:180px;
+    height:60px;
+    background:rgba(255,255,255,.8);
+    border-radius:100px;
+    opacity:.75;
+}
+
+.cloud::before,
+.cloud::after{
+    content:"";
+    position:absolute;
+    background:inherit;
+    border-radius:50%;
+}
+
+.cloud::before{
+    width:80px;
+    height:80px;
+    left:25px;
+    top:-35px;
+}
+
+.cloud::after{
+    width:100px;
+    height:100px;
+    right:20px;
+    top:-50px;
+}
+
+.cloud-one{
+    top:15%;
+    left:-180px;
+    animation:cloudMove 24s linear infinite;
+}
+
+.cloud-two{
+    top:65%;
+    left:100%;
+    transform:scale(.65);
+    animation:cloudMoveReverse 28s linear infinite;
+}
+
+@keyframes cloudMove{
+    from{transform:translateX(0)}
+    to{transform:translateX(125vw)}
+}
+
+@keyframes cloudMoveReverse{
+    from{transform:translateX(0)}
+    to{transform:translateX(-135vw)}
+}
+
+
+/* =========================================================
+   BALLOONS
+========================================================= */
+
+.balloon{
+    position:absolute;
+    width:48px;
+    height:62px;
+    border-radius:50% 50% 47% 47%;
+    bottom:-120px;
+    z-index:5;
+    opacity:.8;
+    animation:balloonFly 15s linear infinite;
+}
+
+.balloon::before{
+    content:"";
+    position:absolute;
+    bottom:-5px;
+    left:50%;
+    transform:translateX(-50%);
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:9px solid currentColor;
+}
+
+.balloon::after{
+    content:"";
+    position:absolute;
+    width:1px;
+    height:130px;
+    background:#857681;
+    left:50%;
+    top:57px;
+}
+
+.balloon-a{
+    left:8%;
+    background:#f2aec8;
+    color:#f2aec8;
+    animation-duration:16s;
+}
+
+.balloon-b{
+    left:30%;
+    background:#bba7d7;
+    color:#bba7d7;
+    animation-duration:19s;
+    animation-delay:3s;
+}
+
+.balloon-c{
+    left:70%;
+    background:#f4d092;
+    color:#f4d092;
+    animation-duration:17s;
+    animation-delay:1s;
+}
+
+.balloon-d{
+    left:88%;
+    background:#a8dadd;
+    color:#a8dadd;
+    animation-duration:21s;
+    animation-delay:5s;
+}
+
+@keyframes balloonFly{
+
+    0%{
+        transform:translateY(0) rotate(-5deg);
     }
 
-    :root {
-      --background: #fff7fb;
-      --card: #ffffff;
-      --text: #57445c;
-      --secondary: #9b849d;
-      --pink: #efa5c4;
-      --pink-dark: #c96f9b;
-      --purple: #e9defa;
-      --green: #dff3e9;
-      --yellow: #fff0cb;
-      --shadow: 0 10px 30px rgba(190, 130, 165, 0.15);
+    50%{
+        transform:translateY(-60vh) translateX(35px) rotate(6deg);
     }
 
-    body.dark {
-      --background: #292333;
-      --card: #3b3045;
-      --text: #fff1fb;
-      --secondary: #cdb9d0;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    100%{
+        transform:translateY(-125vh) translateX(-30px) rotate(-5deg);
+    }
+}
+
+
+/* =========================================================
+   FLOATING LANDING ELEMENTS
+========================================================= */
+
+.landing-flower{
+    position:absolute;
+    font-size:35px;
+    animation:floatFlower 4s ease-in-out infinite;
+}
+
+.flower-a{
+    top:20%;
+    left:12%;
+}
+
+.flower-b{
+    right:10%;
+    bottom:20%;
+    animation-delay:1.5s;
+}
+
+@keyframes floatFlower{
+
+    0%,100%{
+        transform:translateY(0) rotate(-5deg);
     }
 
-    body {
-      background: var(--background);
-      color: var(--text);
-      font-family: "Quicksand", sans-serif;
-      transition: 0.3s;
+    50%{
+        transform:translateY(-15px) rotate(7deg);
+    }
+}
+
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+#editor{
+    min-height:100vh;
+    background:#f7f3f5;
+}
+
+.topbar{
+    height:68px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.brand{
+    font-family:"Pacifico",cursive;
+    font-size:25px;
+    color:var(--purple);
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.top-button{
+    padding:10px 15px;
+    border-radius:12px;
+    background:#f8f1f5;
+    color:var(--text);
+}
+
+.top-button:hover{
+    background:#f2e7ed;
+}
+
+.top-button.primary{
+    color:white;
+    background:var(--purple);
+}
+
+
+/* =========================================================
+   EDITOR GRID
+========================================================= */
+
+.editor-grid{
+    display:grid;
+    grid-template-columns:235px 1fr 245px;
+    min-height:calc(100vh - 68px);
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.left-panel{
+    background:white;
+    border-right:1px solid var(--border);
+    padding:18px 14px;
+    overflow-y:auto;
+}
+
+.panel-heading{
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#8b7c87;
+    margin-bottom:12px;
+}
+
+.tool-button{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    border-radius:12px;
+    background:white;
+    color:var(--text);
+    margin-bottom:6px;
+    text-align:left;
+    transition:.2s;
+}
+
+.tool-button:hover{
+    background:#fff0f5;
+    transform:translateX(2px);
+}
+
+.tool-icon{
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    background:#faf1f5;
+    font-size:17px;
+    flex-shrink:0;
+}
+
+.panel-divider{
+    height:1px;
+    background:var(--border);
+    margin:20px 0;
+}
+
+
+/* =========================================================
+   WORKSPACE
+========================================================= */
+
+.workspace{
+    position:relative;
+    min-width:0;
+    padding:35px 20px 135px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 15% 20%,rgba(255,255,255,.8),transparent 20%),
+        #f7f3f5;
+}
+
+.canvas-wrap{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.scrapbook{
+    position:relative;
+    width:min(760px,92vw);
+    height:min(600px,72vh);
+    min-height:450px;
+
+    background:
+        linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 29px,
+            rgba(215,199,208,.55) 30px
+        );
+
+    box-shadow:
+        0 25px 60px rgba(70,51,65,.16),
+        0 3px 6px rgba(0,0,0,.05);
+
+    overflow:hidden;
+    border-radius:4px;
+
+    transition:
+        background .3s,
+        transform .4s;
+}
+
+.scrapbook::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(245,200,217,.2),transparent 20%),
+        radial-gradient(circle at 80% 75%,rgba(210,190,225,.18),transparent 25%);
+}
+
+.scrap-content{
+    position:absolute;
+    inset:0;
+    z-index:2;
+}
+
+
+/* =========================================================
+   SCRAPBOOK DECOR
+========================================================= */
+
+.page-title{
+    position:absolute;
+    top:55px;
+    left:65px;
+    max-width:55%;
+    font-family:"Patrick Hand",cursive;
+    font-size:50px;
+    color:#85658c;
+    transform:rotate(-2deg);
+    outline:none;
+    z-index:10;
+}
+
+.page-subtitle{
+    position:absolute;
+    top:120px;
+    left:68px;
+    max-width:47%;
+    font-family:"Patrick Hand",cursive;
+    font-size:21px;
+    line-height:1.4;
+    outline:none;
+    color:#766873;
+    z-index:10;
+}
+
+.tape{
+    position:absolute;
+    width:120px;
+    height:30px;
+    background:rgba(241,208,196,.72);
+    z-index:20;
+}
+
+.tape.top-left{
+    left:50px;
+    top:25px;
+    transform:rotate(-8deg);
+}
+
+.tape.top-right{
+    right:50px;
+    top:25px;
+    transform:rotate(8deg);
+}
+
+.scrap-photo{
+    position:absolute;
+    background:#fff;
+    padding:9px 9px 35px;
+    box-shadow:0 9px 20px rgba(40,30,40,.13);
+    z-index:8;
+    cursor:grab;
+    user-select:none;
+    transition:box-shadow .2s;
+}
+
+.scrap-photo:active{
+    cursor:grabbing;
+}
+
+.scrap-photo:hover{
+    box-shadow:0 15px 28px rgba(40,30,40,.18);
+}
+
+.scrap-photo img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    pointer-events:none;
+}
+
+.photo-one{
+    width:200px;
+    height:190px;
+    right:90px;
+    top:150px;
+    transform:rotate(5deg);
+}
+
+.photo-two{
+    width:185px;
+    height:180px;
+    left:65px;
+    bottom:55px;
+    transform:rotate(-6deg);
+}
+
+.scrap-sticker{
+    position:absolute;
+    font-size:45px;
+    z-index:30;
+    user-select:none;
+    cursor:grab;
+    animation:stickerFloat 3.5s ease-in-out infinite;
+}
+
+.scrap-sticker:hover{
+    animation-play-state:paused;
+}
+
+.sticker-one{
+    right:42px;
+    bottom:40px;
+}
+
+.sticker-two{
+    left:35px;
+    top:52px;
+    animation-delay:1s;
+}
+
+.sticker-three{
+    right:315px;
+    bottom:60px;
+    font-size:35px;
+    animation-delay:1.7s;
+}
+
+@keyframes stickerFloat{
+
+    0%,100%{
+        transform:translateY(0) rotate(-4deg);
     }
 
-    h1, h2, h3, .brand {
-      font-family: "Baloo 2", sans-serif;
+    50%{
+        transform:translateY(-8px) rotate(5deg);
+    }
+}
+
+
+/* =========================================================
+   ELEMENTS CREATED BY JS
+========================================================= */
+
+.element{
+    position:absolute;
+    user-select:none;
+    cursor:grab;
+    z-index:50;
+}
+
+.element:active{
+    cursor:grabbing;
+}
+
+.element.selected{
+    outline:2px dashed #b88ba1;
+    outline-offset:5px;
+}
+
+.element-text{
+    font-family:"Patrick Hand",cursive;
+    font-size:28px;
+    color:#675767;
+    min-width:100px;
+    max-width:350px;
+    outline:none;
+}
+
+.element-sticker{
+    font-size:48px;
+}
+
+.element-tape{
+    width:120px;
+    height:30px;
+    background:rgba(236,193,196,.7);
+}
+
+.element-letter{
+    width:260px;
+    min-height:190px;
+    background:#fff7d9;
+    padding:25px;
+    box-shadow:0 12px 25px rgba(60,45,50,.15);
+    font-family:"Patrick Hand",cursive;
+    font-size:21px;
+    line-height:1.4;
+    transform:rotate(-3deg);
+}
+
+.element-letter::before{
+    content:"💌";
+    position:absolute;
+    top:-20px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:30px;
+}
+
+.element-heart{
+    font-size:55px;
+}
+
+.element-balloon{
+    font-size:50px;
+    animation:miniBalloon 5s ease-in-out infinite;
+}
+
+@keyframes miniBalloon{
+
+    0%,100%{
+        transform:translateY(0) rotate(-4deg);
     }
 
-    button, input, textarea {
-      font-family: inherit;
+    50%{
+        transform:translateY(-25px) rotate(5deg);
+    }
+}
+
+
+/* =========================================================
+   RIGHT PANEL
+========================================================= */
+
+.right-panel{
+    background:white;
+    border-left:1px solid var(--border);
+    padding:18px;
+    overflow-y:auto;
+}
+
+.property-card{
+    background:#faf6f8;
+    padding:14px;
+    border-radius:14px;
+    margin-bottom:10px;
+}
+
+.property-card label{
+    display:block;
+    font-size:11px;
+    color:#988b95;
+    margin-bottom:6px;
+}
+
+.property-card input,
+.property-card select{
+    width:100%;
+    border:1px solid #e6dce2;
+    background:white;
+    border-radius:9px;
+    padding:9px;
+    color:var(--text);
+}
+
+.property-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+}
+
+.danger{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    background:#fdecef;
+    color:#b45d76;
+    margin-top:8px;
+}
+
+
+/* =========================================================
+   PAGE BAR
+========================================================= */
+
+.pages-bar{
+    position:absolute;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%);
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    max-width:90%;
+    padding:10px;
+
+    background:rgba(255,255,255,.95);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:18px;
+
+    overflow-x:auto;
+    z-index:200;
+}
+
+.page-thumb{
+    width:80px;
+    height:58px;
+    border-radius:10px;
+    flex-shrink:0;
+
+    background:
+        linear-gradient(#fffdf8,#fffdf8),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 10px,
+            #eadfe4 11px
+        );
+
+    border:2px solid transparent;
+    color:#806f7c;
+    font-family:"Patrick Hand",cursive;
+    font-size:19px;
+
+    transition:.2s;
+}
+
+.page-thumb:hover{
+    transform:translateY(-2px);
+}
+
+.page-thumb.active{
+    border-color:#ad7e97;
+    box-shadow:0 4px 10px rgba(80,50,70,.12);
+}
+
+.add-page{
+    width:58px;
+    height:58px;
+    border-radius:11px;
+    flex-shrink:0;
+    background:#f7e8ef;
+    color:#9b76a7;
+    font-size:26px;
+}
+
+
+/* =========================================================
+   TRANSITIONS
+========================================================= */
+
+.transition-layer{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    pointer-events:none;
+    opacity:0;
+}
+
+.transition-layer.active{
+    opacity:1;
+}
+
+
+/* PAGE TURN */
+
+.transition-page{
+    background:#fffdf8;
+    transform-origin:left center;
+}
+
+.transition-page.active{
+    animation:realPageTurn .9s ease forwards;
+}
+
+@keyframes realPageTurn{
+
+    0%{
+        transform:rotateY(0deg);
     }
 
-    button, a {
-      cursor: pointer;
+    100%{
+        transform:rotateY(-180deg);
+    }
+}
+
+
+/* FLY */
+
+.transition-fly{
+    background:
+        radial-gradient(circle at 20% 30%,#fff 0 5%,transparent 6%),
+        radial-gradient(circle at 70% 60%,#fff 0 7%,transparent 8%),
+        #dff3f4;
+}
+
+.transition-fly.active{
+    animation:flyScene .9s ease forwards;
+}
+
+@keyframes flyScene{
+
+    0%{
+        opacity:0;
+        transform:translateX(-100%);
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    30%{
+        opacity:1;
     }
 
-    .hidden {
-      display: none !important;
+    100%{
+        opacity:0;
+        transform:translateX(100%);
+    }
+}
+
+
+/* CLOUD */
+
+.transition-cloud{
+    background:#fff;
+}
+
+.transition-cloud::before,
+.transition-cloud::after{
+    content:"☁️";
+    position:absolute;
+    font-size:35vw;
+    top:20%;
+}
+
+.transition-cloud::before{
+    left:-5%;
+}
+
+.transition-cloud::after{
+    right:-5%;
+}
+
+.transition-cloud.active{
+    animation:cloudScene .9s ease forwards;
+}
+
+@keyframes cloudScene{
+
+    0%{
+        opacity:0;
+        transform:scale(1.5);
     }
 
-    .eyebrow {
-      color: var(--pink-dark);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    40%{
+        opacity:1;
+        transform:scale(1);
     }
 
-    .muted {
-      color: var(--secondary);
+    100%{
+        opacity:0;
+        transform:scale(.7);
+    }
+}
+
+
+/* FLOWER */
+
+.transition-flower{
+    background:transparent;
+}
+
+.transition-flower::before{
+    content:"🌸 🌷 🌸 🌷 🌸 🌷 🌸";
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:12vw;
+    animation:flowerScene .9s ease forwards;
+}
+
+@keyframes flowerScene{
+
+    0%{
+        transform:scale(.3) rotate(-10deg);
+        opacity:0;
     }
 
-    /* LANDING PAGE */
-    .landing {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background: radial-gradient(circle at top left, #ffe0ee, transparent 40%),
-                  radial-gradient(circle at bottom right, #e8e0ff, transparent 40%),
-                  var(--background);
+    50%{
+        transform:scale(1.3);
+        opacity:1;
     }
 
-    .landing-card {
-      width: 100%;
-      max-width: 570px;
-      padding: 40px 28px;
-      border-radius: 35px;
-      background: rgba(255, 255, 255, 0.85);
-      box-shadow: var(--shadow);
-      text-align: center;
+    100%{
+        transform:scale(2);
+        opacity:0;
+    }
+}
+
+
+/* SPARKLE */
+
+.transition-sparkle{
+    background:#fffafc;
+}
+
+.transition-sparkle::before{
+    content:"✦  ✧  ✦  ✧  ✦  ✧  ✦";
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12vw;
+    color:#c395b4;
+}
+
+.transition-sparkle.active{
+    animation:sparkleScene .9s ease forwards;
+}
+
+@keyframes sparkleScene{
+
+    0%{
+        opacity:0;
+        transform:scale(.5);
     }
 
-    .landing-card h1 {
-      margin: 20px 0;
-      font-size: clamp(3rem, 10vw, 5rem);
-      line-height: 0.9;
-      color: #6c5472;
+    45%{
+        opacity:1;
+        transform:scale(1);
     }
 
-    .landing-card h1 span {
-      color: var(--pink-dark);
+    100%{
+        opacity:0;
+        transform:scale(1.5);
+    }
+}
+
+
+/* LETTER */
+
+.transition-letter{
+    background:#fff3df;
+}
+
+.transition-letter::before{
+    content:"💌";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    font-size:120px;
+}
+
+.transition-letter.active{
+    animation:letterScene 1s ease forwards;
+}
+
+@keyframes letterScene{
+
+    0%{
+        opacity:0;
+        transform:scale(.5) rotate(-8deg);
     }
 
-    .subtitle {
-      max-width: 420px;
-      margin: 0 auto 25px;
-      color: #907b94;
-      line-height: 1.7;
+    35%{
+        opacity:1;
+        transform:scale(1) rotate(0);
     }
 
-    .landing-art {
-      position: relative;
-      height: 180px;
-      margin: 25px 0;
-      overflow: hidden;
-      border-radius: 28px;
-      background: linear-gradient(#dff2ff, #f8e7f1);
-      pointer-events: none;
+    100%{
+        opacity:0;
+        transform:scale(1.5) rotate(8deg);
+    }
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+#preview{
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at center,#fff9fc,#ded2dc);
+    z-index:4000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.preview-close{
+    position:absolute;
+    top:20px;
+    right:25px;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:white;
+    color:#6e5d6b;
+    font-size:19px;
+    z-index:50;
+}
+
+.preview-book{
+    width:min(900px,92vw);
+    height:min(620px,78vh);
+    position:relative;
+    perspective:1800px;
+}
+
+.preview-page{
+    position:absolute;
+    inset:0;
+    background:#fffdf8;
+    box-shadow:0 25px 70px rgba(50,35,50,.25);
+    padding:60px;
+    transform-origin:left center;
+    transition:transform 1s ease;
+    overflow:hidden;
+}
+
+.preview-page.turn{
+    transform:rotateY(-180deg);
+}
+
+.preview-title{
+    font-family:"Patrick Hand",cursive;
+    font-size:55px;
+    color:#86678d;
+}
+
+.preview-text{
+    margin-top:20px;
+    max-width:550px;
+    font-family:"Patrick Hand",cursive;
+    font-size:25px;
+    line-height:1.6;
+}
+
+.preview-decoration{
+    position:absolute;
+    font-size:70px;
+}
+
+.preview-decoration.one{
+    right:70px;
+    top:70px;
+}
+
+.preview-decoration.two{
+    left:70px;
+    bottom:60px;
+}
+
+.preview-controls{
+    position:absolute;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    z-index:100;
+}
+
+.preview-controls button{
+    padding:12px 20px;
+    border-radius:999px;
+    background:white;
+    box-shadow:0 5px 15px rgba(50,30,50,.12);
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.particle{
+    position:fixed;
+    pointer-events:none;
+    z-index:9000;
+    animation:particleFly 1.8s ease forwards;
+}
+
+@keyframes particleFly{
+
+    0%{
+        transform:translateY(0) scale(.4) rotate(0);
+        opacity:0;
     }
 
-    .house {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      font-size: 90px;
-      transform: translate(-50%, -45%);
+    15%{
+        opacity:1;
     }
 
-    .cloud {
-      position: absolute;
-      width: 120px;
-      height: 28px;
-      border-radius: 100px;
-      background: white;
-      opacity: 0.8;
+    100%{
+        transform:translateY(-180px) scale(1.2) rotate(180deg);
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%) translateY(20px);
+    background:#5d5061;
+    color:white;
+    padding:12px 18px;
+    border-radius:999px;
+    opacity:0;
+    pointer-events:none;
+    z-index:9999;
+    transition:.3s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .editor-grid{
+        grid-template-columns:78px 1fr;
     }
 
-    .cloud-one { top: 35px; left: 30px; }
-    .cloud-two { top: 65px; right: 25px; }
-
-    .flower {
-      position: absolute;
-      bottom: 15px;
-      left: 25px;
-      font-size: 28px;
-    }
-    .flower-two { right: 30px; left: auto; }
-
-    .primary-button {
-      display: inline-block;
-      padding: 13px 23px;
-      border: none;
-      border-radius: 999px;
-      background: var(--pink);
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 7px 15px rgba(233, 155, 187, 0.25);
-      transition: 0.2s;
-      position: relative;
-      z-index: 10;
+    .right-panel{
+        display:none;
     }
 
-    .primary-button:hover {
-      background: var(--pink-dark);
-      transform: translateY(-2px);
+    .left-panel{
+        padding:10px 7px;
     }
 
-    .tiny-note {
-      margin-top: 18px;
-      color: #b29bb2;
-      font-size: 0.75rem;
+    .panel-heading{
+        display:none;
     }
 
-    /* APP LAYOUT */
-    .app { display: none; }
-    .app.active { display: block; }
-
-    .app-shell {
-      width: 100%;
-      max-width: 1120px;
-      margin: auto;
-      padding: 20px;
+    .tool-button{
+        justify-content:center;
+        padding:9px 5px;
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 40px;
+    .tool-button span:last-child{
+        display:none;
     }
 
-    .brand {
-      font-size: 1.4rem;
-      font-weight: 700;
+    .tool-icon{
+        margin:0;
+    }
+}
+
+
+@media(max-width:650px){
+
+    .topbar{
+        height:60px;
+        padding:0 10px;
     }
 
-    .icon-button {
-      padding: 10px;
-      border: none;
-      border-radius: 50%;
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .brand{
+        font-size:21px;
     }
 
-    .welcome-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
+    .top-button{
+        padding:8px 10px;
+        font-size:12px;
     }
 
-    .welcome-section h1 {
-      margin: 5px 0;
-      font-size: clamp(2rem, 5vw, 3.3rem);
+    .editor-grid{
+        display:block;
     }
 
-    .level-pill {
-      padding: 10px 15px;
-      border-radius: 999px;
-      background: var(--purple);
-      font-size: 0.85rem;
-      font-weight: 700;
-      white-space: nowrap;
+    .left-panel{
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:68px;
+        z-index:1000;
+
+        display:flex;
+        align-items:center;
+        gap:5px;
+
+        border-top:1px solid var(--border);
+        border-right:0;
+
+        overflow-x:auto;
+        padding:5px;
     }
 
-    /* STATISTICS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin: 30px 0 45px;
+    .panel-divider{
+        display:none;
     }
 
-    .stat-card {
-      display: grid;
-      gap: 5px;
-      padding: 18px;
-      border-radius: 24px;
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .tool-button{
+        min-width:56px;
+        height:55px;
+        margin:0;
     }
 
-    .stat-card span { font-size: 1.5rem; }
-    .stat-card strong { font-size: 1.6rem; }
-    .stat-card small { color: var(--secondary); }
-
-    /* SECTION */
-    .section-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      margin: 25px 0 15px;
+    .workspace{
+        padding:20px 8px 100px;
+        min-height:calc(100vh - 60px);
     }
 
-    .section-heading h2 { margin: 0; font-size: 1.7rem; }
-
-    .soft-label {
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: var(--purple);
-      font-size: 0.75rem;
-      font-weight: 700;
+    .scrapbook{
+        width:96vw;
+        height:470px;
+        min-height:470px;
     }
 
-    /* WORLD PLACES */
-    .world-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+    .page-title{
+        left:30px;
+        top:45px;
+        font-size:37px;
+        max-width:70%;
     }
 
-    .place-card {
-      min-height: 180px;
-      padding: 20px;
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      transition: 0.2s;
+    .page-subtitle{
+        left:32px;
+        top:98px;
+        font-size:17px;
+        max-width:65%;
     }
 
-    .place-card:hover { transform: translateY(-4px); }
-    .place-card.town { background: var(--purple); }
-    .place-card.home { background: var(--green); }
-    .place-card.cafe { background: var(--yellow); }
-    .place-card.garden { background: #f8dfe8; }
-
-    .place-emoji { margin-bottom: 15px; font-size: 2.7rem; }
-    .place-card h3 { margin-bottom: 5px; }
-    .place-card p { font-size: 0.82rem; line-height: 1.5; }
-
-    /* PANELS */
-    .feature-panel {
-      margin-top: 30px;
-      padding: 25px;
-      border-radius: 25px;
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .photo-one{
+        width:145px;
+        height:145px;
+        right:20px;
+        top:145px;
     }
 
-    .town-scene {
-      position: relative;
-      display: grid;
-      min-height: 270px;
-      place-items: center;
-      overflow: hidden;
-      border-radius: 20px;
-      background: linear-gradient(#dff1ff 0 58%, #cbe8c8 58%);
+    .photo-two{
+        width:135px;
+        height:135px;
+        left:25px;
+        bottom:35px;
     }
 
-    .sun { position: absolute; top: 20px; right: 25px; font-size: 2rem; }
-    .tree { position: absolute; bottom: 55px; font-size: 4rem; }
-    .tree-one { left: 30px; }
-    .tree-two { right: 35px; }
-    .town-house { font-size: 7rem; }
-    .town-character { position: absolute; bottom: 30px; left: 52%; font-size: 2.7rem; }
-    .town-scene p {
-      position: absolute;
-      bottom: 10px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: #ffffffaa;
-      font-size: 0.8rem;
+    .pages-bar{
+        bottom:78px;
     }
 
-    /* ACTIVITIES */
-    .activity-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+    .page-thumb{
+        width:60px;
+        height:48px;
     }
 
-    .activity-card {
-      display: grid;
-      gap: 6px;
-      padding: 20px;
-      border: none;
-      border-radius: 24px;
-      background: var(--card);
-      color: var(--text);
-      box-shadow: var(--shadow);
-      text-align: left;
-      transition: 0.2s;
+    .add-page{
+        width:48px;
+        height:48px;
     }
 
-    .activity-card:hover { transform: translateY(-3px); }
-    .activity-card span { font-size: 1.8rem; }
-    .activity-card strong { font-size: 0.95rem; }
-    .activity-card small { color: var(--secondary); }
-
-    /* FORMS */
-    .form-card, .question-box, .memory-upload {
-      display: grid;
-      gap: 12px;
+    .preview-page{
+        padding:30px;
     }
 
-    .form-card input, .form-card textarea, .question-box textarea, .memory-upload input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ead7e5;
-      border-radius: 15px;
-      outline: none;
-      background: var(--background);
-      color: var(--text);
-      font: inherit;
+    .preview-title{
+        font-size:40px;
     }
 
-    .form-card input:focus, .form-card textarea:focus, .question-box textarea:focus {
-      border-color: var(--pink);
+    .preview-text{
+        font-size:20px;
     }
+}
 
-    /* DIARY */
-    .diary-list { display: grid; gap: 12px; margin-top: 20px; }
-    .diary-item {
-      padding: 17px;
-      border-left: 4px solid var(--pink);
-      border-radius: 18px;
-      background: var(--background);
-    }
-    .diary-item h3 { margin-bottom: 5px; }
-    .diary-item small { color: var(--secondary); font-size: 0.72rem; }
-    .diary-item p { margin-top: 10px; line-height: 1.6; white-space: pre-wrap; }
-
-    /* DAILY QUESTION */
-    .question-box {
-      padding: 22px;
-      border-radius: 20px;
-      background: var(--purple);
-    }
-    .question-box p { font-family: "Baloo 2", sans-serif; font-size: 1.35rem; }
-    .saved-message { color: var(--pink-dark); font-size: 0.85rem; }
-
-    /* MEMORY */
-    .memory-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .memory-card { overflow: hidden; border-radius: 18px; background: var(--background); }
-    .memory-card img { width: 100%; height: 160px; object-fit: cover; }
-    .memory-card p { padding: 10px; font-size: 0.85rem; }
-
-    .sync-status {
-      text-align: center;
-      margin-top: 25px;
-      color: var(--secondary);
-      font-size: 0.8rem;
-    }
-
-    @media (max-width: 800px) {
-      .world-grid, .activity-grid, .memory-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 520px) {
-      .app-shell { padding: 16px; }
-      .welcome-section { flex-direction: column; align-items: flex-start; }
-      .world-grid, .activity-grid, .memory-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+</style>
 </head>
+
+
 <body>
 
-  <!-- LANDING PAGE -->
-  <section class="landing" id="landingPage">
-    <div class="landing-card">
-      <p class="eyebrow">A tiny place for two</p>
-      <h1>Our Little<br><span>World</span> ✨</h1>
-      <p class="subtitle">Tempat kecil untuk menyimpan cerita, hadiah, kenangan, dan momen sederhana bersama.</p>
-      <div class="landing-art">
-        <div class="cloud cloud-one"></div>
-        <div class="cloud cloud-two"></div>
-        <div class="house">🏡</div>
-        <div class="flower">🌷</div>
-        <div class="flower flower-two">🌼</div>
-      </div>
-      <button class="primary-button" id="enterWorld">Masuk ke dunia kita →</button>
-      <p class="tiny-note">Made with little moments & lots of love ♡</p>
+
+<!-- =========================================================
+     LANDING
+========================================================= -->
+
+<section id="landing">
+
+    <div class="cloud cloud-one"></div>
+    <div class="cloud cloud-two"></div>
+
+    <div class="balloon balloon-a"></div>
+    <div class="balloon balloon-b"></div>
+    <div class="balloon balloon-c"></div>
+    <div class="balloon balloon-d"></div>
+
+    <div class="landing-flower flower-a">🌸</div>
+    <div class="landing-flower flower-b">🦋</div>
+
+    <div class="landing-content">
+
+        <div class="landing-mini">
+            ✿ a little place for your memories ✿
+        </div>
+
+        <div class="logo">
+            Scraply
+        </div>
+
+        <h1>
+            Create something worth remembering.
+        </h1>
+
+        <p>
+            Buat scrapbook digitalmu sendiri.
+            Simpan foto, surat, cerita, sticker,
+            dan kenangan kecil dalam satu tempat.
+        </p>
+
+        <button
+            class="create-main"
+            onclick="startEditor()"
+        >
+            ✿ Create New Scrapbook
+        </button>
+
     </div>
-  </section>
 
-  <!-- MAIN APPLICATION -->
-  <main class="app" id="mainApp">
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="brand">♡ Our Little World</div>
-        <button class="icon-button" id="themeToggle">☀️</button>
-      </header>
+</section>
 
-      <section class="welcome-section">
-        <div>
-          <p class="eyebrow">Welcome back, little star ✨</p>
-          <h1>Our tiny universe</h1>
-          <p class="muted">Satu tempat untuk semua cerita kecil kita berdua.</p>
+
+
+<!-- =========================================================
+     EDITOR
+========================================================= -->
+
+<section id="editor" class="hidden">
+
+    <header class="topbar">
+
+        <div class="brand">
+            Scraply
         </div>
-        <div class="level-pill">♡ Level <span id="levelValue">1</span></div>
-      </section>
 
-      <section class="stats-grid">
-        <div class="stat-card">
-          <span>💗</span>
-          <strong id="heartPoints">0</strong>
-          <small>Love points</small>
+        <div class="top-actions">
+
+            <button
+                class="top-button"
+                onclick="undo()"
+            >
+                ↶
+            </button>
+
+            <button
+                class="top-button"
+                onclick="redo()"
+            >
+                ↷
+            </button>
+
+            <button
+                class="top-button"
+                onclick="saveProject()"
+            >
+                💾 Save
+            </button>
+
+            <button
+                class="top-button primary"
+                onclick="openPreview()"
+            >
+                👀 Preview
+            </button>
+
         </div>
-        <div class="stat-card">
-          <span>📖</span>
-          <strong id="diaryCount">0</strong>
-          <small>Diary entries</small>
-        </div>
-        <div class="stat-card">
-          <span>🏆</span>
-          <strong id="achievementCount">0</strong>
-          <small>Achievements</small>
-        </div>
-      </section>
 
-      <section class="section-heading">
-        <div><p class="eyebrow">Explore</p><h2>Our little town</h2></div>
-        <span class="soft-label">Choose a place</span>
-      </section>
+    </header>
 
-      <section class="world-grid">
-        <a class="place-card town" href="#town"><div class="place-emoji">🏘️</div><h3>Town Square</h3><p>Tempat berkumpul dan ngobrol.</p></a>
-        <a class="place-card home" href="#home"><div class="place-emoji">🏡</div><h3>Shared Home</h3><p>Rumah kecil yang bisa dihias.</p></a>
-        <a class="place-card cafe" href="#cafe"><div class="place-emoji">☕</div><h3>Little Café</h3><p>Ngobrol sambil menikmati minuman.</p></a>
-        <a class="place-card garden" href="#garden"><div class="place-emoji">🌷</div><h3>Memory Garden</h3><p>Tempat menyimpan kenangan.</p></a>
-      </section>
 
-      <section class="feature-panel" id="town">
-        <div class="section-heading">
-          <div><p class="eyebrow">Your current space</p><h2>Town Square</h2></div>
-          <span>🌤️</span>
-        </div>
-        <div class="town-scene">
-          <div class="sun">☀️</div>
-          <div class="tree tree-one">🌳</div>
-          <div class="tree tree-two">🌳</div>
-          <div class="town-house">🏠</div>
-          <div class="town-character">🧸</div>
-          <p>Di sini, cerita kecil kita dimulai.</p>
-        </div>
-      </section>
+    <div class="editor-grid">
 
-      <section class="section-heading"><div><p class="eyebrow">Little activities</p><h2>Things to do</h2></div></section>
 
-      <section class="activity-grid">
-        <button class="activity-card" data-target="diarySection"><span>📖</span><strong>Daily Notebook</strong><small>Tulis hari ini</small></button>
-        <button class="activity-card" data-target="questionSection"><span>💬</span><strong>Daily Question</strong><small>Jawab pertanyaan</small></button>
-        <button class="activity-card" data-target="memorySection"><span>📸</span><strong>Memories</strong><small>Simpan momen</small></button>
-      </section>
+        <!-- =================================================
+             LEFT
+        ================================================= -->
 
-      <section class="feature-panel" id="diarySection">
-        <div class="section-heading"><div><p class="eyebrow">A page for today</p><h2>Daily Notebook 📖</h2></div></div>
-        <form class="form-card" id="diaryForm">
-          <input type="text" id="diaryTitle" placeholder="Judul cerita hari ini..." maxlength="80" required>
-          <textarea id="diaryContent" rows="4" placeholder="Tulis apa pun yang ingin kamu simpan..." required></textarea>
-          <button class="primary-button" type="submit">Simpan cerita ♡</button>
-        </form>
-        <div class="diary-list" id="diaryList"></div>
-      </section>
+        <aside class="left-panel">
 
-      <section class="feature-panel" id="questionSection">
-        <div class="section-heading"><div><p class="eyebrow">A question for us</p><h2>Daily Question 💬</h2></div></div>
-        <div class="question-box">
-          <p id="questionText">Hal kecil apa yang membuatmu tersenyum hari ini?</p>
-          <textarea id="questionAnswer" rows="3" placeholder="Jawabanmu..."></textarea>
-          <button class="primary-button" id="saveAnswer">Simpan jawaban</button>
-          <p class="saved-message" id="answerMessage"></p>
-        </div>
-      </section>
+            <div class="panel-heading">
+                Elements
+            </div>
 
-      <section class="feature-panel" id="memorySection">
-        <div class="section-heading"><div><p class="eyebrow">Keep the moments</p><h2>Memory Gallery 📸</h2></div></div>
-        <div class="memory-upload">
-          <input type="text" id="memoryUrl" placeholder="Tempel URL gambar (direct link)...">
-          <input type="text" id="memoryCaption" placeholder="Catatan kenangan...">
-          <button class="primary-button" id="addMemoryBtn">Tambah ke Galeri ♡</button>
-        </div>
-        <div class="memory-grid" id="memoryGrid"></div>
-      </section>
+            <button
+                class="tool-button"
+                onclick="addText()"
+            >
+                <span class="tool-icon">✏️</span>
+                <span>Text</span>
+            </button>
 
-      <div class="sync-status" id="syncStatus">✨ Terhubung otomatis ke Cloud Berdua</div>
+            <button
+                class="tool-button"
+                onclick="uploadPhoto()"
+            >
+                <span class="tool-icon">📸</span>
+                <span>Photo</span>
+            </button>
 
-      <footer class="footer" style="padding: 35px 0 15px; color: var(--secondary); text-align: center; font-size: 0.8rem;">
-        <p>Our Little World • Made with love ♡</p>
-      </footer>
+            <button
+                class="tool-button"
+                onclick="addSticker()"
+            >
+                <span class="tool-icon">🧸</span>
+                <span>Sticker</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="addTape()"
+            >
+                <span class="tool-icon">🎀</span>
+                <span>Tape</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="addLetter()"
+            >
+                <span class="tool-icon">💌</span>
+                <span>Letter</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="addHeart()"
+            >
+                <span class="tool-icon">💗</span>
+                <span>Heart</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="addBalloonElement()"
+            >
+                <span class="tool-icon">🎈</span>
+                <span>Balloon</span>
+            </button>
+
+
+            <div class="panel-divider"></div>
+
+
+            <div class="panel-heading">
+                Paper
+            </div>
+
+            <button
+                class="tool-button"
+                onclick="setPaper('lined')"
+            >
+                <span class="tool-icon">📓</span>
+                <span>Lined</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="setPaper('plain')"
+            >
+                <span class="tool-icon">📄</span>
+                <span>Plain</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="setPaper('grid')"
+            >
+                <span class="tool-icon">▦</span>
+                <span>Grid</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="setPaper('pink')"
+            >
+                <span class="tool-icon">🌸</span>
+                <span>Pink</span>
+            </button>
+
+            <button
+                class="tool-button"
+                onclick="setPaper('lavender')"
+            >
+                <span class="tool-icon">💜</span>
+                <span>Lavender</span>
+            </button>
+
+        </aside>
+
+
+
+        <!-- =================================================
+             CENTER
+        ================================================= -->
+
+        <main class="workspace">
+
+            <div class="canvas-wrap">
+
+                <div
+                    class="scrapbook"
+                    id="scrapbook"
+                >
+
+                    <div class="scrap-content">
+
+                        <div
+                            class="tape top-left"
+                        ></div>
+
+                        <div
+                            class="tape top-right"
+                        ></div>
+
+
+                        <div
+                            class="page-title"
+                            contenteditable="true"
+                            id="pageTitle"
+                        >
+                            Our Little Story ♡
+                        </div>
+
+
+                        <div
+                            class="page-subtitle"
+                            contenteditable="true"
+                            id="pageSubtitle"
+                        >
+                            halaman pertama dari cerita kecil kita...
+                        </div>
+
+
+                        <div
+                            class="scrap-photo photo-one"
+                            draggable="false"
+                        >
+
+                            <img
+                                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=600&q=75"
+                                alt="memory"
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="scrap-photo photo-two"
+                            draggable="false"
+                        >
+
+                            <img
+                                src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=75"
+                                alt="memory"
+                            >
+
+                        </div>
+
+
+                        <div class="scrap-sticker sticker-one">
+                            💗
+                        </div>
+
+                        <div class="scrap-sticker sticker-two">
+                            ✿
+                        </div>
+
+                        <div class="scrap-sticker sticker-three">
+                            🦋
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PAGE BAR -->
+
+            <div class="pages-bar" id="pagesBar">
+
+                <button
+                    class="page-thumb active"
+                    data-page="1"
+                    onclick="goToPage(1)"
+                >
+                    01
+                </button>
+
+                <button
+                    class="page-thumb"
+                    data-page="2"
+                    onclick="goToPage(2)"
+                >
+                    02
+                </button>
+
+                <button
+                    class="page-thumb"
+                    data-page="3"
+                    onclick="goToPage(3)"
+                >
+                    03
+                </button>
+
+                <button
+                    class="add-page"
+                    onclick="addPage()"
+                >
+                    +
+                </button>
+
+            </div>
+
+        </main>
+
+
+
+        <!-- =================================================
+             RIGHT
+        ================================================= -->
+
+        <aside class="right-panel">
+
+            <div class="panel-heading">
+                Page Settings
+            </div>
+
+
+            <div class="property-card">
+
+                <label>
+                    Page title
+                </label>
+
+                <input
+                    id="titleInput"
+                    value="Our Little Story ♡"
+                    oninput="changeTitle(this.value)"
+                >
+
+            </div>
+
+
+            <div class="property-card">
+
+                <label>
+                    Page transition
+                </label>
+
+                <select
+                    id="transitionSelect"
+                    onchange="changeTransition(this.value)"
+                >
+
+                    <option value="page">
+                        📖 Page Turn
+                    </option>
+
+                    <option value="fly">
+                        🎈 Fly Away
+                    </option>
+
+                    <option value="cloud">
+                        ☁️ Cloud
+                    </option>
+
+                    <option value="flower">
+                        🌸 Flower
+                    </option>
+
+                    <option value="sparkle">
+                        ✨ Sparkle
+                    </option>
+
+                    <option value="letter">
+                        💌 Letter
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="property-card">
+
+                <label>
+                    Element Animation
+                </label>
+
+                <select>
+
+                    <option>
+                        ✨ Floating
+                    </option>
+
+                    <option>
+                        💗 Heart
+                    </option>
+
+                    <option>
+                        🦋 Butterfly
+                    </option>
+
+                    <option>
+                        🌸 Petals
+                    </option>
+
+                    <option>
+                        None
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="property-card">
+
+                <label>
+                    Theme
+                </label>
+
+                <select onchange="changeTheme(this.value)">
+
+                    <option value="pink">
+                        Pink Dream
+                    </option>
+
+                    <option value="cream">
+                        Cream
+                    </option>
+
+                    <option value="lavender">
+                        Lavender
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="property-card">
+
+                <label>
+                    Page
+                </label>
+
+                <div class="property-row">
+
+                    <button
+                        class="top-button"
+                        onclick="duplicatePage()"
+                    >
+                        Duplicate
+                    </button>
+
+                    <button
+                        class="top-button"
+                        onclick="deletePage()"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
     </div>
-  </main>
 
-  <!-- SCRIPT LOGIC AUTO-SYNC SHARED SPACE -->
-  <script>
-    const JSONBIN_MASTER_KEY = "$2a$10$MxA3/EAN88c0DYsE0LlmkuURu0FcOnyC3EcOAV0zHJ24WAuErS79O";
-    const JSONBIN_BIN_ID = "6ab4fb61ac6210605af06115";
+</section>
 
-    const landingPage = document.getElementById("landingPage");
-    const mainApp = document.getElementById("mainApp");
-    const enterWorld = document.getElementById("enterWorld");
-    const themeToggle = document.getElementById("themeToggle");
-    const syncStatus = document.getElementById("syncStatus");
 
-    let appData = {
-      points: 10,
-      level: 1,
-      diaries: [],
-      memories: [],
-      answer: ""
+
+<!-- =========================================================
+     PREVIEW
+========================================================= -->
+
+<section
+    id="preview"
+    class="hidden"
+>
+
+    <button
+        class="preview-close"
+        onclick="closePreview()"
+    >
+        ✕
+    </button>
+
+
+    <div class="preview-book">
+
+        <div
+            class="preview-page"
+            id="previewPage"
+        >
+
+            <div
+                class="preview-title"
+                id="previewTitle"
+            >
+                Our Little Story ♡
+            </div>
+
+            <div
+                class="preview-text"
+                id="previewText"
+            >
+                halaman pertama dari cerita kecil kita...
+            </div>
+
+            <div class="preview-decoration one">
+                💗
+            </div>
+
+            <div class="preview-decoration two">
+                🌸
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="preview-controls">
+
+        <button onclick="previewPrevious()">
+            ←
+        </button>
+
+        <button onclick="previewNext()">
+            →
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     TRANSITION
+========================================================= -->
+
+<div
+    id="transitionLayer"
+    class="transition-layer"
+></div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="toast"
+>
+    Tersimpan ✿
+</div>
+
+
+<script>
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentPage = 1;
+
+let totalPages = 3;
+
+let currentTransition = "page";
+
+let historyStack = [];
+
+let redoStack = [];
+
+let pageData = {
+
+    1:{
+        title:"Our Little Story ♡",
+        subtitle:"halaman pertama dari cerita kecil kita...",
+        transition:"page",
+        paper:"lined"
+    },
+
+    2:{
+        title:"A Letter For You 💌",
+        subtitle:"ada sesuatu yang ingin aku sampaikan...",
+        transition:"letter",
+        paper:"pink"
+    },
+
+    3:{
+        title:"To Be Continued...",
+        subtitle:"ceritanya belum selesai sampai di sini ♡",
+        transition:"sparkle",
+        paper:"lavender"
+    }
+
+};
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startEditor(){
+
+    document
+        .getElementById("landing")
+        .classList.add("hidden");
+
+    document
+        .getElementById("editor")
+        .classList.remove("hidden");
+
+    loadSaved();
+
+    createParticles(18);
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(message){
+
+    const t =
+        document.getElementById("toast");
+
+    t.textContent = message;
+
+    t.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer =
+        setTimeout(()=>{
+
+            t.classList.remove("show");
+
+        },1800);
+
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+function createParticles(amount = 12){
+
+    const symbols = [
+        "✦",
+        "✧",
+        "♡",
+        "✿",
+        "✨",
+        "🌸",
+        "🦋"
+    ];
+
+    for(let i=0;i<amount;i++){
+
+        const p =
+            document.createElement("div");
+
+        p.className = "particle";
+
+        p.textContent =
+            symbols[
+                Math.floor(
+                    Math.random()*symbols.length
+                )
+            ];
+
+        p.style.left =
+            Math.random()*100 + "vw";
+
+        p.style.top =
+            (55 + Math.random()*35) + "vh";
+
+        p.style.fontSize =
+            (12 + Math.random()*20) + "px";
+
+        document.body.appendChild(p);
+
+        setTimeout(()=>p.remove(),1900);
+
+    }
+
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function goToPage(page){
+
+    if(page === currentPage){
+        return;
+    }
+
+    saveCurrentPageData();
+
+    const oldPage = currentPage;
+
+    currentPage = page;
+
+    const transition =
+        pageData[page]?.transition ||
+        currentTransition;
+
+    playTransition(transition);
+
+    setTimeout(()=>{
+
+        loadPageData(page);
+
+        updateThumbs();
+
+    },420);
+
+    createParticles(14);
+
+}
+
+
+/* =========================================================
+   TRANSITION
+========================================================= */
+
+function playTransition(type){
+
+    const layer =
+        document.getElementById("transitionLayer");
+
+    layer.className =
+        "transition-layer transition-"+type;
+
+    void layer.offsetWidth;
+
+    layer.classList.add("active");
+
+    setTimeout(()=>{
+
+        layer.classList.remove("active");
+
+    },950);
+
+}
+
+
+/* =========================================================
+   LOAD PAGE
+========================================================= */
+
+function loadPageData(page){
+
+    const data =
+        pageData[page] || {
+
+            title:"New Memory ✿",
+
+            subtitle:"cerita baru dimulai di sini...",
+
+            transition:"page",
+
+            paper:"lined"
+
+        };
+
+    document
+        .getElementById("pageTitle")
+        .textContent = data.title;
+
+    document
+        .getElementById("pageSubtitle")
+        .textContent = data.subtitle;
+
+    document
+        .getElementById("titleInput")
+        .value = data.title;
+
+    document
+        .getElementById("transitionSelect")
+        .value = data.transition;
+
+    setPaper(data.paper);
+
+}
+
+
+/* =========================================================
+   SAVE CURRENT PAGE
+========================================================= */
+
+function saveCurrentPageData(){
+
+    if(!pageData[currentPage]){
+        pageData[currentPage] = {};
+    }
+
+    pageData[currentPage].title =
+        document
+            .getElementById("pageTitle")
+            .textContent;
+
+    pageData[currentPage].subtitle =
+        document
+            .getElementById("pageSubtitle")
+            .textContent;
+
+    pageData[currentPage].transition =
+        currentTransition;
+
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+function changeTitle(value){
+
+    document
+        .getElementById("pageTitle")
+        .textContent = value;
+
+    if(!pageData[currentPage]){
+        pageData[currentPage] = {};
+    }
+
+    pageData[currentPage].title = value;
+
+}
+
+
+/* =========================================================
+   TRANSITION SETTING
+========================================================= */
+
+function changeTransition(value){
+
+    currentTransition = value;
+
+    if(!pageData[currentPage]){
+        pageData[currentPage] = {};
+    }
+
+    pageData[currentPage].transition = value;
+
+    createParticles(8);
+
+}
+
+
+/* =========================================================
+   ADD PAGE
+========================================================= */
+
+function addPage(){
+
+    saveCurrentPageData();
+
+    totalPages++;
+
+    pageData[totalPages] = {
+
+        title:"New Memory ✿",
+
+        subtitle:"cerita baru dimulai di sini...",
+
+        transition:"page",
+
+        paper:"lined"
+
     };
 
-    // Ambil data terbaru dari cloud JSONBin secara otomatis saat web dibuka
-    async function fetchCloudData() {
-      try {
-        syncStatus.innerText = "Memuat data bersama... ⏳";
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-          headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+    const button =
+        document.createElement("button");
+
+    button.className = "page-thumb";
+
+    button.dataset.page = totalPages;
+
+    button.textContent =
+        String(totalPages).padStart(2,"0");
+
+    button.onclick =
+        () => goToPage(totalPages);
+
+    const addButton =
+        document.querySelector(".add-page");
+
+    addButton.before(button);
+
+    goToPage(totalPages);
+
+    toast("Halaman baru dibuat ✿");
+
+}
+
+
+/* =========================================================
+   DELETE PAGE
+========================================================= */
+
+function deletePage(){
+
+    if(totalPages <= 1){
+
+        toast("Minimal harus ada 1 halaman 💗");
+
+        return;
+
+    }
+
+    if(!confirm("Hapus halaman ini?")){
+        return;
+    }
+
+    delete pageData[currentPage];
+
+    const thumb =
+        document.querySelector(
+            `.page-thumb[data-page="${currentPage}"]`
+        );
+
+    if(thumb){
+        thumb.remove();
+    }
+
+    totalPages--;
+
+    const nextPage =
+        Math.min(currentPage,totalPages);
+
+    currentPage = nextPage;
+
+    loadPageData(currentPage);
+
+    updateThumbs();
+
+}
+
+
+/* =========================================================
+   DUPLICATE
+========================================================= */
+
+function duplicatePage(){
+
+    saveCurrentPageData();
+
+    totalPages++;
+
+    pageData[totalPages] =
+        JSON.parse(
+            JSON.stringify(
+                pageData[currentPage]
+            )
+        );
+
+    const button =
+        document.createElement("button");
+
+    button.className = "page-thumb";
+
+    button.dataset.page = totalPages;
+
+    button.textContent =
+        String(totalPages).padStart(2,"0");
+
+    button.onclick =
+        () => goToPage(totalPages);
+
+    document
+        .querySelector(".add-page")
+        .before(button);
+
+    goToPage(totalPages);
+
+    toast("Halaman berhasil diduplikasi ✿");
+
+}
+
+
+/* =========================================================
+   THUMBNAILS
+========================================================= */
+
+function updateThumbs(){
+
+    document
+        .querySelectorAll(".page-thumb")
+        .forEach(button=>{
+
+            button.classList.toggle(
+                "active",
+                Number(button.dataset.page) === currentPage
+            );
+
         });
-        const result = await res.json();
-        if (result.record && result.record.sharedSpace) {
-          appData = result.record.sharedSpace;
+
+}
+
+
+/* =========================================================
+   ADD TEXT
+========================================================= */
+
+function addText(){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-text";
+
+    el.contentEditable = true;
+
+    el.textContent =
+        "tulis sesuatu di sini...";
+
+    el.style.left =
+        "38%";
+
+    el.style.top =
+        "52%";
+
+    el.style.transform =
+        "rotate(-3deg)";
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   ADD STICKER
+========================================================= */
+
+function addSticker(){
+
+    const stickers = [
+        "🌸",
+        "🦋",
+        "🐻",
+        "🐰",
+        "🎀",
+        "🍓",
+        "⭐",
+        "🌷",
+        "☁️",
+        "💗",
+        "✨",
+        "🌙"
+    ];
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-sticker";
+
+    el.textContent =
+        stickers[
+            Math.floor(
+                Math.random()*stickers.length
+            )
+        ];
+
+    el.style.left =
+        (20 + Math.random()*60) + "%";
+
+    el.style.top =
+        (20 + Math.random()*60) + "%";
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    createParticles(8);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   ADD TAPE
+========================================================= */
+
+function addTape(){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-tape";
+
+    el.style.left =
+        (20 + Math.random()*60) + "%";
+
+    el.style.top =
+        (20 + Math.random()*60) + "%";
+
+    el.style.transform =
+        `rotate(${Math.random()*18-9}deg)`;
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   ADD LETTER
+========================================================= */
+
+function addLetter(){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-letter";
+
+    el.contentEditable = true;
+
+    el.innerHTML = `
+        Dear you... 💌<br><br>
+        Tulis surat kecilmu di sini.
+        <br><br>
+        With love ♡
+    `;
+
+    el.style.left = "32%";
+    el.style.top = "35%";
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    createParticles(18);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   ADD HEART
+========================================================= */
+
+function addHeart(){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-heart";
+
+    el.textContent =
+        ["💗","💕","💖","💞"][
+            Math.floor(Math.random()*4)
+        ];
+
+    el.style.left =
+        (20+Math.random()*65)+"%";
+
+    el.style.top =
+        (20+Math.random()*60)+"%";
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    createParticles(10);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   ADD BALLOON
+========================================================= */
+
+function addBalloonElement(){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element element-balloon";
+
+    el.textContent = "🎈";
+
+    el.style.left =
+        (20+Math.random()*65)+"%";
+
+    el.style.top =
+        "65%";
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   PHOTO UPLOAD
+========================================================= */
+
+function uploadPhoto(){
+
+    const input =
+        document.createElement("input");
+
+    input.type = "file";
+
+    input.accept =
+        "image/*";
+
+    input.onchange =
+        function(){
+
+            const file =
+                this.files[0];
+
+            if(!file){
+                return;
+            }
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function(event){
+
+                    createPhoto(
+                        event.target.result
+                    );
+
+                };
+
+            reader.readAsDataURL(file);
+
+        };
+
+    input.click();
+
+}
+
+
+/* =========================================================
+   CREATE PHOTO
+========================================================= */
+
+function createPhoto(src){
+
+    const el =
+        document.createElement("div");
+
+    el.className =
+        "element scrap-photo";
+
+    el.style.width = "180px";
+
+    el.style.height = "175px";
+
+    el.style.padding = "9px 9px 30px";
+
+    el.style.left = "35%";
+
+    el.style.top = "35%";
+
+    const img =
+        document.createElement("img");
+
+    img.src = src;
+
+    img.style.width = "100%";
+
+    img.style.height = "100%";
+
+    img.style.objectFit = "cover";
+
+    img.draggable = false;
+
+    el.appendChild(img);
+
+    makeDraggable(el);
+
+    selectElement(el);
+
+    document
+        .querySelector(".scrap-content")
+        .appendChild(el);
+
+    createParticles(10);
+
+    saveHistory();
+
+}
+
+
+/* =========================================================
+   DRAGGING
+========================================================= */
+
+function makeDraggable(el){
+
+    let dragging = false;
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+    el.addEventListener(
+        "pointerdown",
+        startDrag
+    );
+
+    function startDrag(e){
+
+        if(
+            e.target.isContentEditable ||
+            e.target.tagName === "INPUT" ||
+            e.target.tagName === "TEXTAREA"
+        ){
+            return;
         }
-        updateUI();
-        syncStatus.innerText = "✨ Sinkronisasi cloud aktif (Real-time)";
-      } catch (err) {
-        console.error("Gagal mengambil data cloud, menggunakan memori lokal", err);
-        const localSaved = localStorage.getItem("our_little_world_data");
-        if (localSaved) {
-          try { appData = JSON.parse(localSaved); } catch(e) {}
-        }
-        updateUI();
-        syncStatus.innerText = "⚠️ Mode offline (Periksa koneksi internet)";
-      }
+
+        dragging = true;
+
+        el.setPointerCapture(e.pointerId);
+
+        const rect =
+            el.getBoundingClientRect();
+
+        offsetX =
+            e.clientX - rect.left;
+
+        offsetY =
+            e.clientY - rect.top;
+
+        selectElement(el);
+
     }
 
-    // Simpan data otomatis ke cloud JSONBin setiap ada perubahan
-    async function saveCloudData() {
-      try {
-        syncStatus.innerText = "Menyimpan ke cloud... ⏳";
-        // Simpan juga ke localStorage sebagai cadangan instan
-        localStorage.setItem("our_little_world_data", JSON.stringify(appData));
+    el.addEventListener(
+        "pointermove",
+        e=>{
 
-        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": JSONBIN_MASTER_KEY
-          },
-          body: JSON.stringify({ sharedSpace: appData })
+            if(!dragging){
+                return;
+            }
+
+            const parent =
+                document
+                    .querySelector(".scrap-content")
+                    .getBoundingClientRect();
+
+            const x =
+                e.clientX -
+                parent.left -
+                offsetX;
+
+            const y =
+                e.clientY -
+                parent.top -
+                offsetY;
+
+            el.style.left =
+                Math.max(
+                    0,
+                    Math.min(
+                        parent.width-el.offsetWidth,
+                        x
+                    )
+                )+"px";
+
+            el.style.top =
+                Math.max(
+                    0,
+                    Math.min(
+                        parent.height-el.offsetHeight,
+                        y
+                    )
+                )+"px";
+
+        }
+    );
+
+    el.addEventListener(
+        "pointerup",
+        e=>{
+
+            dragging = false;
+
+            try{
+                el.releasePointerCapture(e.pointerId);
+            }catch(err){}
+
+            saveHistory();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SELECT ELEMENT
+========================================================= */
+
+function selectElement(el){
+
+    document
+        .querySelectorAll(".element")
+        .forEach(x=>
+            x.classList.remove("selected")
+        );
+
+    el.classList.add("selected");
+
+    window.selectedElement = el;
+
+}
+
+
+/* =========================================================
+   DELETE SELECTED
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.key === "Delete" &&
+            window.selectedElement
+        ){
+
+            if(
+                document.activeElement?.isContentEditable
+            ){
+                return;
+            }
+
+            window.selectedElement.remove();
+
+            window.selectedElement = null;
+
+            saveHistory();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PAPER
+========================================================= */
+
+function setPaper(type){
+
+    const page =
+        document.getElementById("scrapbook");
+
+    if(type === "lined"){
+
+        page.style.background = `
+            linear-gradient(
+                rgba(255,255,255,.88),
+                rgba(255,255,255,.88)
+            ),
+            repeating-linear-gradient(
+                0deg,
+                transparent 0,
+                transparent 29px,
+                rgba(215,199,208,.55) 30px
+            )
+        `;
+
+    }
+
+    if(type === "plain"){
+
+        page.style.background =
+            "#fffdf9";
+
+    }
+
+    if(type === "grid"){
+
+        page.style.background = `
+            linear-gradient(
+                rgba(255,255,255,.9),
+                rgba(255,255,255,.9)
+            ),
+            linear-gradient(#eadfe4 1px,transparent 1px),
+            linear-gradient(90deg,#eadfe4 1px,transparent 1px)
+        `;
+
+        page.style.backgroundSize =
+            "auto,25px 25px,25px 25px";
+
+    }
+
+    if(type === "pink"){
+
+        page.style.background =
+            "linear-gradient(135deg,#fff0f5,#fff8fb)";
+
+    }
+
+    if(type === "lavender"){
+
+        page.style.background =
+            "linear-gradient(135deg,#f5efff,#fffaff)";
+
+    }
+
+    if(pageData[currentPage]){
+        pageData[currentPage].paper = type;
+    }
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function changeTheme(theme){
+
+    const page =
+        document.getElementById("scrapbook");
+
+    if(theme === "pink"){
+
+        page.style.background =
+            "linear-gradient(135deg,#fff0f5,#fff8fb)";
+
+    }
+
+    if(theme === "cream"){
+
+        page.style.background =
+            "#fff9ed";
+
+    }
+
+    if(theme === "lavender"){
+
+        page.style.background =
+            "linear-gradient(135deg,#f5efff,#fffaff)";
+
+    }
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function saveHistory(){
+
+    const content =
+        document
+            .querySelector(".scrap-content")
+            .innerHTML;
+
+    historyStack.push(content);
+
+    if(historyStack.length > 30){
+        historyStack.shift();
+    }
+
+    redoStack = [];
+
+}
+
+
+/* =========================================================
+   UNDO
+========================================================= */
+
+function undo(){
+
+    if(historyStack.length < 2){
+
+        toast("Belum ada perubahan ✿");
+
+        return;
+
+    }
+
+    const current =
+        historyStack.pop();
+
+    redoStack.push(current);
+
+    const previous =
+        historyStack[
+            historyStack.length-1
+        ];
+
+    document
+        .querySelector(".scrap-content")
+        .innerHTML = previous;
+
+    reconnectElements();
+
+}
+
+
+/* =========================================================
+   REDO
+========================================================= */
+
+function redo(){
+
+    if(!redoStack.length){
+
+        toast("Tidak ada yang bisa di-redo ✿");
+
+        return;
+
+    }
+
+    const next =
+        redoStack.pop();
+
+    historyStack.push(next);
+
+    document
+        .querySelector(".scrap-content")
+        .innerHTML = next;
+
+    reconnectElements();
+
+}
+
+
+/* =========================================================
+   RECONNECT
+========================================================= */
+
+function reconnectElements(){
+
+    document
+        .querySelectorAll(".element")
+        .forEach(el=>{
+
+            makeDraggable(el);
+
+            el.addEventListener(
+                "pointerdown",
+                ()=>selectElement(el)
+            );
+
         });
-        syncStatus.innerText = "✨ Perubahan tersimpan otomatis di Cloud ♡";
-      } catch (err) {
-        console.error("Gagal menyimpan ke cloud", err);
-        syncStatus.innerText = "❌ Gagal menyimpan ke cloud";
-      }
+
+}
+
+
+/* =========================================================
+   SAVE PROJECT
+========================================================= */
+
+function saveProject(){
+
+    saveCurrentPageData();
+
+    const data = {
+
+        currentPage,
+
+        totalPages,
+
+        pageData,
+
+        content:
+            document
+                .querySelector(".scrap-content")
+                .innerHTML
+
+    };
+
+    localStorage.setItem(
+        "scraply-project",
+        JSON.stringify(data)
+    );
+
+    createParticles(18);
+
+    toast("Scrapbook tersimpan 💗");
+
+}
+
+
+/* =========================================================
+   LOAD PROJECT
+========================================================= */
+
+function loadSaved(){
+
+    const saved =
+        localStorage.getItem(
+            "scraply-project"
+        );
+
+    if(!saved){
+        return;
     }
 
-    function updateUI() {
-      document.getElementById("heartPoints").innerText = appData.points;
-      document.getElementById("levelValue").innerText = appData.level;
-      document.getElementById("diaryCount").innerText = appData.diaries.length;
-      document.getElementById("achievementCount").innerText = appData.diaries.length > 0 ? 1 : 0;
+    try{
 
-      // Render Diary
-      const diaryList = document.getElementById("diaryList");
-      diaryList.innerHTML = appData.diaries.map(d => `
-        <div class="diary-item">
-          <h3>${escapeHtml(d.title)}</h3>
-          <small>${d.date}</small>
-          <p>${escapeHtml(d.content)}</p>
-        </div>
-      `).join('');
+        const data =
+            JSON.parse(saved);
 
-      // Render Memories
-      const memoryGrid = document.getElementById("memoryGrid");
-      memoryGrid.innerHTML = appData.memories.map(m => `
-        <div class="memory-card">
-          <img src="${escapeHtml(m.url)}" alt="Memory" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300'">
-          <p>${escapeHtml(m.caption)}</p>
-        </div>
-      `).join('');
+        if(data.pageData){
+            pageData = data.pageData;
+        }
 
-      if (appData.answer) {
-        document.getElementById("questionAnswer").value = appData.answer;
-      }
+        if(data.totalPages){
+            totalPages = data.totalPages;
+        }
+
+        if(data.currentPage){
+            currentPage = data.currentPage;
+        }
+
+        loadPageData(currentPage);
+
+    }catch(error){
+
+        console.log(
+            "Tidak bisa membaca project lama."
+        );
+
     }
 
-    function escapeHtml(text) {
-      if (!text) return "";
-      return text.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+
+/* =========================================================
+   AUTO SAVE
+========================================================= */
+
+setInterval(()=>{
+
+    if(
+        !document
+            .getElementById("editor")
+            .classList.contains("hidden")
+    ){
+
+        saveProject();
+
     }
 
-    enterWorld.addEventListener("click", () => {
-      landingPage.classList.add("hidden");
-      mainApp.classList.add("active");
-      fetchCloudData();
-    });
+},15000);
 
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      themeToggle.innerText = document.body.classList.contains("dark") ? "🌙" : "☀️";
-    });
 
-    // Diary Submit
-    document.getElementById("diaryForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("diaryTitle").value;
-      const content = document.getElementById("diaryContent").value;
-      
-      appData.diaries.unshift({
-        title,
-        content,
-        date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-      });
-      appData.points += 15;
-      appData.level = Math.floor(appData.points / 50) + 1;
+/* =========================================================
+   PREVIEW
+========================================================= */
 
-      document.getElementById("diaryTitle").value = '';
-      document.getElementById("diaryContent").value = '';
-      updateUI();
-      await saveCloudData();
-      alert("Cerita berhasil dibagikan dan tersimpan ke cloud! ♡");
-    });
+let previewPageNumber = 1;
 
-    // Save Answer
-    document.getElementById("saveAnswer").addEventListener("click", async () => {
-      const val = document.getElementById("questionAnswer").value;
-      appData.answer = val;
-      appData.points += 5;
-      document.getElementById("answerMessage").innerText = "Menyimpan jawaban...";
-      updateUI();
-      await saveCloudData();
-      document.getElementById("answerMessage").innerText = "Jawaban tersimpan manis ♡";
-    });
+function openPreview(){
 
-    // Add Memory
-    document.getElementById("addMemoryBtn").addEventListener("click", async () => {
-      const url = document.getElementById("memoryUrl").value;
-      const caption = document.getElementById("memoryCaption").value;
-      if (!url) return alert("Masukkan URL gambar terlebih dahulu!");
+    saveCurrentPageData();
 
-      appData.memories.unshift({ url, caption: caption || "Kenangan indah" });
-      appData.points += 10;
-      
-      document.getElementById("memoryUrl").value = '';
-      document.getElementById("memoryCaption").value = '';
-      updateUI();
-      await saveCloudData();
-      alert("Kenangan baru berhasil ditambahkan! ♡");
-    });
-  </script>
+    previewPageNumber = 1;
+
+    document
+        .getElementById("preview")
+        .classList.remove("hidden");
+
+    updatePreview();
+
+    createParticles(25);
+
+}
+
+
+function closePreview(){
+
+    document
+        .getElementById("preview")
+        .classList.add("hidden");
+
+}
+
+
+function updatePreview(){
+
+    const data =
+        pageData[previewPageNumber] ||
+        pageData[1];
+
+    document
+        .getElementById("previewTitle")
+        .textContent =
+        data.title || "";
+
+    document
+        .getElementById("previewText")
+        .textContent =
+        data.subtitle || "";
+
+}
+
+
+/* =========================================================
+   PREVIEW NEXT
+========================================================= */
+
+function previewNext(){
+
+    if(previewPageNumber >= totalPages){
+
+        previewPageNumber = 1;
+
+    }else{
+
+        previewPageNumber++;
+
+    }
+
+    const type =
+        pageData[previewPageNumber]?.transition ||
+        "page";
+
+    playTransition(type);
+
+    setTimeout(
+        updatePreview,
+        350
+    );
+
+    createParticles(12);
+
+}
+
+
+/* =========================================================
+   PREVIEW PREVIOUS
+========================================================= */
+
+function previewPrevious(){
+
+    if(previewPageNumber <= 1){
+
+        previewPageNumber = totalPages;
+
+    }else{
+
+        previewPageNumber--;
+
+    }
+
+    const type =
+        pageData[previewPageNumber]?.transition ||
+        "page";
+
+    playTransition(type);
+
+    setTimeout(
+        updatePreview,
+        350
+    );
+
+    createParticles(10);
+
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE ELEMENT
+========================================================= */
+
+document.addEventListener(
+    "pointerdown",
+    e=>{
+
+        if(
+            !e.target.closest(".element") &&
+            !e.target.closest(".right-panel") &&
+            !e.target.closest(".left-panel")
+        ){
+
+            document
+                .querySelectorAll(".element")
+                .forEach(el=>
+                    el.classList.remove("selected")
+                );
+
+            window.selectedElement = null;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL HISTORY
+========================================================= */
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        const content =
+            document
+                .querySelector(".scrap-content")
+                .innerHTML;
+
+        historyStack = [content];
+
+    }
+);
+
+</script>
+
 </body>
 </html>
