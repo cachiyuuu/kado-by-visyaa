@@ -122,6 +122,7 @@
       overflow: hidden;
       border-radius: 28px;
       background: linear-gradient(#dff2ff, #f8e7f1);
+      pointer-events: none;
     }
 
     .house {
@@ -162,6 +163,8 @@
       font-weight: 700;
       box-shadow: 0 7px 15px rgba(233, 155, 187, 0.25);
       transition: 0.2s;
+      position: relative;
+      z-index: 10;
     }
 
     .primary-button:hover {
@@ -404,14 +407,11 @@
     .memory-card img { width: 100%; height: 160px; object-fit: cover; }
     .memory-card p { padding: 10px; font-size: 0.85rem; }
 
-    /* PUBLISH BUTTON BAR */
-    .cloud-sync-bar {
-      margin-top: 35px;
+    .sync-status {
       text-align: center;
-      padding: 20px;
-      background: var(--card);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
+      margin-top: 25px;
+      color: var(--secondary);
+      font-size: 0.8rem;
     }
 
     @media (max-width: 800px) {
@@ -456,7 +456,7 @@
         <div>
           <p class="eyebrow">Welcome back, little star ✨</p>
           <h1>Our tiny universe</h1>
-          <p class="muted">Satu tempat untuk semua cerita kecil kita.</p>
+          <p class="muted">Satu tempat untuk semua cerita kecil kita berdua.</p>
         </div>
         <div class="level-pill">♡ Level <span id="levelValue">1</span></div>
       </section>
@@ -544,20 +544,15 @@
         <div class="memory-grid" id="memoryGrid"></div>
       </section>
 
-      <!-- CLOUD PUBLISH PANEL -->
-      <div class="cloud-sync-bar">
-        <h3 style="margin-bottom: 8px; font-family:'Baloo 2'">🚀 Simpan & Terbitkan Online</h3>
-        <p class="muted" style="font-size: 0.85rem; margin-bottom: 15px;">Klik tombol di bawah untuk menyinkronkan data dunia kecil ini ke cloud database JSONBin.</p>
-        <button class="primary-button" id="publishCloudBtn">Publish ke Cloud ☁️</button>
-      </div>
+      <div class="sync-status" id="syncStatus">✨ Terhubung otomatis ke Cloud Berdua</div>
 
-      <footer class="footer">
+      <footer class="footer" style="padding: 35px 0 15px; color: var(--secondary); text-align: center; font-size: 0.8rem;">
         <p>Our Little World • Made with love ♡</p>
       </footer>
     </div>
   </main>
 
-  <!-- SCRIPT LOGIC & JSONBIN INTEGRATION -->
+  <!-- SCRIPT LOGIC AUTO-SYNC SHARED SPACE -->
   <script>
     const JSONBIN_MASTER_KEY = "$2a$10$MxA3/EAN88c0DYsE0LlmkuURu0FcOnyC3EcOAV0zHJ24WAuErS79O";
     const JSONBIN_BIN_ID = "6ab4fb61ac6210605af06115";
@@ -566,6 +561,7 @@
     const mainApp = document.getElementById("mainApp");
     const enterWorld = document.getElementById("enterWorld");
     const themeToggle = document.getElementById("themeToggle");
+    const syncStatus = document.getElementById("syncStatus");
 
     let appData = {
       points: 10,
@@ -575,10 +571,50 @@
       answer: ""
     };
 
-    // Load data dari localStorage jika ada
-    const localSaved = localStorage.getItem("our_little_world_data");
-    if (localSaved) {
-      try { appData = JSON.parse(localSaved); } catch(e) {}
+    // Ambil data terbaru dari cloud JSONBin secara otomatis saat web dibuka
+    async function fetchCloudData() {
+      try {
+        syncStatus.innerText = "Memuat data bersama... ⏳";
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+        });
+        const result = await res.json();
+        if (result.record && result.record.sharedSpace) {
+          appData = result.record.sharedSpace;
+        }
+        updateUI();
+        syncStatus.innerText = "✨ Sinkronisasi cloud aktif (Real-time)";
+      } catch (err) {
+        console.error("Gagal mengambil data cloud, menggunakan memori lokal", err);
+        const localSaved = localStorage.getItem("our_little_world_data");
+        if (localSaved) {
+          try { appData = JSON.parse(localSaved); } catch(e) {}
+        }
+        updateUI();
+        syncStatus.innerText = "⚠️ Mode offline (Periksa koneksi internet)";
+      }
+    }
+
+    // Simpan data otomatis ke cloud JSONBin setiap ada perubahan
+    async function saveCloudData() {
+      try {
+        syncStatus.innerText = "Menyimpan ke cloud... ⏳";
+        // Simpan juga ke localStorage sebagai cadangan instan
+        localStorage.setItem("our_little_world_data", JSON.stringify(appData));
+
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": JSONBIN_MASTER_KEY
+          },
+          body: JSON.stringify({ sharedSpace: appData })
+        });
+        syncStatus.innerText = "✨ Perubahan tersimpan otomatis di Cloud ♡";
+      } catch (err) {
+        console.error("Gagal menyimpan ke cloud", err);
+        syncStatus.innerText = "❌ Gagal menyimpan ke cloud";
+      }
     }
 
     function updateUI() {
@@ -612,13 +648,14 @@
     }
 
     function escapeHtml(text) {
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      if (!text) return "";
+      return text.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     enterWorld.addEventListener("click", () => {
       landingPage.classList.add("hidden");
       mainApp.classList.add("active");
-      updateUI();
+      fetchCloudData();
     });
 
     themeToggle.addEventListener("click", () => {
@@ -627,7 +664,7 @@
     });
 
     // Diary Submit
-    document.getElementById("diaryForm").addEventListener("submit", (e) => {
+    document.getElementById("diaryForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const title = document.getElementById("diaryTitle").value;
       const content = document.getElementById("diaryContent").value;
@@ -640,99 +677,38 @@
       appData.points += 15;
       appData.level = Math.floor(appData.points / 50) + 1;
 
-      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
       document.getElementById("diaryTitle").value = '';
       document.getElementById("diaryContent").value = '';
       updateUI();
-      alert("Cerita berhasil disimpan! ♡");
+      await saveCloudData();
+      alert("Cerita berhasil dibagikan dan tersimpan ke cloud! ♡");
     });
 
     // Save Answer
-    document.getElementById("saveAnswer").addEventListener("click", () => {
+    document.getElementById("saveAnswer").addEventListener("click", async () => {
       const val = document.getElementById("questionAnswer").value;
       appData.answer = val;
       appData.points += 5;
-      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
-      document.getElementById("answerMessage").innerText = "Jawaban tersimpan manis ♡";
+      document.getElementById("answerMessage").innerText = "Menyimpan jawaban...";
       updateUI();
+      await saveCloudData();
+      document.getElementById("answerMessage").innerText = "Jawaban tersimpan manis ♡";
     });
 
     // Add Memory
-    document.getElementById("addMemoryBtn").addEventListener("click", () => {
+    document.getElementById("addMemoryBtn").addEventListener("click", async () => {
       const url = document.getElementById("memoryUrl").value;
       const caption = document.getElementById("memoryCaption").value;
       if (!url) return alert("Masukkan URL gambar terlebih dahulu!");
 
       appData.memories.unshift({ url, caption: caption || "Kenangan indah" });
       appData.points += 10;
-      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
       
       document.getElementById("memoryUrl").value = '';
       document.getElementById("memoryCaption").value = '';
       updateUI();
-    });
-
-    // Publish ke JSONBin Cloud
-    document.getElementById("publishCloudBtn").addEventListener("click", async () => {
-      const token = Math.random().toString(36).substring(2, 8);
-      const publishBtn = document.getElementById("publishCloudBtn");
-      publishBtn.innerText = "Menyimpan ke Cloud... ⏳";
-      publishBtn.disabled = true;
-
-      try {
-        const resGet = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-          headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
-        });
-        const currentBin = await resGet.json();
-        const existingData = currentBin.record || {};
-
-        existingData[token] = {
-          ...appData,
-          updatedAt: new Date().toISOString()
-        };
-
-        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": JSONBIN_MASTER_KEY
-          },
-          body: JSON.stringify(existingData)
-        });
-
-        const shareUrl = `${window.location.origin}${window.location.pathname}#/world/${token}`;
-        prompt("Berhasil Publish! Salin link dunia kecilmu di bawah ini:", shareUrl);
-      } catch (err) {
-        alert("Gagal mempublikasikan ke cloud. Periksa koneksi internetmu.");
-        console.error(err);
-      } finally {
-        publishBtn.innerText = "Publish ke Cloud ☁️";
-        publishBtn.disabled = false;
-      }
-    });
-
-    // Cek Hash URL saat dibuka penerima
-    window.addEventListener("load", async () => {
-      const hash = window.location.hash;
-      if (hash.includes('#/world/')) {
-        const token = hash.split('#/world/')[1];
-        try {
-          const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-            headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
-          });
-          const result = await res.json();
-          const targetWorld = result.record?.[token];
-
-          if (targetWorld) {
-            appData = targetWorld;
-            landingPage.classList.add("hidden");
-            mainApp.classList.add("active");
-            updateUI();
-          }
-        } catch (err) {
-          console.error("Gagal memuat dunia dari cloud", err);
-        }
-      }
+      await saveCloudData();
+      alert("Kenangan baru berhasil ditambahkan! ♡");
     });
   </script>
 </body>
