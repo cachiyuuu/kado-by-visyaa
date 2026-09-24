@@ -3,108 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Gift App Builder</title>
+  <title>Kado Digital Interaktif 💗</title>
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React & ReactDOM CDN -->
+  
+  <!-- React 18 & ReactDOM CDN -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
   <!-- Babel Standalone -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
   <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
+    * {
       font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      background-color: #fff7fb;
+      color: #5d5061;
       overflow-x: hidden;
     }
-    .scrollbar-none::-webkit-scrollbar {
-      display: none;
+
+    /* Scrollbar Rapi */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-    .scrollbar-none {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    ::-webkit-scrollbar-track {
+      background: #fff7fb;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+    ::-webkit-scrollbar-thumb {
+      background: #e8b5ca;
+      border-radius: 10px;
     }
-    .animate-float {
-      animation: float 3s ease-in-out infinite;
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9b76a7;
+    }
+
+    /* Hardware-Accelerated Floating Particle Animation */
+    @keyframes floatParticle {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 0.2;
+      }
+      50% {
+        transform: translate3d(15px, -30px, 0) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate3d(0, -60px, 0) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .particle-item {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: floatParticle linear infinite;
+    }
+
+    /* Soft Card Style */
+    .soft-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid #e8b5ca;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(155, 118, 167, 0.05);
     }
   </style>
 </head>
-<body class="bg-[#fff7fb] text-[#5d5061]">
+<body>
 
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect, useRef, useMemo } = React;
+    const { useState, useEffect, useRef, useMemo, memo, useCallback } = React;
 
     // ==========================================
-    // 1. DATA REGISTRY (60 GAMES & 60 PHOTOS)
+    // 1. REGISTRY DATA (60 GAMES & 60 PHOTOS)
     // ==========================================
     const OFFICIAL_GAME_LIST = [
-      { id: "game_001", type: "catcher", title: "Tangkap Hewan 🐻", emoji: "🐻", description: "Tangkap hewan lucu yang muncul!", instruction: "Tap hewan secepat mungkin!", enabled: true, order: 1 },
-      { id: "game_002", type: "clicker", title: "Pecahin Balon 🎈", emoji: "🎈", description: "Pecahkan semua balon warna-warni!", instruction: "Klik balon sebelum terbang!", enabled: true, order: 2 },
-      { id: "game_003", type: "catcher", title: "Tangkap Hati 💗", emoji: "💗", description: "Kumpulkan cinta sebanyak-banyaknya!", instruction: "Geser keranjang untuk menangkap hati", enabled: true, order: 3 },
-      { id: "game_004", type: "quiz", title: "Tebak Gambar 🖼️", emoji: "🖼️", description: "Tebak gambar tersembunyi ini!", instruction: "Pilih jawaban yang benar", enabled: true, order: 4 },
-      { id: "game_005", type: "quiz", title: "Tebak Lagu 🎧", emoji: "🎧", description: "Dengarkan potongan lagu ini", instruction: "Siapa penyanyinya?", enabled: true, order: 5 },
-      { id: "game_006", type: "memory", title: "Susun Puzzle 🧩", emoji: "🧩", description: "Susun kembali potongan foto kita", instruction: "Geser puzzle ke posisi pas", enabled: true, order: 6 },
-      { id: "game_007", type: "clicker", title: "Cari Hati Tersembunyi 💕", emoji: "💕", description: "Ada hati tersembunyi di layar", instruction: "Cari dan ketuk hatinya!", enabled: true, order: 7 },
-      { id: "game_008", type: "memory", title: "Memory Card 🃏", emoji: "🃏", description: "Buka dan cocokkan pasangan kartu", instruction: "Ingat posisi pasangan kartu", enabled: true, order: 8 },
-      { id: "game_009", type: "quiz", title: "Tebak Kata 🔤", emoji: "🔤", description: "Susun huruf menjadi kata rahasia", instruction: "Ketik kata yang tepat", enabled: true, order: 9 },
-      { id: "game_010", type: "clicker", title: "Spin the Wheel 🎡", emoji: "🎡", description: "Putar roda keberuntungan", instruction: "Tekan SPIN!", enabled: true, order: 10 },
-      { id: "game_011", type: "quiz", title: "Truth or Dare 🎀", emoji: "🎀", description: "Jawab jujur atau lakukan tantangan", instruction: "Pilih kartu kalian", enabled: true, order: 11 },
-      { id: "game_012", type: "quiz", title: "Love Calculator 💌", emoji: "💌", description: "Hitung tingkat kecocokan kita", instruction: "Tuliskan nama kalian", enabled: true, order: 12 },
-      { id: "game_013", type: "catcher", title: "Tangkap Bintang ⭐", emoji: "⭐", description: "Petik bintang di langit malam", instruction: "Tangkap 10 bintang!", enabled: true, order: 13 },
-      { id: "game_014", type: "clicker", title: "Flappy Heart 🪽", emoji: "🪽", description: "Terbangkan hati melintasi rintangan", instruction: "Tap untuk melompat", enabled: true, order: 14 },
-      { id: "game_015", type: "clicker", title: "Mystery Box 🎁", emoji: "🎁", description: "Buka kotak hadiah misterius", instruction: "Pilih 1 dari 3 kotak", enabled: true, order: 15 },
-      { id: "game_016", type: "quiz", title: "Tebak Emoji 😆", emoji: "😆", description: "Apa arti gabungan emoji ini?", instruction: "Pilih tebakanmu", enabled: true, order: 16 },
-      { id: "game_017", type: "quiz", title: "This or That? 🤔", emoji: "🤔", description: "Pilih favoritmu dari 2 pilihan", instruction: "Tap opsi favoritmu", enabled: true, order: 17 },
-      { id: "game_018", type: "memory", title: "Simon Says 👀", emoji: "👀", description: "Ikuti urutan warna yang menyala", instruction: "Ulangi pola warna", enabled: true, order: 18 },
-      { id: "game_019", type: "memory", title: "Connect the Hearts 💞", emoji: "💞", description: "Hubungkan hati dengan warna sejenis", instruction: "Tarik garis tanpa bertabrakan", enabled: true, order: 19 },
-      { id: "game_020", type: "quiz", title: "Tic Tac Love ❌⭕", emoji: "❌⭕", description: "Mainkan Tic Tac Toe romantis", instruction: "Dapatkan 3 berurutan", enabled: true, order: 20 },
-      { id: "game_021", type: "clicker", title: "Cari Perbedaan 🔎", emoji: "🔎", description: "Temukan 3 perbedaan pada gambar", instruction: "Tap area yang berbeda", enabled: true, order: 21 },
-      { id: "game_022", type: "quiz", title: "Word Scramble 🔤", emoji: "🔤", description: "Rapikan huruf yang berantakan", instruction: "Susun kembali dengan benar", enabled: true, order: 22 },
-      { id: "game_023", type: "catcher", title: "Catch the Stars 🌟", emoji: "🌟", description: "Bintang jatuh! Tangkap cepat!", instruction: "Tap bintang sebelum hilang", enabled: true, order: 23 },
-      { id: "game_024", type: "clicker", title: "Bubble Pop 🫧", emoji: "🫧", description: "Pecahkan gelembung cinta", instruction: "Pop semua gelembung!", enabled: true, order: 24 },
-      { id: "game_025", type: "memory", title: "Candy Match 🍭", emoji: "🍭", description: "Cocokkan permen yang sama", instruction: "Swap candy yang serupa", enabled: true, order: 25 },
-      { id: "game_026", type: "memory", title: "Maze of Love 🌀", emoji: "🌀", description: "Cari jalan menuju labirin cinta", instruction: "Gunakan kontrol panah", enabled: true, order: 26 },
-      { id: "game_027", type: "catcher", title: "Jatuhkan Hati 💘", emoji: "💘", description: "Jatuhkan panah tepat pada target hati", instruction: "Tap untuk melepaskan panah", enabled: true, order: 27 },
-      { id: "game_028", type: "quiz", title: "Tebak Suara 🎶", emoji: "🎶", description: "Suara apakah ini?", instruction: "Pilih jawaban yang benar", enabled: true, order: 28 },
-      { id: "game_029", type: "quiz", title: "Susun Kata 💭", emoji: "💭", description: "Buat kalimat romantis dari kata-kata", instruction: "Urutkan blok kata", enabled: true, order: 29 },
-      { id: "game_030", type: "quiz", title: "Pilih Jawaban 💌", emoji: "💌", description: "Jawab pertanyaan dari si pembuat gift", instruction: "Pilih opsi terbaikmu", enabled: true, order: 30 },
-      { id: "game_031", type: "quiz", title: "Kuis Tentang Kita 🫶🏻", emoji: "🫶🏻", description: "Seberapa tahu kamu tentang kita?", instruction: "Jawab kuis spesial ini", enabled: true, order: 31 },
-      { id: "game_032", type: "quiz", title: "Tebak Siapa 👤", emoji: "👤", description: "Tebak siapa yang dimaksud dari petunjuk", instruction: "Pilih orang yang tepat", enabled: true, order: 32 },
-      { id: "game_033", type: "memory", title: "Find the Pair 🃏", emoji: "🃏", description: "Temukan pasangan item yang cocok", instruction: "Tap kartu untuk membuka", enabled: true, order: 33 },
-      { id: "game_034", type: "catcher", title: "Avoid the Bomb 💣", emoji: "💣", description: "Ambil hadiah dan hindari bom!", instruction: "Geser ke kiri dan kanan", enabled: true, order: 34 },
-      { id: "game_035", type: "catcher", title: "Catch the Flower 🌷", emoji: "🌷", description: "Kumpulkan kelopak bunga gugur", instruction: "Tangkap bunga tulip", enabled: true, order: 35 },
-      { id: "game_036", type: "memory", title: "Garden Match 🌸", emoji: "🌸", description: "Pencocokan tanaman di taman", instruction: "Pasangkan Bunga sejenis", enabled: true, order: 36 },
-      { id: "game_037", type: "clicker", title: "Flappy Bird 🐦", emoji: "🐦", description: "Bantu burung terbang tinggi", instruction: "Tap untuk terbang", enabled: true, order: 37 },
-      { id: "game_038", type: "clicker", title: "Mini Fishing 🎣", emoji: "🎣", description: "Tangkap ikan penuh kejutan", instruction: "Tap saat umpan dimakan!", enabled: true, order: 38 },
-      { id: "game_039", type: "clicker", title: "Whack-a-Mole 🐹", emoji: "🐹", description: "Pukul hamster lucu yang muncul", instruction: "Ketuk saat kepala hamster muncul", enabled: true, order: 39 },
-      { id: "game_040", type: "clicker", title: "Balloon Rush 🎈", emoji: "🎈", description: "Terbang bersama balon tanpa menabrak", instruction: "Kendalikan balon udara", enabled: true, order: 40 },
-      { id: "game_041", type: "catcher", title: "Heart Runner 🏃🏻‍♀️", emoji: "🏃🏻‍♀️", description: "Lari dan kumpulkan token cinta", instruction: "Lompat melompati rintangan", enabled: true, order: 41 },
-      { id: "game_042", type: "catcher", title: "Dodge the Clouds ☁️", emoji: "☁️", description: "Hindari awan mendung!", instruction: "Tetap di area cerah", enabled: true, order: 42 },
-      { id: "game_043", type: "catcher", title: "Collect the Coins 🪙", emoji: "🪙", description: "Kumpulkan koin keberuntungan", instruction: "Ambil koin emas", enabled: true, order: 43 },
-      { id: "game_044", type: "clicker", title: "Hidden Object 🔍", emoji: "🔍", description: "Temukan barang rahasia pada ruangan", instruction: "Zoom dan tap objeknya", enabled: true, order: 44 },
-      { id: "game_045", type: "quiz", title: "Crossword Mini 📝", emoji: "📝", description: "Teka-Teki Silang mini romantis", instruction: "Isi kotak dengan kata pas", enabled: true, order: 45 },
-      { id: "game_046", type: "quiz", title: "Hangman 💬", emoji: "💬", description: "Tebak kata sebelum kesempatan habis", instruction: "Pilih abjad satu-satu", enabled: true, order: 46 },
-      { id: "game_047", type: "quiz", title: "Rock Paper Scissors ✊🏻", emoji: "✊🏻", description: "Batu, Gunting, Kertas!", instruction: "Pilih pilihanmu", enabled: true, order: 47 },
-      { id: "game_048", type: "clicker", title: "Lucky Wheel 🍀", emoji: "🍀", description: "Putar untuk klaim hadiahmu hari ini", instruction: "Spin untuk memutar", enabled: true, order: 48 },
-      { id: "game_049", type: "clicker", title: "Pick a Gift 🎁", emoji: "🎁", description: "Pilih kado mana yang paling kamu suka", instruction: "Ketuk kado impianmu", enabled: true, order: 49 },
-      { id: "game_050", type: "mystery", title: "Secret Door 🚪", emoji: "🚪", description: "Buka pintu rahasia dengan kunci tepat", instruction: "Pilih kunci yang cocok", enabled: true, order: 50 },
-      { id: "game_051", type: "mystery", title: "Treasure Hunt 🗺️", emoji: "🗺️", description: "Ikuti peta harta karun", instruction: "Ikuti jejak petunjuk", enabled: true, order: 51 },
-      { id: "game_052", type: "mystery", title: "Find the Key 🔑", emoji: "🔑", description: "Temukan kunci untuk membuka gembok", instruction: "Cari kunci di dalam gambar", enabled: true, order: 52 },
-      { id: "game_053", type: "mystery", title: "Unlock the Heart 🔐", emoji: "🔐", description: "Masukkan kode kombinasi rahasia", instruction: "Masukkan 4 angka sandi", enabled: true, order: 53 },
-      { id: "game_054", type: "clicker", title: "Pop the Bubble 🫧", emoji: "🫧", description: "Pecahkan gelembung hingga habis", instruction: "Tekan gelembung dengan cepat", enabled: true, order: 54 },
-      { id: "game_055", type: "catcher", title: "Star Catcher ⭐", emoji: "⭐", description: "Tangkap bintang jatuh yang lewat", instruction: "Gunakan jaring bintang", enabled: true, order: 55 },
-      { id: "game_056", type: "quiz", title: "Color Match 🎨", emoji: "🎨", description: "Cocokkan teks warna dengan warna asli", instruction: "Pilih Benar atau Salah", enabled: true, order: 56 },
-      { id: "game_057", type: "clicker", title: "Reaction Test ⚡", emoji: "⚡", description: "Uji seberapa cepat refleksmu!", instruction: "Tap saat warna hijau muncul", enabled: true, order: 57 },
-      { id: "game_058", type: "clicker", title: "Tap the Heart 💓", emoji: "💓", description: "Tap hati sebanyak mungkin dalam 5 detik!", instruction: "Ketuk layar secepatnya!", enabled: true, order: 58 },
-      { id: "game_059", type: "quiz", title: "Memory of Us 🤍", emoji: "🤍", description: "Mengingat momen-momen indah bersama", instruction: "Pilih momen paling berkesan", enabled: true, order: 59 },
-      { id: "game_060", type: "mystery", title: "Final Mystery Game 🎀", emoji: "🎀", description: "Tantangan akhir untuk membuka rahasia utama", instruction: "Gunakan semua petunjuk yang didapat", enabled: true, order: 60 }
+      { id: "game_001", type: "catcher", title: "Tangkap Hewan 🐻", emoji: "🐻", instruction: "Tap hewan secepat mungkin!", enabled: true },
+      { id: "game_002", type: "clicker", title: "Pecahin Balon 🎈", emoji: "🎈", instruction: "Klik balon sebelum terbang!", enabled: true },
+      { id: "game_003", type: "catcher", title: "Tangkap Hati 💗", emoji: "💗", instruction: "Tangkap hati yang jatuh!", enabled: true },
+      { id: "game_004", type: "quiz", title: "Tebak Gambar 🖼️", emoji: "🖼️", instruction: "Pilih jawaban yang benar!", enabled: true },
+      { id: "game_005", type: "quiz", title: "Tebak Lagu 🎧", emoji: "🎧", instruction: "Siapa penyanyi lagu ini?", enabled: true },
+      { id: "game_006", type: "memory", title: "Susun Puzzle 🧩", emoji: "🧩", instruction: "Cocokkan pasangan puzzle!", enabled: true },
+      { id: "game_007", type: "clicker", title: "Cari Hati Tersembunyi 💕", emoji: "💕", instruction: "Cari dan ketuk hatinya!", enabled: true },
+      { id: "game_008", type: "memory", title: "Memory Card 🃏", emoji: "🃏", instruction: "Buka dan cocokkan kartu!", enabled: true },
+      { id: "game_009", type: "quiz", title: "Tebak Kata 🔤", emoji: "🔤", instruction: "Susun huruf rahasia!", enabled: true },
+      { id: "game_010", type: "clicker", title: "Spin the Wheel 🎡", emoji: "🎡", instruction: "Putar roda keberuntungan!", enabled: true },
+      { id: "game_011", type: "quiz", title: "Truth or Dare 🎀", emoji: "🎀", instruction: "Pilih kartu jujur atau tantangan!", enabled: true },
+      { id: "game_012", type: "quiz", title: "Love Calculator 💌", emoji: "💌", instruction: "Hitung skor kecocokan!", enabled: true },
+      { id: "game_013", type: "catcher", title: "Tangkap Bintang ⭐", emoji: "⭐", instruction: "Petik bintang jatuh!", enabled: true },
+      { id: "game_014", type: "clicker", title: "Flappy Heart 🪽", emoji: "🪽", instruction: "Tap untuk menerbangkan hati!", enabled: true },
+      { id: "game_015", type: "clicker", title: "Mystery Box 🎁", emoji: "🎁", description: "Buka kotak rahasia!", instruction: "Pilih 1 dari 3 kotak!", enabled: true },
+      { id: "game_016", type: "quiz", title: "Tebak Emoji 😆", emoji: "😆", instruction: "Tebak arti emoji ini!", enabled: true },
+      { id: "game_017", type: "quiz", title: "This or That? 🤔", emoji: "🤔", instruction: "Pilih 1 dari 2 pilihan!", enabled: true },
+      { id: "game_018", type: "memory", title: "Simon Says 👀", emoji: "👀", instruction: "Ikuti urutan warna!", enabled: true },
+      { id: "game_019", type: "memory", title: "Connect the Hearts 💞", emoji: "💞", instruction: "Hubungkan pasangan hati!", enabled: true },
+      { id: "game_020", type: "quiz", title: "Tic Tac Love ❌⭕", emoji: "❌⭕", instruction: "Mainkan Tic Tac Toe!", enabled: true },
+      { id: "game_021", type: "clicker", title: "Cari Perbedaan 🔎", emoji: "🔎", instruction: "Temukan perbedaan gambar!", enabled: true },
+      { id: "game_022", type: "quiz", title: "Word Scramble 🔤", emoji: "🔤", instruction: "Rapikan huruf berantakan!", enabled: true },
+      { id: "game_023", type: "catcher", title: "Catch the Stars 🌟", emoji: "🌟", instruction: "Tangkap bintang secepatnya!", enabled: true },
+      { id: "game_024", type: "clicker", title: "Bubble Pop 🫧", emoji: "🫧", instruction: "Pecahkan semua gelembung!", enabled: true },
+      { id: "game_025", type: "memory", title: "Candy Match 🍭", emoji: "🍭", instruction: "Cocokkan permen manis!", enabled: true },
+      { id: "game_026", type: "memory", title: "Maze of Love 🌀", emoji: "🌀", instruction: "Temukan jalan keluar!", enabled: true },
+      { id: "game_027", type: "catcher", title: "Jatuhkan Hati 💘", emoji: "💘", instruction: "Lepaskan panah tepat sasaran!", enabled: true },
+      { id: "game_028", type: "quiz", title: "Tebak Suara 🎶", emoji: "🎶", instruction: "Suara apakah ini?", enabled: true },
+      { id: "game_029", type: "quiz", title: "Susun Kata 💭", emoji: "💭", instruction: "Buat kalimat romantis!", enabled: true },
+      { id: "game_030", type: "quiz", title: "Pilih Jawaban 💌", emoji: "💌", instruction: "Pilih jawaban paling pas!", enabled: true },
+      { id: "game_031", type: "quiz", title: "Kuis Tentang Kita 🫶🏻", emoji: "🫶🏻", instruction: "Jawab kuis spesial kita!", enabled: true },
+      { id: "game_032", type: "quiz", title: "Tebak Siapa 👤", emoji: "👤", instruction: "Tebak siapa dari petunjuk!", enabled: true },
+      { id: "game_033", type: "memory", title: "Find the Pair 🃏", emoji: "🃏", instruction: "Cari pasangan yang pas!", enabled: true },
+      { id: "game_034", type: "catcher", title: "Avoid the Bomb 💣", emoji: "💣", instruction: "Ambil kado, hindari bom!", enabled: true },
+      { id: "game_035", type: "catcher", title: "Catch the Flower 🌷", emoji: "🌷", instruction: "Kumpulkan kelopak bunga!", enabled: true },
+      { id: "game_036", type: "memory", title: "Garden Match 🌸", emoji: "🌸", instruction: "Pasangkan tanaman sejenis!", enabled: true },
+      { id: "game_037", type: "clicker", title: "Flappy Bird 🐦", emoji: "🐦", instruction: "Bantu burung terbang!", enabled: true },
+      { id: "game_038", type: "clicker", title: "Mini Fishing 🎣", emoji: "🎣", instruction: "Tap saat umpan dimakan!", enabled: true },
+      { id: "game_039", type: "clicker", title: "Whack-a-Mole 🐹", emoji: "🐹", instruction: "Pukul hamster yang muncul!", enabled: true },
+      { id: "game_040", type: "clicker", title: "Balloon Rush 🎈", emoji: "🎈", instruction: "Terbang bersama balon!", enabled: true },
+      { id: "game_041", type: "catcher", title: "Heart Runner 🏃🏻‍♀️", emoji: "🏃🏻‍♀️", instruction: "Lari dan kumpulkan cinta!", enabled: true },
+      { id: "game_042", type: "catcher", title: "Dodge the Clouds ☁️", emoji: "☁️", instruction: "Hindari awan mendung!", enabled: true },
+      { id: "game_043", type: "catcher", title: "Collect the Coins 🪙", emoji: "🪙", instruction: "Kumpulkan koin emas!", enabled: true },
+      { id: "game_044", type: "clicker", title: "Hidden Object 🔍", emoji: "🔍", instruction: "Temukan barang tersembunyi!", enabled: true },
+      { id: "game_045", type: "quiz", title: "Crossword Mini 📝", emoji: "📝", instruction: "Isi TTS mini romantis!", enabled: true },
+      { id: "game_046", type: "quiz", title: "Hangman 💬", emoji: "💬", instruction: "Tebak kata abjad demi abjad!", enabled: true },
+      { id: "game_047", type: "quiz", title: "Rock Paper Scissors ✊🏻", emoji: "✊🏻", instruction: "Batu, Gunting, Kertas!", enabled: true },
+      { id: "game_048", type: "clicker", title: "Lucky Wheel 🍀", emoji: "🍀", instruction: "Putar roda keberuntungan!", enabled: true },
+      { id: "game_049", type: "clicker", title: "Pick a Gift 🎁", emoji: "🎁", instruction: "Pilih kado mana pilihanmu!", enabled: true },
+      { id: "game_050", type: "mystery", title: "Secret Door 🚪", emoji: "🚪", instruction: "Buka pintu dengan kunci tepat!", enabled: true },
+      { id: "game_051", type: "mystery", title: "Treasure Hunt 🗺️", emoji: "🗺️", instruction: "Ikuti petunjuk harta karun!", enabled: true },
+      { id: "game_052", type: "mystery", title: "Find the Key 🔑", emoji: "🔑", instruction: "Cari kunci gembok!", enabled: true },
+      { id: "game_053", type: "mystery", title: "Unlock the Heart 🔐", emoji: "🔐", instruction: "Masukkan kombinasi angka!", enabled: true },
+      { id: "game_054", type: "clicker", title: "Pop the Bubble 🫧", emoji: "🫧", instruction: "Pecahkan gelembung cinta!", enabled: true },
+      { id: "game_055", type: "catcher", title: "Star Catcher ⭐", emoji: "⭐", instruction: "Tangkap bintang berjatuhan!", enabled: true },
+      { id: "game_056", type: "quiz", title: "Color Match 🎨", emoji: "🎨", instruction: "Cocokkan warna dan teks!", enabled: true },
+      { id: "game_057", type: "clicker", title: "Reaction Test ⚡", emoji: "⚡", instruction: "Tap saat layar berubah hijau!", enabled: true },
+      { id: "game_058", type: "clicker", title: "Tap the Heart 💓", emoji: "💓", instruction: "Tap sebanyak mungkin dalam 5 detik!", enabled: true },
+      { id: "game_059", type: "quiz", title: "Memory of Us 🤍", emoji: "🤍", instruction: "Ingat kembali momen manis kita!", enabled: true },
+      { id: "game_060", type: "mystery", title: "Final Mystery Game 🎀", emoji: "🎀", instruction: "Gunakan kode rahasia akhir!", enabled: true }
     ];
 
     const OFFICIAL_PHOTO_CATEGORIES = [
@@ -122,64 +167,76 @@
       "Silly Photos 🤪", "Unforgettable Moments 🥹", "Secret Folder 🔐", "Memory Wall 🖼️", "The Last Photo 💌"
     ];
 
-    // ==========================================
-    // 2. STORAGE ENGINE (LOCAL + SHARED HYBRID)
-    // ==========================================
-    const getStorageData = (key, fallback) => {
-      try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : fallback;
-      } catch (e) {
-        console.error("Storage Read Error:", e);
-        return fallback;
-      }
+    const INITIAL_GIFT_DATA = {
+      id: "gift_draft",
+      status: "draft",
+      updatedAt: new Date().toISOString(),
+      theme: {
+        backgroundColor: "#fff7fb",
+        textColor: "#5d5061",
+        primaryColor: "#9b76a7",
+        accentColor: "#e8b5ca",
+        particles: { type: "hearts", enabled: true, count: 12 }
+      },
+      cover: {
+        tagline: "Sebuah Kejutan Kecil ✨",
+        title: "Ada Sesuatu Untukmu 🎁",
+        subtitle: "Buka kado ini untuk melihat pesan dan kenangan rahasia kita 💗",
+        buttonText: "Buka Kado Sekarang 💌"
+      },
+      messages: [
+        {
+          id: "msg_1",
+          title: "Surat Untukmu 💌",
+          content: "Hai! Terima kasih sudah selalu hadir dan membuat hari-hariku jadi jauh lebih hangat.\n\nKado digital interaktif ini kubuat khusus dengan penuh cinta. Semoga kamu suka ya! ✨"
+        }
+      ],
+      games: OFFICIAL_GAME_LIST.map(g => ({
+        ...g,
+        config: { targetScore: 5, winMessage: "Kamu Hebat Banget! 🎉", secretPasscode: "1234" }
+      })),
+      photos: OFFICIAL_PHOTO_CATEGORIES.map((title, idx) => ({
+        id: `photo_${idx + 1}`,
+        title,
+        items: []
+      })),
+      musicUrl: "",
+      musicSource: "mp3",
+      replies: []
     };
 
-    const setStorageData = (key, value) => {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {
-        console.error("Storage Write Error:", e);
-      }
-    };
-
     // ==========================================
-    // 3. BACKGROUND PARTICLES COMPONENT
+    // 2. LIGHTWEIGHT PARTICLE ENGINE (MEMOIZED)
     // ==========================================
-    function BackgroundParticles({ config }) {
+    const BackgroundParticles = memo(({ config }) => {
       if (!config || !config.enabled) return null;
-      
-      const particleTypes = {
-        hearts: "💗",
-        stars: "⭐",
-        flowers: "🌸",
-        petals: "🪷",
-        bubbles: "🫧",
-        sparkles: "✨"
+
+      const particleSymbols = {
+        hearts: "💗", stars: "⭐", flowers: "🌸", petals: "🪷", bubbles: "🫧", sparkles: "✨"
       };
+      const symbol = particleSymbols[config.type] || "💗";
+      const count = Math.min(config.count || 10, 15); // Batasi maks 15 agar HP tidak panas
 
-      const symbol = particleTypes[config.type] || "💗";
-      const count = config.count || 12;
-
-      const particles = useMemo(() => {
+      const items = useMemo(() => {
         return Array.from({ length: count }).map((_, i) => ({
           id: i,
-          left: `${Math.random() * 100}%`,
-          duration: `${3 + Math.random() * 4}s`,
-          delay: `${Math.random() * 3}s`,
-          size: `${12 + Math.random() * 16}px`
+          left: `${(i * (100 / count)) + Math.random() * 5}%`,
+          top: `${Math.random() * 80 + 10}%`,
+          duration: `${4 + (i % 3) * 2}s`,
+          delay: `${(i % 4) * 0.5}s`,
+          size: `${14 + (i % 4) * 4}px`
         }));
-      }, [count, config.type]);
+      }, [count]);
 
       return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          {particles.map((p) => (
+          {items.map((p) => (
             <div
               key={p.id}
-              className="absolute animate-float opacity-60"
+              className="particle-item"
               style={{
                 left: p.left,
-                top: `${Math.random() * 90}%`,
+                top: p.top,
                 animationDuration: p.duration,
                 animationDelay: p.delay,
                 fontSize: p.size
@@ -190,310 +247,89 @@
           ))}
         </div>
       );
-    }
+    });
 
     // ==========================================
-    // 4. MUSIC MANAGER PLAYER COMPONENT
+    // 3. LAZY GAME ENGINE HOST (SINGLE ACTIVE)
     // ==========================================
-    function MusicPlayer({ url, source }) {
-      const [playing, setPlaying] = useState(false);
-      if (!url) return null;
-
-      const getSpotifyEmbed = (src) => {
-        const match = src.match(/track\/([a-zA-Z0-9]+)/);
-        return match ? `https://open.spotify.com/embed/track/${match[1]}?utm_source=generator&theme=0` : null;
-      };
-
-      const getYouTubeEmbed = (src) => {
-        const match = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-        return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&loop=1` : null;
-      };
-
-      return (
-        <div className="fixed bottom-4 right-4 z-40 bg-white/95 backdrop-blur-md p-2 rounded-2xl shadow-xl border border-[#e8b5ca] max-w-xs transition-all">
-          {source === 'spotify' && getSpotifyEmbed(url) && (
-            <iframe
-              src={getSpotifyEmbed(url)}
-              width="100%"
-              height="80"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              className="rounded-xl"
-            />
-          )}
-
-          {source === 'youtube' && getYouTubeEmbed(url) && (
-            <iframe
-              width="0"
-              height="0"
-              src={getYouTubeEmbed(url)}
-              title="YouTube Audio Engine"
-              allow="autoplay"
-            />
-          )}
-
-          {(source === 'mp3' || !source) && (
-            <div className="flex items-center space-x-2 px-2 py-1">
-              <audio id="global-audio-element" loop src={url} />
-              <button
-                onClick={() => {
-                  const audio = document.getElementById('global-audio-element');
-                  if (audio) {
-                    if (playing) {
-                      audio.pause();
-                      setPlaying(false);
-                    } else {
-                      audio.play().catch(() => {});
-                      setPlaying(true);
-                    }
-                  }
-                }}
-                className="px-3 py-1 bg-[#9b76a7] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow"
-              >
-                {playing ? '⏸️ Pause Music' : '🎵 Tap to Play Music'}
-              </button>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 5. GAME ENGINES (MODULAR)
-    // ==========================================
-    function CatcherEngine({ config, onWin }) {
+    function GameEngineHost({ game, onWin }) {
+      const [isPlaying, setIsPlaying] = useState(false);
       const [score, setScore] = useState(0);
-      const [position, setPosition] = useState({ top: 30, left: 40 });
-      const targetScore = config?.targetScore || 5;
+      const [won, setWon] = useState(false);
+      const [passcode, setPasscode] = useState('');
 
-      const handleCatch = () => {
-        const nextScore = score + 1;
-        setScore(nextScore);
-        if (nextScore >= targetScore) {
-          onWin();
-        } else {
-          setPosition({
-            top: Math.floor(Math.random() * 65) + 10,
-            left: Math.floor(Math.random() * 70) + 15
-          });
-        }
-      };
+      const target = game.config?.targetScore || 5;
 
-      return (
-        <div className="relative w-full h-52 bg-[#fff7fb] rounded-2xl overflow-hidden border border-[#e8b5ca] select-none">
-          <div className="absolute top-2 left-3 text-xs font-bold text-[#5d5061] bg-white/80 px-2 py-1 rounded-lg">
-            Skor: {score} / {targetScore}
-          </div>
-          <button
-            onClick={handleCatch}
-            style={{ top: `${position.top}%`, left: `${position.left}%` }}
-            className="absolute text-3xl transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 active:scale-125"
-          >
-            🎯
-          </button>
-        </div>
-      );
-    }
-
-    function ClickerEngine({ config, onWin }) {
-      const [clicks, setClicks] = useState(0);
-      const target = config?.targetScore || 8;
-
-      const handleClick = () => {
-        const next = clicks + 1;
-        setClicks(next);
+      const handleTap = () => {
+        const next = score + 1;
+        setScore(next);
         if (next >= target) {
-          onWin();
+          setWon(true);
+          if (onWin) onWin(game.id);
         }
       };
 
-      return (
-        <div className="p-4 text-center bg-[#fff7fb] rounded-2xl border border-[#e8b5ca]">
-          <div className="text-3xl font-extrabold mb-3 text-[#5d5061]">{clicks} / {target}</div>
-          <button
-            onClick={handleClick}
-            className="px-6 py-3 bg-[#9b76a7] text-white font-bold rounded-2xl shadow-md active:scale-95 transition"
-          >
-            Ketuk Di Sini! 💓
-          </button>
-        </div>
-      );
-    }
-
-    function QuizEngine({ config, onWin }) {
-      const [selected, setSelected] = useState(null);
-      const options = ["Pilihan A", "Pilihan B (Jawaban Tepat)", "Pilihan C"];
-
-      const handleSelect = (idx) => {
-        setSelected(idx);
-        if (idx === 1) {
-          setTimeout(onWin, 400);
+      const handleMysteryUnlock = () => {
+        if (passcode === (game.config?.secretPasscode || "1234")) {
+          setWon(true);
+          if (onWin) onWin(game.id);
         } else {
-          alert("Coba lagi ya! 🥹");
+          alert(`Kode salah! Coba petunjuk sandi default: ${game.config?.secretPasscode || "1234"}`);
         }
       };
 
       return (
-        <div className="space-y-2 p-2">
-          {options.map((opt, i) => (
+        <div className="soft-card p-4 text-center max-w-sm mx-auto my-3 relative z-10">
+          <div className="text-3xl mb-1">{game.emoji}</div>
+          <h4 className="font-bold text-xs text-[#5d5061]">{game.title}</h4>
+          <p className="text-[10px] text-gray-500 mb-3">{game.instruction}</p>
+
+          {!isPlaying && !won && (
             <button
-              key={i}
-              onClick={() => handleSelect(i)}
-              className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold border transition ${
-                selected === i ? 'bg-[#9b76a7] text-white' : 'bg-white text-[#5d5061] border-[#e8b5ca]'
-              }`}
+              onClick={() => setIsPlaying(true)}
+              className="w-full py-2 bg-[#9b76a7] text-white font-bold rounded-xl text-xs active:scale-95 transition shadow-sm"
             >
-              {opt}
+              Mulai Main 🚀
             </button>
-          ))}
-        </div>
-      );
-    }
+          )}
 
-    function MemoryEngine({ config, onWin }) {
-      const [cards, setCards] = useState([
-        { id: 1, val: '🌸', open: false },
-        { id: 2, val: '🌸', open: false },
-        { id: 3, val: '🎀', open: false },
-        { id: 4, val: '🎀', open: false },
-      ]);
-
-      const handleFlip = (idx) => {
-        const updated = [...cards];
-        updated[idx].open = true;
-        setCards(updated);
-
-        if (updated.every(c => c.open)) {
-          setTimeout(onWin, 400);
-        }
-      };
-
-      return (
-        <div className="grid grid-cols-2 gap-2 p-2">
-          {cards.map((card, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleFlip(idx)}
-              className="h-16 text-2xl bg-white border border-[#e8b5ca] rounded-2xl flex items-center justify-center shadow-sm"
-            >
-              {card.open ? card.val : '❓'}
-            </button>
-          ))}
-        </div>
-      );
-    }
-
-    function MysteryEngine({ config, onWin }) {
-      const [step, setStep] = useState(1);
-      const [code, setCode] = useState('');
-      const secret = config?.secretPasscode || "1234";
-
-      const handleUnlock = () => {
-        if (code === secret) {
-          setStep(2);
-        } else {
-          alert(`Kode salah! Gunakan sandi default: ${secret}`);
-        }
-      };
-
-      return (
-        <div className="p-4 bg-[#fff7fb] rounded-2xl border border-[#e8b5ca] text-center">
-          {step === 1 && (
-            <div className="space-y-3">
-              <p className="text-xs font-semibold text-[#5d5061]">🔐 Masukkan Kode Rahasia Akhir:</p>
-              <input
-                type="text"
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="****"
-                className="w-full text-center text-xl tracking-widest p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b76a7]"
-              />
-              <button
-                onClick={handleUnlock}
-                className="w-full py-2.5 bg-[#9b76a7] text-white font-bold rounded-xl text-xs"
-              >
-                Buka Rahasia 🔑
-              </button>
+          {isPlaying && !won && (
+            <div>
+              {game.type === 'mystery' ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    placeholder="Masukkan Kode Rahasia"
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-center text-xs"
+                  />
+                  <button
+                    onClick={handleMysteryUnlock}
+                    className="w-full py-2 bg-[#9b76a7] text-white font-bold rounded-xl text-xs"
+                  >
+                    Buka Kunci 🔓
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="text-lg font-bold text-[#9b76a7]">{score} / {target}</div>
+                  <button
+                    onClick={handleTap}
+                    className="w-full py-3 bg-[#e8b5ca] text-[#5d5061] font-bold rounded-xl text-xs active:scale-90 transition"
+                  >
+                    Ketuk / Tap Di Sini! 💓
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
-          {step === 2 && (
-            <div className="space-y-3 animate-fade-in">
-              <div className="text-4xl">🎀</div>
-              <h4 className="font-bold text-[#5d5061] text-sm">You Found The Final Secret!</h4>
-              <p className="text-xs text-gray-600 leading-relaxed italic">
-                "{config?.finalText || "Ternyata hadiah terakhirnya bukan sesuatu yang bisa kamu buka... Tapi semua kenangan yang sudah kita buat bersama. 🤍"}"
-              </p>
-              <button
-                onClick={onWin}
-                className="w-full py-2 bg-[#e8b5ca] text-[#5d5061] font-bold rounded-xl text-xs mt-2"
-              >
-                Selesaikan Hadiah ✨
-              </button>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    function GameEngineHost({ gameConfig, onComplete }) {
-      const [gameState, setGameState] = useState('idle');
-
-      const renderEngine = () => {
-        switch (gameConfig.type) {
-          case 'catcher':
-            return <CatcherEngine config={gameConfig.config} onWin={() => handleWin()} />;
-          case 'clicker':
-            return <ClickerEngine config={gameConfig.config} onWin={() => handleWin()} />;
-          case 'quiz':
-            return <QuizEngine config={gameConfig.config} onWin={() => handleWin()} />;
-          case 'memory':
-            return <MemoryEngine config={gameConfig.config} onWin={() => handleWin()} />;
-          case 'mystery':
-            return <MysteryEngine config={gameConfig.config} onWin={() => handleWin()} />;
-          default:
-            return <ClickerEngine config={gameConfig.config} onWin={() => handleWin()} />;
-        }
-      };
-
-      const handleWin = () => {
-        setGameState('won');
-        if (onComplete) onComplete(gameConfig.id);
-      };
-
-      return (
-        <div className="w-full max-w-sm mx-auto p-4 rounded-3xl shadow-sm border border-[#e8b5ca] bg-white text-center">
-          <div className="text-3xl mb-1">{gameConfig.emoji}</div>
-          <h3 className="text-sm font-bold text-[#5d5061]">{gameConfig.title}</h3>
-          <p className="text-[11px] text-gray-500 mb-3">{gameConfig.description}</p>
-
-          {gameState === 'idle' && (
-            <div className="space-y-2">
-              <p className="text-[11px] text-[#9b76a7] bg-[#fff7fb] p-2 rounded-xl">{gameConfig.instruction}</p>
-              <button
-                onClick={() => setGameState('playing')}
-                className="w-full py-2 rounded-xl font-bold text-xs text-white shadow bg-[#9b76a7] active:scale-95 transition"
-              >
-                Mulai Main 🚀
-              </button>
-            </div>
-          )}
-
-          {gameState === 'playing' && renderEngine()}
-
-          {gameState === 'won' && (
-            <div className="py-3">
-              <div className="text-3xl mb-1">🎉</div>
-              <h4 className="text-xs font-bold text-green-600">Berhasil Diselesaikan!</h4>
-              <p className="text-[11px] text-gray-600 my-1">{gameConfig.config?.winMessage || "+10 Hearts 💗"}</p>
-              <button
-                onClick={() => setGameState('idle')}
-                className="px-3 py-1 rounded-xl text-[10px] font-semibold bg-[#e8b5ca] text-[#5d5061]"
-              >
-                Main Lagi 🔄
-              </button>
+          {won && (
+            <div className="py-2 bg-[#fff7fb] rounded-xl border border-[#e8b5ca] animate-pulse">
+              <div className="text-2xl mb-1">🎉</div>
+              <p className="text-xs font-bold text-[#9b76a7]">{game.config?.winMessage || "Berhasil Diselesaikan!"}</p>
             </div>
           )}
         </div>
@@ -501,409 +337,375 @@
     }
 
     // ==========================================
-    // 6. EDITOR DASHBOARD MODULES
+    // 4. EDITOR DASHBOARD (TAHAP 2 INTEGRATED)
     // ==========================================
-    function GameManager({ games, onUpdateGame }) {
-      const [search, setSearch] = useState('');
-      const [editingGame, setEditingGame] = useState(null);
+    function EditorDashboard({ giftData, setGiftData, onPreview, onPublish, lastSaved, saveStatus }) {
+      const [tab, setTab] = useState('cover');
 
-      const filtered = games.filter(g => g.title.toLowerCase().includes(search.toLowerCase()));
-
-      return (
-        <div className="space-y-3">
-          <input
-            type="text"
-            placeholder="🔍 Cari dari 60 game..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-2.5 rounded-2xl border border-[#e8b5ca] focus:outline-none text-xs"
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto pr-1">
-            {filtered.map((game) => (
-              <div key={game.id} className="p-2.5 bg-white rounded-2xl border border-[#e8b5ca] flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xl">{game.emoji}</span>
-                  <div>
-                    <h4 className="text-xs font-bold text-[#5d5061]">{game.title}</h4>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${game.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {game.enabled ? 'Aktif' : 'Sembunyi'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-1">
-                  <button
-                    onClick={() => onUpdateGame(game.id, { enabled: !game.enabled })}
-                    className="p-1 text-xs rounded-lg bg-[#fff7fb] border border-[#e8b5ca]"
-                  >
-                    {game.enabled ? '👁️' : '🙈'}
-                  </button>
-                  <button
-                    onClick={() => setEditingGame(game)}
-                    className="px-2 py-1 text-[10px] rounded-lg bg-[#9b76a7] text-white font-semibold"
-                  >
-                    Edit
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {editingGame && (
-            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl p-4 w-full max-w-sm space-y-3">
-                <h3 className="font-bold text-xs text-[#5d5061]">Edit: {editingGame.title}</h3>
-                <div>
-                  <label className="text-[10px] font-semibold text-gray-500">Judul Game</label>
-                  <input
-                    type="text"
-                    value={editingGame.title}
-                    onChange={(e) => setEditingGame({ ...editingGame, title: e.target.value })}
-                    className="w-full p-2 border rounded-xl text-xs mt-0.5"
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] font-semibold text-gray-500">Instruksi Singkat</label>
-                  <input
-                    type="text"
-                    value={editingGame.instruction}
-                    onChange={(e) => setEditingGame({ ...editingGame, instruction: e.target.value })}
-                    className="w-full p-2 border rounded-xl text-xs mt-0.5"
-                  />
-                </div>
-                <div className="flex justify-end space-x-2 pt-2">
-                  <button
-                    onClick={() => setEditingGame(null)}
-                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-gray-100 text-gray-600"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    onClick={() => {
-                      onUpdateGame(editingGame.id, editingGame);
-                      setEditingGame(null);
-                    }}
-                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-[#9b76a7] text-white"
-                  >
-                    Simpan Perubahan
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    function PhotoManager({ photos, onUpdatePhoto }) {
-      const [search, setSearch] = useState('');
-      const [selectedCat, setSelectedCat] = useState(null);
-
-      const filtered = photos.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
-
-      return (
-        <div className="space-y-3">
-          <input
-            type="text"
-            placeholder="🔍 Cari dari 60 kategori foto..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-2.5 rounded-2xl border border-[#e8b5ca] focus:outline-none text-xs"
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto pr-1">
-            {filtered.map((item) => (
-              <div key={item.id} className="p-2.5 bg-white rounded-2xl border border-[#e8b5ca] flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-[#5d5061]">{item.title}</h4>
-                  <p className="text-[9px] text-gray-400">{item.items.length} Foto</p>
-                </div>
-                <button
-                  onClick={() => setSelectedCat(item)}
-                  className="px-2.5 py-1 text-[10px] rounded-lg bg-[#e8b5ca] text-[#5d5061] font-bold"
-                >
-                  📷 Kelola
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {selectedCat && (
-            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl p-4 w-full max-w-sm space-y-3">
-                <h3 className="font-bold text-xs text-[#5d5061]">{selectedCat.title}</h3>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-gray-500">Tambah URL Gambar Direct / Unsplash</label>
-                  <input
-                    type="text"
-                    placeholder="https://..."
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.target.value) {
-                        const newItems = [...selectedCat.items, { id: Date.now().toString(), url: e.target.value }];
-                        onUpdatePhoto(selectedCat.id, { items: newItems });
-                        setSelectedCat({ ...selectedCat, items: newItems });
-                        e.target.value = '';
-                      }
-                    }}
-                    className="w-full p-2 border rounded-xl text-xs"
-                  />
-                  <p className="text-[9px] text-gray-400">Tekan Enter untuk menyimpan gambar.</p>
-                </div>
-
-                <div className="flex space-x-2 overflow-x-auto py-2">
-                  {selectedCat.items.map((img) => (
-                    <img key={img.id} src={img.url} alt="Memory" className="w-14 h-14 object-cover rounded-xl border" />
-                  ))}
-                </div>
-
-                <div className="flex justify-end pt-1">
-                  <button
-                    onClick={() => setSelectedCat(null)}
-                    className="px-4 py-1.5 text-xs font-bold rounded-xl bg-[#9b76a7] text-white"
-                  >
-                    Selesai
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    function EditorDashboard({ giftData, setGiftData, onPublish, onPreview }) {
-      const [activeTab, setActiveTab] = useState('cover');
-
-      const handleUpdateGame = (gameId, updatedFields) => {
-        const newGames = giftData.games.map(g => g.id === gameId ? { ...g, ...updatedFields } : g);
-        setGiftData({ ...giftData, games: newGames });
+      const updateCover = (field, val) => {
+        setGiftData(prev => ({ ...prev, cover: { ...prev.cover, [field]: val } }));
       };
 
-      const handleUpdatePhoto = (photoId, updatedFields) => {
-        const newPhotos = giftData.photos.map(p => p.id === photoId ? { ...p, ...updatedFields } : p);
-        setGiftData({ ...giftData, photos: newPhotos });
+      const updateMessage = (index, field, val) => {
+        setGiftData(prev => {
+          const newMsgs = [...prev.messages];
+          newMsgs[index] = { ...newMsgs[index], [field]: val };
+          return { ...prev, messages: newMsgs };
+        });
+      };
+
+      const toggleGame = (id) => {
+        setGiftData(prev => ({
+          ...prev,
+          games: prev.games.map(g => g.id === id ? { ...g, enabled: !g.enabled } : g)
+        }));
+      };
+
+      const addPhotoUrl = (catId, url) => {
+        if (!url) return;
+        setGiftData(prev => ({
+          ...prev,
+          photos: prev.photos.map(p => p.id === catId ? { ...p, items: [...p.items, { id: Date.now().toString(), url }] } : p)
+        }));
       };
 
       return (
-        <div className="min-h-screen bg-[#fff7fb] text-[#5d5061] pb-20">
-          <header className="p-3 bg-white border-b border-[#e8b5ca] sticky top-0 z-30 flex items-center justify-between shadow-sm">
-            <h1 className="font-bold text-xs sm:text-sm">🎁 Gift Dashboard Editor</h1>
-            <div className="flex space-x-2">
-              <button onClick={onPreview} className="px-3 py-1 text-xs rounded-xl bg-[#e8b5ca] font-bold">👀 Preview</button>
-              <button onClick={onPublish} className="px-3 py-1 text-xs rounded-xl bg-[#9b76a7] text-white font-bold shadow">🚀 Publish</button>
+        <div className="min-h-screen bg-[#fff7fb] text-[#5d5061] pb-24">
+          {/* Top Bar Navigation */}
+          <header className="p-3 bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-[#e8b5ca] flex items-center justify-between shadow-sm">
+            <div>
+              <h1 className="font-bold text-xs sm:text-sm text-[#5d5061]">🎁 Editor Kado Digital</h1>
+              <p className="text-[9px] text-gray-400">{saveStatus} • Tersimpan: {lastSaved}</p>
+            </div>
+            <div className="flex space-x-1.5">
+              <button
+                onClick={onPreview}
+                className="px-3 py-1.5 bg-[#e8b5ca] text-[#5d5061] font-bold text-xs rounded-xl active:scale-95 transition"
+              >
+                👀 Live Preview
+              </button>
+              <button
+                onClick={onPublish}
+                className="px-3 py-1.5 bg-[#9b76a7] text-white font-bold text-xs rounded-xl shadow active:scale-95 transition"
+              >
+                🚀 Publish
+              </button>
             </div>
           </header>
 
-          <div className="p-3 max-w-2xl mx-auto space-y-3">
+          <main className="max-w-xl mx-auto p-3 space-y-3">
+            {/* Tab Selector */}
             <div className="flex space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-              {['cover', 'messages', 'games', 'photos', 'music', 'appearance'].map((tab) => (
+              {[
+                { id: 'cover', name: 'Cover' },
+                { id: 'messages', name: 'Messages' },
+                { id: 'games', name: 'Games (60)' },
+                { id: 'photos', name: 'Photos (60)' },
+                { id: 'music', name: 'Music' },
+                { id: 'appearance', name: 'Appearance' },
+                { id: 'replies', name: 'Replies' }
+              ].map(t => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-3 py-1.5 rounded-2xl text-xs font-bold capitalize transition ${
-                    activeTab === tab ? 'bg-[#9b76a7] text-white shadow' : 'bg-white text-[#5d5061] border border-[#e8b5ca]'
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+                    tab === t.id ? 'bg-[#9b76a7] text-white shadow-sm' : 'bg-white border border-[#e8b5ca] text-[#5d5061]'
                   }`}
                 >
-                  {tab}
+                  {t.name}
                 </button>
               ))}
             </div>
 
-            {activeTab === 'cover' && (
-              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
-                <h3 className="font-bold text-xs">💌 Tampilan Opening Cover</h3>
+            {/* TAB COVER */}
+            {tab === 'cover' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">💌 Pengaturan Cover Depan</h3>
                 <div>
-                  <label className="text-[10px] text-gray-500 font-semibold">Judul Utama</label>
+                  <label className="text-[10px] text-gray-500 font-semibold">Tagline Kecil</label>
                   <input
                     type="text"
-                    value={giftData.cover.title}
-                    onChange={(e) => setGiftData({ ...giftData, cover: { ...giftData.cover, title: e.target.value } })}
-                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                    value={giftData.cover.tagline}
+                    onChange={(e) => updateCover('tagline', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gray-500 font-semibold">Subjudul / Ucapan</label>
+                  <label className="text-[10px] text-gray-500 font-semibold">Judul Utama Cover</label>
                   <input
                     type="text"
+                    value={giftData.cover.title}
+                    onChange={(e) => updateCover('title', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Subjudul / Pesan Pembuka</label>
+                  <textarea
+                    rows={2}
                     value={giftData.cover.subtitle}
-                    onChange={(e) => setGiftData({ ...giftData, cover: { ...giftData.cover, subtitle: e.target.value } })}
-                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                    onChange={(e) => updateCover('subtitle', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Teks Tombol Buka</label>
+                  <input
+                    type="text"
+                    value={giftData.cover.buttonText}
+                    onChange={(e) => updateCover('buttonText', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
                   />
                 </div>
               </div>
             )}
 
-            {activeTab === 'messages' && (
-              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
-                <h3 className="font-bold text-xs">📝 Surat / Pesan Utama</h3>
+            {/* TAB MESSAGES */}
+            {tab === 'messages' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">📝 Edit Pesan & Surat Utama</h3>
                 <div>
                   <label className="text-[10px] text-gray-500 font-semibold">Judul Surat</label>
                   <input
                     type="text"
                     value={giftData.messages[0]?.title || ''}
-                    onChange={(e) => {
-                      const updatedMsg = [...giftData.messages];
-                      updatedMsg[0] = { ...updatedMsg[0], title: e.target.value };
-                      setGiftData({ ...giftData, messages: updatedMsg });
-                    }}
-                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                    onChange={(e) => updateMessage(0, 'title', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
                   />
                 </div>
                 <div>
                   <label className="text-[10px] text-gray-500 font-semibold">Isi Pesan Romantis</label>
                   <textarea
-                    rows={4}
+                    rows={5}
                     value={giftData.messages[0]?.content || ''}
-                    onChange={(e) => {
-                      const updatedMsg = [...giftData.messages];
-                      updatedMsg[0] = { ...updatedMsg[0], content: e.target.value };
-                      setGiftData({ ...giftData, messages: updatedMsg });
-                    }}
-                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                    onChange={(e) => updateMessage(0, 'content', e.target.value)}
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
                   />
                 </div>
               </div>
             )}
 
-            {activeTab === 'games' && (
-              <GameManager games={giftData.games} onUpdateGame={handleUpdateGame} />
+            {/* TAB GAMES */}
+            {tab === 'games' && (
+              <div className="soft-card p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-xs text-[#9b76a7]">🎮 Kelola 60 Game Interaktif</h3>
+                  <span className="text-[10px] text-gray-400">Aktif: {giftData.games.filter(g => g.enabled).length}/60</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[50vh] overflow-y-auto pr-1">
+                  {giftData.games.map((g) => (
+                    <div key={g.id} className="p-2 bg-white rounded-xl border border-[#e8b5ca] flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span>{g.emoji}</span>
+                        <span className="text-xs font-semibold truncate max-w-[120px]">{g.title}</span>
+                      </div>
+                      <button
+                        onClick={() => toggleGame(g.id)}
+                        className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+                          g.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'
+                        }`}
+                      >
+                        {g.enabled ? 'Aktif' : 'Sembunyi'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
 
-            {activeTab === 'photos' && (
-              <PhotoManager photos={giftData.photos} onUpdatePhoto={handleUpdatePhoto} />
+            {/* TAB PHOTOS */}
+            {tab === 'photos' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">📷 Kelola 60 Kategori Galeri Foto</h3>
+                <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
+                  {giftData.photos.map((cat) => (
+                    <div key={cat.id} className="p-2.5 bg-white rounded-xl border border-[#e8b5ca]">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold">{cat.title}</span>
+                        <span className="text-[10px] text-gray-400">{cat.items.length} foto</span>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Tempel URL Gambar (Unsplash/Direct Link)..."
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            addPhotoUrl(cat.id, e.target.value);
+                            e.target.value = '';
+                          }
+                        }}
+                        className="w-full p-1.5 border rounded-lg text-[10px]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
 
-            {activeTab === 'music' && (
-              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
-                <h3 className="font-bold text-xs">🎵 Pengaturan Musik Background</h3>
+            {/* TAB MUSIC */}
+            {tab === 'music' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">🎵 Audio & Background Music</h3>
                 <div>
-                  <label className="text-[10px] text-gray-500 font-semibold">URL Audio (MP3 / Spotify / YouTube)</label>
+                  <label className="text-[10px] text-gray-500 font-semibold">URL Audio Direct (MP3)</label>
                   <input
                     type="text"
-                    placeholder="https://..."
-                    value={giftData.musicUrl || ''}
+                    placeholder="https://domain.com/music.mp3"
+                    value={giftData.musicUrl}
                     onChange={(e) => setGiftData({ ...giftData, musicUrl: e.target.value })}
-                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5"
                   />
-                </div>
-                <div>
-                  <label className="text-[10px] text-gray-500 font-semibold">Tipe Sumber Musik</label>
-                  <select
-                    value={giftData.musicSource || 'mp3'}
-                    onChange={(e) => setGiftData({ ...giftData, musicSource: e.target.value })}
-                    className="w-full p-2 border rounded-xl text-xs mt-1 bg-white"
-                  >
-                    <option value="mp3">Direct MP3 Link</option>
-                    <option value="spotify">Spotify Track Link</option>
-                    <option value="youtube">YouTube Video Link</option>
-                  </select>
                 </div>
               </div>
             )}
 
-            {activeTab === 'appearance' && (
-              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
-                <h3 className="font-bold text-xs">✨ Tampilan & Partikel Visual</h3>
+            {/* TAB APPEARANCE */}
+            {tab === 'appearance' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">✨ Efek Partikel Visual</h3>
                 <div>
                   <label className="text-[10px] text-gray-500 font-semibold">Jenis Partikel Melayang</label>
                   <select
                     value={giftData.theme.particles.type}
                     onChange={(e) => setGiftData({
                       ...giftData,
-                      theme: {
-                        ...giftData.theme,
-                        particles: { ...giftData.theme.particles, type: e.target.value }
-                      }
+                      theme: { ...giftData.theme, particles: { ...giftData.theme.particles, type: e.target.value } }
                     })}
-                    className="w-full p-2 border rounded-xl text-xs mt-1 bg-white"
+                    className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs mt-0.5 bg-white"
                   >
                     <option value="hearts">💗 Hearts</option>
                     <option value="stars">⭐ Stars</option>
-                    <option value="flowers">🌸 Flowers</option>
-                    <option value="petals">🪷 Petals</option>
-                    <option value="bubbles">🫧 Bubbles</option>
+                    <option value="flowers">🌸 Bunga</option>
                     <option value="sparkles">✨ Sparkles</option>
+                    <option value="bubbles">🫧 Gelembung</option>
                   </select>
                 </div>
               </div>
             )}
-          </div>
+
+            {/* TAB REPLIES */}
+            {tab === 'replies' && (
+              <div className="soft-card p-4 space-y-3">
+                <h3 className="font-bold text-xs text-[#9b76a7]">💬 Respons dari Penerima</h3>
+                {giftData.replies && giftData.replies.length > 0 ? (
+                  <div className="space-y-2">
+                    {giftData.replies.map((r, idx) => (
+                      <div key={idx} className="p-2.5 bg-white rounded-xl border text-xs">
+                        <p className="font-semibold text-[#5d5061]">{r.text}</p>
+                        <span className="text-[9px] text-gray-400">{r.date}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 text-center py-4">Belum ada respons dari penerima.</p>
+                )}
+              </div>
+            )}
+          </main>
         </div>
       );
     }
 
     // ==========================================
-    // 7. RECIPIENT MODE COMPONENT
+    // 5. RECIPIENT VIEW (OPTIMIZED & ISOLATED)
     // ==========================================
     function RecipientView({ giftData, onBackToEditor }) {
-      const [opened, setOpened] = useState(false);
+      const [isOpen, setIsOpen] = useState(false);
+      const [replyInput, setReplyInput] = useState('');
+
+      const activeGames = useMemo(() => {
+        return giftData.games.filter(g => g.enabled);
+      }, [giftData.games]);
+
+      const activePhotos = useMemo(() => {
+        return giftData.photos.filter(p => p.items.length > 0);
+      }, [giftData.photos]);
 
       return (
-        <div
-          className="min-h-screen relative transition-colors duration-500 pb-20"
-          style={{
-            backgroundColor: giftData.theme.backgroundColor || "#fff7fb",
-            color: giftData.theme.textColor || "#5d5061"
-          }}
-        >
+        <div className="min-h-screen relative pb-20 overflow-x-hidden">
           <BackgroundParticles config={giftData.theme.particles} />
 
           {onBackToEditor && (
             <button
               onClick={onBackToEditor}
-              className="fixed top-3 left-3 z-50 bg-black/70 text-white px-3 py-1 rounded-full text-[10px] font-semibold backdrop-blur"
+              className="fixed top-3 left-3 z-50 bg-black/70 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur"
             >
-              ✏️ Kembalikan ke Editor
+              ✏️ Kembali ke Editor
             </button>
           )}
 
-          {!opened ? (
+          {!isOpen ? (
             <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center relative z-10">
-              <div className="text-6xl mb-4 animate-bounce">🎁</div>
-              <h1 className="text-xl sm:text-2xl font-bold mb-2">{giftData.cover.title}</h1>
-              <p className="text-xs sm:text-sm opacity-80 mb-6 max-w-xs">{giftData.cover.subtitle}</p>
+              <span className="text-[10px] font-bold text-[#9b76a7] bg-white/80 px-3 py-1 rounded-full border border-[#e8b5ca] mb-2">
+                {giftData.cover.tagline}
+              </span>
+              <h1 className="text-xl sm:text-2xl font-bold text-[#5d5061] mb-2">{giftData.cover.title}</h1>
+              <p className="text-xs text-gray-600 mb-6 max-w-xs">{giftData.cover.subtitle}</p>
               <button
-                onClick={() => setOpened(true)}
-                className="px-7 py-3 rounded-full font-bold text-xs text-white shadow-lg transition active:scale-95"
-                style={{ backgroundColor: giftData.theme.primaryColor || "#9b76a7" }}
+                onClick={() => setIsOpen(true)}
+                className="px-7 py-3 bg-[#9b76a7] text-white font-bold text-xs rounded-full shadow-lg active:scale-95 transition"
               >
-                {giftData.cover.buttonText || "Buka Hadiah 💌"}
+                {giftData.cover.buttonText}
               </button>
             </div>
           ) : (
-            <main className="max-w-md mx-auto p-4 space-y-6 relative z-10 pt-10">
-              {giftData.messages.map((msg) => (
-                <div key={msg.id} className="p-4 bg-white/90 backdrop-blur rounded-3xl shadow-sm border border-[#e8b5ca]/40 text-center">
-                  <h2 className="font-bold text-sm mb-1">{msg.title}</h2>
-                  <p className="text-xs whitespace-pre-line opacity-90 leading-relaxed">{msg.content}</p>
+            <main className="max-w-md mx-auto p-4 space-y-5 relative z-10 pt-8">
+              {/* Messages */}
+              {giftData.messages.map((m) => (
+                <div key={m.id} className="soft-card p-4 text-center">
+                  <h2 className="font-bold text-sm text-[#9b76a7] mb-2">{m.title}</h2>
+                  <p className="text-xs text-[#5d5061] whitespace-pre-line leading-relaxed">{m.content}</p>
                 </div>
               ))}
 
-              <section className="space-y-3">
-                <h3 className="font-bold text-center text-xs tracking-wider uppercase opacity-70">📸 Memory Lane</h3>
-                {giftData.photos.filter(p => p.items.length > 0).map((cat) => (
-                  <div key={cat.id} className="p-3 bg-white/90 rounded-3xl border border-[#e8b5ca]/40">
-                    <h4 className="font-bold text-xs mb-2">{cat.title}</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {cat.items.map(img => (
-                        <img key={img.id} src={img.url} alt="Memory" className="w-full h-28 object-cover rounded-2xl shadow-sm" />
-                      ))}
+              {/* Photos */}
+              {activePhotos.length > 0 && (
+                <section className="space-y-3">
+                  <h3 className="text-center font-bold text-xs uppercase tracking-wider text-[#9b76a7]">📸 Memory Gallery</h3>
+                  {activePhotos.map(cat => (
+                    <div key={cat.id} className="soft-card p-3">
+                      <h4 className="font-bold text-xs mb-2 text-[#5d5061]">{cat.title}</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {cat.items.map(img => (
+                          <img key={img.id} src={img.url} alt="Memory" className="w-full h-28 object-cover rounded-xl shadow-sm" />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </section>
-
-              <section className="space-y-4">
-                <h3 className="font-bold text-center text-xs tracking-wider uppercase opacity-70">🎮 Mini Games</h3>
-                {giftData.games.filter(g => g.enabled).map((game) => (
-                  <GameEngineHost key={game.id} gameConfig={game} />
-                ))}
-              </section>
-
-              {giftData.musicUrl && (
-                <MusicPlayer url={giftData.musicUrl} source={giftData.musicSource} />
+                  ))}
+                </section>
               )}
+
+              {/* Games */}
+              {activeGames.length > 0 && (
+                <section className="space-y-3">
+                  <h3 className="text-center font-bold text-xs uppercase tracking-wider text-[#9b76a7]">🎮 Play Mini Games</h3>
+                  {activeGames.map(g => (
+                    <GameEngineHost key={g.id} game={g} />
+                  ))}
+                </section>
+              )}
+
+              {/* Reply Form */}
+              <div className="soft-card p-4 text-center space-y-2">
+                <h4 className="font-bold text-xs text-[#5d5061]">💬 Kirim Balasan ke Pembuat Kado</h4>
+                <input
+                  type="text"
+                  placeholder="Tulis balasan manismu..."
+                  value={replyInput}
+                  onChange={(e) => setReplyInput(e.target.value)}
+                  className="w-full p-2 border border-[#e8b5ca] rounded-xl text-xs"
+                />
+                <button
+                  onClick={() => {
+                    if (replyInput) {
+                      alert("Terima kasih! Balasanmu berhasil terkirim 💗");
+                      setReplyInput('');
+                    }
+                  }}
+                  className="w-full py-2 bg-[#e8b5ca] text-[#5d5061] font-bold rounded-xl text-xs"
+                >
+                  Kirim Balasan ✨
+                </button>
+              </div>
             </main>
           )}
         </div>
@@ -911,135 +713,114 @@
     }
 
     // ==========================================
-    // 8. APP ROOT & ROUTER
+    // 6. MAIN APP CONTROLLER
     // ==========================================
-    const INITIAL_GIFT_DATA = {
-      id: "gift_default",
-      status: "draft",
-      theme: {
-        fontFamily: "Poppins, sans-serif",
-        backgroundColor: "#fff7fb",
-        textColor: "#5d5061",
-        primaryColor: "#9b76a7",
-        accentColor: "#e8b5ca",
-        particles: { type: "hearts", enabled: true, count: 12 }
-      },
-      cover: {
-        title: "🎁 Sebuah Kejutan Kecil",
-        subtitle: "Ada sesuatu yang spesial untuk kamu di dalam 🤍",
-        buttonText: "Buka Hadiah 💌"
-      },
-      messages: [
-        {
-          id: "msg_1",
-          title: "Pesan Spesial 💌",
-          content: "Terima kasih sudah selalu ada dan menyinari hariku. Kado interaktif ini kubuat khusus untukmu!"
-        }
-      ],
-      games: OFFICIAL_GAME_LIST.map(g => ({
-        ...g,
-        config: { targetScore: 5, secretPasscode: "1234" }
-      })),
-      photos: OFFICIAL_PHOTO_CATEGORIES.map((title, idx) => ({
-        id: `photo_${String(idx + 1).padStart(3, '0')}`,
-        title,
-        enabled: true,
-        order: idx + 1,
-        items: []
-      })),
-      musicUrl: "",
-      musicSource: "mp3"
-    };
-
     function App() {
-      const [giftData, setGiftData] = useState(() => getStorageData('draft_gift', INITIAL_GIFT_DATA));
-      const [mode, setMode] = useState('editor');
-      const [shareUrl, setShareUrl] = useState('');
+      const [giftData, setGiftData] = useState(() => {
+        const saved = localStorage.getItem('kado_draft_data');
+        return saved ? JSON.parse(saved) : INITIAL_GIFT_DATA;
+      });
 
-      // Auto-Detect Hash Route for Recipient Mode
+      const [viewMode, setViewMode] = useState('editor'); // 'editor' | 'preview' | 'recipient'
+      const [lastSavedTime, setLastSavedTime] = useState('Baru saja');
+      const [saveStatus, setSaveStatus] = useState('Tersimpan');
+      const [publishedModalUrl, setPublishedModalUrl] = useState('');
+
+      // AutoSave ke LocalStorage
       useEffect(() => {
-        const hash = window.location.hash.replace('#', '');
-        if (hash) {
-          const loaded = getStorageData(`published_gift_${hash}`, null);
-          if (loaded) {
-            setGiftData(loaded);
-            setMode('recipient');
+        setSaveStatus('Menyimpan...');
+        const timer = setTimeout(() => {
+          localStorage.setItem('kado_draft_data', JSON.stringify(giftData));
+          setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          setSaveStatus('Draft Tersimpan');
+        }, 800);
+
+        return () => clearTimeout(timer);
+      }, [giftData]);
+
+      // System Publish (Tahap 3 Ready)
+      const handlePublish = () => {
+        const token = Math.random().toString(36).substring(2, 8);
+        const publishedPayload = { ...giftData, status: 'published', updatedAt: new Date().toISOString() };
+        
+        // Simpan versi terpublikasi secara independen
+        localStorage.setItem(`kado_pub_${token}`, JSON.stringify(publishedPayload));
+
+        const shareableUrl = `${window.location.origin}${window.location.pathname}#/g/${token}`;
+        setPublishedModalUrl(shareableUrl);
+      };
+
+      // Hash Listener untuk mode Recipient
+      useEffect(() => {
+        const hash = window.location.hash;
+        if (hash.includes('#/g/')) {
+          const token = hash.split('#/g/')[1];
+          const pubData = localStorage.getItem(`kado_pub_${token}`);
+          if (pubData) {
+            setGiftData(JSON.parse(pubData));
+            setViewMode('recipient');
           }
         }
       }, []);
 
-      useEffect(() => {
-        if (mode === 'editor') {
-          setStorageData('draft_gift', giftData);
-        }
-      }, [giftData, mode]);
-
-      const handlePublish = () => {
-        const uniqueId = Math.random().toString(36).substring(2, 8);
-        const publishedPayload = { ...giftData, id: uniqueId, status: 'published' };
-        
-        setStorageData(`published_gift_${uniqueId}`, publishedPayload);
-        const url = `${window.location.origin}${window.location.pathname}#${uniqueId}`;
-        setShareUrl(url);
-      };
-
-      if (shareUrl) {
-        return (
-          <div className="min-h-screen bg-[#fff7fb] flex items-center justify-center p-4">
-            <div className="bg-white p-5 rounded-3xl border border-[#e8b5ca] shadow-xl max-w-xs w-full text-center space-y-3">
-              <div className="text-4xl">🎉</div>
-              <h2 className="text-sm font-bold text-[#5d5061]">Gift Berhasil Dipublish!</h2>
-              <p className="text-[10px] text-gray-500">Bagikan link ini ke orang tersayang:</p>
-              <input
-                type="text"
-                readOnly
-                value={shareUrl}
-                className="w-full p-2 bg-gray-50 border rounded-xl text-[10px] text-center font-mono select-all"
-              />
-              <div className="flex space-x-2 pt-1">
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(shareUrl);
-                    alert("Link berhasil disalin! 💗");
-                  }}
-                  className="flex-1 py-2 bg-[#e8b5ca] text-[#5d5061] text-xs font-bold rounded-xl"
-                >
-                  📋 Salin Link
-                </button>
-                <button
-                  onClick={() => setShareUrl('')}
-                  className="flex-1 py-2 bg-[#9b76a7] text-white text-xs font-bold rounded-xl"
-                >
-                  Tutup
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      }
-
       return (
         <div>
-          {mode === 'editor' && (
+          {viewMode === 'editor' && (
             <EditorDashboard
               giftData={giftData}
               setGiftData={setGiftData}
+              onPreview={() => setViewMode('preview')}
               onPublish={handlePublish}
-              onPreview={() => setMode('preview')}
+              lastSaved={lastSavedTime}
+              saveStatus={saveStatus}
             />
           )}
 
-          {mode === 'preview' && (
+          {viewMode === 'preview' && (
             <RecipientView
               giftData={giftData}
-              onBackToEditor={() => setMode('editor')}
+              onBackToEditor={() => setViewMode('editor')}
             />
           )}
 
-          {mode === 'recipient' && (
+          {viewMode === 'recipient' && (
             <RecipientView
               giftData={giftData}
             />
+          )}
+
+          {/* Modal Publish Success */}
+          {publishedModalUrl && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="soft-card p-5 max-w-sm w-full text-center space-y-3 bg-white">
+                <div className="text-4xl">🎉</div>
+                <h3 className="font-bold text-sm text-[#5d5061]">Kado Berhasil Dipublish!</h3>
+                <p className="text-[10px] text-gray-500">Bagikan link ini kepada penerima kado:</p>
+                <input
+                  type="text"
+                  readOnly
+                  value={publishedModalUrl}
+                  className="w-full p-2 bg-gray-50 border rounded-xl text-[10px] text-center font-mono select-all"
+                />
+                <div className="flex space-x-2 pt-1">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(publishedModalUrl);
+                      alert("Link unik berhasil disalin! 💗");
+                    }}
+                    className="flex-1 py-2 bg-[#e8b5ca] text-[#5d5061] text-xs font-bold rounded-xl"
+                  >
+                    📋 Salin Link
+                  </button>
+                  <button
+                    onClick={() => setPublishedModalUrl('')}
+                    className="flex-1 py-2 bg-[#9b76a7] text-white text-xs font-bold rounded-xl"
+                  >
+                    Tutup
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       );
