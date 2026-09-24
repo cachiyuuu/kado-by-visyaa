@@ -3,17 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Our Little World 💗</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================
-       BASIC STYLE
-    ========================= */
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -48,21 +43,15 @@
       transition: 0.3s;
     }
 
-    h1,
-    h2,
-    h3,
-    .brand {
+    h1, h2, h3, .brand {
       font-family: "Baloo 2", sans-serif;
     }
 
-    button,
-    input,
-    textarea {
+    button, input, textarea {
       font-family: inherit;
     }
 
-    button,
-    a {
+    button, a {
       cursor: pointer;
     }
 
@@ -87,19 +76,15 @@
       color: var(--secondary);
     }
 
-    /* =========================
-       LANDING PAGE
-    ========================= */
-
+    /* LANDING PAGE */
     .landing {
       min-height: 100vh;
       display: grid;
       place-items: center;
       padding: 24px;
-      background:
-        radial-gradient(circle at top left, #ffe0ee, transparent 40%),
-        radial-gradient(circle at bottom right, #e8e0ff, transparent 40%),
-        var(--background);
+      background: radial-gradient(circle at top left, #ffe0ee, transparent 40%),
+                  radial-gradient(circle at bottom right, #e8e0ff, transparent 40%),
+                  var(--background);
     }
 
     .landing-card {
@@ -156,15 +141,8 @@
       opacity: 0.8;
     }
 
-    .cloud-one {
-      top: 35px;
-      left: 30px;
-    }
-
-    .cloud-two {
-      top: 65px;
-      right: 25px;
-    }
+    .cloud-one { top: 35px; left: 30px; }
+    .cloud-two { top: 65px; right: 25px; }
 
     .flower {
       position: absolute;
@@ -172,11 +150,7 @@
       left: 25px;
       font-size: 28px;
     }
-
-    .flower-two {
-      right: 30px;
-      left: auto;
-    }
+    .flower-two { right: 30px; left: auto; }
 
     .primary-button {
       display: inline-block;
@@ -201,17 +175,9 @@
       font-size: 0.75rem;
     }
 
-    /* =========================
-       APP LAYOUT
-    ========================= */
-
-    .app {
-      display: none;
-    }
-
-    .app.active {
-      display: block;
-    }
+    /* APP LAYOUT */
+    .app { display: none; }
+    .app.active { display: block; }
 
     .app-shell {
       width: 100%;
@@ -261,10 +227,7 @@
       white-space: nowrap;
     }
 
-    /* =========================
-       STATISTICS
-    ========================= */
-
+    /* STATISTICS */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -281,22 +244,11 @@
       box-shadow: var(--shadow);
     }
 
-    .stat-card span {
-      font-size: 1.5rem;
-    }
+    .stat-card span { font-size: 1.5rem; }
+    .stat-card strong { font-size: 1.6rem; }
+    .stat-card small { color: var(--secondary); }
 
-    .stat-card strong {
-      font-size: 1.6rem;
-    }
-
-    .stat-card small {
-      color: var(--secondary);
-    }
-
-    /* =========================
-       SECTION
-    ========================= */
-
+    /* SECTION */
     .section-heading {
       display: flex;
       align-items: center;
@@ -305,10 +257,7 @@
       margin: 25px 0 15px;
     }
 
-    .section-heading h2 {
-      margin: 0;
-      font-size: 1.7rem;
-    }
+    .section-heading h2 { margin: 0; font-size: 1.7rem; }
 
     .soft-label {
       padding: 8px 13px;
@@ -318,10 +267,7 @@
       font-weight: 700;
     }
 
-    /* =========================
-       WORLD PLACES
-    ========================= */
-
+    /* WORLD PLACES */
     .world-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -336,44 +282,17 @@
       transition: 0.2s;
     }
 
-    .place-card:hover {
-      transform: translateY(-4px);
-    }
+    .place-card:hover { transform: translateY(-4px); }
+    .place-card.town { background: var(--purple); }
+    .place-card.home { background: var(--green); }
+    .place-card.cafe { background: var(--yellow); }
+    .place-card.garden { background: #f8dfe8; }
 
-    .place-card.town {
-      background: var(--purple);
-    }
+    .place-emoji { margin-bottom: 15px; font-size: 2.7rem; }
+    .place-card h3 { margin-bottom: 5px; }
+    .place-card p { font-size: 0.82rem; line-height: 1.5; }
 
-    .place-card.home {
-      background: var(--green);
-    }
-
-    .place-card.cafe {
-      background: var(--yellow);
-    }
-
-    .place-card.garden {
-      background: #f8dfe8;
-    }
-
-    .place-emoji {
-      margin-bottom: 15px;
-      font-size: 2.7rem;
-    }
-
-    .place-card h3 {
-      margin-bottom: 5px;
-    }
-
-    .place-card p {
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
-
-    /* =========================
-       PANELS
-    ========================= */
-
+    /* PANELS */
     .feature-panel {
       margin-top: 30px;
       padding: 25px;
@@ -392,38 +311,12 @@
       background: linear-gradient(#dff1ff 0 58%, #cbe8c8 58%);
     }
 
-    .sun {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      font-size: 2rem;
-    }
-
-    .tree {
-      position: absolute;
-      bottom: 55px;
-      font-size: 4rem;
-    }
-
-    .tree-one {
-      left: 30px;
-    }
-
-    .tree-two {
-      right: 35px;
-    }
-
-    .town-house {
-      font-size: 7rem;
-    }
-
-    .town-character {
-      position: absolute;
-      bottom: 30px;
-      left: 52%;
-      font-size: 2.7rem;
-    }
-
+    .sun { position: absolute; top: 20px; right: 25px; font-size: 2rem; }
+    .tree { position: absolute; bottom: 55px; font-size: 4rem; }
+    .tree-one { left: 30px; }
+    .tree-two { right: 35px; }
+    .town-house { font-size: 7rem; }
+    .town-character { position: absolute; bottom: 30px; left: 52%; font-size: 2.7rem; }
     .town-scene p {
       position: absolute;
       bottom: 10px;
@@ -433,10 +326,7 @@
       font-size: 0.8rem;
     }
 
-    /* =========================
-       ACTIVITIES
-    ========================= */
-
+    /* ACTIVITIES */
     .activity-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -456,37 +346,18 @@
       transition: 0.2s;
     }
 
-    .activity-card:hover {
-      transform: translateY(-3px);
-    }
+    .activity-card:hover { transform: translateY(-3px); }
+    .activity-card span { font-size: 1.8rem; }
+    .activity-card strong { font-size: 0.95rem; }
+    .activity-card small { color: var(--secondary); }
 
-    .activity-card span {
-      font-size: 1.8rem;
-    }
-
-    .activity-card strong {
-      font-size: 0.95rem;
-    }
-
-    .activity-card small {
-      color: var(--secondary);
-    }
-
-    /* =========================
-       FORMS
-    ========================= */
-
-    .form-card,
-    .question-box,
-    .memory-upload {
+    /* FORMS */
+    .form-card, .question-box, .memory-upload {
       display: grid;
       gap: 12px;
     }
 
-    .form-card input,
-    .form-card textarea,
-    .question-box textarea,
-    .memory-upload input {
+    .form-card input, .form-card textarea, .question-box textarea, .memory-upload input {
       width: 100%;
       padding: 13px;
       border: 1px solid #ead7e5;
@@ -497,529 +368,372 @@
       font: inherit;
     }
 
-    .form-card input:focus,
-    .form-card textarea:focus,
-    .question-box textarea:focus {
+    .form-card input:focus, .form-card textarea:focus, .question-box textarea:focus {
       border-color: var(--pink);
     }
 
-    /* =========================
-       DIARY
-    ========================= */
-
-    .diary-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
+    /* DIARY */
+    .diary-list { display: grid; gap: 12px; margin-top: 20px; }
     .diary-item {
       padding: 17px;
       border-left: 4px solid var(--pink);
       border-radius: 18px;
       background: var(--background);
     }
+    .diary-item h3 { margin-bottom: 5px; }
+    .diary-item small { color: var(--secondary); font-size: 0.72rem; }
+    .diary-item p { margin-top: 10px; line-height: 1.6; white-space: pre-wrap; }
 
-    .diary-item h3 {
-      margin-bottom: 5px;
-    }
-
-    .diary-item small {
-      color: var(--secondary);
-      font-size: 0.72rem;
-    }
-
-    .diary-item p {
-      margin-top: 10px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-
-    /* =========================
-       DAILY QUESTION
-    ========================= */
-
+    /* DAILY QUESTION */
     .question-box {
       padding: 22px;
       border-radius: 20px;
       background: var(--purple);
     }
+    .question-box p { font-family: "Baloo 2", sans-serif; font-size: 1.35rem; }
+    .saved-message { color: var(--pink-dark); font-size: 0.85rem; }
 
-    .question-box p {
-      font-family: "Baloo 2", sans-serif;
-      font-size: 1.35rem;
-    }
-
-    .saved-message {
-      color: var(--pink-dark);
-      font-size: 0.85rem;
-    }
-
-    /* =========================
-       MEMORY
-    ========================= */
-
+    /* MEMORY */
     .memory-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
       margin-top: 20px;
     }
+    .memory-card { overflow: hidden; border-radius: 18px; background: var(--background); }
+    .memory-card img { width: 100%; height: 160px; object-fit: cover; }
+    .memory-card p { padding: 10px; font-size: 0.85rem; }
 
-    .memory-card {
-      overflow: hidden;
-      border-radius: 18px;
-      background: var(--background);
-    }
-
-    .memory-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
-
-    .memory-card p {
-      padding: 10px;
-      font-size: 0.85rem;
-    }
-
-    /* =========================
-       ACHIEVEMENTS
-    ========================= */
-
-    .achievement-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .achievement {
-      padding: 16px;
-      border-radius: 18px;
-      background: var(--background);
-    }
-
-    .achievement.locked {
-      opacity: 0.45;
-    }
-
-    .achievement strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .achievement small {
-      color: var(--secondary);
-    }
-
-    .footer {
-      padding: 35px 0 15px;
-      color: var(--secondary);
+    /* PUBLISH BUTTON BAR */
+    .cloud-sync-bar {
+      margin-top: 35px;
       text-align: center;
-      font-size: 0.8rem;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
     }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
 
     @media (max-width: 800px) {
-      .world-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .activity-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .memory-grid,
-      .achievement-list {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .world-grid, .activity-grid, .memory-grid { grid-template-columns: repeat(2, 1fr); }
     }
-
     @media (max-width: 520px) {
-      .app-shell {
-        padding: 16px;
-      }
-
-      .welcome-section {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .stats-grid {
-        gap: 8px;
-      }
-
-      .stat-card {
-        padding: 12px;
-      }
-
-      .stat-card strong {
-        font-size: 1.3rem;
-      }
-
-      .world-grid,
-      .activity-grid,
-      .memory-grid,
-      .achievement-list {
-        grid-template-columns: 1fr;
-      }
-
-      .feature-panel {
-        padding: 18px;
-      }
-
-      .soft-label {
-        display: none;
-      }
+      .app-shell { padding: 16px; }
+      .welcome-section { flex-direction: column; align-items: flex-start; }
+      .world-grid, .activity-grid, .memory-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- =========================
-       LANDING PAGE
-  ========================= -->
-
+  <!-- LANDING PAGE -->
   <section class="landing" id="landingPage">
     <div class="landing-card">
-
       <p class="eyebrow">A tiny place for two</p>
-
-      <h1>
-        Our Little<br>
-        <span>World</span> ✨
-      </h1>
-
-      <p class="subtitle">
-        Tempat kecil untuk menyimpan cerita,
-        hadiah, kenangan, dan momen sederhana
-        bersama.
-      </p>
-
+      <h1>Our Little<br><span>World</span> ✨</h1>
+      <p class="subtitle">Tempat kecil untuk menyimpan cerita, hadiah, kenangan, dan momen sederhana bersama.</p>
       <div class="landing-art">
         <div class="cloud cloud-one"></div>
         <div class="cloud cloud-two"></div>
-
         <div class="house">🏡</div>
-
         <div class="flower">🌷</div>
         <div class="flower flower-two">🌼</div>
       </div>
-
-      <button class="primary-button" id="enterWorld">
-        Masuk ke dunia kita →
-      </button>
-
-      <p class="tiny-note">
-        Made with little moments & lots of love ♡
-      </p>
-
+      <button class="primary-button" id="enterWorld">Masuk ke dunia kita →</button>
+      <p class="tiny-note">Made with little moments & lots of love ♡</p>
     </div>
   </section>
 
-
-  <!-- =========================
-       MAIN APPLICATION
-  ========================= -->
-
+  <!-- MAIN APPLICATION -->
   <main class="app" id="mainApp">
-
     <div class="app-shell">
-
-      <!-- TOPBAR -->
-
       <header class="topbar">
-
-        <div class="brand">
-          ♡ Our Little World
-        </div>
-
-        <button class="icon-button" id="themeToggle">
-          ☀️
-        </button>
-
+        <div class="brand">♡ Our Little World</div>
+        <button class="icon-button" id="themeToggle">☀️</button>
       </header>
 
-
-      <!-- WELCOME -->
-
       <section class="welcome-section">
-
         <div>
-          <p class="eyebrow">
-            Welcome back, little star ✨
-          </p>
-
-          <h1>
-            Our tiny universe
-          </h1>
-
-          <p class="muted">
-            Satu tempat untuk semua cerita kecil kita.
-          </p>
+          <p class="eyebrow">Welcome back, little star ✨</p>
+          <h1>Our tiny universe</h1>
+          <p class="muted">Satu tempat untuk semua cerita kecil kita.</p>
         </div>
-
-        <div class="level-pill">
-          ♡ Level <span id="levelValue">1</span>
-        </div>
-
+        <div class="level-pill">♡ Level <span id="levelValue">1</span></div>
       </section>
 
-
-      <!-- STATISTICS -->
-
       <section class="stats-grid">
-
         <div class="stat-card">
           <span>💗</span>
           <strong id="heartPoints">0</strong>
           <small>Love points</small>
         </div>
-
         <div class="stat-card">
           <span>📖</span>
           <strong id="diaryCount">0</strong>
           <small>Diary entries</small>
         </div>
-
         <div class="stat-card">
           <span>🏆</span>
           <strong id="achievementCount">0</strong>
           <small>Achievements</small>
         </div>
-
       </section>
-
-
-      <!-- OUR LITTLE TOWN -->
 
       <section class="section-heading">
-
-        <div>
-          <p class="eyebrow">Explore</p>
-          <h2>Our little town</h2>
-        </div>
-
-        <span class="soft-label">
-          Choose a place
-        </span>
-
+        <div><p class="eyebrow">Explore</p><h2>Our little town</h2></div>
+        <span class="soft-label">Choose a place</span>
       </section>
-
 
       <section class="world-grid">
-
-        <a class="place-card town" href="#town">
-          <div class="place-emoji">🏘️</div>
-          <h3>Town Square</h3>
-          <p>Tempat berkumpul dan ngobrol.</p>
-        </a>
-
-        <a class="place-card home" href="#home">
-          <div class="place-emoji">🏡</div>
-          <h3>Shared Home</h3>
-          <p>Rumah kecil yang bisa dihias.</p>
-        </a>
-
-        <a class="place-card cafe" href="#cafe">
-          <div class="place-emoji">☕</div>
-          <h3>Little Café</h3>
-          <p>Ngobrol sambil menikmati minuman.</p>
-        </a>
-
-        <a class="place-card garden" href="#garden">
-          <div class="place-emoji">🌷</div>
-          <h3>Memory Garden</h3>
-          <p>Tempat menyimpan kenangan.</p>
-        </a>
-
+        <a class="place-card town" href="#town"><div class="place-emoji">🏘️</div><h3>Town Square</h3><p>Tempat berkumpul dan ngobrol.</p></a>
+        <a class="place-card home" href="#home"><div class="place-emoji">🏡</div><h3>Shared Home</h3><p>Rumah kecil yang bisa dihias.</p></a>
+        <a class="place-card cafe" href="#cafe"><div class="place-emoji">☕</div><h3>Little Café</h3><p>Ngobrol sambil menikmati minuman.</p></a>
+        <a class="place-card garden" href="#garden"><div class="place-emoji">🌷</div><h3>Memory Garden</h3><p>Tempat menyimpan kenangan.</p></a>
       </section>
-
-
-      <!-- TOWN SQUARE -->
 
       <section class="feature-panel" id="town">
-
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">Your current space</p>
-            <h2>Town Square</h2>
-          </div>
-
+          <div><p class="eyebrow">Your current space</p><h2>Town Square</h2></div>
           <span>🌤️</span>
         </div>
-
         <div class="town-scene">
-
           <div class="sun">☀️</div>
-
           <div class="tree tree-one">🌳</div>
           <div class="tree tree-two">🌳</div>
-
           <div class="town-house">🏠</div>
-
-          <div class="town-character">
-            🧸
-          </div>
-
-          <p>
-            Di sini, cerita kecil kita dimulai.
-          </p>
-
+          <div class="town-character">🧸</div>
+          <p>Di sini, cerita kecil kita dimulai.</p>
         </div>
-
       </section>
 
-
-      <!-- ACTIVITIES -->
-
-      <section class="section-heading">
-
-        <div>
-          <p class="eyebrow">Little activities</p>
-          <h2>Things to do</h2>
-        </div>
-
-      </section>
-
+      <section class="section-heading"><div><p class="eyebrow">Little activities</p><h2>Things to do</h2></div></section>
 
       <section class="activity-grid">
-
-        <button class="activity-card" data-target="diarySection">
-          <span>📖</span>
-          <strong>Daily Notebook</strong>
-          <small>Tulis hari ini</small>
-        </button>
-
-        <button class="activity-card" data-target="questionSection">
-          <span>💬</span>
-          <strong>Daily Question</strong>
-          <small>Jawab pertanyaan</small>
-        </button>
-
-        <button class="activity-card" id="giftButton">
-          <span>🎁</span>
-          <strong>Send a Gift</strong>
-          <small>Kirim kejutan</small>
-        </button>
-
-        <button class="activity-card" data-target="memorySection">
-          <span>📸</span>
-          <strong>Memories</strong>
-          <small>Simpan momen</small>
-        </button>
-
-        <button class="activity-card" id="dressButton">
-          <span>👗</span>
-          <strong>Dress-up</strong>
-          <small>Atur penampilan</small>
-        </button>
-
-        <button class="activity-card" id="gameButton">
-          <span>🎮</span>
-          <strong>Mini Game</strong>
-          <small>Main sebentar</small>
-        </button>
-
+        <button class="activity-card" data-target="diarySection"><span>📖</span><strong>Daily Notebook</strong><small>Tulis hari ini</small></button>
+        <button class="activity-card" data-target="questionSection"><span>💬</span><strong>Daily Question</strong><small>Jawab pertanyaan</small></button>
+        <button class="activity-card" data-target="memorySection"><span>📸</span><strong>Memories</strong><small>Simpan momen</small></button>
       </section>
-
-
-      <!-- DAILY NOTEBOOK -->
 
       <section class="feature-panel" id="diarySection">
-
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">A page for today</p>
-            <h2>Daily Notebook 📖</h2>
-          </div>
-        </div>
-
+        <div class="section-heading"><div><p class="eyebrow">A page for today</p><h2>Daily Notebook 📖</h2></div></div>
         <form class="form-card" id="diaryForm">
-
-          <input
-            type="text"
-            id="diaryTitle"
-            placeholder="Judul cerita hari ini..."
-            maxlength="80"
-            required
-          >
-
-          <textarea
-            id="diaryContent"
-            rows="4"
-            placeholder="Tulis apa pun yang ingin kamu simpan..."
-            required
-          ></textarea>
-
-          <button class="primary-button" type="submit">
-            Simpan cerita ♡
-          </button>
-
+          <input type="text" id="diaryTitle" placeholder="Judul cerita hari ini..." maxlength="80" required>
+          <textarea id="diaryContent" rows="4" placeholder="Tulis apa pun yang ingin kamu simpan..." required></textarea>
+          <button class="primary-button" type="submit">Simpan cerita ♡</button>
         </form>
-
         <div class="diary-list" id="diaryList"></div>
-
       </section>
-
-
-      <!-- DAILY QUESTION -->
 
       <section class="feature-panel" id="questionSection">
-
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">A question for us</p>
-            <h2>Daily Question 💬</h2>
-          </div>
-        </div>
-
+        <div class="section-heading"><div><p class="eyebrow">A question for us</p><h2>Daily Question 💬</h2></div></div>
         <div class="question-box">
-
-          <p id="questionText">
-            Hal kecil apa yang membuatmu tersenyum hari ini?
-          </p>
-
-          <textarea
-            id="questionAnswer"
-            rows="3"
-            placeholder="Jawabanmu..."
-          ></textarea>
-
-          <button class="primary-button" id="saveAnswer">
-            Simpan jawaban
-          </button>
-
+          <p id="questionText">Hal kecil apa yang membuatmu tersenyum hari ini?</p>
+          <textarea id="questionAnswer" rows="3" placeholder="Jawabanmu..."></textarea>
+          <button class="primary-button" id="saveAnswer">Simpan jawaban</button>
           <p class="saved-message" id="answerMessage"></p>
-
         </div>
-
       </section>
 
-
-      <!-- MEMORY GALLERY -->
-
       <section class="feature-panel" id="memorySection">
-
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Keep the moments</p>
-            <h2>Memory Gallery 📸</h2>
-          </div>
-        </div>
-
+        <div class="section-heading"><div><p class="eyebrow">Keep the moments</p><h2>Memory Gallery 📸</h2></div></div>
         <div class="memory-upload">
+          <input type="text" id="memoryUrl" placeholder="Tempel URL gambar (direct link)...">
+          <input type="text" id="memoryCaption" placeholder="Catatan kenangan...">
+          <button class="primary-button" id="addMemoryBtn">Tambah ke Galeri ♡</button>
+        </div>
+        <div class="memory-grid" id="memoryGrid"></div>
+      </section>
 
-          <input
-            type="file"
-            id="memoryFile"
-            accept="image/*"
-          >
+      <!-- CLOUD PUBLISH PANEL -->
+      <div class="cloud-sync-bar">
+        <h3 style="margin-bottom: 8px; font-family:'Baloo 2'">🚀 Simpan & Terbitkan Online</h3>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 15px;">Klik tombol di bawah untuk menyinkronkan data dunia kecil ini ke cloud database JSONBin.</p>
+        <button class="primary-button" id="publishCloudBtn">Publish ke Cloud ☁️</button>
+      </div>
 
-          <input
-            type="text"
-            id="memoryCap
+      <footer class="footer">
+        <p>Our Little World • Made with love ♡</p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- SCRIPT LOGIC & JSONBIN INTEGRATION -->
+  <script>
+    const JSONBIN_MASTER_KEY = "$2a$10$MxA3/EAN88c0DYsE0LlmkuURu0FcOnyC3EcOAV0zHJ24WAuErS79O";
+    const JSONBIN_BIN_ID = "6ab4fb61ac6210605af06115";
+
+    const landingPage = document.getElementById("landingPage");
+    const mainApp = document.getElementById("mainApp");
+    const enterWorld = document.getElementById("enterWorld");
+    const themeToggle = document.getElementById("themeToggle");
+
+    let appData = {
+      points: 10,
+      level: 1,
+      diaries: [],
+      memories: [],
+      answer: ""
+    };
+
+    // Load data dari localStorage jika ada
+    const localSaved = localStorage.getItem("our_little_world_data");
+    if (localSaved) {
+      try { appData = JSON.parse(localSaved); } catch(e) {}
+    }
+
+    function updateUI() {
+      document.getElementById("heartPoints").innerText = appData.points;
+      document.getElementById("levelValue").innerText = appData.level;
+      document.getElementById("diaryCount").innerText = appData.diaries.length;
+      document.getElementById("achievementCount").innerText = appData.diaries.length > 0 ? 1 : 0;
+
+      // Render Diary
+      const diaryList = document.getElementById("diaryList");
+      diaryList.innerHTML = appData.diaries.map(d => `
+        <div class="diary-item">
+          <h3>${escapeHtml(d.title)}</h3>
+          <small>${d.date}</small>
+          <p>${escapeHtml(d.content)}</p>
+        </div>
+      `).join('');
+
+      // Render Memories
+      const memoryGrid = document.getElementById("memoryGrid");
+      memoryGrid.innerHTML = appData.memories.map(m => `
+        <div class="memory-card">
+          <img src="${escapeHtml(m.url)}" alt="Memory" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300'">
+          <p>${escapeHtml(m.caption)}</p>
+        </div>
+      `).join('');
+
+      if (appData.answer) {
+        document.getElementById("questionAnswer").value = appData.answer;
+      }
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    enterWorld.addEventListener("click", () => {
+      landingPage.classList.add("hidden");
+      mainApp.classList.add("active");
+      updateUI();
+    });
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      themeToggle.innerText = document.body.classList.contains("dark") ? "🌙" : "☀️";
+    });
+
+    // Diary Submit
+    document.getElementById("diaryForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = document.getElementById("diaryTitle").value;
+      const content = document.getElementById("diaryContent").value;
+      
+      appData.diaries.unshift({
+        title,
+        content,
+        date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+      });
+      appData.points += 15;
+      appData.level = Math.floor(appData.points / 50) + 1;
+
+      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
+      document.getElementById("diaryTitle").value = '';
+      document.getElementById("diaryContent").value = '';
+      updateUI();
+      alert("Cerita berhasil disimpan! ♡");
+    });
+
+    // Save Answer
+    document.getElementById("saveAnswer").addEventListener("click", () => {
+      const val = document.getElementById("questionAnswer").value;
+      appData.answer = val;
+      appData.points += 5;
+      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
+      document.getElementById("answerMessage").innerText = "Jawaban tersimpan manis ♡";
+      updateUI();
+    });
+
+    // Add Memory
+    document.getElementById("addMemoryBtn").addEventListener("click", () => {
+      const url = document.getElementById("memoryUrl").value;
+      const caption = document.getElementById("memoryCaption").value;
+      if (!url) return alert("Masukkan URL gambar terlebih dahulu!");
+
+      appData.memories.unshift({ url, caption: caption || "Kenangan indah" });
+      appData.points += 10;
+      localStorage.setItem("our_little_world_data", JSON.stringify(appData));
+      
+      document.getElementById("memoryUrl").value = '';
+      document.getElementById("memoryCaption").value = '';
+      updateUI();
+    });
+
+    // Publish ke JSONBin Cloud
+    document.getElementById("publishCloudBtn").addEventListener("click", async () => {
+      const token = Math.random().toString(36).substring(2, 8);
+      const publishBtn = document.getElementById("publishCloudBtn");
+      publishBtn.innerText = "Menyimpan ke Cloud... ⏳";
+      publishBtn.disabled = true;
+
+      try {
+        const resGet = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+        });
+        const currentBin = await resGet.json();
+        const existingData = currentBin.record || {};
+
+        existingData[token] = {
+          ...appData,
+          updatedAt: new Date().toISOString()
+        };
+
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": JSONBIN_MASTER_KEY
+          },
+          body: JSON.stringify(existingData)
+        });
+
+        const shareUrl = `${window.location.origin}${window.location.pathname}#/world/${token}`;
+        prompt("Berhasil Publish! Salin link dunia kecilmu di bawah ini:", shareUrl);
+      } catch (err) {
+        alert("Gagal mempublikasikan ke cloud. Periksa koneksi internetmu.");
+        console.error(err);
+      } finally {
+        publishBtn.innerText = "Publish ke Cloud ☁️";
+        publishBtn.disabled = false;
+      }
+    });
+
+    // Cek Hash URL saat dibuka penerima
+    window.addEventListener("load", async () => {
+      const hash = window.location.hash;
+      if (hash.includes('#/world/')) {
+        const token = hash.split('#/world/')[1];
+        try {
+          const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+            headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+          });
+          const result = await res.json();
+          const targetWorld = result.record?.[token];
+
+          if (targetWorld) {
+            appData = targetWorld;
+            landingPage.classList.add("hidden");
+            mainApp.classList.add("active");
+            updateUI();
+          }
+        } catch (err) {
+          console.error("Gagal memuat dunia dari cloud", err);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
