@@ -1,2151 +1,1052 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Kado by Visyaa — Interactive Gift Builder V7 ♡</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Comfortaa:wght@500;700&family=Dancing+Script:wght@700&family=Fredoka:wght@400;600&family=Gaegu:wght@700&family=Itim&family=Mali:wght@600&family=Pacifico&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@400;500;600;700&family=Quicksand:wght@500;700&family=Sacramento&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<style>
-:root{
- --bg:#fff7fb;
- --text:#5d5061;
- --primary:#9b76a7;
- --accent:#e8b5ca;
- --card:#fff;
- --radius:18px;
- --font:'Poppins',sans-serif
-}
-
-*{
- box-sizing:border-box;
- margin:0;
- padding:0
-}
-
-body{
- font-family:var(--font);
- background:#f1eaf4;
- color:var(--text);
- overflow:hidden;
- min-height:100vh
-}
-
-button,input,textarea,select{
- font:inherit
-}
-
-button{
- cursor:pointer;
- border:0
-}
-
-input,textarea,select{
- width:100%;
- border:1px solid #e5d9e8;
- border-radius:10px;
- padding:9px 10px;
- background:#fff;
- color:var(--text);
- outline:0;
- margin-bottom:9px;
- font-size:12px
-}
-
-input:focus,textarea:focus,select:focus{
- border-color:#b58ac0;
- box-shadow:0 0 0 3px #b58ac01a
-}
-
-textarea{
- min-height:70px;
- resize:vertical
-}
-
-.top{
- height:60px;
- background:#fff;
- border-bottom:1px solid #eadfeb;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 18px;
- position:relative;
- z-index:50
-}
-
-.brand{
- font-weight:700;
- color:#866394;
- font-size:14px;
- display:flex;
- align-items:center;
- gap:8px
-}
-
-.save{
- font-size:10px;
- background:#f4edf6;
- padding:4px 8px;
- border-radius:20px
-}
-
-.actions{
- display:flex;
- gap:7px
-}
-
-.btn{
- padding:8px 12px;
- border-radius:10px;
- font-size:11px;
- font-weight:700;
- background:#f4edf7;
- color:#76577d
-}
-
-.btn.primary{
- background:var(--primary);
- color:white
-}
-
-.btn.green{
- background:#5da486;
- color:#fff
-}
-
-.btn.danger{
- background:#fff0f3;
- color:#c46b7c
-}
-
-.app{
- display:grid;
- grid-template-columns:minmax(360px,450px) minmax(0,1fr);
- height:calc(100vh - 60px);
- min-height:0
-}
-
-.sidebar{
- background:#fff;
- border-right:1px solid #eadfeb;
- display:flex;
- flex-direction:column;
- overflow:hidden;
- min-width:0;
- min-height:0
-}
-
-.tabs{
- display:flex;
- overflow-x:auto;
- background:#faf5fc;
- border-bottom:1px solid #eadfeb
-}
-
-.tabs button{
- padding:12px 13px;
- background:transparent;
- color:#78667d;
- font-size:10px;
- font-weight:700;
- white-space:nowrap;
- border-bottom:2px solid transparent
-}
-
-.tabs button.active{
- color:#8d6798;
- border-top:2px solid #8d6798;
- border-bottom-color:transparent;
- background:#fff;
- margin-top:-1px
-}
-
-.pane{
- display:none;
- padding:16px;
- overflow:auto
-}
-
-.pane.active{
- display:block
-}
-
-.title{
- font-size:10px;
- font-weight:800;
- text-transform:uppercase;
- letter-spacing:.5px;
- color:#745a7b;
- margin:12px 0 8px;
- display:flex;
- justify-content:space-between;
- align-items:center
-}
-
-.card{
- background:#faf6fb;
- border:1px solid #eee2f0;
- border-radius:12px;
- padding:10px;
- margin-bottom:9px
-}
-
-.mini{
- font-size:10px;
- color:#8c7c90;
- line-height:1.45
-}
-
-.grid2{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px
-}
-
-.library{
- display:grid;
- gap:7px
-}
-
-.libbtn{
- background:#f7f0f9;
- border:1px solid #eaddec;
- border-radius:10px;
- padding:9px;
- text-align:left;
- color:#715877;
- font-size:11px;
- font-weight:600
-}
-
-.libbtn:hover{
- background:#eee1f1
-}
-
-.search{
- margin-bottom:8px
-}
-
-.previewArea{
- padding:20px;
- overflow:auto;
- background:#e9deed;
- min-width:0;
- min-height:0
-}
-
-.previewTop{
- max-width:900px;
- margin:0 auto 9px;
- display:flex;
- justify-content:space-between;
- align-items:center
-}
-
-.previewLabel{
- font-size:11px;
- color:#806d84
-}
-
-.previewWrap{
- max-width:900px;
- margin:auto;
- transition:.25s
-}
-
-.previewWrap.mobile{
- max-width:375px
-}
-
-.gift{
- min-height:850px;
- background:var(--bg);
- color:var(--text);
- border-radius:22px;
- overflow:hidden;
- position:relative;
- box-shadow:0 18px 45px #64466c1c
-}
-
-.float{
- position:absolute;
- inset:0;
- overflow:hidden;
- pointer-events:none;
- z-index:1
-}
-
-.p{
- position:absolute;
- bottom:-50px;
- animation:rise linear infinite;
- opacity:.7;
- filter:drop-shadow(0 2px 4px #0001)
-}
-
-@keyframes rise{
- 0%{
-  transform:translateY(0) rotate(0);
-  opacity:0
- }
- 15%{
-  opacity:.7
- }
- 100%{
-  transform:translateY(-110vh) rotate(260deg);
-  opacity:0
- }
-}
-
-@keyframes driftSide{
- 0%{
-  transform:translate3d(0,20px,0) rotate(0) scale(var(--scale));
-  opacity:0
- }
- 15%{
-  opacity:.7
- }
- 50%{
-  transform:translate3d(var(--drift),-50vh,0) rotate(var(--rot)) scale(1)
- }
- 100%{
-  transform:translate3d(calc(var(--drift)*-1),-110vh,0) rotate(calc(var(--rot)*1.4)) scale(.75);
-  opacity:0
- }
-}
-
-@keyframes swirlFloat{
- 0%{
-  transform:translate3d(0,30px,0) rotate(0) scale(var(--scale));
-  opacity:0
- }
- 20%{
-  opacity:.7
- }
- 35%{
-  transform:translate3d(var(--drift),-25vh,0) rotate(100deg) scale(1)
- }
- 65%{
-  transform:translate3d(calc(var(--drift)*-0.7),-65vh,0) rotate(220deg) scale(.9)
- }
- 100%{
-  transform:translate3d(var(--drift),-110vh,0) rotate(var(--rot)) scale(.65);
-  opacity:0
- }
-}
-
-@keyframes fallParticle{
- 0%{
-  transform:translate3d(0,-20vh,0) rotate(0) scale(var(--scale));
-  opacity:0
- }
- 15%{
-  opacity:.7
- }
- 100%{
-  transform:translate3d(var(--drift),115vh,0) rotate(var(--rot)) scale(.8);
-  opacity:0
- }
-}
-
-.hero{
- min-height:390px;
- padding:55px 22px 40px;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- text-align:center;
- position:relative;
- z-index:2
-}
-
-.eyebrow{
- font-size:11px;
- letter-spacing:2px;
- text-transform:uppercase;
- opacity:.75;
- margin-bottom:10px
-}
-
-.hero h1{
- font-size:clamp(28px,5vw,46px);
- line-height:1.2;
- margin-bottom:12px
-}
-
-.hero p{
- max-width:530px;
- font-size:13px;
- line-height:1.7
-}
-
-.open{
- margin-top:22px;
- padding:12px 23px;
- border-radius:30px;
- background:var(--primary);
- color:white;
- font-weight:700;
- box-shadow:0 8px 25px #0002;
- animation:pulse 2s infinite
-}
-
-@keyframes pulse{
- 50%{
-  transform:scale(1.04)
- }
-}
-
-.section{
- padding:30px 18px;
- text-align:center;
- position:relative;
- z-index:2;
- background:#ffffff80;
- border-top:1px solid #ffffff99;
- backdrop-filter:blur(5px)
-}
-
-.section h2{
- font-size:18px;
- color:var(--primary);
- margin-bottom:12px
-}
-
-.block{
- max-width:600px;
- margin:10px auto;
- background:var(--card);
- border-radius:var(--radius);
- padding:17px;
- box-shadow:0 6px 20px #0000000b
-}
-
-.photo{
- width:100%;
- max-height:360px;
- object-fit:cover;
- border-radius:12px
-}
-
-.polaroid{
- display:inline-block;
- background:#fff;
- padding:11px 11px 24px;
- box-shadow:0 10px 25px #0002;
- transform:rotate(-2deg);
- max-width:280px
-}
-
-.polaroid img{
- width:100%;
- height:210px;
- object-fit:cover
-}
-
-.hand{
- font-family:'Caveat',cursive;
- font-size:18px
-}
-
-.film{
- display:flex;
- gap:7px;
- overflow:auto;
- background:#171717;
- padding:12px;
- border-radius:10px
-}
-
-.film img{
- height:105px;
- width:105px;
- object-fit:cover;
- flex:0 0 auto;
- border:2px solid #fff
-}
-
-.ticket{
- border:2px dashed var(--primary);
- padding:15px;
- border-radius:13px
-}
-
-.ticket img{
- width:100%;
- height:170px;
- object-fit:cover;
- border-radius:8px
-}
-
-.chat{
- background:#e8ddd6;
- border-radius:12px;
- padding:12px;
- text-align:left;
- max-width:360px;
- margin:auto
-}
-
-.bubble{
- background:#dcf8c6;
- padding:8px 10px;
- border-radius:9px;
- margin-top:6px
-}
-
-.newspaper{
- background:#f3ead7;
- padding:15px;
- font-family:'Playfair Display',serif
-}
-
-.newspaper h3{
- font-size:20px;
- border-bottom:2px solid #333;
- padding-bottom:5px
-}
-
-.newspaper img{
- width:100%;
- height:180px;
- object-fit:cover;
- margin:8px 0
-}
-
-.reveal{
- position:relative;
- cursor:pointer;
- overflow:hidden;
- border-radius:12px
-}
-
-.reveal img{
- width:100%;
- height:220px;
- object-fit:cover;
- filter:blur(16px);
- transition:.5s
-}
-
-.reveal.open img{
- filter:none
-}
-
-.reveal span{
- position:absolute;
- inset:0;
- display:grid;
- place-items:center;
- color:#fff;
- background:#0005;
- font-weight:700
-}
-
-.reveal.open span{
- display:none
-}
-
-.heartImg{
- width:190px;
- height:190px;
- border-radius:50%;
- object-fit:cover;
- border:5px solid var(--accent)
-}
-
-.story{
- text-align:left
-}
-
-.storyStep{
- padding:12px 0;
- border-left:2px solid var(--accent);
- padding-left:14px;
- margin-left:8px
-}
-
-.gameArea{
- display:grid;
- gap:10px
-}
-
-.gameBtn{
- padding:10px 14px;
- background:var(--primary);
- color:white;
- border-radius:10px;
- font-weight:700
-}
-
-.choices{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px
-}
-
-.choice{
- padding:10px;
- background:#f4edf7;
- border:1px solid #e5d8e8;
- border-radius:10px;
- color:#6e5574
-}
-
-.result{
- min-height:20px;
- font-size:12px;
- font-weight:700;
- color:var(--primary)
-}
-
-.heartGame{
- height:230px;
- position:relative;
- overflow:hidden;
- background:linear-gradient(#fff,#fff7fc);
- border-radius:12px
-}
-
-.fall{
- position:absolute;
- font-size:27px;
- cursor:pointer;
- animation:fall linear forwards
-}
-
-@keyframes fall{
- from{
-  top:-40px
- }
- to{
-  top:260px
- }
-}
-
-.bubbleGame{
- height:220px;
- position:relative;
- overflow:hidden;
- background:#f3f7ff;
- border-radius:14px
-}
-
-.bubble{
- position:absolute;
- border-radius:50%;
- background:#cfe8ff99;
- border:1px solid #9ccfff;
- animation:drift 5s linear forwards;
- cursor:pointer
-}
-
-.calmCircle{
- width:100px;
- height:100px;
- border-radius:50%;
- margin:15px auto;
- background:#e6d8f0;
- display:grid;
- place-items:center;
- animation:breathe 4s ease-in-out infinite
-}
-
-@keyframes breathe{
- 50%{
-  transform:scale(1.55);
-  background:#e6d8f080
- }
-}
-
-.memoryGrid{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:7px
-}
-
-.memoryCard{
- aspect-ratio:1;
- background:#eee4f0;
- border-radius:99px;
- display:grid;
- place-items:center;
- font-size:23px;
- cursor:pointer
-}
-
-.memoryCard.flipped{
- background:#fff;
- border:1px solid #dfd0e4
-}
-
-.scratch{
- height:130px;
- background:#c8c8c8;
- border-radius:12px;
- display:grid;
- place-items:center;
- cursor:pointer;
- position:relative;
- overflow:hidden
-}
-
-.scratch.cover:after{
- content:'🖐️ TAP TO REVEAL';
- position:absolute;
- inset:0;
- display:grid;
- place-items:center;
- background:#b9b9b9;
- color:#555;
- font-weight:800
-}
-
-.wheel{
- width:150px;
- height:150px;
- border-radius:50%;
- margin:8px auto;
- background:conic-gradient(
-  #e9bfd1 0 25%,
-  #cbb7e5 25% 50%,
-  #b8d9d1 50% 75%,
-  #f1d7a9 75%
- );
- border:7px solid white;
- box-shadow:0 5px 20px #0002;
- transition:1s
-}
-
-.responseBox{
- background:#fff;
- border:1px solid #eaddea;
- border-radius:14px;
- padding:14px;
- max-width:600px;
- margin:0 auto;
- text-align:left
-}
-
-.responseBox h3{
- text-align:center;
- color:var(--primary);
- margin-bottom:8px
-}
-
-.responseActions{
- display:flex;
- gap:7px;
- flex-wrap:wrap
-}
-
-.responseActions button{
- flex:1;
- min-width:120px
-}
-
-.footer{
- padding:35px 20px;
- text-align:center;
- position:relative;
- z-index:2
-}
-
-.modal{
- position:fixed;
- inset:0;
- background:#0007;
- backdrop-filter:blur(5px);
- display:none;
- align-items:center;
- justify-content:center;
- z-index:100
-}
-  }
- Object.entries(map).forEach(([from,to])=>{
-  if(d[from]!==undefined && $(to))$(to).value=d[from];
- });
- items=Array.isArray(d.items)?d.items:[];
- responseItems=Array.isArray(d.responseItems)?d.responseItems:[];
- render();
- renderLists();
-}
-
-function addPhoto(style){
- items.push({
-  id:crypto.randomUUID(),
-  kind:'photo',
-  style,
-  title:photoStyles[style],
-  url:'',
-  caption:'Kenangan kecil yang aku suka 🤍',
-  date:'',
-  location:''
- });
- renderLists();
- change()
-}
-
-function addWebPhoto(url){
- if(!url)return;
- items.push({
-  id:crypto.randomUUID(),
-  kind:'photo',
-  style:'classic',
-  title:'📸 Foto dari Web',
-  url:url,
-  caption:'Kenangan dari web 🤍',
-  date:'',
-  location:'',
-  resolvedFrom:''
- });
- renderLists();
- change();
- resolvePhotoURL(items.length-1,url)
-}
-
-function addCustomPhoto(){
- addPhoto('classic')
-}
-
-function filesToBlocks(files){
- [...files].forEach(file=>{
-  const r=new FileReader();
-  r.onload=e=>{
-   items.push({
-    id:crypto.randomUUID(),
-    kind:'photo',
-    style:'polaroid',
-    title:'📸 Foto Kita',
-    url:e.target.result,
-    caption:'Simpan momen ini baik-baik 🤍',
-    date:'',
-    location:''
-   });
-   renderLists();
-   change()
-  };
-  r.readAsDataURL(file)
- });
- toast('Foto ditambahkan ✨')
-}
-
-function addGame(type){
- items.push({
-  id:crypto.randomUUID(),
-  kind:'game',
-  type,
-  title:games[type],
-  question:'Pertanyaan untuk kamu...',
-  a:'Pilihan A',
-  b:'Pilihan B',
-  answer:'a',
-  message:'Yay! Kamu berhasil! 🤍',
-  pass:'1202',
-  word:'LOVE',
-  target:8,
-  seconds:15,
-  emoji:'♡',
-  letter:'Aku punya sesuatu yang ingin kusampaikan...',
-  sequence:'⭐💗🌸',
-  numbers:'2468'
- });
- renderLists();
- change()
-}
-
-function addResponse(type){
- responseItems.push({
-  id:crypto.randomUUID(),
-  type,
-  title:responses[type],
-  prompt:defaultPrompt(type),
-  button:'Kirim 🤍',
-  after:'Makasih sudah cerita. Aku baca ya 🤍'
- });
- renderLists();
- change()
-}
-
-function defaultPrompt(t){
- return {
-  letter:'Tulis surat kecil untukku...',
-  guest:'Tinggalkan satu pesan di guestbook...',
-  qa:'Apa satu hal yang ingin kamu bilang?',
-  three:'Tulis 3 hal yang kamu suka dari kita.',
-  wish:'Satu harapan kecil untuk kita...',
-  memory:'Ceritakan satu memori favoritmu.',
-  rating:'Seberapa kamu suka gift ini?',
-  photo:'Kirim satu foto untukku.',
-  choice:'Kamu sekarang lagi merasa apa?',
-  free:'Cerita apa pun yang ingin kamu ceritakan...',
-  voice:'Rekam pesan suara untukku (demo UI).'
- }[t]||'Cerita aja di sini...'
-}
-
-function renderLists(){
- $('photoLibrary').innerHTML=Object.entries(photoStyles)
-  .map(([k,v])=>
-   `<button class="libbtn photoLib"
-   data-name="${v.toLowerCase()}"
-   onclick="addPhoto('${k}')">${v} ➕</button>`
-  ).join('');
-
- $('gameLibrary').innerHTML=Object.entries(games)
-  .map(([k,v])=>
-   `<button class="libbtn gameLib"
-   data-name="${v.toLowerCase()}"
-   onclick="addGame('${k}')">${v} ➕</button>`
-  ).join('');
-
- $('responseLibrary').innerHTML=Object.entries(responses)
-  .map(([k,v])=>
-   `<button class="libbtn"
-   onclick="addResponse('${k}')">${v} ➕</button>`
-  ).join('');
-
- renderModuleList();
-}
-
-function filterLibrary(input,selector){
- const q=$(input).value.toLowerCase();
-
- document.querySelectorAll(selector).forEach(x=>
-  x.style.display=x.dataset.name.includes(q)?'block':'none'
- )
-}
-
-function renderModuleList(){
- const list=$('moduleList');
- list.innerHTML='';
-
- items.forEach((it,i)=>{
-  const c=document.createElement('div');
-  c.className='card';
-
-  c.innerHTML=`
-   <div style="display:flex;gap:5px;align-items:center">
-    <b style="flex:1">${esc(it.title)}</b>
-    <button class="btn" onclick="move(${i},-1)">↑</button>
-    <button class="btn" onclick="move(${i},1)">↓</button>
-    <button class="btn danger" onclick="del(${i})">×</button>
-   </div>
-   ${it.kind==='photo'?photoEditor(it,i):gameEditor(it,i)}
-  `;
-
-  list.appendChild(c)
- });
-
- responseItems.forEach((it,i)=>{
-  const c=document.createElement('div');
-  c.className='card';
-
-  c.innerHTML=`
-   <div style="display:flex;gap:5px">
-    <b style="flex:1">${esc(it.title)}</b>
-    <button class="btn danger" onclick="delResponse(${i})">×</button>
-   </div>
-
-   <label>Judul</label>
-   <input
-    value="${escAttr(it.title)}"
-    oninput="updResponse(${i},'title',this.value)"
-   >
-
-   <label>Pertanyaan / prompt</label>
-   <textarea
-    oninput="updResponse(${i},'prompt',this.value)"
-   >${esc(it.prompt)}</textarea>
-
-   <label>Tombol</label>
-   <input
-    value="${escAttr(it.button)}"
-    oninput="updResponse(${i},'button',this.value)"
-   >
-
-   <label>Pesan setelah kirim</label>
-   <input
-    value="${escAttr(it.after)}"
-    oninput="updResponse(${i},'after',this.value)"
-   >
-  `;
-
-  list.appendChild(c)
- })
-}
-
-function photoEditor(it,i){
- return`
-  <label>Judul</label>
-  <input
-   value="${escAttr(it.title)}"
-   oninput="upd(${i},'title',this.value)"
-  >
-
-  <label>Link foto / Pinterest / web</label>
-  <input
-   value="${escAttr(it.url)}"
-   placeholder="Tempel link Pinterest / gambar di sini..."
-   oninput="upd(${i},'url',this.value)"
-   onblur="resolvePhotoURL(${i},this.value)"
-  >
-
-  <div class="mini" id="photo-status-${it.id}">
-   ${
-    it.resolvedFrom
-     ? '✓ Gambar ditemukan dari '+esc(it.resolvedFrom)
-     : 'Tempel URL lalu klik di luar kolom — sistem akan mencoba menemukan gambar otomatis.'
-   }
-  </div>
-
-  <label>Caption</label>
-  <input
-   value="${escAttr(it.caption)}"
-   oninput="upd(${i},'caption',this.value)"
-  >
-
-  <div class="grid2">
-   <input
-    value="${escAttr(it.date)}"
-    placeholder="Tanggal"
-    oninput="upd(${i},'date',this.value)"
-   >
-
-   <input
-    value="${escAttr(it.location)}"
-    placeholder="Lokasi"
-    oninput="upd(${i},'location',this.value)"
-   >
-  </div>
- `
-}
-
-function gameEditor(it,i){
- const t=it.type;
- let extra='';
-
- if([
-  'quiz',
-  'this_that',
-  'memory_quiz',
-  'guess_answer',
-  'who_said',
-  'favorites',
-  'would_rather',
-  'firsts',
-  'flag'
- ].includes(t)){
-  extra=`
-   <div class="grid2">
-    <div>
-     <label>Opsi A</label>
-     <input
-      value="${escAttr(it.a)}"
-      oninput="upd(${i},'a',this.value)"
-     >
-    </div>
-
-    <div>
-     <label>Opsi B</label>
-     <input
-      value="${escAttr(it.b)}"
-      oninput="upd(${i},'b',this.value)"
-     >
-    </div>
-   </div>
-
-   <label>Jawaban benar</label>
-   <select onchange="upd(${i},'answer',this.value)">
-    <option value="a" ${it.answer==='a'?'selected':''}>A</option>
-    <option value="b" ${it.answer==='b'?'selected':''}>B</option>
-   </select>
-  `
- }
-
- if([
-  'letter_unlock',
-  'secret_message',
-  'final_unlock',
-  'password'
- ].includes(t)){
-  extra=`
-   <label>Kode / Password</label>
-   <input
-    value="${escAttr(it.pass)}"
-    oninput="upd(${i},'pass',this.value)"
-   >
-
-   <label>Isi surat / pesan rahasia</label>
-   <textarea
-    oninput="upd(${i},'letter',this.value)"
-   >${esc(it.letter)}</textarea>
-  `
- }
-
- if([
-  'word',
-  'hidden_words',
-  'complete_letter'
- ].includes(t)){
-  extra+=`
-   <label>Kata / jawaban target</label>
-   <input
-    value="${escAttr(it.word)}"
-    oninput="upd(${i},'word',this.value)"
-   >
-  `
- }
-
- if([
-  'pop',
-  'catch',
-  'balloon',
-  'bubbles',
-  'firefly',
-  'stars'
- ].includes(t)){
-  extra=`
-   <div class="grid2">
-    <div>
-     <label>Target</label>
-     <input
-      type="number"
-      min="3"
-      max="30"
-      value="${it.target||8}"
-      oninput="upd(${i},'target',+this.value)"
-     >
-    </div>
-
-    <div>
-     <label>Durasi (detik)</label>
-     <input
-      type="number"
-      min="5"
-      max="60"
-      value="${it.seconds||15}"
-      oninput="upd(${i},'seconds',+this.value)"
-     >
-    </div>
-   </div>
-
-   <label>Emoji target</label>
-   <input
-    value="${escAttr(it.emoji||'♡')}"
-    oninput="upd(${i},'emoji',this.value)"
-   >
-  `
- }
-
- if(t==='letter_puzzle'){
-  extra=`
-   <label>Kata rahasia</label>
-   <input
-    value="${escAttr(it.word||'SAYANG')}"
-    oninput="upd(${i},'word',this.value)"
-   >
-
-   <div class="mini">
-    Penerima menyusun huruf untuk membuka pesan.
-   </div>
-  `
- }
-
- if(t==='seven_messages'){
-  extra=`
-   <label>7 pesan (pisahkan dengan | )</label>
-   <textarea
-    oninput="upd(${i},'messages',this.value)"
-   >${esc(it.messages||'Aku bangga sama kamu.|Makasih sudah hadir.|Jangan lupa istirahat.|Kamu cukup.|Aku selalu senang lihat kamu bahagia.|Semoga hari ini lembut buat kamu.|Satu peluk dari jauh 🤍')}</textarea>
-  `
- }
-
- if(t==='photo_puzzle'){
-  extra=`
-   <label>URL foto puzzle</label>
-   <input
-    value="${escAttr(it.image||'')}"
-    placeholder="https://..."
-    oninput="upd(${i},'image',this.value)"
-   >
-  `
- }
-
- if([
-  'letter_chain',
-  'missing_word',
-  'message_bottle',
-  'secret_sentence',
-  'letter_memory',
-  'one_question',
-  'unlock_chapters'
- ].includes(t)){
-  extra+=`
-   <label>Isi pesan / target</label>
-   <textarea
-    oninput="upd(${i},'letter',this.value)"
-   >${esc(it.letter||'Aku punya pesan khusus untukmu 🤍')}</textarea>
-  `
- }
-
- if(t==='emoji_decode'){
-  extra+=`
-   <label>Kode emoji</label>
-   <input
-    value="${escAttr(it.sequence||'🌙💗⭐')}"
-    oninput="upd(${i},'sequence',this.value)"
-   >
-
-   <label>Jawaban</label>
-   <input
-    value="${escAttr(it.word||'LOVE')}"
-    oninput="upd(${i},'word',this.value)"
-   >
-  `
- }
-
- if(t==='number_lock'){
-  extra+=`
-   <label>Kode angka</label>
-   <input
-    value="${escAttr(it.numbers||'2468')}"
-    oninput="upd(${i},'numbers',this.value)"
-   >
-  `
- }
-
- if(t==='sequence_memory'){
-  extra+=`
-   <label>Urutan</label>
-   <input
-    value="${escAttr(it.sequence||'⭐💗🌸')}"
-    oninput="upd(${i},'sequence',this.value)"
-   >
-  `
- }
-
- if([
-  'collect_hearts',
-  'reaction',
-  'avoid_wrong',
-  'tap_love',
-  'catch_kiss',
-  'keep_heart',
-  'key_maze'
- ].includes(t)){
-  extra+=`
-   <div class="grid2">
-    <div>
-     <label>Target</label>
-     <input
-      type="number"
-      min="3"
-      max="40"
-      value="${it.target||8}"
-      oninput="upd(${i},'target',+this.value)"
-     >
-    </div>
-
-    <div>
-     <label>Durasi</label>
-     <input
-      type="number"
-      min="5"
-      max="60"
-      value="${it.seconds||15}"
-      oninput="upd(${i},'seconds',+this.value)"
-     >
-    </div>
-   </div>
-  `
- }
-
- return `
-  <div class="moduleCard">
-   <div class="dragHint">
-    ${games[t]||'Game'} · bisa dimainkan penerima
-   </div>
-
-   <label>Judul</label>
-   <input
-    value="${escAttr(it.title)}"
-    oninput="upd(${i},'title',this.value)"
-   >
-
-   <label>Instruksi</label>
-   <textarea
-    oninput="upd(${i},'question',this.value)"
-   >${esc(it.question)}</textarea>
-
-   ${extra}
-
-   <label>Pesan berhasil</label>
-   <input
-    value="${escAttr(it.message)}"
-    oninput="upd(${i},'message',this.value)"
-   >
-  </div>
- `
-}
-
-function upd(i,p,v){
- items[i][p]=v;
- render();
- save()
-}
-
-function updResponse(i,p,v){
- responseItems[i][p]=v;
- render();
- save()
-}
-
-function del(i){
- items.splice(i,1);
- renderLists();
- change()
-}
-
-function delResponse(i){
- responseItems.splice(i,1);
- renderLists();
- change()
-}
-
-function move(i,d){
- const j=i+d;
-
- if(j<0||j>=items.length)return;
-
- [items[i],items[j]]=[items[j],items[i]];
-
- renderLists();
- change()
-}
-
-function esc(s){
- return String(s??'').replace(
-  /[&<>]/g,
-  c=>({
-   '&':'&amp;',
-   '<':'&lt;',
-   '>':'&gt;'
-  }[c])
- )
-}
-
-function escAttr(s){
- return esc(s)
-  .replace(/"/g,'&quot;')
-  .replace(/'/g,'&#39;')
-}
-
-function render(){
- const r=document.documentElement.style;
-
- r.setProperty('--bg',$('bg').value);
- r.setProperty('--text',$('text').value);
- r.setProperty('--primary',$('primary').value);
- r.setProperty('--accent',$('accent').value);
- r.setProperty('--font',$('font').value);
-
- $('pvEyebrow').textContent=$('eyebrow').value;
- $('pvTitle').textContent=$('title').value;
- $('pvIntro').textContent=$('intro').value;
- $('pvOpen').textContent=$('openText').value;
- $('pvFinal').textContent=$('final').value;
-
- const gift=$('gift');
- gift.style.fontFamily=$('font').value;
-
- renderParticles();
- renderModules();
- renderResponses();
-
- $('music').value=$('music').value||'';
-
- save()
-}
-
-function renderParticles(){
- const box=$('float');
-
- if(!box)return;
-
- const count=+$('particleCount').value||25;
- const size=+$('particleSize').value||18;
- const opacity=+$('particleOpacity').value||.7;
- const drift=+$('particleDrift').value||60;
- const speed=+$('particleSpeed').value||12;
-
- box.innerHTML='';
-
- const chars={
-  hearts:['♡','♥','💗','💖'],
-  stars:['✦','✧','⭐','✨'],
-  flowers:['✿','❀','🌸','🌷'],
-  bubbles:['○','◌','◯','🫧'],
-  snow:['❄','❅','❆'],
-  mix:['♡','✦','🌸','✨','○']
- };
-
- const arr=chars[$('particle').value]||chars.mix;
-
- for(let i=0;i<count;i++){
-  const p=document.createElement('span');
-
-  p.className='p';
-  p.textContent=arr[Math.floor(Math.random()*arr.length)];
-
-  p.style.left=Math.random()*100+'%';
-  p.style.fontSize=(size*(.65+Math.random()*.7))+'px';
-  p.style.opacity=opacity;
-  p.style.animationDuration=(speed*(.7+Math.random()*.7))+'s';
-  p.style.animationDelay=(-Math.random()*speed)+'s';
-  p.style.setProperty('--drift',(Math.random()>.5?1:-1)*drift+'px');
-
-  box.appendChild(p)
- }
-}
-function meter(id,msg){
- $('gr-'+id).textContent='1000% — terlalu sayang untuk dihitung 💖 '+msg;
- confetti({particleCount:50})
-}
-
-function calmDone(id,msg){
- $('gr-'+id).textContent=msg;
- confetti({particleCount:20})
-}
-
-function grow(id,msg){
- const f=$('flower-'+id);
-
- f.textContent=
-  f.textContent==='🌱'?'🌿':
-  f.textContent==='🌿'?'🌷':'🌸';
-
- if(f.textContent==='🌸'){
-  $('gr-'+id).textContent=msg;
-  confetti()
- }
-}
-
-function wish(id,msg){
- const v=$('wish-'+id).value;
-
- if(!v){
-  $('gr-'+id).textContent='Tulis harapan dulu 🤍';
-  return
- }
-
- $('gr-'+id).textContent=
-  '🌠 Harapanmu sudah dititipkan ke bintang. '+msg;
-
- confetti()
-}
-
-function surprise(){
- confetti({
-  particleCount:100,
-  spread:80,
-  origin:{y:.6}
- });
-
- toast('🎉 Kejutannya dimulai!')
-}
-
-function renderParticles(){
- clearTimeout(particleTimer);
-
- const box=$('float');
-
- if(!box)return;
-
- box.innerHTML='';
-
- const preset=$('particle').value;
-
- const sets={
-  mix:['♡','✨','🌸','🦋','☁️','🫧','⭐','🎀','🎵','🌙','💫','🪽','🍃'],
-  romantic:['♡','♥','💖','🩷','🤍','💜','🎀','🌸','✨'],
-  nature:['🌸','🌺','🌷','🍃','🍂','🦋','🪷','🌼','🌻','🍀','🪻'],
-  sparkle:['✨','✦','🌟','⭐','💫','🎵','🎶','🌙','🌙✨'],
-  soft:['☁️','☁','🫧','🪽','🤍','🪻','🌸','💫'],
-  festive:['🎀','🎊','🎈','✨','⭐','🎵','🎶','💖'],
-  '🌙✨':['🌙','✨','⭐','💫']
- };
-
- const symbols=sets[preset]||[preset];
-
- const n=Math.min(
-  180,
-  Math.max(10,+$('particleCount').value||60)
- );
-
- const speed=+$('particleSpeed').value||11;
- const baseSize=+$('particleSize').value||17;
- const opacity=(+$('particleOpacity').value||70)/100;
- const drift=$('particleDrift').value||'float';
-
- for(let i=0;i<n;i++){
-
-  const p=document.createElement('span');
-
-  p.className='p';
-
-  p.textContent=
-   symbols[Math.floor(Math.random()*symbols.length)];
-
-  const x=Math.random()*100;
-
-  const size=Math.max(
-   6,
-   baseSize*(.55+Math.random()*.9)
-  );
-
-  const duration=
-   speed*(.65+Math.random()*.9);
-
-  const delay=-Math.random()*duration;
-
-  p.style.left=x+'%';
-  p.style.fontSize=size+'px';
-  p.style.animationDuration=duration+'s';
-  p.style.animationDelay=delay+'s';
-  p.style.opacity=
-   Math.max(.12,opacity*(.55+Math.random()*.45));
-
-  p.style.setProperty(
-   '--drift',
-   ((Math.random()-.5)*140)+'px'
-  );
-
-  p.style.setProperty(
-   '--rot',
-   (Math.random()*520-260)+'deg'
-  );
-
-  p.style.setProperty(
-   '--scale',
-   (0.65+Math.random()*.7).toFixed(2)
-  );
-
-  if(drift==='side')
-   p.style.animationName='driftSide';
-  else if(drift==='swirl')
-   p.style.animationName='swirlFloat';
-  else if(drift==='fall')
-   p.style.animationName='fallParticle';
-  else
-   p.style.animationName='rise';
-
-  box.appendChild(p)
- }
-}
-
-function updateMusic(){
- const u=$('music').value.trim();
- const player=$('musicPlayer');
- const a=$('audio');
-
- if(!u){
-  player.classList.add('hidden');
-  a.pause();
-  return
- }
-
- player.classList.remove('hidden');
-
- if(/\.(mp3|wav|ogg|m4a)(\?|$)/i.test(u)){
-  a.src=u
- }else{
-  a.removeAttribute('src')
- }
-}
-
-function toggleMusic(){
- const a=$('audio');
-
- if(!a.src){
-  toast('Untuk musik web, gunakan direct audio URL/MP3.');
-  return
- }
-
- if(audioPlaying){
-  a.pause();
-  audioPlaying=false;
-  $('musicState').textContent='Putar'
- }else{
-  a.play()
-   .then(()=>{
-    audioPlaying=true;
-    $('musicState').textContent='Diputar ♪'
-   })
-   .catch(()=>{
-    toast('Klik lagi untuk mengizinkan musik.')
-   })
- }
-}
-
-function device(m){
- $('previewWrap').classList.toggle(
-  'mobile',
-  m==='mobile'
- )
-}
-
-function toggleReceiver(){
- document.body.classList.toggle('receiver')
-}
-
-
-/* =========================
-   ENCODE DATA GIFT
-========================= */
-
-function encodeGiftData(data){
-
- const json=JSON.stringify(data);
-
- const bytes=new TextEncoder().encode(json);
-
- let binary='';
-
- const chunk=0x8000;
-
- for(
-  let i=0;
-  i<bytes.length;
-  i+=chunk
- ){
-  binary+=String.fromCharCode(
-   ...bytes.subarray(i,i+chunk)
-  );
- }
-
- return btoa(binary)
-  .replace(/\+/g,'-')
-  .replace(/\//g,'_')
-  .replace(/=+$/,'');
-}
-
-
-/* =========================
-   DECODE DATA GIFT
-========================= */
-
-function decodeGiftData(encoded){
-
- encoded=encoded
-  .replace(/-/g,'+')
-  .replace(/_/g,'/');
-
- while(encoded.length%4)
-  encoded+='=';
-
- const binary=atob(encoded);
-
- const bytes=Uint8Array.from(
-  binary,
-  c=>c.charCodeAt(0)
- );
-
- return JSON.parse(
-  new TextDecoder('utf-8').decode(bytes)
- )
-}
-
-
-/* =========================
-   GENERATE SHARE URL
-========================= */
-
-function generateShareUrl(mode){
-
- const data=encodeGiftData(
-  payload()
- );
-
- const baseUrl=
-  location.href.split('#')[0];
-
- if(mode==='edit')
-  return baseUrl+'#edit='+data;
-
- if(mode==='fill')
-  return baseUrl+'#fill='+data;
-
- return baseUrl+'#gift='+data;
-}
-
-
-/* =========================
-   UPDATE SHARE URL
-========================= */
-
-function updateShareUrlByPermission(){
-
- const perm=$('sharePermission')
-  ?$('sharePermission').value
-  :'view';
-
- const url=generateShareUrl(perm);
-
- const share=$('shareUrl');
-
- if(share){
-  share.value=url;
-  share.removeAttribute('disabled');
-  share.style.cursor='text';
- }
-
- const qr=$('qr');
-
- if(qr){
-
-  qr.innerHTML='';
-
-  if(typeof QRCode!=='undefined'){
-
-   try{
-
-    new QRCode(qr,{
-     text:url,
-     width:140,
-     height:140
-    });
-
-   }catch(e){
-
-    qr.innerHTML=
-     '<div style="font-size:10px;color:#8f8193">'+
-     'QR belum tersedia, tapi link tetap bisa disalin.'+
-     '</div>';
-
-   }
-
-  }else{
-
-   qr.innerHTML=
-    '<div style="font-size:10px;color:#8f8193">'+
-    'QR belum tersedia, tapi link tetap bisa disalin.'+
-    '</div>';
-
-  }
- }
-
- return url;
-}
-
-
-/* =========================
-   OPEN PUBLISH MODAL
-========================= */
-
-function openPublish(){
-
- try{
-
-  if($('sharePermission'))
-   $('sharePermission').value='view';
-
-  updateShareUrlByPermission();
-
-  const note=$('shareNote');
-
-  if(note){
-
-   note.textContent=
-    location.protocol==='file:'
-     ?
-     '⚠️ File ini masih dibuka dari komputer. Agar link bisa dibuka teman di HP/perangkat lain, upload HTML ini ke hosting (mis. GitHub Pages/Netlify) terlebih dahulu.'
-     :
-     '💗 Tinggal salin link ini dan kirim ke teman.';
-
-   note.className=
-    location.protocol==='file:'
-     ?
-     'shareWarning'
-     :
-     'shareReady';
-  }
-
-  $('publishModal')
-   .classList.add('active');
-
- }catch(e){
-
-  console.error(
-   'openPublish error:',
-   e
-  );
-
-  const modal=$('publishModal');
-
-  if(modal)
-   modal.classList.add('active');
-
-  toast(
-   'Menu bagikan dibuka. Jika link belum muncul, muat ulang halaman.'
-  );
- }
-}
-
-
-/* =========================
-   CLOSE MODAL
-========================= */
-
-function closeModal(){
- $('publishModal')
-  .classList.remove('active')
-}
-
-
-/* =========================
-   COPY LINK
-========================= */
-
-async function copyLink(){
-
- const share=$('shareUrl');
-
- const url=share
-  ?share.value
-  :'';
-
- if(!url){
-
-  toast(
-   'Link belum siap, coba buka menu Bagikan lagi 💗'
-  );
-
-  return;
- }
-
- try{
-
-  if(
-   navigator.share &&
-   /Mobi|Android|iPhone|iPad/i
-    .test(navigator.userAgent)
-  ){
-
-   await navigator.share({
-    title:'Kado by Visyaa 💗',
-    text:'Ada kado kecil buat kamu 💌',
-    url
-   });
-
-   return;
-  }
-
-  if(
-   navigator.clipboard &&
-   window.isSecureContext
-  ){
-
-   await navigator.clipboard.writeText(url);
-
-  }else{
-
-   const ta=
-    document.createElement('textarea');
-
-   ta.value=url;
-
-   ta.setAttribute(
-    'readonly',
-    ''
-   );
-
-   ta.style.position='fixed';
-   ta.style.left='-9999px';
-
-   document.body.appendChild(ta);
-
-   ta.focus();
-   ta.select();
-
-   const ok=
-    document.execCommand('copy');
-
-   ta.remove();
-
-   if(!ok)
-    throw new Error(
-     'copy command failed'
-    );
-  }
-
-  toast(
-   'Link berhasil disalin 📋'
-  );
-
- }catch(e){
-
-  if(
-   e &&
-   e.name==='AbortError'
-  )
-   return;
-
-  if(share){
-
-   share.focus();
-   share.select();
-
-  }
-
-  toast(
-   'Link sudah dipilih — tekan Ctrl+C untuk menyalin 💗'
-  );
- }
-}
-
-
-/* =========================
-   DOWNLOAD SHARE LINK
-========================= */
-
-function downloadGiftLinkDirect(){
-
- const perm=$('sharePermission')
-  ?$('sharePermission').value
-  :'view';
-
- const url=
-  generateShareUrl(perm);
-
- const blob=
-  new Blob(
-   [url],
-   {type:'text/plain'}
-  );
-
- const a=
-  document.createElement('a');
-
- a.href=
-  URL.createObjectURL(blob);
-
- a.download=
-  'kado-share-link.txt';
-
- a.click();
-
- toast(
-  'Link berhasil diunduh (.txt) 📋'
- );
-}
-
-
-/* =========================
-   DOWNLOAD GIFT
-========================= */
-
-function downloadGift(){
-
- const clone=
-  document.documentElement.cloneNode(true);
-
- clone
-  .querySelectorAll(
-   '.modal,.toast'
-  )
-  .forEach(x=>x.remove());
-
- const html=
-  '<!doctype html>'+
-  clone.outerHTML;
-
- const blob=
-  new Blob(
-   [html],
-   {type:'text/html'}
-  );
-
- const a=
-  document.createElement('a');
-
- a.href=
-  URL.createObjectURL(blob);
-
- a.download=
-  'kado-by-visyaa.html';
-
- a.click();
-
- toast(
-  'HTML siap diunduh ✨'
- );
-}
-
-
-/* =========================
-   LOAD DATA DARI HASH
-========================= */
-
-function loadHash(){
-
- const h=location.hash;
-
- if(!h)return;
-
- try{
-
-  let mode='';
-  let encoded='';
-
-  if(
-   h.startsWith('#gift=')
-  ){
-
-   mode='gift';
-   encoded=h.slice(6);
-
-  }else if(
-   h.startsWith('#edit=')
-  ){
-
-   mode='edit';
-   encoded=h.slice(6);
-
-  }else if(
-   h.startsWith('#fill=')
-  ){
-
-   mode='fill';
-   encoded=h.slice(6);
-
-  }else{
-
-   return;
-  }
-
-
-  /*
-   * Decode data gift menggunakan
-   * decoder UTF-8 yang baru.
-   */
-
-  const d=
-   decodeGiftData(encoded);
-
-
-  /*
-   * Masukkan data ke editor / gift.
-   */
-
-  apply(d);
-
-
-  /*
-   * Mode penerima.
-   */
-
-  if(mode==='gift'){
-
-   document.body
-    .classList.add('receiver');
-
-  }
-
-
-  /*
-   * Mode editor.
-   */
-
-  else if(mode==='edit'){
-
-   document.body
-    .classList.remove('receiver');
-
-  }
-
-
-  /*
-   * Mode isi / response.
-   */
-
-  else if(mode==='fill'){
-
-   document.body
-    .classList.add('receiver');
-
-   setTimeout(()=>{
-
-    const rSec=
-     document.querySelector(
-      '.responseBox'
-     );
-
-    if(rSec){
-
-     rSec.scrollIntoView({
-      behavior:'smooth'
-     });
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Gift App Builder</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#fff7fb] text-[#5d5061]">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    // ==========================================
+    // 1. DATA REGISTRY (60 GAMES & 60 PHOTOS)
+    // ==========================================
+    const OFFICIAL_GAME_LIST = [
+      { id: "game_001", type: "catcher", title: "Tangkap Hewan 🐻", emoji: "🐻", description: "Tangkap hewan lucu yang muncul!", instruction: "Tap hewan secepat mungkin!", enabled: true, order: 1 },
+      { id: "game_002", type: "clicker", title: "Pecahin Balon 🎈", emoji: "🎈", description: "Pecahkan semua balon warna-warni!", instruction: "Klik balon sebelum terbang!", enabled: true, order: 2 },
+      { id: "game_003", type: "catcher", title: "Tangkap Hati 💗", emoji: "💗", description: "Kumpulkan cinta sebanyak-banyaknya!", instruction: "Geser keranjang untuk menangkap hati", enabled: true, order: 3 },
+      { id: "game_004", type: "quiz", title: "Tebak Gambar 🖼️", emoji: "🖼️", description: "Tebak gambar tersembunyi ini!", instruction: "Pilih jawaban yang benar", enabled: true, order: 4 },
+      { id: "game_005", type: "quiz", title: "Tebak Lagu 🎧", emoji: "🎧", description: "Dengarkan potongan lagu ini", instruction: "Siapa penyanyinya?", enabled: true, order: 5 },
+      { id: "game_006", type: "memory", title: "Susun Puzzle 🧩", emoji: "🧩", description: "Susun kembali potongan foto kita", instruction: "Geser puzzle ke posisi pas", enabled: true, order: 6 },
+      { id: "game_007", type: "clicker", title: "Cari Hati Tersembunyi 💕", emoji: "💕", description: "Ada hati tersembunyi di layar", instruction: "Cari dan ketuk hatinya!", enabled: true, order: 7 },
+      { id: "game_008", type: "memory", title: "Memory Card 🃏", emoji: "🃏", description: "Buka dan cocokkan pasangan kartu", instruction: "Ingat posisi pasangan kartu", enabled: true, order: 8 },
+      { id: "game_009", type: "quiz", title: "Tebak Kata 🔤", emoji: "🔤", description: "Susun huruf menjadi kata rahasia", instruction: "Ketik kata yang tepat", enabled: true, order: 9 },
+      { id: "game_010", type: "clicker", title: "Spin the Wheel 🎡", emoji: "🎡", description: "Putar roda keberuntungan", instruction: "Tekan SPIN!", enabled: true, order: 10 },
+      { id: "game_011", type: "quiz", title: "Truth or Dare 🎀", emoji: "🎀", description: "Jawab jujur atau lakukan tantangan", instruction: "Pilih kartu kalian", enabled: true, order: 11 },
+      { id: "game_012", type: "quiz", title: "Love Calculator 💌", emoji: "💌", description: "Hitung tingkat kecocokan kita", instruction: "Tuliskan nama kalian", enabled: true, order: 12 },
+      { id: "game_013", type: "catcher", title: "Tangkap Bintang ⭐", emoji: "⭐", description: "Petik bintang di langit malam", instruction: "Tangkap 10 bintang!", enabled: true, order: 13 },
+      { id: "game_014", type: "clicker", title: "Flappy Heart 🪽", emoji: "🪽", description: "Terbangkan hati melintasi rintangan", instruction: "Tap untuk melompat", enabled: true, order: 14 },
+      { id: "game_015", type: "clicker", title: "Mystery Box 🎁", emoji: "🎁", description: "Buka kotak hadiah misterius", instruction: "Pilih 1 dari 3 kotak", enabled: true, order: 15 },
+      { id: "game_016", type: "quiz", title: "Tebak Emoji 😆", emoji: "😆", description: "Apa arti gabungan emoji ini?", instruction: "Pilih tebakanmu", enabled: true, order: 16 },
+      { id: "game_017", type: "quiz", title: "This or That? 🤔", emoji: "🤔", description: "Pilih favoritmu dari 2 pilihan", instruction: "Tap opsi favoritmu", enabled: true, order: 17 },
+      { id: "game_018", type: "memory", title: "Simon Says 👀", emoji: "👀", description: "Ikuti urutan warna yang menyala", instruction: "Ulangi pola warna", enabled: true, order: 18 },
+      { id: "game_019", type: "memory", title: "Connect the Hearts 💞", emoji: "💞", description: "Hubungkan hati dengan warna sejenis", instruction: "Tarik garis tanpa bertabrakan", enabled: true, order: 19 },
+      { id: "game_020", type: "quiz", title: "Tic Tac Love ❌⭕", emoji: "❌⭕", description: "Mainkan Tic Tac Toe romantis", instruction: "Dapatkan 3 berurutan", enabled: true, order: 20 },
+      { id: "game_021", type: "clicker", title: "Cari Perbedaan 🔎", emoji: "🔎", description: "Temukan 3 perbedaan pada gambar", instruction: "Tap area yang berbeda", enabled: true, order: 21 },
+      { id: "game_022", type: "quiz", title: "Word Scramble 🔤", emoji: "🔤", description: "Rapikan huruf yang berantakan", instruction: "Susun kembali dengan benar", enabled: true, order: 22 },
+      { id: "game_023", type: "catcher", title: "Catch the Stars 🌟", emoji: "🌟", description: "Bintang jatuh! Tangkap cepat!", instruction: "Tap bintang sebelum hilang", enabled: true, order: 23 },
+      { id: "game_024", type: "clicker", title: "Bubble Pop 🫧", emoji: "🫧", description: "Pecahkan gelembung cinta", instruction: "Pop semua gelembung!", enabled: true, order: 24 },
+      { id: "game_025", type: "memory", title: "Candy Match 🍭", emoji: "🍭", description: "Cocokkan permen yang sama", instruction: "Swap candy yang serupa", enabled: true, order: 25 },
+      { id: "game_026", type: "memory", title: "Maze of Love 🌀", emoji: "🌀", description: "Cari jalan menuju labirin cinta", instruction: "Gunakan kontrol panah", enabled: true, order: 26 },
+      { id: "game_027", type: "catcher", title: "Jatuhkan Hati 💘", emoji: "💘", description: "Jatuhkan panah tepat pada target hati", instruction: "Tap untuk melepaskan panah", enabled: true, order: 27 },
+      { id: "game_028", type: "quiz", title: "Tebak Suara 🎶", emoji: "🎶", description: "Suara apakah ini?", instruction: "Pilih jawaban yang benar", enabled: true, order: 28 },
+      { id: "game_029", type: "quiz", title: "Susun Kata 💭", emoji: "💭", description: "Buat kalimat romantis dari kata-kata", instruction: "Urutkan blok kata", enabled: true, order: 29 },
+      { id: "game_030", type: "quiz", title: "Pilih Jawaban 💌", emoji: "💌", description: "Jawab pertanyaan dari si pembuat gift", instruction: "Pilih opsi terbaikmu", enabled: true, order: 30 },
+      { id: "game_031", type: "quiz", title: "Kuis Tentang Kita 🫶🏻", emoji: "🫶🏻", description: "Seberapa tahu kamu tentang kita?", instruction: "Jawab kuis spesial ini", enabled: true, order: 31 },
+      { id: "game_032", type: "quiz", title: "Tebak Siapa 👤", emoji: "👤", description: "Tebak siapa yang dimaksud dari petunjuk", instruction: "Pilih orang yang tepat", enabled: true, order: 32 },
+      { id: "game_033", type: "memory", title: "Find the Pair 🃏", emoji: "🃏", description: "Temukan pasangan item yang cocok", instruction: "Tap kartu untuk membuka", enabled: true, order: 33 },
+      { id: "game_034", type: "catcher", title: "Avoid the Bomb 💣", emoji: "💣", description: "Ambil hadiah dan hindari bom!", instruction: "Geser ke kiri dan kanan", enabled: true, order: 34 },
+      { id: "game_035", type: "catcher", title: "Catch the Flower 🌷", emoji: "🌷", description: "Kumpulkan kelopak bunga gugur", instruction: "Tangkap bunga tulip", enabled: true, order: 35 },
+      { id: "game_036", type: "memory", title: "Garden Match 🌸", emoji: "🌸", description: "Pencocokan tanaman di taman", instruction: "Pasangkan Bunga sejenis", enabled: true, order: 36 },
+      { id: "game_037", type: "clicker", title: "Flappy Bird 🐦", emoji: "🐦", description: "Bantu burung terbang tinggi", instruction: "Tap untuk terbang", enabled: true, order: 37 },
+      { id: "game_038", type: "clicker", title: "Mini Fishing 🎣", emoji: "🎣", description: "Tangkap ikan penuh kejutan", instruction: "Tap saat umpan dimakan!", enabled: true, order: 38 },
+      { id: "game_039", type: "clicker", title: "Whack-a-Mole 🐹", emoji: "🐹", description: "Pukul hamster lucu yang muncul", instruction: "Ketuk saat kepala hamster muncul", enabled: true, order: 39 },
+      { id: "game_040", type: "clicker", title: "Balloon Rush 🎈", emoji: "🎈", description: "Terbang bersama balon tanpa menabrak", instruction: "Kendalikan balon udara", enabled: true, order: 40 },
+      { id: "game_041", type: "catcher", title: "Heart Runner 🏃🏻‍♀️", emoji: "🏃🏻‍♀️", description: "Lari dan kumpulkan token cinta", instruction: "Lompat melompati rintangan", enabled: true, order: 41 },
+      { id: "game_042", type: "catcher", title: "Dodge the Clouds ☁️", emoji: "☁️", description: "Hindari awan mendung!", instruction: "Tetap di area cerah", enabled: true, order: 42 },
+      { id: "game_043", type: "catcher", title: "Collect the Coins 🪙", emoji: "🪙", description: "Kumpulkan koin keberuntungan", instruction: "Ambil koin emas", enabled: true, order: 43 },
+      { id: "game_044", type: "clicker", title: "Hidden Object 🔍", emoji: "🔍", description: "Temukan barang rahasia pada ruangan", instruction: "Zoom dan tap objeknya", enabled: true, order: 44 },
+      { id: "game_045", type: "quiz", title: "Crossword Mini 📝", emoji: "📝", description: "Teka-Teki Silang mini romantis", instruction: "Isi kotak dengan kata pas", enabled: true, order: 45 },
+      { id: "game_046", type: "quiz", title: "Hangman 💬", emoji: "💬", description: "Tebak kata sebelum kesempatan habis", instruction: "Pilih abjad satu-satu", enabled: true, order: 46 },
+      { id: "game_047", type: "quiz", title: "Rock Paper Scissors ✊🏻", emoji: "✊🏻", description: "Batu, Gunting, Kertas!", instruction: "Pilih pilihanmu", enabled: true, order: 47 },
+      { id: "game_048", type: "clicker", title: "Lucky Wheel 🍀", emoji: "🍀", description: "Putar untuk klaim hadiahmu hari ini", instruction: "Spin untuk memutar", enabled: true, order: 48 },
+      { id: "game_049", type: "clicker", title: "Pick a Gift 🎁", emoji: "🎁", description: "Pilih kado mana yang paling kamu suka", instruction: "Ketuk kado impianmu", enabled: true, order: 49 },
+      { id: "game_050", type: "mystery", title: "Secret Door 🚪", emoji: "🚪", description: "Buka pintu rahasia dengan kunci tepat", instruction: "Pilih kunci yang cocok", enabled: true, order: 50 },
+      { id: "game_051", type: "mystery", title: "Treasure Hunt 🗺️", emoji: "🗺️", description: "Ikuti peta harta karun", instruction: "Ikuti jejak petunjuk", enabled: true, order: 51 },
+      { id: "game_052", type: "mystery", title: "Find the Key 🔑", emoji: "🔑", description: "Temukan kunci untuk membuka gembok", instruction: "Cari kunci di dalam gambar", enabled: true, order: 52 },
+      { id: "game_053", type: "mystery", title: "Unlock the Heart 🔐", emoji: "🔐", description: "Masukkan kode kombinasi rahasia", instruction: "Masukkan 4 angka sandi", enabled: true, order: 53 },
+      { id: "game_054", type: "clicker", title: "Pop the Bubble 🫧", emoji: "🫧", description: "Pecahkan gelembung hingga habis", instruction: "Tekan gelembung dengan cepat", enabled: true, order: 54 },
+      { id: "game_055", type: "catcher", title: "Star Catcher ⭐", emoji: "⭐", description: "Tangkap bintang jatuh yang lewat", instruction: "Gunakan jaring bintang", enabled: true, order: 55 },
+      { id: "game_056", type: "quiz", title: "Color Match 🎨", emoji: "🎨", description: "Cocokkan teks warna dengan warna asli", instruction: "Pilih Benar atau Salah", enabled: true, order: 56 },
+      { id: "game_057", type: "clicker", title: "Reaction Test ⚡", emoji: "⚡", description: "Uji seberapa cepat refleksmu!", instruction: "Tap saat warna hijau muncul", enabled: true, order: 57 },
+      { id: "game_058", type: "clicker", title: "Tap the Heart 💓", emoji: "💓", description: "Tap hati sebanyak mungkin dalam 5 detik!", instruction: "Ketuk layar secepatnya!", enabled: true, order: 58 },
+      { id: "game_059", type: "quiz", title: "Memory of Us 🤍", emoji: "🤍", description: "Mengingat momen-momen indah bersama", instruction: "Pilih momen paling berkesan", enabled: true, order: 59 },
+      { id: "game_060", type: "mystery", title: "Final Mystery Game 🎀", emoji: "🎀", description: "Tantangan akhir untuk membuka rahasia utama", instruction: "Gunakan semua petunjuk yang didapat", enabled: true, order: 60 }
+    ];
+
+    const OFFICIAL_PHOTO_CATEGORIES = [
+      "Polaroid Memories 📷", "Foto Random 🤭", "Foto Favorit 💗", "Tebak Foto 👀", "Foto Pertama 🌷",
+      "Foto Terbaru ✨", "Our Moments 🤍", "Before & After 🕰️", "Photo Booth 🎀", "Foto Candid 📸",
+      "Foto Lucu 😂", "Foto Aesthetic 🌸", "Foto Senyum 😊", "Foto Selfie 🤳🏻", "Foto Bareng 🫶🏻",
+      "Foto Jalan-Jalan 🚶🏻‍♀️", "Foto Makanan 🍜", "Foto Sunset 🌅", "Foto Langit ☁️", "Foto Malam 🌙",
+      "Foto Kecil yang Berarti 💌", "Foto yang Bikin Kangen 🥹", "Foto Paling Random 🤪", "Foto Favorit Kamu 💕", "Foto Favorit Aku 💗",
+      "Hidden Photo 🔎", "Secret Photo 🤫", "Photo Puzzle 🧩", "Photo Timeline 🕰️", "Our Story 📖",
+      "Little Things 🌷", "Daily Moments ☀️", "Weekend Memories 🌤️", "Holiday Memories 🏖️", "Funny Moments 😂",
+      "Cute Moments 🐻", "Sweet Moments 🍯", "Unexpected Moments ✨", "First Impression 👀", "Favorite Outfit 👕",
+      "Mirror Selfie 🪞", "Food Memories 🍰", "Coffee Time ☕", "Night Memories 🌙", "Sunset Memories 🌅",
+      "Sky Collection ☁️", "Flower Collection 🌷", "Random Gallery 🎞️", "Screenshot Memories 📱", "Chat Memories 💬",
+      "Favorite Quotes 💭", "Our Places 📍", "Little Adventures 🗺️", "Throwback Gallery 🔙", "Childhood Photos 🧸",
+      "Silly Photos 🤪", "Unforgettable Moments 🥹", "Secret Folder 🔐", "Memory Wall 🖼️", "The Last Photo 💌"
+    ];
+
+    // ==========================================
+    // 2. STORAGE ENGINE (LOCAL + SHARED HYBRID)
+    // ==========================================
+    const getStorageData = (key, fallback) => {
+      try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : fallback;
+      } catch (e) {
+        console.error("Storage Read Error:", e);
+        return fallback;
+      }
+    };
+
+    const setStorageData = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error("Storage Write Error:", e);
+      }
+    };
+
+    // ==========================================
+    // 3. BACKGROUND PARTICLES COMPONENT
+    // ==========================================
+    function BackgroundParticles({ config }) {
+      if (!config || !config.enabled) return null;
+      
+      const particleTypes = {
+        hearts: "💗",
+        stars: "⭐",
+        flowers: "🌸",
+        petals: "🪷",
+        bubbles: "🫧",
+        sparkles: "✨"
+      };
+
+      const symbol = particleTypes[config.type] || "💗";
+      const count = config.count || 12;
+
+      const particles = useMemo(() => {
+        return Array.from({ length: count }).map((_, i) => ({
+          id: i,
+          left: `${Math.random() * 100}%`,
+          duration: `${3 + Math.random() * 4}s`,
+          delay: `${Math.random() * 3}s`,
+          size: `${12 + Math.random() * 16}px`
+        }));
+      }, [count, config.type]);
+
+      return (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          {particles.map((p) => (
+            <div
+              key={p.id}
+              className="absolute animate-float opacity-60"
+              style={{
+                left: p.left,
+                top: `${Math.random() * 90}%`,
+                animationDuration: p.duration,
+                animationDelay: p.delay,
+                fontSize: p.size
+              }}
+            >
+              {symbol}
+            </div>
+          ))}
+        </div>
+      );
     }
 
-   },500);
-  }
+    // ==========================================
+    // 4. MUSIC MANAGER PLAYER COMPONENT
+    // ==========================================
+    function MusicPlayer({ url, source }) {
+      const [playing, setPlaying] = useState(false);
+      if (!url) return null;
 
- }catch(e){
+      const getSpotifyEmbed = (src) => {
+        const match = src.match(/track\/([a-zA-Z0-9]+)/);
+        return match ? `https://open.spotify.com/embed/track/${match[1]}?utm_source=generator&theme=0` : null;
+      };
 
-  console.error(
-   'Gagal membaca data gift:',
-   e
-  );
+      const getYouTubeEmbed = (src) => {
+        const match = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&loop=1` : null;
+      };
 
-  toast(
-   'Data gift tidak bisa dibaca'
-  );
- }
-}
+      return (
+        <div className="fixed bottom-4 right-4 z-40 bg-white/95 backdrop-blur-md p-2 rounded-2xl shadow-xl border border-[#e8b5ca] max-w-xs transition-all">
+          {source === 'spotify' && getSpotifyEmbed(url) && (
+            <iframe
+              src={getSpotifyEmbed(url)}
+              width="100%"
+              height="80"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              className="rounded-xl"
+            />
+          )}
 
+          {source === 'youtube' && getYouTubeEmbed(url) && (
+            <iframe
+              width="0"
+              height="0"
+              src={getYouTubeEmbed(url)}
+              title="YouTube Audio Engine"
+              allow="autoplay"
+            />
+          )}
 
-/* =========================
-   INITIALIZE APP
-========================= */
+          {(source === 'mp3' || !source) && (
+            <div className="flex items-center space-x-2 px-2 py-1">
+              <audio id="global-audio-element" loop src={url} />
+              <button
+                onClick={() => {
+                  const audio = document.getElementById('global-audio-element');
+                  if (audio) {
+                    if (playing) {
+                      audio.pause();
+                      setPlaying(false);
+                    } else {
+                      audio.play().catch(() => {});
+                      setPlaying(true);
+                    }
+                  }
+                }}
+                className="px-3 py-1 bg-[#9b76a7] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow"
+              >
+                {playing ? '⏸️ Pause Music' : '🎵 Tap to Play Music'}
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
 
-window.addEventListener(
- 'DOMContentLoaded',
- ()=>{
+    // ==========================================
+    // 5. GAME ENGINES (MODULAR)
+    // ==========================================
+    function CatcherEngine({ config, onWin }) {
+      const [score, setScore] = useState(0);
+      const [position, setPosition] = useState({ top: 30, left: 40 });
+      const targetScore = config?.targetScore || 5;
 
-  renderLists();
+      const handleCatch = () => {
+        const nextScore = score + 1;
+        setScore(nextScore);
+        if (nextScore >= targetScore) {
+          onWin();
+        } else {
+          setPosition({
+            top: Math.floor(Math.random() * 65) + 10,
+            left: Math.floor(Math.random() * 70) + 15
+          });
+        }
+      };
 
-  const saved=
-   localStorage.getItem(
-    'kadoV5'
-   );
+      return (
+        <div className="relative w-full h-52 bg-[#fff7fb] rounded-2xl overflow-hidden border border-[#e8b5ca] select-none">
+          <div className="absolute top-2 left-3 text-xs font-bold text-[#5d5061] bg-white/80 px-2 py-1 rounded-lg">
+            Skor: {score} / {targetScore}
+          </div>
+          <button
+            onClick={handleCatch}
+            style={{ top: `${position.top}%`, left: `${position.left}%` }}
+            className="absolute text-3xl transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 active:scale-125"
+          >
+            🎯
+          </button>
+        </div>
+      );
+    }
 
-  if(saved){
+    function ClickerEngine({ config, onWin }) {
+      const [clicks, setClicks] = useState(0);
+      const target = config?.targetScore || 8;
 
-   try{
+      const handleClick = () => {
+        const next = clicks + 1;
+        setClicks(next);
+        if (next >= target) {
+          onWin();
+        }
+      };
 
-    apply(
-     JSON.parse(saved)
-    );
+      return (
+        <div className="p-4 text-center bg-[#fff7fb] rounded-2xl border border-[#e8b5ca]">
+          <div className="text-3xl font-extrabold mb-3 text-[#5d5061]">{clicks} / {target}</div>
+          <button
+            onClick={handleClick}
+            className="px-6 py-3 bg-[#9b76a7] text-white font-bold rounded-2xl shadow-md active:scale-95 transition"
+          >
+            Ketuk Di Sini! 💓
+          </button>
+        </div>
+      );
+    }
 
-   }catch(e){}
+    function QuizEngine({ config, onWin }) {
+      const [selected, setSelected] = useState(null);
+      const options = ["Pilihan A", "Pilihan B (Jawaban Tepat)", "Pilihan C"];
 
-  }
+      const handleSelect = (idx) => {
+        setSelected(idx);
+        if (idx === 1) {
+          setTimeout(onWin, 400);
+        } else {
+          alert("Coba lagi ya! 🥹");
+        }
+      };
 
-  render();
+      return (
+        <div className="space-y-2 p-2">
+          {options.map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => handleSelect(i)}
+              className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold border transition ${
+                selected === i ? 'bg-[#9b76a7] text-white' : 'bg-white text-[#5d5061] border-[#e8b5ca]'
+              }`}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      );
+    }
 
-  loadHash();
+    function MemoryEngine({ config, onWin }) {
+      const [cards, setCards] = useState([
+        { id: 1, val: '🌸', open: false },
+        { id: 2, val: '🌸', open: false },
+        { id: 3, val: '🎀', open: false },
+        { id: 4, val: '🎀', open: false },
+      ]);
 
- }
-);
+      const handleFlip = (idx) => {
+        const updated = [...cards];
+        updated[idx].open = true;
+        setCards(updated);
 
-</script>
+        if (updated.every(c => c.open)) {
+          setTimeout(onWin, 400);
+        }
+      };
 
+      return (
+        <div className="grid grid-cols-2 gap-2 p-2">
+          {cards.map((card, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleFlip(idx)}
+              className="h-16 text-2xl bg-white border border-[#e8b5ca] rounded-2xl flex items-center justify-center shadow-sm"
+            >
+              {card.open ? card.val : '❓'}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    function MysteryEngine({ config, onWin }) {
+      const [step, setStep] = useState(1);
+      const [code, setCode] = useState('');
+      const secret = config?.secretPasscode || "1234";
+
+      const handleUnlock = () => {
+        if (code === secret) {
+          setStep(2);
+        } else {
+          alert(`Kode salah! Gunakan sandi default: ${secret}`);
+        }
+      };
+
+      return (
+        <div className="p-4 bg-[#fff7fb] rounded-2xl border border-[#e8b5ca] text-center">
+          {step === 1 && (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-[#5d5061]">🔐 Masukkan Kode Rahasia Akhir:</p>
+              <input
+                type="text"
+                maxLength={6}
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="****"
+                className="w-full text-center text-xl tracking-widest p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b76a7]"
+              />
+              <button
+                onClick={handleUnlock}
+                className="w-full py-2.5 bg-[#9b76a7] text-white font-bold rounded-xl text-xs"
+              >
+                Buka Rahasia 🔑
+              </button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-3 animate-fade-in">
+              <div className="text-4xl">🎀</div>
+              <h4 className="font-bold text-[#5d5061] text-sm">You Found The Final Secret!</h4>
+              <p className="text-xs text-gray-600 leading-relaxed italic">
+                "{config?.finalText || "Ternyata hadiah terakhirnya bukan sesuatu yang bisa kamu buka... Tapi semua kenangan yang sudah kita buat bersama. 🤍"}"
+              </p>
+              <button
+                onClick={onWin}
+                className="w-full py-2 bg-[#e8b5ca] text-[#5d5061] font-bold rounded-xl text-xs mt-2"
+              >
+                Selesaikan Hadiah ✨
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function GameEngineHost({ gameConfig, onComplete }) {
+      const [gameState, setGameState] = useState('idle');
+
+      const renderEngine = () => {
+        switch (gameConfig.type) {
+          case 'catcher':
+            return <CatcherEngine config={gameConfig.config} onWin={() => handleWin()} />;
+          case 'clicker':
+            return <ClickerEngine config={gameConfig.config} onWin={() => handleWin()} />;
+          case 'quiz':
+            return <QuizEngine config={gameConfig.config} onWin={() => handleWin()} />;
+          case 'memory':
+            return <MemoryEngine config={gameConfig.config} onWin={() => handleWin()} />;
+          case 'mystery':
+            return <MysteryEngine config={gameConfig.config} onWin={() => handleWin()} />;
+          default:
+            return <ClickerEngine config={gameConfig.config} onWin={() => handleWin()} />;
+        }
+      };
+
+      const handleWin = () => {
+        setGameState('won');
+        if (onComplete) onComplete(gameConfig.id);
+      };
+
+      return (
+        <div className="w-full max-w-sm mx-auto p-4 rounded-3xl shadow-sm border border-[#e8b5ca] bg-white text-center">
+          <div className="text-3xl mb-1">{gameConfig.emoji}</div>
+          <h3 className="text-sm font-bold text-[#5d5061]">{gameConfig.title}</h3>
+          <p className="text-[11px] text-gray-500 mb-3">{gameConfig.description}</p>
+
+          {gameState === 'idle' && (
+            <div className="space-y-2">
+              <p className="text-[11px] text-[#9b76a7] bg-[#fff7fb] p-2 rounded-xl">{gameConfig.instruction}</p>
+              <button
+                onClick={() => setGameState('playing')}
+                className="w-full py-2 rounded-xl font-bold text-xs text-white shadow bg-[#9b76a7] active:scale-95 transition"
+              >
+                Mulai Main 🚀
+              </button>
+            </div>
+          )}
+
+          {gameState === 'playing' && renderEngine()}
+
+          {gameState === 'won' && (
+            <div className="py-3">
+              <div className="text-3xl mb-1">🎉</div>
+              <h4 className="text-xs font-bold text-green-600">Berhasil Diselesaikan!</h4>
+              <p className="text-[11px] text-gray-600 my-1">{gameConfig.config?.winMessage || "+10 Hearts 💗"}</p>
+              <button
+                onClick={() => setGameState('idle')}
+                className="px-3 py-1 rounded-xl text-[10px] font-semibold bg-[#e8b5ca] text-[#5d5061]"
+              >
+                Main Lagi 🔄
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 6. EDITOR DASHBOARD MODULES
+    // ==========================================
+    function GameManager({ games, onUpdateGame }) {
+      const [search, setSearch] = useState('');
+      const [editingGame, setEditingGame] = useState(null);
+
+      const filtered = games.filter(g => g.title.toLowerCase().includes(search.toLowerCase()));
+
+      return (
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="🔍 Cari dari 60 game..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full p-2.5 rounded-2xl border border-[#e8b5ca] focus:outline-none text-xs"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto pr-1">
+            {filtered.map((game) => (
+              <div key={game.id} className="p-2.5 bg-white rounded-2xl border border-[#e8b5ca] flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xl">{game.emoji}</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#5d5061]">{game.title}</h4>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${game.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                      {game.enabled ? 'Aktif' : 'Sembunyi'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-1">
+                  <button
+                    onClick={() => onUpdateGame(game.id, { enabled: !game.enabled })}
+                    className="p-1 text-xs rounded-lg bg-[#fff7fb] border border-[#e8b5ca]"
+                  >
+                    {game.enabled ? '👁️' : '🙈'}
+                  </button>
+                  <button
+                    onClick={() => setEditingGame(game)}
+                    className="px-2 py-1 text-[10px] rounded-lg bg-[#9b76a7] text-white font-semibold"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {editingGame && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-4 w-full max-w-sm space-y-3">
+                <h3 className="font-bold text-xs text-[#5d5061]">Edit: {editingGame.title}</h3>
+                <div>
+                  <label className="text-[10px] font-semibold text-gray-500">Judul Game</label>
+                  <input
+                    type="text"
+                    value={editingGame.title}
+                    onChange={(e) => setEditingGame({ ...editingGame, title: e.target.value })}
+                    className="w-full p-2 border rounded-xl text-xs mt-0.5"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-gray-500">Instruksi Singkat</label>
+                  <input
+                    type="text"
+                    value={editingGame.instruction}
+                    onChange={(e) => setEditingGame({ ...editingGame, instruction: e.target.value })}
+                    className="w-full p-2 border rounded-xl text-xs mt-0.5"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2 pt-2">
+                  <button
+                    onClick={() => setEditingGame(null)}
+                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-gray-100 text-gray-600"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={() => {
+                      onUpdateGame(editingGame.id, editingGame);
+                      setEditingGame(null);
+                    }}
+                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-[#9b76a7] text-white"
+                  >
+                    Simpan Perubahan
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function PhotoManager({ photos, onUpdatePhoto }) {
+      const [search, setSearch] = useState('');
+      const [selectedCat, setSelectedCat] = useState(null);
+
+      const filtered = photos.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
+
+      return (
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="🔍 Cari dari 60 kategori foto..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full p-2.5 rounded-2xl border border-[#e8b5ca] focus:outline-none text-xs"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto pr-1">
+            {filtered.map((item) => (
+              <div key={item.id} className="p-2.5 bg-white rounded-2xl border border-[#e8b5ca] flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-[#5d5061]">{item.title}</h4>
+                  <p className="text-[9px] text-gray-400">{item.items.length} Foto</p>
+                </div>
+                <button
+                  onClick={() => setSelectedCat(item)}
+                  className="px-2.5 py-1 text-[10px] rounded-lg bg-[#e8b5ca] text-[#5d5061] font-bold"
+                >
+                  📷 Kelola
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {selectedCat && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-4 w-full max-w-sm space-y-3">
+                <h3 className="font-bold text-xs text-[#5d5061]">{selectedCat.title}</h3>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-semibold text-gray-500">Tambah URL Gambar Direct / Unsplash</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.target.value) {
+                        const newItems = [...selectedCat.items, { id: Date.now().toString(), url: e.target.value }];
+                        onUpdatePhoto(selectedCat.id, { items: newItems });
+                        setSelectedCat({ ...selectedCat, items: newItems });
+                        e.target.value = '';
+                      }
+                    }}
+                    className="w-full p-2 border rounded-xl text-xs"
+                  />
+                  <p className="text-[9px] text-gray-400">Tekan Enter untuk menyimpan gambar.</p>
+                </div>
+
+                <div className="flex space-x-2 overflow-x-auto py-2">
+                  {selectedCat.items.map((img) => (
+                    <img key={img.id} src={img.url} alt="Memory" className="w-14 h-14 object-cover rounded-xl border" />
+                  ))}
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    onClick={() => setSelectedCat(null)}
+                    className="px-4 py-1.5 text-xs font-bold rounded-xl bg-[#9b76a7] text-white"
+                  >
+                    Selesai
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function EditorDashboard({ giftData, setGiftData, onPublish, onPreview }) {
+      const [activeTab, setActiveTab] = useState('cover');
+
+      const handleUpdateGame = (gameId, updatedFields) => {
+        const newGames = giftData.games.map(g => g.id === gameId ? { ...g, ...updatedFields } : g);
+        setGiftData({ ...giftData, games: newGames });
+      };
+
+      const handleUpdatePhoto = (photoId, updatedFields) => {
+        const newPhotos = giftData.photos.map(p => p.id === photoId ? { ...p, ...updatedFields } : p);
+        setGiftData({ ...giftData, photos: newPhotos });
+      };
+
+      return (
+        <div className="min-h-screen bg-[#fff7fb] text-[#5d5061] pb-20">
+          <header className="p-3 bg-white border-b border-[#e8b5ca] sticky top-0 z-30 flex items-center justify-between shadow-sm">
+            <h1 className="font-bold text-xs sm:text-sm">🎁 Gift Dashboard Editor</h1>
+            <div className="flex space-x-2">
+              <button onClick={onPreview} className="px-3 py-1 text-xs rounded-xl bg-[#e8b5ca] font-bold">👀 Preview</button>
+              <button onClick={onPublish} className="px-3 py-1 text-xs rounded-xl bg-[#9b76a7] text-white font-bold shadow">🚀 Publish</button>
+            </div>
+          </header>
+
+          <div className="p-3 max-w-2xl mx-auto space-y-3">
+            <div className="flex space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
+              {['cover', 'messages', 'games', 'photos', 'music', 'appearance'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 py-1.5 rounded-2xl text-xs font-bold capitalize transition ${
+                    activeTab === tab ? 'bg-[#9b76a7] text-white shadow' : 'bg-white text-[#5d5061] border border-[#e8b5ca]'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {activeTab === 'cover' && (
+              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
+                <h3 className="font-bold text-xs">💌 Tampilan Opening Cover</h3>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Judul Utama</label>
+                  <input
+                    type="text"
+                    value={giftData.cover.title}
+                    onChange={(e) => setGiftData({ ...giftData, cover: { ...giftData.cover, title: e.target.value } })}
+                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Subjudul / Ucapan</label>
+                  <input
+                    type="text"
+                    value={giftData.cover.subtitle}
+                    onChange={(e) => setGiftData({ ...giftData, cover: { ...giftData.cover, subtitle: e.target.value } })}
+                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                  />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'messages' && (
+              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
+                <h3 className="font-bold text-xs">📝 Surat / Pesan Utama</h3>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Judul Surat</label>
+                  <input
+                    type="text"
+                    value={giftData.messages[0]?.title || ''}
+                    onChange={(e) => {
+                      const updatedMsg = [...giftData.messages];
+                      updatedMsg[0] = { ...updatedMsg[0], title: e.target.value };
+                      setGiftData({ ...giftData, messages: updatedMsg });
+                    }}
+                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Isi Pesan Romantis</label>
+                  <textarea
+                    rows={4}
+                    value={giftData.messages[0]?.content || ''}
+                    onChange={(e) => {
+                      const updatedMsg = [...giftData.messages];
+                      updatedMsg[0] = { ...updatedMsg[0], content: e.target.value };
+                      setGiftData({ ...giftData, messages: updatedMsg });
+                    }}
+                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                  />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'games' && (
+              <GameManager games={giftData.games} onUpdateGame={handleUpdateGame} />
+            )}
+
+            {activeTab === 'photos' && (
+              <PhotoManager photos={giftData.photos} onUpdatePhoto={handleUpdatePhoto} />
+            )}
+
+            {activeTab === 'music' && (
+              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
+                <h3 className="font-bold text-xs">🎵 Pengaturan Musik Background</h3>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">URL Audio (MP3 / Spotify / YouTube)</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={giftData.musicUrl || ''}
+                    onChange={(e) => setGiftData({ ...giftData, musicUrl: e.target.value })}
+                    className="w-full p-2 border rounded-xl text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Tipe Sumber Musik</label>
+                  <select
+                    value={giftData.musicSource || 'mp3'}
+                    onChange={(e) => setGiftData({ ...giftData, musicSource: e.target.value })}
+                    className="w-full p-2 border rounded-xl text-xs mt-1 bg-white"
+                  >
+                    <option value="mp3">Direct MP3 Link</option>
+                    <option value="spotify">Spotify Track Link</option>
+                    <option value="youtube">YouTube Video Link</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'appearance' && (
+              <div className="bg-white p-4 rounded-3xl border border-[#e8b5ca] space-y-3">
+                <h3 className="font-bold text-xs">✨ Tampilan & Partikel Visual</h3>
+                <div>
+                  <label className="text-[10px] text-gray-500 font-semibold">Jenis Partikel Melayang</label>
+                  <select
+                    value={giftData.theme.particles.type}
+                    onChange={(e) => setGiftData({
+                      ...giftData,
+                      theme: {
+                        ...giftData.theme,
+                        particles: { ...giftData.theme.particles, type: e.target.value }
+                      }
+                    })}
+                    className="w-full p-2 border rounded-xl text-xs mt-1 bg-white"
+                  >
+                    <option value="hearts">💗 Hearts</option>
+                    <option value="stars">⭐ Stars</option>
+                    <option value="flowers">🌸 Flowers</option>
+                    <option value="petals">🪷 Petals</option>
+                    <option value="bubbles">🫧 Bubbles</option>
+                    <option value="sparkles">✨ Sparkles</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 7. RECIPIENT MODE COMPONENT
+    // ==========================================
+    function RecipientView({ giftData, onBackToEditor }) {
+      const [opened, setOpened] = useState(false);
+
+      return (
+        <div
+          className="min-h-screen relative transition-colors duration-500 pb-20"
+          style={{
+            backgroundColor: giftData.theme.backgroundColor || "#fff7fb",
+            color: giftData.theme.textColor || "#5d5061"
+          }}
+        >
+          <BackgroundParticles config={giftData.theme.particles} />
+
+          {onBackToEditor && (
+            <button
+              onClick={onBackToEditor}
+              className="fixed top-3 left-3 z-50 bg-black/70 text-white px-3 py-1 rounded-full text-[10px] font-semibold backdrop-blur"
+            >
+              ✏️ Kembalikan ke Editor
+            </button>
+          )}
+
+          {!opened ? (
+            <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center relative z-10">
+              <div className="text-6xl mb-4 animate-bounce">🎁</div>
+              <h1 className="text-xl sm:text-2xl font-bold mb-2">{giftData.cover.title}</h1>
+              <p className="text-xs sm:text-sm opacity-80 mb-6 max-w-xs">{giftData.cover.subtitle}</p>
+              <button
+                onClick={() => setOpened(true)}
+                className="px-7 py-3 rounded-full font-bold text-xs text-white shadow-lg transition active:scale-95"
+                style={{ backgroundColor: giftData.theme.primaryColor || "#9b76a7" }}
+              >
+                {giftData.cover.buttonText || "Buka Hadiah 💌"}
+              </button>
+            </div>
+          ) : (
+            <main className="max-w-md mx-auto p-4 space-y-6 relative z-10 pt-10">
+              {giftData.messages.map((msg) => (
+                <div key={msg.id} className="p-4 bg-white/90 backdrop-blur rounded-3xl shadow-sm border border-[#e8b5ca]/40 text-center">
+                  <h2 className="font-bold text-sm mb-1">{msg.title}</h2>
+                  <p className="text-xs whitespace-pre-line opacity-90 leading-relaxed">{msg.content}</p>
+                </div>
+              ))}
+
+              <section className="space-y-3">
+                <h3 className="font-bold text-center text-xs tracking-wider uppercase opacity-70">📸 Memory Lane</h3>
+                {giftData.photos.filter(p => p.items.length > 0).map((cat) => (
+                  <div key={cat.id} className="p-3 bg-white/90 rounded-3xl border border-[#e8b5ca]/40">
+                    <h4 className="font-bold text-xs mb-2">{cat.title}</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {cat.items.map(img => (
+                        <img key={img.id} src={img.url} alt="Memory" className="w-full h-28 object-cover rounded-2xl shadow-sm" />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </section>
+
+              <section className="space-y-4">
+                <h3 className="font-bold text-center text-xs tracking-wider uppercase opacity-70">🎮 Mini Games</h3>
+                {giftData.games.filter(g => g.enabled).map((game) => (
+                  <GameEngineHost key={game.id} gameConfig={game} />
+                ))}
+              </section>
+
+              {giftData.musicUrl && (
+                <MusicPlayer url={giftData.musicUrl} source={giftData.musicSource} />
+              )}
+            </main>
+          )}
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 8. APP ROOT & ROUTER
+    // ==========================================
+    const INITIAL_GIFT_DATA = {
+      id: "gift_default",
+      status: "draft",
+      theme: {
+        fontFamily: "Poppins, sans-serif",
+        backgroundColor: "#fff7fb",
+        textColor: "#5d5061",
+        primaryColor: "#9b76a7",
+        accentColor: "#e8b5ca",
+        particles: { type: "hearts", enabled: true, count: 12 }
+      },
+      cover: {
+        title: "🎁 Sebuah Kejutan Kecil",
+        subtitle: "Ada sesuatu yang spesial untuk kamu di dalam 🤍",
+        buttonText: "Buka Hadiah 💌"
+      },
+      messages: [
+        {
+          id: "msg_1",
+          title: "Pesan Spesial 💌",
+          content: "Terima kasih sudah selalu ada dan menyinari hariku. Kado interaktif ini kubuat khusus untukmu!"
+        }
+      ],
+      games: OFFICIAL_GAME_LIST.map(g => ({
+        ...g,
+        config: { targetScore: 5, secretPasscode: "1234" }
+      })),
+      photos: OFFICIAL_PHOTO_CATEGORIES.map((title, idx) => ({
+        id: `photo_${String(idx + 1).padStart(3, '0')}`,
+        title,
+        enabled: true,
+        order: idx + 1,
+        items: []
+      })),
+      musicUrl: "",
+      musicSource: "mp3"
+    };
+
+    function App() {
+      const [giftData, setGiftData] = useState(() => getStorageData('draft_gift', INITIAL_GIFT_DATA));
+      const [mode, setMode] = useState('editor');
+      const [shareUrl, setShareUrl] = useState('');
+
+      // Auto-Detect Hash Route for Recipient Mode
+      useEffect(() => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+          const loaded = getStorageData(`published_gift_${hash}`, null);
+          if (loaded) {
+            setGiftData(loaded);
+            setMode('recipient');
+          }
+        }
+      }, []);
+
+      useEffect(() => {
+        if (mode === 'editor') {
+          setStorageData('draft_gift', giftData);
+        }
+      }, [giftData, mode]);
+
+      const handlePublish = () => {
+        const uniqueId = Math.random().toString(36).substring(2, 8);
+        const publishedPayload = { ...giftData, id: uniqueId, status: 'published' };
+        
+        setStorageData(`published_gift_${uniqueId}`, publishedPayload);
+        const url = `${window.location.origin}${window.location.pathname}#${uniqueId}`;
+        setShareUrl(url);
+      };
+
+      if (shareUrl) {
+        return (
+          <div className="min-h-screen bg-[#fff7fb] flex items-center justify-center p-4">
+            <div className="bg-white p-5 rounded-3xl border border-[#e8b5ca] shadow-xl max-w-xs w-full text-center space-y-3">
+              <div className="text-4xl">🎉</div>
+              <h2 className="text-sm font-bold text-[#5d5061]">Gift Berhasil Dipublish!</h2>
+              <p className="text-[10px] text-gray-500">Bagikan link ini ke orang tersayang:</p>
+              <input
+                type="text"
+                readOnly
+                value={shareUrl}
+                className="w-full p-2 bg-gray-50 border rounded-xl text-[10px] text-center font-mono select-all"
+              />
+              <div className="flex space-x-2 pt-1">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareUrl);
+                    alert("Link berhasil disalin! 💗");
+                  }}
+                  className="flex-1 py-2 bg-[#e8b5ca] text-[#5d5061] text-xs font-bold rounded-xl"
+                >
+                  📋 Salin Link
+                </button>
+                <button
+                  onClick={() => setShareUrl('')}
+                  className="flex-1 py-2 bg-[#9b76a7] text-white text-xs font-bold rounded-xl"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div>
+          {mode === 'editor' && (
+            <EditorDashboard
+              giftData={giftData}
+              setGiftData={setGiftData}
+              onPublish={handlePublish}
+              onPreview={() => setMode('preview')}
+            />
+          )}
+
+          {mode === 'preview' && (
+            <RecipientView
+              giftData={giftData}
+              onBackToEditor={() => setMode('editor')}
+            />
+          )}
+
+          {mode === 'recipient' && (
+            <RecipientView
+              giftData={giftData}
+            />
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
