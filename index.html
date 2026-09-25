@@ -16,7 +16,14 @@ export const ModuleSchema = z.object({
   module_id: z.string(),
   order: z.number(),
   title: z.string(),
-  type: z.enum(['unboxing', 'welcome_screen', 'letter', 'scrapbook_photos', 'mini_game', 'grand_finale']),
+  type: z.enum([
+    'unboxing',
+    'welcome_screen',
+    'letter',
+    'scrapbook_photos',
+    'mini_game',
+    'grand_finale'
+  ]),
   enabled: z.boolean().default(true),
   is_locked: z.boolean().default(false),
   config: z.record(z.any()),
@@ -31,14 +38,22 @@ export const GiftSchema = z.object({
 
 export type GiftData = z.infer<typeof GiftSchema>;
 export type ModuleData = z.infer<typeof ModuleSchema>;
+
 'use client';
+
 import React from 'react';
 import { z } from 'zod';
 import { ThemeConfigSchema } from '@/types/gift';
 
 type ThemeConfig = z.infer<typeof ThemeConfigSchema>;
 
-export default function ThemeProvider({ theme, children }: { theme: ThemeConfig; children: React.ReactNode }) {
+export default function ThemeProvider({
+  theme,
+  children
+}: {
+  theme: ThemeConfig;
+  children: React.ReactNode
+}) {
   const { palette, font_family } = theme;
 
   const themeStyles = {
@@ -46,154 +61,332 @@ export default function ThemeProvider({ theme, children }: { theme: ThemeConfig;
     '--gift-text': palette.text_color,
     '--gift-accent': palette.accent_color,
     '--gift-card': palette.card_color,
-    fontFamily: font_family === 'Typewriter' ? 'Courier New, monospace' : 'sans-serif',
+    fontFamily:
+      font_family === 'Typewriter'
+        ? 'Courier New, monospace'
+        : 'sans-serif',
   } as React.CSSProperties;
 
   return (
-    <div style={themeStyles} className="min-h-screen bg-[var(--gift-bg)] text-[var(--gift-text)] flex flex-col items-center justify-center p-4 transition-all duration-500">
+    <div
+      style={themeStyles}
+      className="min-h-screen bg-[var(--gift-bg)] text-[var(--gift-text)] flex flex-col items-center justify-center p-4 transition-all duration-500"
+    >
       <div className="w-full max-w-md mx-auto relative overflow-hidden shadow-2xl rounded-3xl bg-[var(--gift-card)] border border-black/5 flex flex-col min-h-[520px] p-6">
         {children}
       </div>
     </div>
   );
 }
+
 'use client';
+
 import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
-export default function UnboxingModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+export default function UnboxingModule({
+  config,
+  onComplete
+}: {
+  config: any;
+  onComplete: () => void
+}) {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = () => {
     setIsOpened(true);
-    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: {
+        y: 0.6
+      }
+    });
+
     setTimeout(onComplete, 1200);
   };
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
-      <p className="text-sm opacity-80 animate-pulse">{config.teaser_text}</p>
-      <button onClick={handleOpen} disabled={isOpened} className="px-8 py-4 bg-[var(--gift-accent)] text-white font-bold rounded-2xl shadow-lg transform active:scale-95 transition">
-        {isOpened ? 'Membuka...' : config.open_button_text}
+      <p className="text-sm opacity-80 animate-pulse">
+        {config.teaser_text}
+      </p>
+
+      <button
+        onClick={handleOpen}
+        disabled={isOpened}
+        className="px-8 py-4 bg-[var(--gift-accent)] text-white font-bold rounded-2xl shadow-lg transform active:scale-95 transition"
+      >
+        {isOpened
+          ? 'Membuka...'
+          : config.open_button_text}
       </button>
     </div>
   );
 }
+
 'use client';
-export default function WelcomeModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+
+export default function WelcomeModule({
+  config,
+  onComplete
+}: {
+  config: any;
+  onComplete: () => void
+}) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
-      <h1 className="text-3xl font-extrabold tracking-tight">{config.greeting}</h1>
-      <p className="text-sm leading-relaxed opacity-90 px-4">{config.intro_message}</p>
-      <button onClick={onComplete} className="px-6 py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow transition">
+      <h1 className="text-3xl font-extrabold tracking-tight">
+        {config.greeting}
+      </h1>
+
+      <p className="text-sm leading-relaxed opacity-90 px-4">
+        {config.intro_message}
+      </p>
+
+      <button
+        onClick={onComplete}
+        className="px-6 py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow transition"
+      >
         {config.start_button_text}
       </button>
     </div>
   );
 }
+
 'use client';
-export default function LetterModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+
+export default function LetterModule({
+  config,
+  onComplete
+}: {
+  config: any;
+  onComplete: () => void
+}) {
   return (
     <div className="flex flex-col justify-between flex-1 space-y-4">
       <div>
-        <h2 className="text-xl font-bold mb-3 border-b border-black/10 pb-2">{config.title}</h2>
-        <p className="text-sm leading-relaxed whitespace-pre-line opacity-90">{config.content}</p>
+        <h2 className="text-xl font-bold mb-3 border-b border-black/10 pb-2">
+          {config.title}
+        </h2>
+
+        <p className="text-sm leading-relaxed whitespace-pre-line opacity-90">
+          {config.content}
+        </p>
       </div>
-      <div className="text-right text-xs font-semibold italic mt-4 opacity-75">{config.signature}</div>
-      <button onClick={onComplete} className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow mt-4">
+
+      <div className="text-right text-xs font-semibold italic mt-4 opacity-75">
+        {config.signature}
+      </div>
+
+      <button
+        onClick={onComplete}
+        className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow mt-4"
+      >
         Lanjutkan Perjalanan →
       </button>
     </div>
   );
 }
+
 'use client';
-export default function PhotosModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+
+export default function PhotosModule({
+  config,
+  onComplete
+}: {
+  config: any;
+  onComplete: () => void
+}) {
   return (
     <div className="flex flex-col justify-between flex-1 space-y-4">
-      <h2 className="text-xl font-bold text-center">Galeri Kenangan 📸</h2>
+      <h2 className="text-xl font-bold text-center">
+        Galeri Kenangan 📸
+      </h2>
+
       <div className="space-y-3 flex-1 overflow-y-auto max-h-[50vh] pr-1">
         {config.photos.map((photo: any, index: number) => (
-          <div key={index} className="p-4 bg-white/60 rounded-2xl border border-black/5 shadow-sm space-y-1">
-            <div className="h-32 bg-gray-200 rounded-xl flex items-center justify-center text-xs text-gray-500 italic">[Foto Polaroid]</div>
-            <p className="text-xs font-medium pt-1">{photo.caption}</p>
-            <span className="text-[10px] opacity-65">{photo.date}</span>
+          <div
+            key={index}
+            className="p-4 bg-white/60 rounded-2xl border border-black/5 shadow-sm space-y-1"
+          >
+            <div className="h-32 bg-gray-200 rounded-xl flex items-center justify-center text-xs text-gray-500 italic">
+              [Foto Polaroid]
+            </div>
+
+            <p className="text-xs font-medium pt-1">
+              {photo.caption}
+            </p>
+
+            <span className="text-[10px] opacity-65">
+              {photo.date}
+            </span>
           </div>
         ))}
       </div>
-      <button onClick={onComplete} className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow">
+
+      <button
+        onClick={onComplete}
+        className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow"
+      >
         Lanjut ke Mini-Game 🎮
       </button>
     </div>
   );
 }
+
 'use client';
+
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
-export default function FinaleModule({ config }: { config: any }) {
+export default function FinaleModule({
+  config
+}: {
+  config: any
+}) {
   useEffect(() => {
-    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: {
+        y: 0.5
+      }
+    });
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center space-y-4">
-      <div className="text-4xl animate-pulse">🎉</div>
-      <h2 className="text-2xl font-black">{config.completion_message}</h2>
-      <p className="text-sm leading-relaxed opacity-90 px-2">{config.final_note}</p>
-      <div className="pt-4 text-xs font-bold opacity-60 uppercase tracking-widest">GiftVerse Studio</div>
+      <div className="text-4xl animate-pulse">
+        🎉
+      </div>
+
+      <h2 className="text-2xl font-black">
+        {config.completion_message}
+      </h2>
+
+      <p className="text-sm leading-relaxed opacity-90 px-2">
+        {config.final_note}
+      </p>
+
+      <div className="pt-4 text-xs font-bold opacity-60 uppercase tracking-widest">
+        GiftVerse Studio
+      </div>
     </div>
   );
 }
+
 'use client';
+
 import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
-export default function QuizGame({ data, onWin }: { data: any; onWin: () => void }) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+export default function QuizGame({
+  data,
+  onWin
+}: {
+  data: any;
+  onWin: () => void
+}) {
+  const [selected, setSelected] =
+    useState<number | null>(null);
+
+  const [isCorrect, setIsCorrect] =
+    useState<boolean | null>(null);
 
   const handleSelect = (idx: number) => {
     setSelected(idx);
-    const correct = idx === data.correct_index;
+
+    const correct =
+      idx === data.correct_index;
+
     setIsCorrect(correct);
+
     if (correct) {
-      confetti({ particleCount: 50, spread: 60 });
+      confetti({
+        particleCount: 50,
+        spread: 60
+      });
+
       setTimeout(onWin, 1500);
     }
   };
 
   return (
     <div className="space-y-3">
-      <p className="font-semibold text-sm">{data.question}</p>
+      <p className="font-semibold text-sm">
+        {data.question}
+      </p>
+
       <div className="space-y-2">
-        {data.options.map((opt: string, idx: number) => {
-          let style = "bg-white/80 border border-black/10";
-          if (selected === idx) style = isCorrect ? "bg-green-500 text-white" : "bg-red-500 text-white";
-          return (
-            <button key={idx} onClick={() => handleSelect(idx)} className={`w-full p-3 rounded-xl text-left text-sm transition ${style}`}>
-              {opt}
-            </button>
-          );
-        })}
+        {data.options.map(
+          (opt: string, idx: number) => {
+            let style =
+              "bg-white/80 border border-black/10";
+
+            if (selected === idx) {
+              style = isCorrect
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white";
+            }
+
+            return (
+              <button
+                key={idx}
+                onClick={() =>
+                  handleSelect(idx)
+                }
+                className={`w-full p-3 rounded-xl text-left text-sm transition ${style}`}
+              >
+                {opt}
+              </button>
+            );
+          }
+        )}
       </div>
     </div>
   );
 }
+
 'use client';
+
 import { useState } from 'react';
 
-export default function MemoryGame({ data, onWin }: { data: any; onWin: () => void }) {
-  const [solved, setSolved] = useState(false);
+export default function MemoryGame({
+  data,
+  onWin
+}: {
+  data: any;
+  onWin: () => void
+}) {
+  const [solved, setSolved] =
+    useState(false);
+
   return (
     <div className="text-center space-y-4">
-      <p className="text-xs opacity-80">{data.instruction || "Klik tombol untuk mencocokkan kartu."}</p>
-      <button onClick={() => { setSolved(true); setTimeout(onWin, 1000); }} className="px-6 py-2 bg-[var(--gift-accent)] text-white rounded-xl text-sm font-bold">
-        {solved ? 'Berhasil Dicocokkan! ✨' : 'Selesaikan Game Memory'}
+      <p className="text-xs opacity-80">
+        {data.instruction ||
+          "Klik tombol untuk mencocokkan kartu."}
+      </p>
+
+      <button
+        onClick={() => {
+          setSolved(true);
+          setTimeout(onWin, 1000);
+        }}
+        className="px-6 py-2 bg-[var(--gift-accent)] text-white rounded-xl text-sm font-bold"
+      >
+        {solved
+          ? 'Berhasil Dicocokkan! ✨'
+          : 'Selesaikan Game Memory'}
       </button>
     </div>
   );
 }
+
 'use client';
+
 import QuizGame from './QuizGame';
 import MemoryGame from './MemoryGame';
 
@@ -202,21 +395,42 @@ const GAME_REGISTRY: Record<string, any> = {
   memory_card: MemoryGame,
 };
 
-export default function GameEngine({ config, onComplete }: { config: any; onComplete: () => void }) {
-  const SelectedGame = GAME_REGISTRY[config.game_type] || QuizGame;
+export default function GameEngine({
+  config,
+  onComplete
+}: {
+  config: any;
+  onComplete: () => void
+}) {
+  const SelectedGame =
+    GAME_REGISTRY[config.game_type] ||
+    QuizGame;
+
   return (
     <div className="flex flex-col justify-between flex-1 space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-center mb-1">{config.title}</h2>
-        <p className="text-xs text-center opacity-80 mb-4">{config.instruction}</p>
-        <SelectedGame data={config} onWin={onComplete} />
+        <h2 className="text-xl font-bold text-center mb-1">
+          {config.title}
+        </h2>
+
+        <p className="text-xs text-center opacity-80 mb-4">
+          {config.instruction}
+        </p>
+
+        <SelectedGame
+          data={config}
+          onWin={onComplete}
+        />
       </div>
     </div>
   );
-  }
+}
+
 'use client';
+
 import { useState } from 'react';
-import { GiftData, ModuleData } from '@/types/gift';
+import { GiftData } from '@/types/gift';
+
 import ThemeProvider from '../themes/ThemeProvider';
 import UnboxingModule from '../modules/UnboxingModule';
 import WelcomeModule from '../modules/WelcomeModule';
@@ -234,51 +448,223 @@ const MODULE_REGISTRY: Record<string, any> = {
   grand_finale: FinaleModule,
 };
 
-export default function GiftRenderer({ gift }: { gift: GiftData }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const activeModule = gift.modules[currentIndex];
-  const ActiveComponent = MODULE_REGISTRY[activeModule.type];
+export default function GiftRenderer({
+  gift
+}: {
+  gift: GiftData
+}) {
+  const [currentIndex, setCurrentIndex] =
+    useState(0);
+
+  const activeModule =
+    gift.modules[currentIndex];
+
+  const ActiveComponent =
+    MODULE_REGISTRY[
+      activeModule.type
+    ];
 
   return (
-    <ThemeProvider theme={gift.theme_config}>
+    <ThemeProvider
+      theme={gift.theme_config}
+    >
       <div className="w-full bg-gray-200 h-1.5 rounded-full mb-6 overflow-hidden">
-        <div className="bg-[var(--gift-accent)] h-full transition-all duration-300" style={{ width: `${((currentIndex + 1) / gift.modules.length) * 100}%` }} />
+        <div
+          className="bg-[var(--gift-accent)] h-full transition-all duration-300"
+          style={{
+            width: `${
+              ((currentIndex + 1) /
+                gift.modules.length) *
+              100
+            }%`
+          }}
+        />
       </div>
+
       <div className="flex-1 flex flex-col">
-        <ActiveComponent config={activeModule.config} onComplete={() => setCurrentIndex((prev) => prev + 1)} />
+        <ActiveComponent
+          config={activeModule.config}
+          onComplete={() =>
+            setCurrentIndex(
+              (prev) => prev + 1
+            )
+          }
+        />
       </div>
     </ThemeProvider>
   );
 }
+
 import GiftRenderer from '@/components/renderer/GiftRenderer';
 import { GiftSchema } from '@/types/gift';
 
 const mockGiftDB = {
   schema_version: '2.0.0',
+
   gift_id: 'andre-x7k29',
+
   theme_config: {
     theme_mode: 'preset',
-    palette: { bg_color: '#FDF2F8', text_color: '#831843', accent_color: '#DB2777', card_color: '#FFFFFF' },
+
+    palette: {
+      bg_color: '#FDF2F8',
+      text_color: '#831843',
+      accent_color: '#DB2777',
+      card_color: '#FFFFFF'
+    },
+
     font_family: 'Typewriter',
+
     decorations: ['heart'],
   },
+
   modules: [
-    { module_id: 'm1', order: 1, title: 'Unboxing', type: 'unboxing', enabled: true, is_locked: false, config: { teaser_text: 'Seseorang meninggalkan sesuatu untukmu...', open_button_text: 'Buka Kado 🎁' } },
-    { module_id: 'm2', order: 2, title: 'Welcome', type: 'welcome_screen', enabled: true, is_locked: false, config: { greeting: 'Halo, Andre! ♡', intro_message: 'Selamat menikmati perjalanannya!', start_button_text: 'Mulai ✨' } },
-    { module_id: 'm3', order: 3, title: 'Letter', type: 'letter', enabled: true, is_locked: false, config: { title: 'Catatan Kecil', content: 'Terima kasih sudah jadi teman yang seru!', signature: '— Dari Creator' } },
-    { module_id: 'm4', order: 4, title: 'Photos', type: 'scrapbook_photos', enabled: true, is_locked: false, config: { photos: [{ caption: 'Momen bareng', date: '2026-06-01' }] } },
-    { module_id: 'm5', order: 5, title: 'Quiz', type: 'mini_game', enabled: true, is_locked: false, config: { game_type: 'quiz', title: 'Kuis', instruction: 'Jawab ya!', question: 'Di kota mana kita nongkrong?', options: ['Malang', 'Jakarta'], correct_index: 0 } },
-    { module_id: 'm6', order: 6, title: 'Finale', type: 'grand_finale', enabled: true, is_locked: false, config: { completion_message: 'Selesai! ♡', final_note: 'Semoga harimu menyenangkan!' } },
-  ],
+    {
+      module_id: 'm1',
+      order: 1,
+      title: 'Unboxing',
+      type: 'unboxing',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        teaser_text:
+          'Seseorang meninggalkan sesuatu untukmu...',
+
+        open_button_text:
+          'Buka Kado 🎁'
+      }
+    },
+
+    {
+      module_id: 'm2',
+      order: 2,
+      title: 'Welcome',
+      type: 'welcome_screen',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        greeting:
+          'Halo, Andre! ♡',
+
+        intro_message:
+          'Selamat menikmati perjalanannya!',
+
+        start_button_text:
+          'Mulai ✨'
+      }
+    },
+
+    {
+      module_id: 'm3',
+      order: 3,
+      title: 'Letter',
+      type: 'letter',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        title:
+          'Catatan Kecil',
+
+        content:
+          'Terima kasih sudah jadi teman yang seru!',
+
+        signature:
+          '— Dari Creator'
+      }
+    },
+
+    {
+      module_id: 'm4',
+      order: 4,
+      title: 'Photos',
+      type: 'scrapbook_photos',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        photos: [
+          {
+            caption:
+              'Momen bareng',
+
+            date:
+              '2026-06-01'
+          }
+        ]
+      }
+    },
+
+    {
+      module_id: 'm5',
+      order: 5,
+      title: 'Quiz',
+      type: 'mini_game',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        game_type:
+          'quiz',
+
+        title:
+          'Kuis',
+
+        instruction:
+          'Jawab ya!',
+
+        question:
+          'Di kota mana kita nongkrong?',
+
+        options: [
+          'Malang',
+          'Jakarta'
+        ],
+
+        correct_index: 0
+      }
+    },
+
+    {
+      module_id: 'm6',
+      order: 6,
+      title: 'Finale',
+      type: 'grand_finale',
+      enabled: true,
+      is_locked: false,
+
+      config: {
+        completion_message:
+          'Selesai! ♡',
+
+        final_note:
+          'Semoga harimu menyenangkan!'
+      }
+    }
+  ]
 };
 
-export default function Page({ params }: { params: { giftId: string } }) {
-  const parsed = GiftSchema.safeParse(mockGiftDB);
-  if (!parsed.success) return <div className="p-10 text-center text-red-500">Invalid Schema</div>;
+export default function Page() {
+  const parsed =
+    GiftSchema.safeParse(
+      mockGiftDB
+    );
+
+  if (!parsed.success) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Invalid Schema
+      </div>
+    );
+  }
 
   return (
     <main className="w-full min-h-screen bg-black">
-      <GiftRenderer gift={parsed.data} />
+      <GiftRenderer
+        gift={parsed.data}
+      />
     </main>
   );
 }
