@@ -1,778 +1,767 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Gift Maker Studio - Upgrade Edition</title>
+  <title>My Aesthetic Interactive World</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Sacramento&family=VT323&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            handwriting: ['"Sacramento"', 'cursive'],
+            pixel: ['"VT323"', 'monospace'],
+            serif: ['"Lora"', 'serif']
+          },
           colors: {
-            brand: {
-              50: '#fff1f2',
-              100: '#ffe4e6',
-              200: '#fecdd3',
-              300: '#fda4af',
-              400: '#fb7185',
-              500: '#f43f5e',
-              600: '#e11d48',
-              700: '#be123c',
-              800: '#9f1239',
-              900: '#881337',
+            theme: {
+              bg: 'var(--bg-main)',
+              card: 'var(--bg-card)',
+              primary: 'var(--primary)',
+              accent: 'var(--accent)',
+              text: 'var(--text-main)',
+              muted: 'var(--text-muted)',
+              border: 'var(--border-color)'
             }
           },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Poppins', 'sans-serif'],
-            handwriting: ['Caveat', 'cursive'],
-            romantic: ['Dancing Script', 'cursive'],
-            tech: ['Space Grotesk', 'sans-serif']
+          animation: {
+            'spin-slow': 'spin 8s linear infinite',
+            'bounce-soft': 'bounce 2s infinite',
+            'pulse-glow': 'pulseGlow 2s infinite alternate',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%': { boxShadow: '0 0 10px var(--primary)' },
+              '100%': { boxShadow: '0 0 25px var(--accent)' }
+            }
           }
         }
       }
     }
   </script>
-  
+
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); }
-    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
-    
-    /* Animations */
-    @keyframes pulse-subtle {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-    .animate-pulse-subtle { animation: pulse-subtle 3s infinite ease-in-out; }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    .animate-float { animation: float 4s infinite ease-in-out; }
-
-    /* Custom CSS Filters for Photo Studio */
-    .filter-vintage { filter: sepia(0.35) contrast(1.1) brightness(0.9) saturate(1.3); }
-    .filter-film { filter: contrast(1.25) saturate(0.85) hue-rotate(-10deg); }
-    .filter-lavender { filter: hue-rotate(270deg) saturate(0.9) contrast(1.05); }
-    .filter-polaroid { filter: sepia(0.2) contrast(1.2) brightness(1.1) saturate(1.1); }
-    .filter-softglow { filter: brightness(1.15) contrast(0.95) saturate(1.2) blur(0.3px); }
-    .filter-bw { filter: grayscale(1) contrast(1.2); }
-    .filter-warm { filter: sepia(0.25) saturate(1.2) hue-rotate(-15deg); }
-    .filter-cool { filter: hue-rotate(30deg) saturate(0.9) brightness(1.05); }
-
-    /* Canvas Grid Pattern */
-    .bg-grid-pattern {
-      background-size: 24px 24px;
-      background-image: 
-        radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
-    }
-    .dark .bg-grid-pattern {
-      background-image: 
-        radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    :root[data-theme="pastel"] {
+      --bg-main: #fdf6f0;
+      --bg-card: #ffffff;
+      --primary: #f4a261;
+      --accent: #e76f51;
+      --text-main: #2b2d42;
+      --text-muted: #8d99ae;
+      --border-color: #f8edeb;
+      --gradient: linear-gradient(135deg, #ffedd5 0%, #ffe4e6 100%);
     }
 
-    /* Scratch Canvas Overlay */
-    .scratch-card-container {
-      position: relative;
-      user-select: none;
+    :root[data-theme="dark"] {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --primary: #818cf8;
+      --accent: #c084fc;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --gradient: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
     }
-    
-    /* Photo Washi Tape Effect */
-    .washi-tape {
-      background: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      backdrop-filter: blur(2px);
+
+    :root[data-theme="cyberpunk"] {
+      --bg-main: #050505;
+      --bg-card: #121212;
+      --primary: #00f0ff;
+      --accent: #ff007f;
+      --text-main: #00f0ff;
+      --text-muted: #7000ff;
+      --border-color: #00f0ff;
+      --gradient: linear-gradient(135deg, #00f0ff22 0%, #ff007f22 100%);
+    }
+
+    :root[data-theme="retro"] {
+      --bg-main: #f4ebd9;
+      --bg-card: #fffbf0;
+      --primary: #c85a32;
+      --accent: #2d5a27;
+      --text-main: #332211;
+      --text-muted: #776655;
+      --border-color: #e6d7bc;
+      --gradient: linear-gradient(135deg, #e0cbab 0%, #c85a3222 100%);
+    }
+
+    :root[data-theme="kawaii"] {
+      --bg-main: #fff0f5;
+      --bg-card: #ffffff;
+      --primary: #ff69b4;
+      --accent: #ffb6c1;
+      --text-main: #4a2e35;
+      --text-muted: #b8860b;
+      --border-color: #ffdae9;
+      --gradient: linear-gradient(135deg, #ffe4e1 0%, #fff0f5 100%);
+    }
+
+    :root[data-theme="sage"] {
+      --bg-main: #f2f5f3;
+      --bg-card: #ffffff;
+      --primary: #6b8e23;
+      --accent: #8fbc8f;
+      --text-main: #2e3b32;
+      --text-muted: #7c9482;
+      --border-color: #e2e8e4;
+      --gradient: linear-gradient(135deg, #e6efe8 0%, #d8e5db 100%);
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: all 0.3s ease;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: 999px;
+      opacity: 0.3;
+    }
+
+    .glass-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white dark:bg-slate-950 dark:text-slate-100">
+<body class="h-full font-sans antialiased flex flex-col md:flex-row overflow-hidden" data-theme="pastel">
 
-  <div id="app" class="flex flex-col h-screen w-screen overflow-hidden">
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- TOP NAVBAR -->
-    <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 flex items-center justify-between z-30 shrink-0">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-rose-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
-          <i data-lucide="gift" class="w-5 h-5"></i>
+  <aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-theme-border flex-shrink-0 bg-theme-card flex flex-col justify-between z-20">
+    <div class="p-4 md:p-6">
+      <!-- User Profile Summary -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="relative">
+          <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AestheticSpace" class="w-12 h-12 rounded-full bg-theme-bg p-1 border border-theme-border" alt="Avatar">
+          <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
         </div>
-        <div>
-          <h1 class="font-display font-bold text-base leading-tight bg-gradient-to-r from-brand-600 to-rose-500 bg-clip-text text-transparent">
-            GiftStudio <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-normal ml-1">Pro v2.5</span>
-          </h1>
+        <div class="overflow-hidden">
+          <h2 id="user-name-display" class="font-bold text-lg truncate">Aesthetic Zone</h2>
+          <p class="text-xs text-theme-muted truncate">✨ Welcome to my space ✨</p>
         </div>
       </div>
 
-      <!-- Mode Switcher & Top Actions -->
-      <div class="flex items-center space-x-2">
-        <button id="btn-theme-toggle" onclick="toggleTheme()" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-          <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
-          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+      <!-- Navigation Links -->
+      <nav class="flex md:flex-col gap-1 overflow-x-auto custom-scrollbar pb-2 md:pb-0">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap bg-theme-primary/10 text-theme-primary">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
         </button>
-
-        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 my-auto mx-1"></div>
-
-        <button onclick="switchAppMode('editor')" id="nav-mode-editor" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50 flex items-center gap-1.5 transition">
-          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Canvas Studio
+        <button onclick="switchTab('letters')" id="nav-letters" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
+          <i data-lucide="mail" class="w-4 h-4"></i> Letters & Journal
         </button>
-
-        <button onclick="openPreviewModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition">
-          <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-500"></i> Preview Gift
+        <button onclick="switchTab('games')" id="nav-games" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
+          <i data-lucide="gamepad-2" class="w-4 h-4"></i> Mini Games (4)
         </button>
-
-        <button onclick="publishGift()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-brand-500 to-rose-500 text-white shadow-sm hover:shadow-md hover:from-brand-600 hover:to-rose-600 transition flex items-center gap-1.5">
-          <i data-lucide="send" class="w-3.5 h-3.5"></i> Publish & Share
+        <button onclick="switchTab('symbols')" id="nav-symbols" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Simbol & Fancy Text
         </button>
+        <button onclick="switchTab('share')" id="nav-share" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
+          <i data-lucide="share-2" class="w-4 h-4"></i> Linktree & Salin
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-4 md:p-6 border-t border-theme-border flex flex-col gap-3">
+      <button onclick="togglePublishModal()" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-sm shadow-md hover:opacity-90 transition">
+        <i data-lucide="globe" class="w-4 h-4"></i> Live Preview / Publish
+      </button>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col h-full overflow-hidden bg-theme-bg relative">
+    
+    <header class="p-4 md:p-6 flex justify-between items-center border-b border-theme-border bg-theme-card/50 backdrop-blur-md">
+      <div>
+        <h1 id="page-title" class="text-xl md:text-2xl font-bold">Interactive Dashboard</h1>
+        <p id="page-subtitle" class="text-xs md:text-sm text-theme-muted">Kelola space, main game, dan salin kaomoji favoritmu.</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="relative inline-block text-left">
+          <select id="theme-select" onchange="changeTheme(this.value)" class="appearance-none bg-theme-card border border-theme-border text-theme-text text-sm rounded-xl px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-theme-primary cursor-pointer shadow-sm">
+            <option value="pastel">🌸 Pastel Light</option>
+            <option value="dark">🌙 Dark Mode</option>
+            <option value="cyberpunk">⚡ Cyberpunk Neon</option>
+            <option value="retro">📻 Warm Retro</option>
+            <option value="kawaii">🎀 Kawaii Pink</option>
+            <option value="sage">🌿 Sage Green</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-theme-muted">
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </div>
+        </div>
       </div>
     </header>
 
-    <!-- MAIN STUDIO WORKSPACE -->
-    <div class="flex-1 flex overflow-hidden relative">
+    <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar space-y-6 pb-28">
 
-      <aside class="w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col z-20 shrink-0">
-        <!-- Sidebar Navigation Tabs -->
-        <div class="grid grid-cols-4 gap-1 p-2 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 text-xs">
-          <button onclick="switchSidebarTab('games')" id="stab-games" class="sidebar-tab-btn active flex flex-col items-center gap-1 p-2 rounded-lg text-brand-600 bg-white shadow-sm dark:bg-slate-800 dark:text-brand-400 font-medium">
-            <i data-lucide="gamepad-2" class="w-4 h-4"></i> Games
-          </button>
-          <button onclick="switchSidebarTab('photos')" id="stab-photos" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
-            <i data-lucide="image" class="w-4 h-4"></i> Photos
-          </button>
-          <button onclick="switchSidebarTab('music')" id="stab-music" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
-            <i data-lucide="music" class="w-4 h-4"></i> Audio
-          </button>
-          <button onclick="switchSidebarTab('elements')" id="stab-elements" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Extras
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content block space-y-6">
+        <div class="glass-card rounded-2xl p-6 md:p-8 relative overflow-hidden" style="background: var(--gradient);">
+          <div class="relative z-10 max-w-xl">
+            <span class="inline-block px-3 py-1 bg-white/40 backdrop-blur-md rounded-full text-xs font-semibold mb-3">✨ Daily Inspiration</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold mb-2">"Bikin karya estetik dengan caramu sendiri."</h2>
+            <p class="text-sm opacity-90 mb-4">Gunakan semua fitur interaktif: pemutar musik, koleksi kaomoji, mini game, hingga buku catat/surat rahasia.</p>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="switchTab('letters')" class="px-4 py-2 rounded-xl bg-white text-gray-900 font-bold text-sm shadow hover:bg-opacity-90 transition">Tulis Surat</button>
+              <button onclick="switchTab('symbols')" class="px-4 py-2 rounded-xl bg-black/20 text-white font-bold text-sm backdrop-blur-md hover:bg-black/30 transition">Cari Kaomoji</button>
+            </div>
+          </div>
+          <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none">
+            <i data-lucide="sparkles" class="w-64 h-64 text-theme-primary"></i>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+            <div class="p-3 bg-pink-500/10 text-pink-500 rounded-xl">
+              <i data-lucide="mail-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-theme-muted">Surat Tersimpan</p>
+              <h3 id="stat-letters-count" class="text-xl font-bold">0 Surat</h3>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+            <div class="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
+              <i data-lucide="trophy" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-theme-muted">Best Score 2048</p>
+              <h3 id="stat-2048-score" class="text-xl font-bold">0 Poin</h3>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+            <div class="p-3 bg-blue-500/10 text-blue-500 rounded-xl">
+              <i data-lucide="smile" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-theme-muted">Koleksi Kaomoji & Simbol</p>
+              <h3 class="text-xl font-bold">120+ Item</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-theme-primary"></i> Catatan Cepat / Quick Note</h3>
+            <button onclick="saveQuickNote()" class="text-xs bg-theme-primary text-white px-3 py-1.5 rounded-lg hover:opacity-90">Simpan Note</button>
+          </div>
+          <textarea id="quick-note-input" rows="4" placeholder="Tulis sesuatu di sini... (otomatis tersimpan secara lokal)" class="w-full bg-theme-bg border border-theme-border rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none"></textarea>
+        </div>
+      </section>
+
+      <section id="tab-letters" class="tab-content hidden space-y-6">
+        <!-- Template Selection Bar -->
+        <div class="glass-card p-4 rounded-2xl space-y-3">
+          <h4 class="text-xs font-bold text-theme-primary flex items-center gap-2">
+            <i data-lucide="layout" class="w-4 h-4"></i> Pilih Template Surat / Jurnal Presets:
+          </h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+            <button onclick="applyTemplate('love')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>💌 Love Letter</span>
+            </button>
+            <button onclick="applyTemplate('future')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>🕯️ Masa Depan</span>
+            </button>
+            <button onclick="applyTemplate('gratitude')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>📖 Jurnal Syukur</span>
+            </button>
+            <button onclick="applyTemplate('birthday')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>🌸 Ulang Tahun</span>
+            </button>
+            <button onclick="applyTemplate('diary')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>🌧️ Dear Diary</span>
+            </button>
+            <button onclick="applyTemplate('apology')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
+              <span>✉️ Permintaan Maaf</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1 glass-card p-6 rounded-2xl space-y-4">
+            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="pen-tool" class="w-5 h-5 text-theme-primary"></i> Editor Surat</h3>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Judul Surat</label>
+              <input type="text" id="letter-title" placeholder="Contoh: Pesan Rahasia..." class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Penerima / Tanggal</label>
+              <input type="text" id="letter-recipient" placeholder="Untuk: Sahabat Terbaik" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Pilih Style Font</label>
+              <select id="letter-font-style" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm focus:outline-none">
+                <option value="font-sans">Modern Clean (Plus Jakarta)</option>
+                <option value="font-handwriting">Handwriting Estetik (Sacramento)</option>
+                <option value="font-serif">Classic Serif (Lora)</option>
+                <option value="font-pixel">Retro Pixel (VT323)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Isi Pesan</label>
+              <textarea id="letter-content" rows="8" placeholder="Tulis isi surat atau pilih template di atas..." class="w-full bg-theme-bg border border-theme-border rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none custom-scrollbar"></textarea>
+            </div>
+            <button onclick="createLetter()" class="w-full bg-theme-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i> Simpan Surat
+            </button>
+          </div>
+
+          <div class="lg:col-span-2 space-y-4">
+            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="folder-open" class="w-5 h-5 text-theme-primary"></i> Kotak Surat Saya</h3>
+            <div id="letters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Cards dynamic -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-games" class="tab-content hidden space-y-6">
+        <!-- Game Switcher Bar -->
+        <div class="flex gap-2 border-b border-theme-border pb-3 overflow-x-auto custom-scrollbar">
+          <button onclick="selectGame('2048')" id="btn-game-2048" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-primary text-white whitespace-nowrap">2048 Puzzle</button>
+          <button onclick="selectGame('mole')" id="btn-game-mole" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Whack-A-Mole 🎯</button>
+          <button onclick="selectGame('memory')" id="btn-game-memory" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Memory Match 🧩</button>
+          <button onclick="selectGame('tictactoe')" id="btn-game-tictactoe" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Tic-Tac-Toe AI ❌⭕</button>
+        </div>
+
+        <!-- GAME 1: 2048 PUZZLE -->
+        <div id="game-2048-container" class="glass-card p-6 rounded-2xl text-center space-y-4">
+          <div class="flex justify-between items-center max-w-sm mx-auto">
+            <div class="text-left">
+              <h3 class="font-bold text-lg">2048 Mini Puzzle 🎮</h3>
+              <p class="text-xs text-theme-muted">Gunakan Keyboard Arrow / Swipe untuk geser tile!</p>
+            </div>
+            <div class="bg-theme-bg px-4 py-2 rounded-xl border border-theme-border text-right">
+              <p class="text-[10px] text-theme-muted font-bold">SCORE</p>
+              <span id="score-2048" class="text-lg font-bold text-theme-primary">0</span>
+            </div>
+          </div>
+
+          <div id="board-2048" class="grid grid-cols-4 gap-2 w-64 h-64 md:w-72 md:h-72 mx-auto bg-theme-border/40 p-2 rounded-2xl touch-none">
+            <!-- 16 tiles -->
+          </div>
+
+          <button onclick="init2048()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
+            Reset 2048 Game
           </button>
         </div>
 
-        <!-- Sidebar Content Panels Container -->
-        <div class="flex-1 overflow-y-auto p-3 space-y-4" id="sidebar-panel-container">
+        <!-- GAME 2: WHACK A MOLE -->
+        <div id="game-mole-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
+          <div class="flex justify-between items-center max-w-md mx-auto">
+            <div class="text-left">
+              <h3 class="font-bold text-lg">Catch The Cute Stars 🎯</h3>
+              <p class="text-xs text-theme-muted">Klik karakter yang muncul sebelum hilang!</p>
+            </div>
+            <div class="flex gap-3 text-sm font-bold">
+              <span>Time: <span id="mole-timer" class="text-red-500">20s</span></span>
+              <span>Score: <span id="mole-score" class="text-theme-primary">0</span></span>
+            </div>
+          </div>
+
+          <div id="mole-grid" class="grid grid-cols-3 gap-3 max-w-xs mx-auto">
+            <!-- 9 holes -->
+          </div>
+
+          <button onclick="startMoleGame()" id="btn-start-mole" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
+            Start Whack Game
+          </button>
+        </div>
+
+        <!-- GAME 3: MEMORY MATCH -->
+        <div id="game-memory-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
+          <div class="flex flex-wrap justify-between items-center max-w-md mx-auto gap-2">
+            <div class="text-left">
+              <h3 class="font-bold text-lg">Memory Match 🧩</h3>
+              <p class="text-xs text-theme-muted">Temukan pasangan emoji yang sama!</p>
+            </div>
+            <div class="flex gap-3 text-xs font-semibold">
+              <select id="memory-difficulty" onchange="initMemoryGame()" class="bg-theme-bg border border-theme-border rounded-lg px-2 py-1">
+                <option value="easy">Easy (6 pasang)</option>
+                <option value="hard">Hard (8 pasang)</option>
+              </select>
+              <span>Moves: <span id="memory-moves" class="text-theme-primary">0</span></span>
+            </div>
+          </div>
+
+          <div id="memory-board" class="grid grid-cols-3 md:grid-cols-4 gap-3 max-w-md mx-auto">
+            <!-- Cards injected via JS -->
+          </div>
+
+          <button onclick="initMemoryGame()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
+            Reset Memory
+          </button>
+        </div>
+
+        <!-- GAME 4: TIC TAC TOE AI -->
+        <div id="game-tictactoe-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
+          <div class="flex justify-between items-center max-w-xs mx-auto">
+            <div class="text-left">
+              <h3 class="font-bold text-lg">Tic-Tac-Toe AI ❌⭕</h3>
+              <p class="text-xs text-theme-muted">Lawan Robot AI Pintar!</p>
+            </div>
+            <div id="ttt-status" class="text-xs font-bold text-theme-primary">Giliran Kamu (X)</div>
+          </div>
+
+          <div id="ttt-board" class="grid grid-cols-3 gap-3 max-w-xs mx-auto">
+            <!-- 9 cells -->
+          </div>
+
+          <button onclick="initTicTacToe()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
+            Main Lagi
+          </button>
+        </div>
+      </section>
+
+      <section id="tab-symbols" class="tab-content hidden space-y-6">
+        <!-- Fancy Text Generator -->
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="type" class="w-5 h-5 text-theme-primary"></i> Fancy Text Decorator Generator</h3>
+          <p class="text-xs text-theme-muted">Ketik teks biasa lalu klik hasil font estetik di bawah untuk menyalin langsung!</p>
+          <input type="text" id="fancy-input" value="Aesthetic World" oninput="generateFancyText()" placeholder="Ketik nama atau kata estetik..." class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
           
-          <!-- TAB 1: GAME LIBRARY -->
-          <div id="spanel-games" class="sidebar-panel space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Game Engine Catalog</h3>
-              <span id="game-count-badge" class="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500">8 Modules</span>
-            </div>
-
-            <!-- Search and Filter -->
-            <div class="relative">
-              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
-              <input type="text" id="game-search-input" onkeyup="filterGameCatalog()" placeholder="Search mini games..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-brand-500">
-            </div>
-
-            <!-- Category Pills -->
-            <div class="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] no-scrollbar">
-              <button onclick="filterGameCategory('all')" class="gcat-btn px-2.5 py-1 rounded-full bg-brand-500 text-white font-medium shrink-0">All</button>
-              <button onclick="filterGameCategory('love')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">💗 Love</button>
-              <button onclick="filterGameCategory('puzzle')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🧩 Puzzle</button>
-              <button onclick="filterGameCategory('quiz')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🧠 Quiz</button>
-              <button onclick="filterGameCategory('arcade')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🎮 Arcade</button>
-            </div>
-
-            <!-- Game Cards Grid -->
-            <div class="grid grid-cols-1 gap-2.5" id="game-catalog-grid">
-              <!-- Dynamically Populated Game Modules -->
-            </div>
+          <div id="fancy-results" class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
+            <!-- Dynamic font previews -->
           </div>
-
-          <!-- TAB 2: PHOTO STUDIO & LAYOUT LIBRARY -->
-          <div id="spanel-photos" class="sidebar-panel hidden space-y-4">
-            <div class="space-y-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Add Photos</h3>
-              
-              <!-- Direct Upload Dropzone -->
-              <div onclick="document.getElementById('photo-file-input').click()" class="border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 rounded-xl p-3 text-center cursor-pointer transition bg-slate-50/50 dark:bg-slate-900/50 group">
-                <input type="file" id="photo-file-input" multiple accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
-                <i data-lucide="upload-cloud" class="w-6 h-6 mx-auto text-slate-400 group-hover:text-brand-500 transition"></i>
-                <p class="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-1">Upload Device Photos</p>
-                <p class="text-[10px] text-slate-400">Multiple files supported</p>
-              </div>
-
-              <!-- Direct URL Upload -->
-              <div class="flex gap-1">
-                <input type="text" id="photo-url-input" placeholder="Paste Image URL..." class="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                <button onclick="addPhotoFromUrl()" class="px-2.5 py-1.5 bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 rounded-lg text-xs font-medium hover:opacity-90">Add</button>
-              </div>
-            </div>
-
-            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
-
-            <!-- Photo Layout Presets & Templates -->
-            <div class="space-y-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Layout Studio Templates</h3>
-              <div class="grid grid-cols-2 gap-2" id="photo-templates-grid">
-                <!-- Dynamically generated photo layout options -->
-              </div>
-            </div>
-
-            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
-
-            <!-- Instant Photo to Puzzle Studio -->
-            <div class="p-3 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-xl border border-indigo-100 dark:border-indigo-900/50 space-y-2">
-              <div class="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 font-semibold text-xs">
-                <i data-lucide="puzzle" class="w-4 h-4"></i> Photo to Jigsaw Generator
-              </div>
-              <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-tight">Convert any memory photo instantly into an interactive jigsaw challenge.</p>
-              <button onclick="convertUploadedPhotoToPuzzle()" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm transition">
-                Create Puzzle from Last Upload
-              </button>
-            </div>
-          </div>
-
-          <!-- TAB 3: ADVANCED MUSIC & SOUND STUDIO -->
-          <div id="spanel-music" class="sidebar-panel hidden space-y-4">
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Music & Sound Track</h3>
-                <span id="music-mode-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-semibold">Global Mode</span>
-              </div>
-
-              <!-- Audio Settings -->
-              <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-2 text-xs">
-                <div class="flex items-center justify-between">
-                  <span>Playback Trigger</span>
-                  <select id="music-start-trigger" onchange="updateMusicSettings()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-1 text-[11px]">
-                    <option value="gift-open">After Gift Opens</option>
-                    <option value="first-click">First Tap / Click</option>
-                    <option value="page-load">Immediate (Autoplay)</option>
-                  </select>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span>Player Visual Style</span>
-                  <select id="music-player-style" onchange="updateMusicSettings()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-1 text-[11px]">
-                    <option value="mini">Mini Pill 🎵</option>
-                    <option value="compact">Compact Player</option>
-                    <option value="card">Album Card</option>
-                    <option value="hidden">Hidden Player</option>
-                  </select>
-                </div>
-                <div class="flex items-center justify-between pt-1">
-                  <span>Volume Level</span>
-                  <input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.8" oninput="updateMusicVolume(this.value)" class="w-24 accent-brand-500">
-                </div>
-              </div>
-
-              <!-- Track Add Box -->
-              <div class="space-y-2">
-                <h4 class="text-[11px] font-semibold text-slate-500">Add Audio Track</h4>
-                <div class="flex gap-1">
-                  <input type="text" id="audio-url-input" placeholder="Audio Direct URL (.mp3)..." class="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                  <button onclick="addAudioTrackFromUrl()" class="px-2.5 py-1.5 bg-brand-500 text-white rounded-lg text-xs font-medium hover:bg-brand-600">Add</button>
-                </div>
-              </div>
-
-              <!-- Playlist items -->
-              <div class="space-y-1.5" id="playlist-container">
-                <!-- Dynamically rendered playlist items -->
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 4: EXTRAS, LETTERS & STICKERS -->
-          <div id="spanel-elements" class="sidebar-panel hidden space-y-4">
-            <!-- Love Letter Presets -->
-            <div class="space-y-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Love Letters & Cards</h3>
-              <div class="grid grid-cols-1 gap-2">
-                <button onclick="addLetterToCanvas('romantic')" class="p-2.5 text-left rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/30 hover:border-rose-400 transition group">
-                  <div class="flex items-center justify-between">
-                    <span class="font-romantic font-bold text-base text-rose-700 dark:text-rose-300">Heartfelt Love Note</span>
-                    <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
-                  </div>
-                  <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">"You mean the world to me..."</p>
-                </button>
-                <button onclick="addLetterToCanvas('typewriter')" class="p-2.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 bg-amber-50/40 dark:bg-amber-950/20 hover:border-amber-400 transition group">
-                  <div class="flex items-center justify-between">
-                    <span class="font-mono font-bold text-xs text-amber-800 dark:text-amber-300">Vintage Typewriter Letter</span>
-                    <i data-lucide="file-text" class="w-4 h-4 text-amber-500"></i>
-                  </div>
-                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Classic paper note style...</p>
-                </button>
-              </div>
-            </div>
-
-            <!-- Decorative Stickers -->
-            <div class="space-y-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Stickers & Accents</h3>
-              <div class="grid grid-cols-4 gap-2 text-2xl text-center" id="stickers-grid">
-                <!-- Dynamically generated sticker clickable badges -->
-              </div>
-            </div>
-          </div>
-
         </div>
-      </aside>
 
-      <main class="flex-1 bg-slate-100 dark:bg-slate-950 relative flex flex-col overflow-hidden">
+        <!-- Categorized Symbols & Kaomojis -->
+        <div class="glass-card p-6 rounded-2xl space-y-6">
+          <h3 class="font-bold text-lg">Koleksi Simbol & Kaomoji Lengkap ✧˚·</h3>
 
-        <!-- Top Canvas Tool Strip -->
-        <div class="h-10 border-b border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xs px-4 flex items-center justify-between shrink-0">
-          <!-- Page Selector Carousel / Breadcrumb -->
-          <div class="flex items-center space-x-1 overflow-x-auto text-xs" id="page-tabs-bar">
-            <!-- Dynamically populated page tabs -->
+          <!-- Sub Tabs for Symbols -->
+          <div class="flex gap-2 border-b border-theme-border pb-3 overflow-x-auto custom-scrollbar">
+            <button onclick="filterSymbols('all')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-primary text-white">Semua</button>
+            <button onclick="filterSymbols('stars')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🌸 Stars & Sparkles</button>
+            <button onclick="filterSymbols('kaomoji')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">ʕ•ᴥ•ʔ Cute Kaomoji</button>
+            <button onclick="filterSymbols('borders')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🎀 Borders & Lines</button>
+            <button onclick="filterSymbols('magical')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🪐 Space & Magic</button>
+            <button onclick="filterSymbols('hearts')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">💌 Hearts & Arrows</button>
           </div>
 
-          <!-- Page Control Buttons -->
-          <div class="flex items-center space-x-1 text-xs">
-            <button onclick="addNewPage()" class="px-2.5 py-1 rounded-md bg-brand-50 hover:bg-brand-100 text-brand-600 dark:bg-brand-950 dark:text-brand-300 font-medium flex items-center gap-1 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Page
-            </button>
-            <button onclick="duplicateCurrentPage()" title="Duplicate Page" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            </button>
-            <button onclick="deleteCurrentPage()" title="Delete Page" class="p-1.5 rounded hover:bg-rose-100 dark:hover:bg-rose-950 text-rose-600">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <div id="symbols-grid-container" class="space-y-6">
+            <!-- Symbols categorized injected here -->
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-share" class="tab-content hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-card p-6 rounded-2xl space-y-4">
+            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-theme-primary"></i> Bio & Link Tree Editor</h3>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Nama Tampilan</label>
+              <input type="text" id="edit-name" value="Aesthetic Zone" oninput="updateProfileCard()" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Bio Ringkas</label>
+              <input type="text" id="edit-bio" value="Digital Creator & Dreamer ✨" oninput="updateProfileCard()" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Custom Link Instagram</label>
+              <input type="text" id="edit-ig" value="https://instagram.com" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-theme-muted mb-1">Custom Link Spotify / TikTok</label>
+              <input type="text" id="edit-tiktok" value="https://tiktok.com" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
+            </div>
+            <button onclick="copyProfileLink()" class="w-full bg-theme-primary text-white font-bold py-2.5 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4"></i> Salin Link Profil Saya
             </button>
           </div>
-        </div>
 
-        <!-- Interactive WYSIWYG Stage Container -->
-        <div class="flex-1 overflow-auto flex items-center justify-center p-6 bg-grid-pattern relative" id="canvas-stage-wrapper">
-          
-          <!-- Screen Frame (Mobile Responsive Preview Frame) -->
-          <div id="canvas-stage" class="w-[380px] h-[680px] bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl border-4 border-slate-800/10 dark:border-slate-700/30 relative overflow-hidden transition-all duration-300 flex flex-col">
-            
-            <!-- Page Dynamic Content Canvas Layer -->
-            <div id="active-page-content" class="w-full h-full relative overflow-y-auto overflow-x-hidden p-4 space-y-4">
-              <!-- Dynamically populated canvas elements rendered here -->
+          <div class="glass-card p-6 rounded-2xl text-center space-y-4 flex flex-col items-center justify-center border-2 border-dashed border-theme-primary/30">
+            <img id="preview-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AestheticSpace" class="w-20 h-20 rounded-full border-2 border-theme-primary p-1 bg-theme-bg" alt="Profile">
+            <div>
+              <h4 id="preview-name" class="font-bold text-xl">Aesthetic Zone</h4>
+              <p id="preview-bio" class="text-xs text-theme-muted">Digital Creator & Dreamer ✨</p>
             </div>
 
-            <!-- Interactive Music Widget Overlay (if configured) -->
-            <div id="canvas-music-player-overlay" class="absolute bottom-3 left-3 right-3 z-30 pointer-events-auto">
-              <!-- Rendered music player widget -->
+            <div class="w-full max-w-xs space-y-2 pt-2">
+              <a id="preview-ig-btn" href="#" target="_blank" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-theme-bg border border-theme-border text-xs font-semibold hover:border-theme-primary transition">
+                <span>Instagram</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+              <a id="preview-tiktok-btn" href="#" target="_blank" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-theme-bg border border-theme-border text-xs font-semibold hover:border-theme-primary transition">
+                <span>TikTok / Music</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
             </div>
-
-          </div>
-
-        </div>
-
-        <!-- Bottom Page Sequence Controls -->
-        <div class="h-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 flex items-center justify-between shrink-0 text-xs text-slate-500">
-          <div class="flex items-center gap-2">
-            <span>Canvas View Mode:</span>
-            <span class="font-semibold text-slate-700 dark:text-slate-200">Mobile Phone View (380x680)</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <button onclick="navigatePage('prev')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
-              <i data-lucide="chevron-left" class="w-4 h-4"></i>
-            </button>
-            <span id="page-counter-indicator" class="font-mono text-xs">Page 1 of 1</span>
-            <button onclick="navigatePage('next')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
-              <i data-lucide="chevron-right" class="w-4 h-4"></i>
-            </button>
           </div>
         </div>
-
-      </main>
-
-      <aside class="w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col z-20 shrink-0 hidden lg:flex">
-        <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Inspector & Properties</h3>
-          <span id="inspector-target-type" class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-500">Page Level</span>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-4 space-y-5" id="inspector-body">
-          <!-- Dynamically populated property editor controls -->
-        </div>
-      </aside>
+      </section>
 
     </div>
-  </div>
 
-  <div id="game-customizer-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
-      <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center">
-            <i data-lucide="sliders" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h2 id="modal-game-title" class="text-base font-bold text-slate-800 dark:text-slate-100">Customize Game Engine</h2>
-            <p class="text-xs text-slate-400">Modify rules, cards, questions, visual styles & success triggers</p>
-          </div>
+    <!-- Music Player Floating Widget -->
+    <div class="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 glass-card rounded-2xl p-3 shadow-2xl border border-theme-border z-30 flex items-center gap-3 backdrop-blur-lg">
+      <div class="relative flex-shrink-0">
+        <div id="music-vinyl" class="w-12 h-12 rounded-full bg-gray-900 border-2 border-gray-700 flex items-center justify-center shadow-inner">
+          <div class="w-4 h-4 rounded-full bg-theme-primary border border-white"></div>
         </div>
+      </div>
+
+      <div class="flex-1 min-w-0">
+        <h4 id="track-title" class="text-xs font-bold truncate">Lofi Chill Beats</h4>
+        <p id="track-artist" class="text-[10px] text-theme-muted truncate">Aesthetic Chill Vibe</p>
         
-        <div class="flex items-center space-x-2">
-          <button onclick="testPlayCustomGame()" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-300 text-xs font-semibold hover:bg-emerald-100 transition flex items-center gap-1.5">
-            <i data-lucide="play" class="w-3.5 h-3.5"></i> Live Test Preview
-          </button>
-          <button onclick="saveAndAddGameToPage()" class="px-4 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-semibold hover:bg-brand-600 transition flex items-center gap-1.5">
-            <i data-lucide="check" class="w-3.5 h-3.5"></i> Insert into Canvas
-          </button>
-          <button onclick="closeGameCustomizerModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
+        <div class="w-full bg-theme-bg h-1.5 rounded-full mt-1.5 overflow-hidden cursor-pointer" onclick="seekAudio(event)">
+          <div id="track-progress" class="bg-theme-primary h-full w-0 transition-all"></div>
         </div>
       </div>
 
-      <!-- Modal Body Split View -->
-      <div class="flex-1 flex overflow-hidden">
-        <!-- Left: Rule & Content Settings -->
-        <div class="w-1/2 border-r border-slate-200 dark:border-slate-800 overflow-y-auto p-5 space-y-5" id="game-customizer-form-container">
-          <!-- Dynamic Form Injection based on active game type -->
-        </div>
-
-        <!-- Right: Live Interactive Sandbox Preview -->
-        <div class="w-1/2 bg-slate-50 dark:bg-slate-950 p-6 flex flex-col items-center justify-center relative overflow-hidden">
-          <div class="text-center mb-3">
-            <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Live Editor Sandbox</span>
-          </div>
-          <div id="game-preview-stage" class="w-[320px] h-[520px] bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-4 relative flex flex-col overflow-hidden">
-            <!-- Game Instance Live Render Engine Injection -->
-          </div>
-        </div>
+      <div class="flex items-center gap-1">
+        <button onclick="prevTrack()" class="p-1.5 text-theme-muted hover:text-theme-text rounded-lg">
+          <i data-lucide="skip-back" class="w-4 h-4"></i>
+        </button>
+        <button onclick="togglePlayMusic()" id="btn-play-music" class="p-2 bg-theme-primary text-white rounded-full hover:opacity-90 shadow">
+          <i data-lucide="play" class="w-4 h-4"></i>
+        </button>
+        <button onclick="nextTrack()" class="p-1.5 text-theme-muted hover:text-theme-text rounded-lg">
+          <i data-lucide="skip-forward" class="w-4 h-4"></i>
+        </button>
       </div>
+
+      <audio id="audio-player" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
     </div>
-  </div>
 
-  <div id="photo-editor-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
-      <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <i data-lucide="sliders" class="w-4 h-4 text-brand-500"></i> Photo Adjustments Studio
-        </h3>
-        <button onclick="closePhotoEditorModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+  </main>
+
+  <!-- Publish Modal -->
+  <div id="publish-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card w-full max-w-md rounded-2xl p-6 space-y-5 relative">
+      <button onclick="togglePublishModal()" class="absolute top-4 right-4 text-theme-muted hover:text-theme-text">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto">
+          <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-xl font-bold">Siap Dipublish! 🚀</h3>
+        <p class="text-xs text-theme-muted">Website kustomisasi estetikmu dapat langsung disalin dan dibagikan ke teman-temanmu.</p>
       </div>
 
-      <div class="p-6 flex flex-col md:flex-row gap-6 overflow-y-auto">
-        <!-- Photo Preview Canvas -->
-        <div class="flex-1 flex items-center justify-center bg-slate-100 dark:bg-slate-950 rounded-xl p-4 min-h-[260px] relative overflow-hidden">
-          <img id="photo-editor-preview-target" src="" class="max-h-[300px] object-contain rounded shadow-md transition-all duration-200">
-        </div>
-
-        <!-- Filter & Adjustment Controls -->
-        <div class="w-full md:w-64 space-y-4 text-xs">
-          <div>
-            <label class="font-semibold block mb-1.5 text-slate-600 dark:text-slate-300">Preset CSS Filter</label>
-            <select id="pe-filter-select" onchange="applyPhotoEditorAdjustments()" class="w-full p-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-              <option value="none">Original (None)</option>
-              <option value="filter-vintage">Vintage Sepia</option>
-              <option value="filter-film">35mm Film</option>
-              <option value="filter-polaroid">Polaroid Instant</option>
-              <option value="filter-lavender">Dreamy Lavender</option>
-              <option value="filter-softglow">Soft Glow</option>
-              <option value="filter-warm">Warm Sunset</option>
-              <option value="filter-cool">Cool Twilight</option>
-              <option value="filter-bw">Monochrome B&W</option>
-            </select>
-          </div>
-
-          <div class="space-y-3">
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="text-slate-500">Brightness</span>
-                <span id="lbl-pe-brightness">100%</span>
-              </div>
-              <input type="range" id="pe-brightness" min="50" max="150" value="100" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
-            </div>
-
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="text-slate-500">Contrast</span>
-                <span id="lbl-pe-contrast">100%</span>
-              </div>
-              <input type="range" id="pe-contrast" min="50" max="150" value="100" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
-            </div>
-
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="text-slate-500">Border Radius</span>
-                <span id="lbl-pe-radius">12px</span>
-              </div>
-              <input type="range" id="pe-radius" min="0" max="30" value="12" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
-            </div>
-          </div>
-
-          <button onclick="savePhotoEditorChanges()" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-semibold shadow-sm transition">
-            Apply Adjustments
-          </button>
-        </div>
+      <div class="bg-theme-bg p-3 rounded-xl border border-theme-border flex items-center justify-between gap-2">
+        <span id="published-url" class="text-xs font-mono text-theme-muted truncate">https://my-space.aesthetic/user-1029</span>
+        <button onclick="copyPublishedLink()" class="px-3 py-1.5 bg-theme-primary text-white text-xs font-bold rounded-lg whitespace-nowrap hover:opacity-90">Salin Link</button>
       </div>
-    </div>
-  </div>
-
-  <div id="recipient-experience-modal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col items-center justify-center overflow-hidden">
-    <!-- Close Preview Overlay Button -->
-    <button onclick="closePreviewModal()" class="absolute top-4 right-4 z-50 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 text-xs font-semibold flex items-center gap-1.5 transition">
-      <i data-lucide="x" class="w-4 h-4"></i> Exit Preview
-    </button>
-
-    <!-- Recipient Mobile Stage Display Container -->
-    <div id="recipient-stage" class="w-full max-w-[420px] h-full max-h-[820px] bg-slate-900 md:rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col">
-      <!-- Content populated dynamically -->
     </div>
   </div>
 
   <script>
-    /* ==========================================================================
-       GLOBAL GIFT STUDIO STATE & CONFIGURATION
-       ========================================================================== */
-    
-    // Sample fallback images
-    const SAMPLE_IMAGES = [
-      'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80'
+    // --- APP STATE ---
+    let currentTheme = localStorage.getItem('theme') || 'pastel';
+    let letters = JSON.parse(localStorage.getItem('letters')) || [
+      { id: 1, title: 'Selamat Datang! ✨', recipient: 'Kamu', font: 'font-handwriting', content: 'Selamat datang di website estetik interaktif milikmu! Pilih template untuk membuat jurnal atau surat estetik baru.', date: 'Today' }
+    ];
+    let isPlaying = false;
+    let currentTrackIndex = 0;
+
+    const playlist = [
+      { title: 'Lofi Chill Study', artist: 'Aesthetic Beats', src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3' },
+      { title: 'Cozy Coffee Vibe', artist: 'Chillhop Community', src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=cozy-vibes-13074.mp3' },
     ];
 
-    // Main Gift Project Data Model
-    let giftProject = {
-      title: "Our Love Story Gift",
-      theme: "romantic", // romantic, vintage, cute, midnight
-      openingScreen: {
-        title: "A Special Secret Gift For You 🎁",
-        subtitle: "Tap the present box to open your personalized memory journey",
-        boxColor: "#f43f5e",
-        ribbonColor: "#fb7185"
-      },
-      musicSettings: {
-        mode: "global", // global vs per-page
-        autoplayTrigger: "gift-open", // gift-open, first-click, page-load
-        playerStyle: "mini", // mini, compact, card, hidden
-        volume: 0.8,
-        activeTrackIndex: 0,
-        tracks: [
-          {
-            title: "Acoustic Romantic Melodies",
-            artist: "Gift Studio Sound Library",
-            url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
-            cover: SAMPLE_IMAGES[0]
-          }
-        ]
-      },
-      pages: [
-        {
-          id: "page-1",
-          title: "Intro Memory",
-          background: "#ffffff",
-          elements: []
-        }
-      ]
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      lucide.createIcons();
+      changeTheme(currentTheme);
+      document.getElementById('theme-select').value = currentTheme;
+
+      renderLetters();
+      initSymbolsAndKaomojis();
+      generateFancyText();
+      init2048();
+      setupAudioPlayer();
+      loadQuickNote();
+      updateStats();
+
+      // Keyboard Controls for 2048
+      window.addEventListener('keydown', handle2048Key);
     };
 
-    let activePageIndex = 0;
-    let activeElementId = null;
-    let editingGameTempConfig = null;
-    let editingGameTemplateId = null;
-
-    /* ==========================================================================
-       GAME ENGINE LIBRARY SCHEMAS & DEFAULT ENGINE CATALOG
-       ========================================================================== */
-    
-    const GAME_CATALOG = [
-      {
-        id: "memory-match",
-        name: "Memory Card Match",
-        category: "puzzle",
-        icon: "grid",
-        badge: "Interactive",
-        desc: "Match pairs of romantic cards or custom photos before time runs out.",
-        defaultConfig: {
-          pairsCount: 4,
-          cardBackEmoji: "💖",
-          cardImages: [SAMPLE_IMAGES[0], SAMPLE_IMAGES[1], SAMPLE_IMAGES[2], SAMPLE_IMAGES[3]],
-          successMessage: "You matched all our memories! 💗",
-          onSuccessAction: "confetti" // confetti, next-page, open-letter
-        }
-      },
-      {
-        id: "photo-jigsaw",
-        name: "Photo Jigsaw Puzzle",
-        category: "puzzle",
-        icon: "puzzle",
-        badge: "Popular",
-        desc: "Drag or tap puzzle tiles to assemble a full memory photo.",
-        defaultConfig: {
-          gridSize: 3, // 3x3 = 9 pieces
-          photoUrl: SAMPLE_IMAGES[0],
-          successMessage: "Puzzle Solved! Beautiful memory. ✨",
-          onSuccessAction: "confetti"
-        }
-      },
-      {
-        id: "couple-quiz",
-        name: "Couple Memory Quiz",
-        category: "quiz",
-        icon: "help-circle",
-        badge: "Fun",
-        desc: "Interactive multiple choice questions with scores & instant feedback.",
-        defaultConfig: {
-          questions: [
-            {
-              question: "Where was our first coffee date?",
-              options: ["Starbucks Cafe", "Cozy Corner Bakery", "Beachside Bistro", "Parks Park"],
-              correctIndex: 1
-            },
-            {
-              question: "What is my absolute favorite movie genre?",
-              options: ["Sci-Fi", "Romantic Comedy", "Horror", "Documentaries"],
-              correctIndex: 1
-            }
-          ],
-          successMessage: "You know me so well! Perfect score! 🥰",
-          onSuccessAction: "next-page"
-        }
-      },
-      {
-        id: "this-or-that",
-        name: "This or That Date Game",
-        category: "love",
-        icon: "heart-handshake",
-        badge: "Romantic",
-        desc: "Choose between two romantic options for our next date adventure.",
-        defaultConfig: {
-          questions: [
-            { title: "Next Date Choice", optionA: "🏖️ Beach Sunset", optionB: "🏔️ Mountain Cabin" },
-            { title: "Evening Vibe", optionA: "🎬 Movie Marathon", optionB: "🍽️ Fancy Candlelight Dinner" }
-          ],
-          successMessage: "Great choices! Date night locked in. 🥂",
-          onSuccessAction: "confetti"
-        }
-      },
-      {
-        id: "scratch-card",
-        name: "Secret Scratch Reveal",
-        category: "love",
-        icon: "sparkles",
-        badge: "Surprise",
-        desc: "Scratch off the silver coat to reveal a hidden love message or voucher.",
-        defaultConfig: {
-          hiddenText: "🎁 VOUCHER: Unlimited Hugs & Ice Cream Date!",
-          hiddenImage: SAMPLE_IMAGES[1],
-          coverColor: "#cbd5e1",
-          successMessage: "You revealed the secret gift!",
-          onSuccessAction: "confetti"
-        }
-      },
-      {
-        id: "spin-wheel",
-        name: "Spin Date Wheel",
-        category: "arcade",
-        icon: "disc",
-        badge: "Random",
-        desc: "Spin the fortune wheel to randomly select a date activity or compliment.",
-        defaultConfig: {
-          slices: ["Romantic Dinner", "Late Night Walk", "Shopping Spree", "Movie Night", "Bake Cookies Together"],
-          successMessage: "Wheel decided our fate!",
-          onSuccessAction: "confetti"
-        }
-      },
-      {
-        id: "heart-clicker",
-        name: "Heart Collector Rush",
-        category: "arcade",
-        icon: "flame",
-        badge: "Arcade",
-        desc: "Tap as many floating hearts as possible within 10 seconds.",
-        defaultConfig: {
-          targetScore: 12,
-          timeLimit: 10,
-          successMessage: "Fast fingers! Heart score crushed! 💕",
-          onSuccessAction: "confetti"
-        }
-      },
-      {
-        id: "tic-tac-toe",
-        name: "Love Tic-Tac-Toe",
-        category: "arcade",
-        icon: "x-circle",
-        badge: "Classic",
-        desc: "Play classic Tic-Tac-Toe using ❤️ and 💖 heart tokens.",
-        defaultConfig: {
-          playerSymbol: "❤️",
-          aiSymbol: "💖",
-          successMessage: "Three in a row! Love wins!",
-          onSuccessAction: "confetti"
-        }
-      }
-    ];
-
-    window.addEventListener('DOMContentLoaded', () => {
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message, icon = 'check-circle') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'glass-card bg-theme-card border border-theme-border text-theme-text px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold pointer-events-auto transition-all transform translate-y-2 opacity-0';
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 text-theme-primary"></i> <span>${message}</span>`;
+      
+      container.appendChild(toast);
       lucide.createIcons();
-      renderSidebarGameCatalog();
-      renderSidebarPhotoTemplates();
-      renderSidebarStickers();
-      renderPlaylist();
-      renderCanvasStage();
-      renderPageTabs();
-      renderInspector();
-    });
 
-    // Theme Toggle Function
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 50);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
     }
 
-    // Tab Navigation
-    function switchSidebarTab(tabKey) {
-      document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-brand-600', 'bg-white', 'dark:bg-slate-800', 'dark:text-brand-400', 'shadow-sm');
-        btn.classList.add('text-slate-500');
+    function changeTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      localStorage.setItem('theme', themeName);
+      currentTheme = themeName;
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(el => {
+        el.classList.remove('bg-theme-primary/10', 'text-theme-primary');
+        el.classList.add('text-theme-muted');
       });
-      const activeBtn = document.getElementById(`stab-${tabKey}`);
-      if (activeBtn) {
-        activeBtn.classList.add('active', 'text-brand-600', 'bg-white', 'dark:bg-slate-800', 'dark:text-brand-400', 'shadow-sm');
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if(activeNav) {
+        activeNav.classList.add('bg-theme-primary/10', 'text-theme-primary');
+        activeNav.classList.remove('text-theme-muted');
+      }
+    }
+
+    // --- STREAMING_CHUNK:Letter Templates & Logic... ---
+    const letterTemplates = {
+      love: {
+        title: "Surat Cinta / Love Letter 💌",
+        recipient: "Untuk Seseorang yang Istimewa",
+        font: "font-handwriting",
+        content: `Halo manis,\n\nAku cuma mau bilang kalau hadirmu selalu membawa kehangatan di hari-hariku. Terima kasih sudah menjadi alasan di balik senyumku belakangan ini...\n\nSemoga harimu penuh kebahagiaan 💖`
+      },
+      future: {
+        title: "Pesan Untuk Diriku di Masa Depan 🕯️",
+        recipient: "Diriku di Masa Depan",
+        font: "font-serif",
+        content: `Hai diriku di masa depan,\n\nSaat menulis ini, aku sedang berusaha mengejar mimpi-mimpiku. Apakah kamu di sana sudah berhasil meraih apa yang kita cita-citakan?\n\nIngatlah untuk selalu bersyukur dan jangan lupa tersenyum ya!`
+      },
+      gratitude: {
+        title: "Jurnal Syukur Hari Ini 📖",
+        recipient: "Self Reflection",
+        font: "font-sans",
+        content: `✨ 3 Hal Yang Aku Syukuri Hari Ini:\n1. Cuaca yang cerah dan secangkir kopi hangat.\n2. Waktu luang untuk menikmati hobi.\n3. Suasana hati yang tenang dan damai.\n\nMood Hari Ini: 🌟🌟🌟🌟🌟`
+      },
+      birthday: {
+        title: "Selamat Ulang Tahun! 🌸🎂",
+        recipient: "Sahabat Tersayang",
+        font: "font-sans",
+        content: `Selamat Ulang Tahun! 🎉✨\n\nSemoga di usiamu yang baru ini, makin banyak kebahagiaan, kesehatan, dan keberhasilan yang menghampirimu. Tetaplah menjadi pribadi yang hangat dan menginspirasi!\n\nWish you all the best! 🧁`
+      },
+      diary: {
+        title: "Dear Diary 🌧️",
+        recipient: "Private Note",
+        font: "font-handwriting",
+        content: `Dear Diary,\n\nHari ini ada banyak hal yang terjadi. Ada momen lelah, tapi aku bangga bisa melewatinya dengan baik. Esok hari adalah kesempatan baru untuk memulai kembali dengan semangat baru... ✨`
+      },
+      apology: {
+        title: "Permintaan Maaf Hangat ✉️",
+        recipient: "Teman Baik",
+        font: "font-sans",
+        content: `Halo,\n\nAku ingin meminta maaf secara tulus atas kesalahpahaman kemarin. Hubungan baik denganmu sangat berarti bagiku, dan aku berharap kita bisa ngobrol santai kembali... 🤍`
+      }
+    };
+
+    function applyTemplate(key) {
+      const t = letterTemplates[key];
+      if(!t) return;
+      document.getElementById('letter-title').value = t.title;
+      document.getElementById('letter-recipient').value = t.recipient;
+      document.getElementById('letter-font-style').value = t.font;
+      document.getElementById('letter-content').value = t.content;
+      showToast('Template diterapkan! Edit sesuai keinginanmu ✨');
+    }
+
+    function createLetter() {
+      const title = document.getElementById('letter-title').value || 'Tanpa Judul';
+      const recipient = document.getElementById('letter-recipient').value || 'Seseorang';
+      const font = document.getElementById('letter-font-style').value;
+      const content = document.getElementById('letter-content').value;
+
+      if(!content.trim()) {
+        showToast('Isi surat tidak boleh kosong!', 'alert-circle');
+        return;
       }
 
-      document.querySelectorAll('.sidebar-panel').forEach(panel => panel.classList.add('hidden'));
-      const activePanel = document.getElementById(`spanel-${tabKey}`);
-      if (activePanel) activePanel.classList.remove('hidden');
+      const newLetter = {
+        id: Date.now(),
+        title,
+        recipient,
+        font,
+        content,
+        date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+      };
+
+      letters.unshift(newLetter);
+      localStorage.setItem('letters', JSON.stringify(letters));
+      
+      document.getElementById('letter-title').value = '';
+      document.getElementById('letter-recipient').value = '';
+      document.getElementById('letter-content').value = '';
+
+      renderLetters();
+      updateStats();
+      showToast('Surat berhasil disimpan! 💌');
     }
 
-    /* ==========================================================================
-       SIDEBAR RENDERERS: GAMES, PHOTOS & STICKERS
-       ========================================================================== */
+    function deleteLetter(id) {
+      letters = letters.filter(l => l.id !== id);
+      localStorage.setItem('letters', JSON.stringify(letters));
+      renderLetters();
+      updateStats();
+      showToast('Surat dihapus.');
+    }
 
-    function renderSidebarGameCatalog(filteredCategory = 'all', searchQuery = '') {
-      const grid = document.getElementById('game-catalog-grid');
-      if (!grid) return;
-
+    function renderLetters() {
+      const grid = document.getElementById('letters-grid');
       grid.innerHTML = '';
-      const list = GAME_CATALOG.filter(game => {
-        const matchesCat = (filteredCategory === 'all' || game.category === filteredCategory);
-        const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase()) || game.desc.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCat && matchesSearch;
-      });
 
-      list.forEach(game => {
+      if(letters.length === 0) {
+        grid.innerHTML = `<p class="text-xs text-theme-muted col-span-2 text-center py-8">Belum ada surat tersimpan. Tulis surat pertamamu!</p>`;
+        return;
+      }
+
+      letters.forEach(letter => {
         const card = document.createElement('div');
-        card.className = "p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-300 dark:hover:border-brand-700 transition shadow-xs group flex flex-col justify-between";
+        card.className = 'glass-card p-5 rounded-2xl relative space-y-3 border border-theme-border flex flex-col justify-between';
         card.innerHTML = `
           <div>
-            <div class="flex items-center justify-between mb-1">
-              <div class="flex items-center space-x-2">
-                <div class="w-7 h-7 rounded-lg bg-brand-50 dark:bg-brand-950/80 text-brand-500 flex items-center justify-center">
-                  <i data-lucide="${game.icon}" class="w-4 h-4"></i>
-                </div>
-                <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100">${game.name}</h4>
-              </div>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium">${game.badge}</span>
+            <div class="flex justify-between items-start">
+              <span class="text-[10px] bg-theme-primary/10 text-theme-primary px-2.5 py-1 rounded-full font-bold">${letter.recipient}</span>
+              <button onclick="deleteLetter(${letter.id})" class="text-theme-muted hover:text-red-500 transition">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
             </div>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mb-2">${game.desc}</p>
+            <h4 class="font-bold text-base mt-2">${letter.title}</h4>
+            <p class="text-sm text-theme-text/80 mt-1 whitespace-pre-line ${letter.font}">${letter.content}</p>
           </div>
-          <div class="flex items-center gap-1.5 pt-1">
-            <button onclick="openGameCustomizerModal('${game.id}')" class="flex-1 py-1 px-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-[11px] font-semibold transition flex items-center justify-center gap-1">
-              <i data-lucide="settings" class="w-3 h-3"></i> Customize & Add
-            </button>
+          <div class="text-[10px] text-theme-muted text-right border-t border-theme-border/50 pt-2">
+            ${letter.date}
           </div>
         `;
         grid.appendChild(card);
@@ -780,709 +769,501 @@
       lucide.createIcons();
     }
 
-    function filterGameCategory(category) {
-      document.querySelectorAll('.gcat-btn').forEach(btn => {
-        btn.classList.remove('bg-brand-500', 'text-white');
-        btn.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+    // --- STREAMING_CHUNK:Expanded Mini Games Implementation (2048, Whack, Memory, TicTacToe)... ---
+    function selectGame(game) {
+      ['2048', 'mole', 'memory', 'tictactoe'].forEach(g => {
+        document.getElementById(`game-${g}-container`).classList.toggle('hidden', g !== game);
+        const btn = document.getElementById(`btn-game-${g}`);
+        if(btn) btn.className = g === game ? 'px-4 py-2 rounded-xl text-sm font-bold bg-theme-primary text-white whitespace-nowrap' : 'px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap';
       });
-      event.target.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
-      event.target.classList.add('bg-brand-500', 'text-white');
 
-      const searchQuery = document.getElementById('game-search-input').value;
-      renderSidebarGameCatalog(category, searchQuery);
+      if(game === '2048') init2048();
+      if(game === 'memory') initMemoryGame();
+      if(game === 'tictactoe') initTicTacToe();
+      if(game === 'mole') initMoleGrid();
     }
 
-    function filterGameCatalog() {
-      const searchQuery = document.getElementById('game-search-input').value;
-      renderSidebarGameCatalog('all', searchQuery);
+    // GAME 1: 2048 LOGIC
+    let board2048 = Array(16).fill(0);
+    let score2048 = 0;
+
+    function init2048() {
+      board2048 = Array(16).fill(0);
+      score2048 = 0;
+      add2048Tile();
+      add2048Tile();
+      render2048();
     }
 
-    function renderSidebarPhotoTemplates() {
-      const grid = document.getElementById('photo-templates-grid');
-      if (!grid) return;
+    function add2048Tile() {
+      const empty = board2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+      if(empty.length > 0) {
+        const rand = empty[Math.floor(Math.random() * empty.length)];
+        board2048[rand] = Math.random() < 0.9 ? 2 : 4;
+      }
+    }
 
-      const templates = [
-        { id: "polaroid-single", name: "Polaroid Frame", icon: "square" },
-        { id: "polaroid-wall", name: "Polaroid Wall Grid", icon: "layout-grid" },
-        { id: "film-strip", name: "35mm Film Strip", icon: "film" },
-        { id: "heart-frame", name: "Romantic Heart Photo", icon: "heart" },
-        { id: "scrapbook", name: "Scrapbook Memory", icon: "file-image" },
-        { id: "photo-story", name: "Photo Story Timeline", icon: "clock" }
+    function render2048() {
+      const boardEl = document.getElementById('board-2048');
+      boardEl.innerHTML = '';
+      document.getElementById('score-2048').innerText = score2048;
+
+      board2048.forEach(val => {
+        const tile = document.createElement('div');
+        tile.className = 'w-full h-full rounded-xl flex items-center justify-center font-bold text-sm md:text-base transition-all transform';
+        if(val > 0) {
+          tile.innerText = val;
+          tile.classList.add('bg-theme-primary', 'text-white', 'scale-100');
+        } else {
+          tile.classList.add('bg-theme-bg/60');
+        }
+        boardEl.appendChild(tile);
+      });
+
+      const hs = Math.max(localStorage.getItem('score2048') || 0, score2048);
+      localStorage.setItem('score2048', hs);
+      updateStats();
+    }
+
+    function handle2048Key(e) {
+      if(document.getElementById('game-2048-container').classList.contains('hidden')) return;
+
+      let moved = false;
+      if(e.key === 'ArrowLeft') moved = move2048Left();
+      if(e.key === 'ArrowRight') moved = move2048Right();
+      if(e.key === 'ArrowUp') moved = move2048Up();
+      if(e.key === 'ArrowDown') moved = move2048Down();
+
+      if(moved) {
+        add2048Tile();
+        render2048();
+      }
+    }
+
+    function slideRow(row) {
+      let arr = row.filter(val => val);
+      for(let i = 0; i < arr.length - 1; i++) {
+        if(arr[i] === arr[i+1]) {
+          arr[i] *= 2;
+          score2048 += arr[i];
+          arr[i+1] = 0;
+        }
+      }
+      arr = arr.filter(val => val);
+      while(arr.length < 4) arr.push(0);
+      return arr;
+    }
+
+    function move2048Left() {
+      let moved = false;
+      for(let r = 0; r < 4; r++) {
+        const row = board2048.slice(r * 4, r * 4 + 4);
+        const newRow = slideRow(row);
+        for(let c = 0; c < 4; c++) {
+          if(board2048[r * 4 + c] !== newRow[c]) moved = true;
+          board2048[r * 4 + c] = newRow[c];
+        }
+      }
+      return moved;
+    }
+
+    function move2048Right() {
+      let moved = false;
+      for(let r = 0; r < 4; r++) {
+        const row = board2048.slice(r * 4, r * 4 + 4).reverse();
+        const newRow = slideRow(row).reverse();
+        for(let c = 0; c < 4; c++) {
+          if(board2048[r * 4 + c] !== newRow[c]) moved = true;
+          board2048[r * 4 + c] = newRow[c];
+        }
+      }
+      return moved;
+    }
+
+    function move2048Up() {
+      let moved = false;
+      for(let c = 0; c < 4; c++) {
+        const col = [board2048[c], board2048[c+4], board2048[c+8], board2048[c+12]];
+        const newCol = slideRow(col);
+        for(let r = 0; r < 4; r++) {
+          if(board2048[r * 4 + c] !== newCol[r]) moved = true;
+          board2048[r * 4 + c] = newCol[r];
+        }
+      }
+      return moved;
+    }
+
+    function move2048Down() {
+      let moved = false;
+      for(let c = 0; c < 4; c++) {
+        const col = [board2048[c], board2048[c+4], board2048[c+8], board2048[c+12]].reverse();
+        const newCol = slideRow(col).reverse();
+        for(let r = 0; r < 4; r++) {
+          if(board2048[r * 4 + c] !== newCol[r]) moved = true;
+          board2048[r * 4 + c] = newCol[r];
+        }
+      }
+      return moved;
+    }
+
+    // GAME 2: WHACK A MOLE
+    let moleTimer = null;
+    let moleTimeLeft = 20;
+    let moleScore = 0;
+
+    function initMoleGrid() {
+      const grid = document.getElementById('mole-grid');
+      grid.innerHTML = '';
+      for(let i=0; i<9; i++) {
+        const hole = document.createElement('button');
+        hole.className = 'w-20 h-20 bg-theme-bg border border-theme-border rounded-2xl text-2xl flex items-center justify-center hover:border-theme-primary transition';
+        hole.id = `mole-hole-${i}`;
+        hole.innerText = '🕳️';
+        grid.appendChild(hole);
+      }
+    }
+
+    function startMoleGame() {
+      initMoleGrid();
+      moleScore = 0;
+      moleTimeLeft = 20;
+      document.getElementById('mole-score').innerText = moleScore;
+      document.getElementById('mole-timer').innerText = `${moleTimeLeft}s`;
+
+      clearInterval(moleTimer);
+      moleTimer = setInterval(() => {
+        moleTimeLeft--;
+        document.getElementById('mole-timer').innerText = `${moleTimeLeft}s`;
+        popMole();
+
+        if(moleTimeLeft <= 0) {
+          clearInterval(moleTimer);
+          showToast(`Game Over! Skor kamu: ${moleScore}`);
+          confetti({ particleCount: 70 });
+        }
+      }, 800);
+    }
+
+    function popMole() {
+      for(let i=0; i<9; i++) {
+        const h = document.getElementById(`mole-hole-${i}`);
+        if(h) {
+          h.innerText = '🕳️';
+          h.onclick = null;
+        }
+      }
+      const rand = Math.floor(Math.random() * 9);
+      const target = document.getElementById(`mole-hole-${rand}`);
+      if(target) {
+        target.innerText = '⭐';
+        target.onclick = () => {
+          moleScore += 10;
+          document.getElementById('mole-score').innerText = moleScore;
+          target.innerText = '💥';
+          target.onclick = null;
+        };
+      }
+    }
+
+    // GAME 3: MEMORY MATCH
+    let memoryEmojis = ['🌸', '🎀', '🧸', '✨', '🍓', '🧁', '🌙', '💌'];
+    let memoryCards = [];
+    let flippedCards = [];
+    let moves = 0;
+
+    function initMemoryGame() {
+      const diff = document.getElementById('memory-difficulty').value;
+      const count = diff === 'easy' ? 6 : 8;
+      const selected = memoryEmojis.slice(0, count);
+
+      const board = document.getElementById('memory-board');
+      board.innerHTML = '';
+      memoryCards = [...selected, ...selected].sort(() => Math.random() - 0.5);
+      flippedCards = [];
+      moves = 0;
+      document.getElementById('memory-moves').innerText = moves;
+
+      memoryCards.forEach((emoji, index) => {
+        const card = document.createElement('button');
+        card.className = 'w-16 h-16 md:w-20 md:h-20 bg-theme-bg border border-theme-border rounded-xl text-2xl flex items-center justify-center font-bold hover:border-theme-primary transition transform active:scale-95';
+        card.dataset.index = index;
+        card.dataset.emoji = emoji;
+        card.innerText = '❓';
+        card.onclick = () => flipCard(card);
+        board.appendChild(card);
+      });
+    }
+
+    function flipCard(card) {
+      if(flippedCards.length === 2 || card.innerText !== '❓') return;
+
+      card.innerText = card.dataset.emoji;
+      card.classList.add('bg-theme-primary/20', 'border-theme-primary');
+      flippedCards.push(card);
+
+      if(flippedCards.length === 2) {
+        moves++;
+        document.getElementById('memory-moves').innerText = moves;
+        checkMemoryMatch();
+      }
+    }
+
+    function checkMemoryMatch() {
+      const [c1, c2] = flippedCards;
+      if(c1.dataset.emoji === c2.dataset.emoji) {
+        flippedCards = [];
+      } else {
+        setTimeout(() => {
+          c1.innerText = '❓';
+          c2.innerText = '❓';
+          c1.classList.remove('bg-theme-primary/20', 'border-theme-primary');
+          c2.classList.remove('bg-theme-primary/20', 'border-theme-primary');
+          flippedCards = [];
+        }, 800);
+      }
+    }
+
+    // GAME 4: TIC TAC TOE AI
+    let tttBoard = Array(9).fill(null);
+    let tttActive = true;
+
+    function initTicTacToe() {
+      const board = document.getElementById('ttt-board');
+      board.innerHTML = '';
+      tttBoard = Array(9).fill(null);
+      tttActive = true;
+      document.getElementById('ttt-status').innerText = 'Giliran Kamu (X)';
+
+      for(let i = 0; i < 9; i++) {
+        const cell = document.createElement('button');
+        cell.className = 'w-20 h-20 bg-theme-bg border border-theme-border rounded-2xl text-2xl font-bold flex items-center justify-center hover:bg-theme-primary/10 transition';
+        cell.onclick = () => handleTTTClick(i, cell);
+        board.appendChild(cell);
+      }
+    }
+
+    function handleTTTClick(i, cell) {
+      if(!tttActive || tttBoard[i]) return;
+
+      tttBoard[i] = 'X';
+      cell.innerText = 'X';
+      cell.classList.add('text-theme-primary');
+
+      if(checkTTTWinner('X')) {
+        document.getElementById('ttt-status').innerText = `🎉 Kamu Menang!`;
+        confetti({ particleCount: 80 });
+        tttActive = false;
+        return;
+      }
+
+      if(tttBoard.every(c => c)) {
+        document.getElementById('ttt-status').innerText = 'Hasil Seri! 🤝';
+        tttActive = false;
+        return;
+      }
+
+      // AI Move
+      setTimeout(makeAIMove, 400);
+    }
+
+    function makeAIMove() {
+      if(!tttActive) return;
+      const empty = tttBoard.map((v, i) => v === null ? i : null).filter(v => v !== null);
+      if(empty.length > 0) {
+        const rand = empty[Math.floor(Math.random() * empty.length)];
+        tttBoard[rand] = 'O';
+        const cells = document.getElementById('ttt-board').children;
+        cells[rand].innerText = 'O';
+        cells[rand].classList.add('text-theme-accent');
+
+        if(checkTTTWinner('O')) {
+          document.getElementById('ttt-status').innerText = `🤖 Robot AI Menang!`;
+          tttActive = false;
+        }
+      }
+    }
+
+    function checkTTTWinner(player) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return winPatterns.some(pattern => {
+        const [a,b,c] = pattern;
+        return tttBoard[a] === player && tttBoard[b] === player && tttBoard[c] === player;
+      });
+    }
+
+    // --- STREAMING_CHUNK:Fancy Text Generator & Symbols Data... ---
+    function generateFancyText() {
+      const input = document.getElementById('fancy-input').value || 'Aesthetic';
+      const container = document.getElementById('fancy-results');
+      container.innerHTML = '';
+
+      const styles = [
+        text => text.split('').map(c => '𝔜𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔟𝔮𝔯𝔰𝔱𝔲𝔳𝔮𝔭𝔶𝔷'[c.charCodeAt(0) - 97] || c).join(''),
+        text => text.split('').map(c => 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ'[c.charCodeAt(0) - 97] || c).join(''),
+        text => text.split('').map(c => '🄰🄱🄲🄳🄴🄵🄺🄷🄸🄹🄺🄻🄼 any'[c.charCodeAt(0) - 97] || c).join(''),
+        text => `✧˚· ${text} ·˚✧`,
+        text => `𓆩♡𓆪 ${text} 𓆩♡𓆪`,
+        text => `─── ⋆⋅ ${text} ⋅⋆ ───`
       ];
 
-      grid.innerHTML = templates.map(t => `
-        <button onclick="addPhotoTemplateToCanvas('${t.id}')" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-brand-400 dark:hover:border-brand-500 transition text-left group">
-          <i data-lucide="${t.icon}" class="w-4 h-4 text-brand-500 mb-1"></i>
-          <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">${t.name}</p>
-        </button>
-      `).join('');
+      styles.forEach(fn => {
+        const styled = fn(input.toLowerCase());
+        const btn = document.createElement('button');
+        btn.className = 'p-3 bg-theme-bg border border-theme-border rounded-xl text-xs font-semibold hover:border-theme-primary transition text-left flex justify-between items-center';
+        btn.innerHTML = `<span class="truncate">${styled}</span> <i data-lucide="copy" class="w-3.5 h-3.5 text-theme-muted"></i>`;
+        btn.onclick = () => copyText(styled);
+        container.appendChild(btn);
+      });
       lucide.createIcons();
     }
 
-    function renderSidebarStickers() {
-      const grid = document.getElementById('stickers-grid');
-      if (!grid) return;
+    const symbolsData = {
+      stars: ['✦', '✧', '★', '☆', '✮', '✰', '✵', '✶', '✷', '✸', '✹', '✺', '𓆩♡𓆪', '˚˖𓍢ִ🌾', '✧˚·.'],
+      kaomoji: ['( ˶ˆ 📜 ˆ˶ )', '₍ᐢ. ◣.ᐢ₎', '(っ 🏃 )っ', '( •⩊• )', '⸜(｡˃ ᵕ ˂ )⸝', '(´｡• ᵕ •｡`)', 'ฅ(≈> 🐾 <≈)ฅ', '(  •̀ - •́  )', 'ʕ•ᴥ•ʔ', '(•⩊•)'],
+      borders: ['┊', '┊✧', '┌─── ⋆⋅☆⋅⋆ ───┐', '───────── 𝒵𝓏', '╭───────┈➤', '────── 𖥸 ──────', '✧･ﾟ: *✧･ﾟ:* *:･ﾟ✧*:･ﾟ✧'],
+      magical: ['☾', '☽', '☼', '☀', '☁', '⚡', '☄', '🪐', '🌌', '🔮', '🧿', '🪞'],
+      hearts: ['♡', '❥', '♥', '❣', '❦', '❧', '➳', '🏹', '🏹♡', '𓆩♥𓆪']
+    };
 
-      const stickers = ["💖", "🌸", "👑", "💌", "🧸", "✨", "🎀", "🌹", "🥂", "🎀", "🕊️", "🎁"];
-      grid.innerHTML = stickers.map(s => `
-        <button onclick="addStickerToCanvas('${s}')" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:scale-110 hover:bg-rose-100 transition duration-150">
-          ${s}
-        </button>
-      `).join('');
+    function initSymbolsAndKaomojis() {
+      filterSymbols('all');
     }
 
-    /* ==========================================================================
-       PHOTO UPLOAD & EDITOR LOGIC
-       ========================================================================== */
+    function filterSymbols(cat) {
+      const container = document.getElementById('symbols-grid-container');
+      container.innerHTML = '';
 
-    function handlePhotoUpload(e) {
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
+      const categories = cat === 'all' ? Object.keys(symbolsData) : [cat];
 
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          addPhotoToCanvas(evt.target.result);
-        };
-        reader.readAsDataURL(file);
+      categories.forEach(key => {
+        const items = symbolsData[key];
+        if(!items) return;
+
+        const section = document.createElement('div');
+        section.className = 'space-y-2';
+        section.innerHTML = `<h4 class="text-xs font-bold text-theme-primary capitalize">${key}</h4>`;
+
+        const list = document.createElement('div');
+        list.className = 'flex flex-wrap gap-2';
+
+        items.forEach(item => {
+          const btn = document.createElement('button');
+          btn.className = 'px-3 py-2 bg-theme-bg border border-theme-border rounded-xl text-xs font-semibold hover:border-theme-primary transition active:scale-95';
+          btn.innerText = item;
+          btn.onclick = () => copyText(item);
+          list.appendChild(btn);
+        });
+
+        section.appendChild(list);
+        container.appendChild(section);
       });
     }
 
-    function addPhotoFromUrl() {
-      const input = document.getElementById('photo-url-input');
-      const url = input.value.trim();
-      if (!url) return;
-      addPhotoToCanvas(url);
-      input.value = '';
+    function copyText(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToast(`Disalin: ${text}`);
     }
 
-    function addPhotoToCanvas(srcUrl, layoutStyle = 'polaroid-single') {
-      const currentPage = giftProject.pages[activePageIndex];
-      const newElem = {
-        id: "photo-" + Date.now() + Math.random().toString(36).substr(2, 4),
-        type: "photo",
-        src: srcUrl,
-        layout: layoutStyle,
-        caption: "Our Special Moment ❤️",
-        filter: "none",
-        brightness: 100,
-        contrast: 100,
-        radius: 12
-      };
-      currentPage.elements.push(newElem);
-      renderCanvasStage();
-      selectCanvasElement(newElem.id);
-    }
-
-    function addPhotoTemplateToCanvas(layoutType) {
-      addPhotoToCanvas(SAMPLE_IMAGES[Math.floor(Math.random() * SAMPLE_IMAGES.length)], layoutType);
-    }
-
-    function convertUploadedPhotoToPuzzle() {
-      const currentPage = giftProject.pages[activePageIndex];
-      const photoElem = currentPage.elements.find(e => e.type === 'photo');
-      const photoUrl = photoElem ? photoElem.src : SAMPLE_IMAGES[0];
-
-      // Open customizer directly for Photo Jigsaw
-      openGameCustomizerModal('photo-jigsaw');
-      editingGameTempConfig.photoUrl = photoUrl;
-      renderGameCustomizerForm();
-      renderLiveGameSandbox();
-    }
-
-    /* ==========================================================================
-       GAME ENGINE CUSTOMIZER & LIVE SANDBOX MODAL
-       ========================================================================== */
-
-    function openGameCustomizerModal(gameCatalogId) {
-      const template = GAME_CATALOG.find(g => g.id === gameCatalogId);
-      if (!template) return;
-
-      editingGameTemplateId = gameCatalogId;
-      editingGameTempConfig = JSON.parse(JSON.stringify(template.defaultConfig));
-
-      document.getElementById('modal-game-title').innerText = `Customize ${template.name}`;
-      document.getElementById('game-customizer-modal').classList.remove('hidden');
-
-      renderGameCustomizerForm();
-      renderLiveGameSandbox();
-    }
-
-    function closeGameCustomizerModal() {
-      document.getElementById('game-customizer-modal').classList.add('hidden');
-    }
-
-    function renderGameCustomizerForm() {
-      const container = document.getElementById('game-customizer-form-container');
-      if (!container) return;
-
-      let html = '';
-
-      if (editingGameTemplateId === 'memory-match') {
-        html = `
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="font-bold block mb-1">Number of Pairs</label>
-              <select onchange="editingGameTempConfig.pairsCount = parseInt(this.value); renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                <option value="3" ${editingGameTempConfig.pairsCount === 3 ? 'selected':''}>3 Pairs (Easy)</option>
-                <option value="4" ${editingGameTempConfig.pairsCount === 4 ? 'selected':''}>4 Pairs (Medium)</option>
-                <option value="6" ${editingGameTempConfig.pairsCount === 6 ? 'selected':''}>6 Pairs (Hard)</option>
-              </select>
-            </div>
-            <div>
-              <label class="font-bold block mb-1">Success Message</label>
-              <input type="text" value="${editingGameTempConfig.successMessage}" oninput="editingGameTempConfig.successMessage = this.value;" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-            </div>
-          </div>
-        `;
-      } else if (editingGameTemplateId === 'photo-jigsaw') {
-        html = `
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="font-bold block mb-1">Puzzle Image URL</label>
-              <input type="text" value="${editingGameTempConfig.photoUrl}" onchange="editingGameTempConfig.photoUrl = this.value; renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-            </div>
-            <div>
-              <label class="font-bold block mb-1">Grid Complexity</label>
-              <select onchange="editingGameTempConfig.gridSize = parseInt(this.value); renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                <option value="2" ${editingGameTempConfig.gridSize === 2 ? 'selected':''}>2 x 2 (4 Pieces)</option>
-                <option value="3" ${editingGameTempConfig.gridSize === 3 ? 'selected':''}>3 x 3 (9 Pieces)</option>
-              </select>
-            </div>
-          </div>
-        `;
-      } else if (editingGameTemplateId === 'couple-quiz') {
-        html = `
-          <div class="space-y-4 text-xs">
-            <h4 class="font-bold">Quiz Questions</h4>
-            ${editingGameTempConfig.questions.map((q, qIdx) => `
-              <div class="p-3 border rounded-xl border-slate-200 dark:border-slate-800 space-y-2 bg-slate-50 dark:bg-slate-800/40">
-                <input type="text" value="${q.question}" oninput="editingGameTempConfig.questions[${qIdx}].question = this.value;" placeholder="Question title..." class="w-full p-1.5 font-bold border rounded bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-                <div class="grid grid-cols-2 gap-1.5">
-                  ${q.options.map((opt, optIdx) => `
-                    <input type="text" value="${opt}" oninput="editingGameTempConfig.questions[${qIdx}].options[${optIdx}] = this.value;" class="p-1 border rounded bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-                  `).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else {
-        html = `<p class="text-xs text-slate-500">Default settings active for this game template.</p>`;
-      }
-
-      container.innerHTML = html;
-    }
-
-    function renderLiveGameSandbox() {
-      const stage = document.getElementById('game-preview-stage');
-      if (!stage) return;
-      stage.innerHTML = renderGameEngineHTML(editingGameTemplateId, editingGameTempConfig);
-    }
-
-    function saveAndAddGameToPage() {
-      const currentPage = giftProject.pages[activePageIndex];
-      const template = GAME_CATALOG.find(g => g.id === editingGameTemplateId);
-
-      const gameElement = {
-        id: "game-" + Date.now(),
-        type: "game",
-        gameId: editingGameTemplateId,
-        title: template.name,
-        config: JSON.parse(JSON.stringify(editingGameTempConfig))
-      };
-
-      currentPage.elements.push(gameElement);
-      closeGameCustomizerModal();
-      renderCanvasStage();
-      selectCanvasElement(gameElement.id);
-    }
-
-    function testPlayCustomGame() {
-      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
-    }
-
-    /* ==========================================================================
-       GAME ENGINE HTML & INTERACTIVE EXECUTION RENDERING
-       ========================================================================== */
-
-    function renderGameEngineHTML(gameId, config) {
-      if (gameId === 'memory-match') {
-        const totalCards = config.pairsCount * 2;
-        return `
-          <div class="flex flex-col h-full justify-between items-center text-center p-2">
-            <h4 class="font-bold text-xs text-brand-600 dark:text-brand-400">Match the Pairs 💖</h4>
-            <div class="grid grid-cols-3 gap-2 w-full my-auto">
-              ${Array.from({length: totalCards}).map((_, i) => `
-                <button onclick="handleSandboxMemoryClick(this)" class="h-16 rounded-xl bg-gradient-to-tr from-brand-500 to-rose-400 text-white font-bold text-xl flex items-center justify-center shadow hover:scale-105 transition">
-                  ${config.cardBackEmoji || '💖'}
-                </button>
-              `).join('')}
-            </div>
-            <p class="text-[10px] text-slate-400">Tap cards to flip & match</p>
-          </div>
-        `;
-      }
-
-      if (gameId === 'photo-jigsaw') {
-        const gridClass = config.gridSize === 2 ? 'grid-cols-2' : 'grid-cols-3';
-        return `
-          <div class="flex flex-col h-full justify-between items-center text-center p-2">
-            <h4 class="font-bold text-xs text-indigo-600">Solve Jigsaw Puzzle 🧩</h4>
-            <div class="grid ${gridClass} gap-1 w-full aspect-square border-2 border-slate-200 rounded-xl overflow-hidden my-auto bg-slate-100">
-              ${Array.from({length: config.gridSize * config.gridSize}).map((_, i) => `
-                <div class="bg-cover bg-center border border-white/40 cursor-pointer hover:opacity-80" style="background-image: url('${config.photoUrl}'); filter: hue-rotate(${i * 30}deg);"></div>
-              `).join('')}
-            </div>
-            <p class="text-[10px] text-slate-400">Tap pieces to swap and arrange</p>
-          </div>
-        `;
-      }
-
-      if (gameId === 'couple-quiz') {
-        const q = config.questions[0] || { question: "Sample Quiz", options: ["A", "B"] };
-        return `
-          <div class="flex flex-col h-full justify-between p-2 text-center">
-            <span class="text-[10px] font-bold text-brand-500 uppercase">Question 1</span>
-            <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100 my-2">${q.question}</h4>
-            <div class="space-y-1.5 w-full my-auto">
-              ${q.options.map((opt, i) => `
-                <button onclick="confetti()" class="w-full py-2 px-3 text-xs rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-brand-50 dark:hover:bg-brand-950 font-medium transition text-left">
-                  ${opt}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      if (gameId === 'scratch-card') {
-        return `
-          <div class="flex flex-col h-full justify-between items-center text-center p-2">
-            <h4 class="font-bold text-xs text-slate-700 dark:text-slate-200">Scratch to Reveal 🎁</h4>
-            <div onclick="this.innerHTML='<div class=\'text-xs font-bold text-brand-600 p-2\'>${config.hiddenText}</div>'; confetti();" class="w-full h-32 rounded-xl bg-slate-300 dark:bg-slate-700 flex items-center justify-center cursor-pointer font-bold text-slate-600 dark:text-slate-300 border-2 border-dashed border-slate-400 my-auto">
-              ✨ Scratch Here
-            </div>
-            <p class="text-[10px] text-slate-400">Click or swipe silver area</p>
-          </div>
-        `;
-      }
-
-      // Default Game Placeholder Engine
-      return `
-        <div class="flex flex-col h-full items-center justify-center text-center p-4">
-          <i data-lucide="gamepad-2" class="w-10 h-10 text-brand-500 mb-2"></i>
-          <h4 class="font-bold text-sm mb-1">${config.title || 'Interactive Mini Game'}</h4>
-          <p class="text-xs text-slate-400 mb-4">Tap start button to launch game action.</p>
-          <button onclick="confetti()" class="px-4 py-2 bg-brand-500 text-white font-bold text-xs rounded-xl shadow hover:bg-brand-600">Start Mini Game</button>
-        </div>
-      `;
-    }
-
-    function handleSandboxMemoryClick(btn) {
-      btn.innerText = '💖';
-      btn.classList.add('bg-emerald-500');
-    }
-
-    /* ==========================================================================
-       MUSIC PLAYLIST ENGINE & AUDIO CONTROLS
-       ========================================================================== */
-
-    function renderPlaylist() {
-      const container = document.getElementById('playlist-container');
-      if (!container) return;
-
-      container.innerHTML = giftProject.musicSettings.tracks.map((track, idx) => `
-        <div class="p-2.5 rounded-xl border ${idx === giftProject.musicSettings.activeTrackIndex ? 'border-brand-400 bg-brand-50/50 dark:bg-brand-950/30' : 'border-slate-200 dark:border-slate-800'} bg-white dark:bg-slate-900 flex items-center justify-between text-xs">
-          <div class="flex items-center space-x-2 overflow-hidden">
-            <img src="${track.cover}" class="w-8 h-8 rounded-lg object-cover">
-            <div class="truncate">
-              <p class="font-semibold text-slate-800 dark:text-slate-100 truncate">${track.title}</p>
-              <p class="text-[10px] text-slate-400 truncate">${track.artist}</p>
-            </div>
-          </div>
-          <button onclick="removeAudioTrack(${idx})" class="text-slate-400 hover:text-rose-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-        </div>
-      `).join('');
-      lucide.createIcons();
-    }
-
-    function addAudioTrackFromUrl() {
-      const input = document.getElementById('audio-url-input');
-      const url = input.value.trim();
-      if (!url) return;
-
-      giftProject.musicSettings.tracks.push({
-        title: "Custom Romantic Track",
-        artist: "Uploaded Audio",
-        url: url,
-        cover: SAMPLE_IMAGES[1]
-      });
-
-      input.value = '';
-      renderPlaylist();
-    }
-
-    function removeAudioTrack(idx) {
-      if (giftProject.musicSettings.tracks.length <= 1) return;
-      giftProject.musicSettings.tracks.splice(idx, 1);
-      renderPlaylist();
-    }
-
-    function updateMusicSettings() {
-      giftProject.musicSettings.autoplayTrigger = document.getElementById('music-start-trigger').value;
-      giftProject.musicSettings.playerStyle = document.getElementById('music-player-style').value;
-    }
-
-    function updateMusicVolume(val) {
-      giftProject.musicSettings.volume = parseFloat(val);
-    }
-
-    /* ==========================================================================
-       CANVAS STAGE RENDERING & PAGE MANAGEMENT
-       ========================================================================== */
-
-    function renderPageTabs() {
-      const bar = document.getElementById('page-tabs-bar');
-      if (!bar) return;
-
-      bar.innerHTML = giftProject.pages.map((p, idx) => `
-        <button onclick="switchActivePage(${idx})" class="px-3 py-1 rounded-md transition font-medium ${idx === activePageIndex ? 'bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-xs border border-slate-200 dark:border-slate-700' : 'text-slate-500 hover:text-slate-800'}">
-          ${p.title}
-        </button>
-      `).join('');
-
-      document.getElementById('page-counter-indicator').innerText = `Page ${activePageIndex + 1} of ${giftProject.pages.length}`;
-    }
-
-    function switchActivePage(idx) {
-      activePageIndex = idx;
-      activeElementId = null;
-      renderPageTabs();
-      renderCanvasStage();
-      renderInspector();
-    }
-
-    function addNewPage() {
-      giftProject.pages.push({
-        id: "page-" + (giftProject.pages.length + 1),
-        title: `Page ${giftProject.pages.length + 1}`,
-        background: "#ffffff",
-        elements: []
-      });
-      switchActivePage(giftProject.pages.length - 1);
-    }
-
-    function duplicateCurrentPage() {
-      const pageToDup = giftProject.pages[activePageIndex];
-      const newPage = JSON.parse(JSON.stringify(pageToDup));
-      newPage.id = "page-" + Date.now();
-      newPage.title = `${pageToDup.title} (Copy)`;
-      giftProject.pages.push(newPage);
-      switchActivePage(giftProject.pages.length - 1);
-    }
-
-    function deleteCurrentPage() {
-      if (giftProject.pages.length <= 1) return;
-      giftProject.pages.splice(activePageIndex, 1);
-      activePageIndex = Math.max(0, activePageIndex - 1);
-      switchActivePage(activePageIndex);
-    }
-
-    function navigatePage(dir) {
-      if (dir === 'prev' && activePageIndex > 0) switchActivePage(activePageIndex - 1);
-      if (dir === 'next' && activePageIndex < giftProject.pages.length - 1) switchActivePage(activePageIndex + 1);
-    }
-
-    function renderCanvasStage() {
-      const pageContainer = document.getElementById('active-page-content');
-      if (!pageContainer) return;
-
-      const currentPage = giftProject.pages[activePageIndex];
-      pageContainer.style.backgroundColor = currentPage.background;
-      pageContainer.innerHTML = '';
-
-      if (currentPage.elements.length === 0) {
-        pageContainer.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center text-slate-400 p-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
-            <i data-lucide="layout" class="w-8 h-8 mb-2 stroke-1"></i>
-            <p class="text-xs font-semibold">Page Canvas Empty</p>
-            <p class="text-[11px]">Click Games, Photos, or Letters from sidebar to insert items.</p>
-          </div>
-        `;
-        lucide.createIcons();
-        return;
-      }
-
-      currentPage.elements.forEach(elem => {
-        const wrapper = document.createElement('div');
-        wrapper.className = `relative rounded-xl border-2 transition ${elem.id === activeElementId ? 'border-brand-500 shadow-lg ring-2 ring-brand-500/20' : 'border-transparent hover:border-slate-300'}`;
-        wrapper.onclick = (e) => {
-          e.stopPropagation();
-          selectCanvasElement(elem.id);
-        };
-
-        if (elem.type === 'photo') {
-          wrapper.innerHTML = `
-            <div class="p-3 bg-white dark:bg-slate-900 rounded-xl shadow-md overflow-hidden ${elem.filter || ''}">
-              <img src="${elem.src}" class="w-full object-cover rounded-lg" style="brightness: ${elem.brightness}%; contrast: ${elem.contrast}%; border-radius: ${elem.radius}px;">
-              ${elem.caption ? `<p class="font-handwriting text-center text-lg mt-2 text-slate-700 dark:text-slate-200">${elem.caption}</p>` : ''}
-            </div>
-          `;
-        } else if (elem.type === 'game') {
-          wrapper.innerHTML = `
-            <div class="p-3 bg-white dark:bg-slate-900 rounded-xl shadow-md border border-slate-100 dark:border-slate-800">
-              ${renderGameEngineHTML(elem.gameId, elem.config)}
-            </div>
-          `;
-        } else if (elem.type === 'letter') {
-          wrapper.innerHTML = `
-            <div class="p-4 bg-rose-50/70 dark:bg-rose-950/40 rounded-xl shadow-sm border border-rose-200 dark:border-rose-900/40 font-romantic text-lg text-rose-900 dark:text-rose-100 leading-relaxed">
-              ${elem.text}
-            </div>
-          `;
-        } else if (elem.type === 'sticker') {
-          wrapper.innerHTML = `<div class="text-5xl text-center py-2 animate-bounce">${elem.symbol}</div>`;
+    // --- MUSIC & HELPERS ---
+    function setupAudioPlayer() {
+      const audio = document.getElementById('audio-player');
+      audio.ontimeupdate = () => {
+        if(audio.duration) {
+          const pct = (audio.currentTime / audio.duration) * 100;
+          document.getElementById('track-progress').style.width = `${pct}%`;
         }
-
-        pageContainer.appendChild(wrapper);
-      });
-
-      lucide.createIcons();
-    }
-
-    function selectCanvasElement(id) {
-      activeElementId = id;
-      renderCanvasStage();
-      renderInspector();
-    }
-
-    function addLetterToCanvas(style) {
-      const currentPage = giftProject.pages[activePageIndex];
-      const newElem = {
-        id: "letter-" + Date.now(),
-        type: "letter",
-        text: "My Dearest,\n\nEvery single day with you feels like a beautiful dream. Thank you for filling my life with endless warmth, laughter, and pure happiness.\n\nForever Yours ❤️"
       };
-      currentPage.elements.push(newElem);
-      renderCanvasStage();
-      selectCanvasElement(newElem.id);
+      audio.onended = () => nextTrack();
     }
 
-    function addStickerToCanvas(symbol) {
-      const currentPage = giftProject.pages[activePageIndex];
-      const newElem = {
-        id: "sticker-" + Date.now(),
-        type: "sticker",
-        symbol: symbol
-      };
-      currentPage.elements.push(newElem);
-      renderCanvasStage();
-      selectCanvasElement(newElem.id);
-    }
+    function togglePlayMusic() {
+      const audio = document.getElementById('audio-player');
+      const vinyl = document.getElementById('music-vinyl');
+      const btn = document.getElementById('btn-play-music');
 
-    /* ==========================================================================
-       RIGHT INSPECTOR PANEL LOGIC
-       ========================================================================== */
-
-    function renderInspector() {
-      const container = document.getElementById('inspector-body');
-      const badge = document.getElementById('inspector-target-type');
-      if (!container) return;
-
-      const currentPage = giftProject.pages[activePageIndex];
-
-      if (!activeElementId) {
-        badge.innerText = "Page Level";
-        container.innerHTML = `
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="font-bold block mb-1">Page Title</label>
-              <input type="text" value="${currentPage.title}" oninput="giftProject.pages[${activePageIndex}].title = this.value; renderPageTabs();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-            </div>
-            <div>
-              <label class="font-bold block mb-1">Canvas Background Color</label>
-              <input type="color" value="${currentPage.background}" onchange="giftProject.pages[${activePageIndex}].background = this.value; renderCanvasStage();" class="w-full h-8 rounded cursor-pointer">
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      const activeElem = currentPage.elements.find(e => e.id === activeElementId);
-      if (!activeElem) return;
-
-      badge.innerText = activeElem.type.toUpperCase();
-
-      if (activeElem.type === 'photo') {
-        container.innerHTML = `
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="font-bold block mb-1">Caption</label>
-              <input type="text" value="${activeElem.caption}" oninput="activeElem.caption = this.value; renderCanvasStage();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-            </div>
-            <button onclick="openPhotoEditorModal('${activeElem.id}')" class="w-full py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-lg font-semibold flex items-center justify-center gap-1.5">
-              <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Open Photo Studio Editor
-            </button>
-            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
-              Delete Photo
-            </button>
-          </div>
-        `;
-      } else if (activeElem.type === 'letter') {
-        container.innerHTML = `
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="font-bold block mb-1">Letter Message</label>
-              <textarea rows="6" oninput="activeElem.text = this.value; renderCanvasStage();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">${activeElem.text}</textarea>
-            </div>
-            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
-              Delete Letter
-            </button>
-          </div>
-        `;
+      if(isPlaying) {
+        audio.pause();
+        vinyl.classList.remove('animate-spin-slow');
+        btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i>`;
       } else {
-        container.innerHTML = `
-          <div class="space-y-4 text-xs">
-            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
-              Delete Element
-            </button>
-          </div>
-        `;
+        audio.play().catch(() => showToast('Klik layar untuk memainkan audio!'));
+        vinyl.classList.add('animate-spin-slow');
+        btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i>`;
       }
-
+      isPlaying = !isPlaying;
       lucide.createIcons();
     }
 
-    function deleteActiveElement() {
-      const currentPage = giftProject.pages[activePageIndex];
-      currentPage.elements = currentPage.elements.filter(e => e.id !== activeElementId);
-      activeElementId = null;
-      renderCanvasStage();
-      renderInspector();
+    function nextTrack() {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      loadTrack(currentTrackIndex);
     }
 
-    /* ==========================================================================
-       PHOTO STUDIO ADJUSTMENTS MODAL LOGIC
-       ========================================================================== */
-
-    let editingPhotoElemId = null;
-
-    function openPhotoEditorModal(photoElemId) {
-      editingPhotoElemId = photoElemId;
-      const currentPage = giftProject.pages[activePageIndex];
-      const elem = currentPage.elements.find(e => e.id === photoElemId);
-      if (!elem) return;
-
-      document.getElementById('photo-editor-preview-target').src = elem.src;
-      document.getElementById('pe-filter-select').value = elem.filter || 'none';
-      document.getElementById('pe-brightness').value = elem.brightness || 100;
-      document.getElementById('pe-contrast').value = elem.contrast || 100;
-      document.getElementById('pe-radius').value = elem.radius || 12;
-
-      document.getElementById('photo-editor-modal').classList.remove('hidden');
-      applyPhotoEditorAdjustments();
+    function prevTrack() {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(currentTrackIndex);
     }
 
-    function closePhotoEditorModal() {
-      document.getElementById('photo-editor-modal').classList.add('hidden');
+    function loadTrack(index) {
+      const track = playlist[index];
+      const audio = document.getElementById('audio-player');
+      audio.src = track.src;
+      document.getElementById('track-title').innerText = track.title;
+      document.getElementById('track-artist').innerText = track.artist;
+      if(isPlaying) audio.play();
     }
 
-    function applyPhotoEditorAdjustments() {
-      const img = document.getElementById('photo-editor-preview-target');
-      const filter = document.getElementById('pe-filter-select').value;
-      const brightness = document.getElementById('pe-brightness').value;
-      const contrast = document.getElementById('pe-contrast').value;
-      const radius = document.getElementById('pe-radius').value;
-
-      document.getElementById('lbl-pe-brightness').innerText = `${brightness}%`;
-      document.getElementById('lbl-pe-contrast').innerText = `${contrast}%`;
-      document.getElementById('lbl-pe-radius').innerText = `${radius}px`;
-
-      img.className = `max-h-[300px] object-contain rounded shadow-md transition-all duration-200 ${filter !== 'none' ? filter : ''}`;
-      img.style.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
-      img.style.borderRadius = `${radius}px`;
+    function seekAudio(e) {
+      const audio = document.getElementById('audio-player');
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      if(audio.duration) audio.currentTime = pos * audio.duration;
     }
 
-    function savePhotoEditorChanges() {
-      const currentPage = giftProject.pages[activePageIndex];
-      const elem = currentPage.elements.find(e => e.id === editingPhotoElemId);
-      if (elem) {
-        elem.filter = document.getElementById('pe-filter-select').value;
-        elem.brightness = document.getElementById('pe-brightness').value;
-        elem.contrast = document.getElementById('pe-contrast').value;
-        elem.radius = document.getElementById('pe-radius').value;
-      }
-      closePhotoEditorModal();
-      renderCanvasStage();
+    function updateProfileCard() {
+      const name = document.getElementById('edit-name').value || 'Aesthetic Zone';
+      const bio = document.getElementById('edit-bio').value || 'Digital Creator';
+      document.getElementById('preview-name').innerText = name;
+      document.getElementById('preview-bio').innerText = bio;
+      document.getElementById('user-name-display').innerText = name;
     }
 
-    /* ==========================================================================
-       RECIPIENT PREVIEW EXPERIENCE MODAL
-       ========================================================================== */
-
-    function openPreviewModal() {
-      const modal = document.getElementById('recipient-experience-modal');
-      const stage = document.getElementById('recipient-stage');
-      modal.classList.remove('hidden');
-
-      // Opening Screen Step
-      stage.innerHTML = `
-        <div class="h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-b from-slate-900 via-rose-950 to-slate-900 relative overflow-hidden">
-          <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-brand-500 to-rose-400 flex items-center justify-center shadow-2xl animate-float cursor-pointer mb-6" onclick="startRecipientJourney()">
-            <i data-lucide="gift" class="w-12 h-12 text-white"></i>
-          </div>
-          <h2 class="font-display font-bold text-2xl mb-2">${giftProject.openingScreen.title}</h2>
-          <p class="text-xs text-rose-200 max-w-xs mb-8">${giftProject.openingScreen.subtitle}</p>
-          <button onclick="startRecipientJourney()" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 font-bold text-xs rounded-full shadow-lg transition animate-pulse">
-            Open Secret Gift 🎁
-          </button>
-        </div>
-      `;
-      lucide.createIcons();
+    function saveQuickNote() {
+      const note = document.getElementById('quick-note-input').value;
+      localStorage.setItem('quickNote', note);
+      showToast('Quick Note tersimpan! 📝');
     }
 
-    function closePreviewModal() {
-      document.getElementById('recipient-experience-modal').classList.add('hidden');
+    function loadQuickNote() {
+      document.getElementById('quick-note-input').value = localStorage.getItem('quickNote') || '';
     }
 
-    function startRecipientJourney() {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      renderRecipientPage(0);
+    function updateStats() {
+      document.getElementById('stat-letters-count').innerText = `${letters.length} Surat`;
+      const hs = localStorage.getItem('score2048') || 0;
+      document.getElementById('stat-2048-score').innerText = `${hs} Poin`;
     }
 
-    function renderRecipientPage(pageIdx) {
-      const stage = document.getElementById('recipient-stage');
-      const page = giftProject.pages[pageIdx];
-
-      stage.innerHTML = `
-        <div class="h-full flex flex-col justify-between p-4 bg-white dark:bg-slate-900 overflow-y-auto">
-          <div class="space-y-4">
-            <h3 class="font-bold text-base text-center text-slate-800 dark:text-slate-100">${page.title}</h3>
-            ${page.elements.map(e => {
-              if (e.type === 'photo') return `<img src="${e.src}" class="w-full rounded-xl shadow-md">`;
-              if (e.type === 'letter') return `<div class="p-4 bg-rose-50 text-rose-900 rounded-xl font-romantic text-lg">${e.text}</div>`;
-              if (e.type === 'game') return `<div class="p-3 border rounded-xl">${renderGameEngineHTML(e.gameId, e.config)}</div>`;
-              return `<div class="text-4xl text-center">${e.symbol}</div>`;
-            }).join('')}
-          </div>
-
-          <!-- Bottom Nav -->
-          <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
-            <button onclick="${pageIdx > 0 ? `renderRecipientPage(${pageIdx - 1})` : ''}" class="px-3 py-1.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium ${pageIdx === 0 ? 'opacity-30' : ''}">Back</button>
-            <span>${pageIdx + 1} / ${giftProject.pages.length}</span>
-            <button onclick="${pageIdx < giftProject.pages.length - 1 ? `renderRecipientPage(${pageIdx + 1})` : 'closePreviewModal()'}" class="px-3 py-1.5 rounded bg-brand-500 text-white font-medium">
-              ${pageIdx < giftProject.pages.length - 1 ? 'Next' : 'Finish ✨'}
-            </button>
-          </div>
-        </div>
-      `;
-      lucide.createIcons();
+    function copyProfileLink() {
+      copyText(window.location.href);
     }
 
-    function publishGift() {
-      confetti({ particleCount: 80, spread: 80 });
-      alert("🎁 Gift Published Successfully!\n\nShareable link copied to your clipboard!");
+    function togglePublishModal() {
+      const modal = document.getElementById('publish-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    function copyPublishedLink() {
+      copyText('https://my-space.aesthetic/user-1029');
     }
   </script>
 </body>
