@@ -1,1770 +1,1489 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#FFF7FB]">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Gift Maker - Create Little Interactive Surprises</title>
+  <title>Digital Gift Maker Studio - Upgrade Edition</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Pacifico&family=Poppins:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
             brand: {
-              bg: '#FFF7FB',
-              text: '#5D5061',
-              primary: '#9B76A7',
-              accent: '#E8B5CA',
-              card: '#FFFFFF',
-              dark: '#433448',
-              hover: '#8A6396'
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
             }
           },
           fontFamily: {
-            poppins: ['Poppins', 'sans-serif'],
-            inter: ['Inter', 'sans-serif'],
-            handwritten: ['Caveat', 'cursive'],
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+            handwriting: ['Caveat', 'cursive'],
             romantic: ['Dancing Script', 'cursive'],
-            cute: ['Pacifico', 'cursive'],
-            graceful: ['Sacramento', 'cursive']
+            tech: ['Space Grotesk', 'sans-serif']
           }
         }
       }
     }
   </script>
-
+  
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: #5D5061;
-      background-color: #FFF7FB;
-      user-select: none;
-    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
     
-    /* Scrollbars */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    /* Animations */
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
     }
-    ::-webkit-scrollbar-track {
-      background: rgba(232, 181, 202, 0.15);
-      border-radius: 10px;
+    .animate-pulse-subtle { animation: pulse-subtle 3s infinite ease-in-out; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(155, 118, 167, 0.4);
-      border-radius: 10px;
+    .animate-float { animation: float 4s infinite ease-in-out; }
+
+    /* Custom CSS Filters for Photo Studio */
+    .filter-vintage { filter: sepia(0.35) contrast(1.1) brightness(0.9) saturate(1.3); }
+    .filter-film { filter: contrast(1.25) saturate(0.85) hue-rotate(-10deg); }
+    .filter-lavender { filter: hue-rotate(270deg) saturate(0.9) contrast(1.05); }
+    .filter-polaroid { filter: sepia(0.2) contrast(1.2) brightness(1.1) saturate(1.1); }
+    .filter-softglow { filter: brightness(1.15) contrast(0.95) saturate(1.2) blur(0.3px); }
+    .filter-bw { filter: grayscale(1) contrast(1.2); }
+    .filter-warm { filter: sepia(0.25) saturate(1.2) hue-rotate(-15deg); }
+    .filter-cool { filter: hue-rotate(30deg) saturate(0.9) brightness(1.05); }
+
+    /* Canvas Grid Pattern */
+    .bg-grid-pattern {
+      background-size: 24px 24px;
+      background-image: 
+        radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(155, 118, 167, 0.7);
+    .dark .bg-grid-pattern {
+      background-image: 
+        radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     }
 
-    /* Glassmorphism */
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(232, 181, 202, 0.3);
-    }
-
-    /* Selection outline for Canvas elements */
-    .canvas-element-selected {
-      outline: 2px dashed #9B76A7;
-      outline-offset: 4px;
-    }
-
-    /* Keyframe Animations */
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(2deg); }
-    }
-    .animate-float {
-      animation: floatSlow 4s ease-in-out infinite;
-    }
-
-    @keyframes pulseSoft {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
-    }
-    .animate-pulse-soft {
-      animation: pulseSoft 2.5s ease-in-out infinite;
-    }
-
-    @keyframes shakeBox {
-      0%, 100% { transform: rotate(0deg); }
-      20% { transform: rotate(-5deg); }
-      40% { transform: rotate(5deg); }
-      60% { transform: rotate(-3deg); }
-      80% { transform: rotate(3deg); }
-    }
-    .animate-shake {
-      animation: shakeBox 0.6s ease-in-out;
-    }
-
-    /* Letter Fold Opening Effects */
-    .envelope-wrapper {
-      perspective: 1000px;
-    }
-    .envelope-flap {
-      transform-origin: top;
-      transition: transform 0.6s ease-in-out;
-    }
-    .envelope-open .envelope-flap {
-      transform: rotateX(180deg);
-    }
-
-    /* Scratch Canvas CSS */
-    .scratch-container {
+    /* Scratch Canvas Overlay */
+    .scratch-card-container {
       position: relative;
       user-select: none;
     }
-
-    /* Grid Snap Background */
-    .bg-grid-pattern {
-      background-size: 20px 20px;
-      background-image: radial-gradient(circle, rgba(155, 118, 167, 0.15) 1px, transparent 1px);
+    
+    /* Photo Washi Tape Effect */
+    .washi-tape {
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      backdrop-filter: blur(2px);
     }
   </style>
 </head>
-<body class="h-full overflow-x-hidden flex flex-col">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white dark:bg-slate-950 dark:text-slate-100">
 
-  <!-- BACKGROUND PARTICLE CANVAS -->
-  <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+  <div id="app" class="flex flex-col h-screen w-screen overflow-hidden">
 
-  <!-- APP ROOT -->
-  <div id="app" class="relative z-10 min-h-screen flex flex-col">
-    <!-- Dynamic views will render here via JavaScript -->
+    <!-- TOP NAVBAR -->
+    <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 flex items-center justify-between z-30 shrink-0">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-rose-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i data-lucide="gift" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-base leading-tight bg-gradient-to-r from-brand-600 to-rose-500 bg-clip-text text-transparent">
+            GiftStudio <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-normal ml-1">Pro v2.5</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Mode Switcher & Top Actions -->
+      <div class="flex items-center space-x-2">
+        <button id="btn-theme-toggle" onclick="toggleTheme()" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+        </button>
+
+        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 my-auto mx-1"></div>
+
+        <button onclick="switchAppMode('editor')" id="nav-mode-editor" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50 flex items-center gap-1.5 transition">
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Canvas Studio
+        </button>
+
+        <button onclick="openPreviewModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition">
+          <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-500"></i> Preview Gift
+        </button>
+
+        <button onclick="publishGift()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-brand-500 to-rose-500 text-white shadow-sm hover:shadow-md hover:from-brand-600 hover:to-rose-600 transition flex items-center gap-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i> Publish & Share
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN STUDIO WORKSPACE -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+      <aside class="w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col z-20 shrink-0">
+        <!-- Sidebar Navigation Tabs -->
+        <div class="grid grid-cols-4 gap-1 p-2 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 text-xs">
+          <button onclick="switchSidebarTab('games')" id="stab-games" class="sidebar-tab-btn active flex flex-col items-center gap-1 p-2 rounded-lg text-brand-600 bg-white shadow-sm dark:bg-slate-800 dark:text-brand-400 font-medium">
+            <i data-lucide="gamepad-2" class="w-4 h-4"></i> Games
+          </button>
+          <button onclick="switchSidebarTab('photos')" id="stab-photos" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
+            <i data-lucide="image" class="w-4 h-4"></i> Photos
+          </button>
+          <button onclick="switchSidebarTab('music')" id="stab-music" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
+            <i data-lucide="music" class="w-4 h-4"></i> Audio
+          </button>
+          <button onclick="switchSidebarTab('elements')" id="stab-elements" class="sidebar-tab-btn flex flex-col items-center gap-1 p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Extras
+          </button>
+        </div>
+
+        <!-- Sidebar Content Panels Container -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-4" id="sidebar-panel-container">
+          
+          <!-- TAB 1: GAME LIBRARY -->
+          <div id="spanel-games" class="sidebar-panel space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Game Engine Catalog</h3>
+              <span id="game-count-badge" class="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500">8 Modules</span>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="relative">
+              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
+              <input type="text" id="game-search-input" onkeyup="filterGameCatalog()" placeholder="Search mini games..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] no-scrollbar">
+              <button onclick="filterGameCategory('all')" class="gcat-btn px-2.5 py-1 rounded-full bg-brand-500 text-white font-medium shrink-0">All</button>
+              <button onclick="filterGameCategory('love')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">💗 Love</button>
+              <button onclick="filterGameCategory('puzzle')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🧩 Puzzle</button>
+              <button onclick="filterGameCategory('quiz')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🧠 Quiz</button>
+              <button onclick="filterGameCategory('arcade')" class="gcat-btn px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">🎮 Arcade</button>
+            </div>
+
+            <!-- Game Cards Grid -->
+            <div class="grid grid-cols-1 gap-2.5" id="game-catalog-grid">
+              <!-- Dynamically Populated Game Modules -->
+            </div>
+          </div>
+
+          <!-- TAB 2: PHOTO STUDIO & LAYOUT LIBRARY -->
+          <div id="spanel-photos" class="sidebar-panel hidden space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Add Photos</h3>
+              
+              <!-- Direct Upload Dropzone -->
+              <div onclick="document.getElementById('photo-file-input').click()" class="border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 rounded-xl p-3 text-center cursor-pointer transition bg-slate-50/50 dark:bg-slate-900/50 group">
+                <input type="file" id="photo-file-input" multiple accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+                <i data-lucide="upload-cloud" class="w-6 h-6 mx-auto text-slate-400 group-hover:text-brand-500 transition"></i>
+                <p class="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-1">Upload Device Photos</p>
+                <p class="text-[10px] text-slate-400">Multiple files supported</p>
+              </div>
+
+              <!-- Direct URL Upload -->
+              <div class="flex gap-1">
+                <input type="text" id="photo-url-input" placeholder="Paste Image URL..." class="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <button onclick="addPhotoFromUrl()" class="px-2.5 py-1.5 bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 rounded-lg text-xs font-medium hover:opacity-90">Add</button>
+              </div>
+            </div>
+
+            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+            <!-- Photo Layout Presets & Templates -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Layout Studio Templates</h3>
+              <div class="grid grid-cols-2 gap-2" id="photo-templates-grid">
+                <!-- Dynamically generated photo layout options -->
+              </div>
+            </div>
+
+            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+            <!-- Instant Photo to Puzzle Studio -->
+            <div class="p-3 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-xl border border-indigo-100 dark:border-indigo-900/50 space-y-2">
+              <div class="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 font-semibold text-xs">
+                <i data-lucide="puzzle" class="w-4 h-4"></i> Photo to Jigsaw Generator
+              </div>
+              <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-tight">Convert any memory photo instantly into an interactive jigsaw challenge.</p>
+              <button onclick="convertUploadedPhotoToPuzzle()" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm transition">
+                Create Puzzle from Last Upload
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 3: ADVANCED MUSIC & SOUND STUDIO -->
+          <div id="spanel-music" class="sidebar-panel hidden space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Music & Sound Track</h3>
+                <span id="music-mode-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-semibold">Global Mode</span>
+              </div>
+
+              <!-- Audio Settings -->
+              <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                  <span>Playback Trigger</span>
+                  <select id="music-start-trigger" onchange="updateMusicSettings()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-1 text-[11px]">
+                    <option value="gift-open">After Gift Opens</option>
+                    <option value="first-click">First Tap / Click</option>
+                    <option value="page-load">Immediate (Autoplay)</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Player Visual Style</span>
+                  <select id="music-player-style" onchange="updateMusicSettings()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-1 text-[11px]">
+                    <option value="mini">Mini Pill 🎵</option>
+                    <option value="compact">Compact Player</option>
+                    <option value="card">Album Card</option>
+                    <option value="hidden">Hidden Player</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                  <span>Volume Level</span>
+                  <input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.8" oninput="updateMusicVolume(this.value)" class="w-24 accent-brand-500">
+                </div>
+              </div>
+
+              <!-- Track Add Box -->
+              <div class="space-y-2">
+                <h4 class="text-[11px] font-semibold text-slate-500">Add Audio Track</h4>
+                <div class="flex gap-1">
+                  <input type="text" id="audio-url-input" placeholder="Audio Direct URL (.mp3)..." class="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                  <button onclick="addAudioTrackFromUrl()" class="px-2.5 py-1.5 bg-brand-500 text-white rounded-lg text-xs font-medium hover:bg-brand-600">Add</button>
+                </div>
+              </div>
+
+              <!-- Playlist items -->
+              <div class="space-y-1.5" id="playlist-container">
+                <!-- Dynamically rendered playlist items -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: EXTRAS, LETTERS & STICKERS -->
+          <div id="spanel-elements" class="sidebar-panel hidden space-y-4">
+            <!-- Love Letter Presets -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Love Letters & Cards</h3>
+              <div class="grid grid-cols-1 gap-2">
+                <button onclick="addLetterToCanvas('romantic')" class="p-2.5 text-left rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/30 hover:border-rose-400 transition group">
+                  <div class="flex items-center justify-between">
+                    <span class="font-romantic font-bold text-base text-rose-700 dark:text-rose-300">Heartfelt Love Note</span>
+                    <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">"You mean the world to me..."</p>
+                </button>
+                <button onclick="addLetterToCanvas('typewriter')" class="p-2.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 bg-amber-50/40 dark:bg-amber-950/20 hover:border-amber-400 transition group">
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono font-bold text-xs text-amber-800 dark:text-amber-300">Vintage Typewriter Letter</span>
+                    <i data-lucide="file-text" class="w-4 h-4 text-amber-500"></i>
+                  </div>
+                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Classic paper note style...</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Decorative Stickers -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Stickers & Accents</h3>
+              <div class="grid grid-cols-4 gap-2 text-2xl text-center" id="stickers-grid">
+                <!-- Dynamically generated sticker clickable badges -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <main class="flex-1 bg-slate-100 dark:bg-slate-950 relative flex flex-col overflow-hidden">
+
+        <!-- Top Canvas Tool Strip -->
+        <div class="h-10 border-b border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xs px-4 flex items-center justify-between shrink-0">
+          <!-- Page Selector Carousel / Breadcrumb -->
+          <div class="flex items-center space-x-1 overflow-x-auto text-xs" id="page-tabs-bar">
+            <!-- Dynamically populated page tabs -->
+          </div>
+
+          <!-- Page Control Buttons -->
+          <div class="flex items-center space-x-1 text-xs">
+            <button onclick="addNewPage()" class="px-2.5 py-1 rounded-md bg-brand-50 hover:bg-brand-100 text-brand-600 dark:bg-brand-950 dark:text-brand-300 font-medium flex items-center gap-1 transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Page
+            </button>
+            <button onclick="duplicateCurrentPage()" title="Duplicate Page" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="deleteCurrentPage()" title="Delete Page" class="p-1.5 rounded hover:bg-rose-100 dark:hover:bg-rose-950 text-rose-600">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive WYSIWYG Stage Container -->
+        <div class="flex-1 overflow-auto flex items-center justify-center p-6 bg-grid-pattern relative" id="canvas-stage-wrapper">
+          
+          <!-- Screen Frame (Mobile Responsive Preview Frame) -->
+          <div id="canvas-stage" class="w-[380px] h-[680px] bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl border-4 border-slate-800/10 dark:border-slate-700/30 relative overflow-hidden transition-all duration-300 flex flex-col">
+            
+            <!-- Page Dynamic Content Canvas Layer -->
+            <div id="active-page-content" class="w-full h-full relative overflow-y-auto overflow-x-hidden p-4 space-y-4">
+              <!-- Dynamically populated canvas elements rendered here -->
+            </div>
+
+            <!-- Interactive Music Widget Overlay (if configured) -->
+            <div id="canvas-music-player-overlay" class="absolute bottom-3 left-3 right-3 z-30 pointer-events-auto">
+              <!-- Rendered music player widget -->
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Bottom Page Sequence Controls -->
+        <div class="h-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 flex items-center justify-between shrink-0 text-xs text-slate-500">
+          <div class="flex items-center gap-2">
+            <span>Canvas View Mode:</span>
+            <span class="font-semibold text-slate-700 dark:text-slate-200">Mobile Phone View (380x680)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="navigatePage('prev')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <span id="page-counter-indicator" class="font-mono text-xs">Page 1 of 1</span>
+            <button onclick="navigatePage('next')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </main>
+
+      <aside class="w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col z-20 shrink-0 hidden lg:flex">
+        <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Inspector & Properties</h3>
+          <span id="inspector-target-type" class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-500">Page Level</span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-5" id="inspector-body">
+          <!-- Dynamically populated property editor controls -->
+        </div>
+      </aside>
+
+    </div>
   </div>
 
-  <!-- NOTIFICATION TOAST CONTAINER -->
-  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <div id="game-customizer-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+            <i data-lucide="sliders" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 id="modal-game-title" class="text-base font-bold text-slate-800 dark:text-slate-100">Customize Game Engine</h2>
+            <p class="text-xs text-slate-400">Modify rules, cards, questions, visual styles & success triggers</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <button onclick="testPlayCustomGame()" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-300 text-xs font-semibold hover:bg-emerald-100 transition flex items-center gap-1.5">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i> Live Test Preview
+          </button>
+          <button onclick="saveAndAddGameToPage()" class="px-4 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-semibold hover:bg-brand-600 transition flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i> Insert into Canvas
+          </button>
+          <button onclick="closeGameCustomizerModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
 
-  <!-- MODAL CONTAINER -->
-  <div id="modalContainer" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden">
-    <div id="modalContent" class="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border border-brand-accent transform transition-all scale-95 opacity-0"></div>
+      <!-- Modal Body Split View -->
+      <div class="flex-1 flex overflow-hidden">
+        <!-- Left: Rule & Content Settings -->
+        <div class="w-1/2 border-r border-slate-200 dark:border-slate-800 overflow-y-auto p-5 space-y-5" id="game-customizer-form-container">
+          <!-- Dynamic Form Injection based on active game type -->
+        </div>
+
+        <!-- Right: Live Interactive Sandbox Preview -->
+        <div class="w-1/2 bg-slate-50 dark:bg-slate-950 p-6 flex flex-col items-center justify-center relative overflow-hidden">
+          <div class="text-center mb-3">
+            <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Live Editor Sandbox</span>
+          </div>
+          <div id="game-preview-stage" class="w-[320px] h-[520px] bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-4 relative flex flex-col overflow-hidden">
+            <!-- Game Instance Live Render Engine Injection -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="photo-editor-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-brand-500"></i> Photo Adjustments Studio
+        </h3>
+        <button onclick="closePhotoEditorModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="p-6 flex flex-col md:flex-row gap-6 overflow-y-auto">
+        <!-- Photo Preview Canvas -->
+        <div class="flex-1 flex items-center justify-center bg-slate-100 dark:bg-slate-950 rounded-xl p-4 min-h-[260px] relative overflow-hidden">
+          <img id="photo-editor-preview-target" src="" class="max-h-[300px] object-contain rounded shadow-md transition-all duration-200">
+        </div>
+
+        <!-- Filter & Adjustment Controls -->
+        <div class="w-full md:w-64 space-y-4 text-xs">
+          <div>
+            <label class="font-semibold block mb-1.5 text-slate-600 dark:text-slate-300">Preset CSS Filter</label>
+            <select id="pe-filter-select" onchange="applyPhotoEditorAdjustments()" class="w-full p-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+              <option value="none">Original (None)</option>
+              <option value="filter-vintage">Vintage Sepia</option>
+              <option value="filter-film">35mm Film</option>
+              <option value="filter-polaroid">Polaroid Instant</option>
+              <option value="filter-lavender">Dreamy Lavender</option>
+              <option value="filter-softglow">Soft Glow</option>
+              <option value="filter-warm">Warm Sunset</option>
+              <option value="filter-cool">Cool Twilight</option>
+              <option value="filter-bw">Monochrome B&W</option>
+            </select>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-500">Brightness</span>
+                <span id="lbl-pe-brightness">100%</span>
+              </div>
+              <input type="range" id="pe-brightness" min="50" max="150" value="100" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-500">Contrast</span>
+                <span id="lbl-pe-contrast">100%</span>
+              </div>
+              <input type="range" id="pe-contrast" min="50" max="150" value="100" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-500">Border Radius</span>
+                <span id="lbl-pe-radius">12px</span>
+              </div>
+              <input type="range" id="pe-radius" min="0" max="30" value="12" oninput="applyPhotoEditorAdjustments()" class="w-full accent-brand-500">
+            </div>
+          </div>
+
+          <button onclick="savePhotoEditorChanges()" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-semibold shadow-sm transition">
+            Apply Adjustments
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="recipient-experience-modal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col items-center justify-center overflow-hidden">
+    <!-- Close Preview Overlay Button -->
+    <button onclick="closePreviewModal()" class="absolute top-4 right-4 z-50 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 text-xs font-semibold flex items-center gap-1.5 transition">
+      <i data-lucide="x" class="w-4 h-4"></i> Exit Preview
+    </button>
+
+    <!-- Recipient Mobile Stage Display Container -->
+    <div id="recipient-stage" class="w-full max-w-[420px] h-full max-h-[820px] bg-slate-900 md:rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col">
+      <!-- Content populated dynamically -->
+    </div>
   </div>
 
   <script>
-    // --- APP STATE ---
-    const STATE = {
-      view: 'DASHBOARD', // DASHBOARD | EDITOR | PREVIEW | RECIPIENT
-      drafts: [],
-      publishedGifts: [],
-      currentGift: null,
-      activePageIndex: 0,
-      selectedElementId: null,
-      history: [],
-      historyIndex: -1,
-      maxHistory: 50,
-      activeSidebarTab: 'text',
-      searchTerm: '',
-      stickerCategory: 'ALL',
-      stickerFavorites: [],
-      activeEffect: 'hearts', // hearts, sparkles, petals, snow, confetti, none
-      particleInstance: null,
-      audioPlayer: new Audio(),
-      isMusicPlaying: false,
-      gridSnap: true,
-      autosaveTimer: null,
-      autosaveStatus: 'Saved ✓'
-    };
-
-    // --- STICKERS DATA LIBRARY ---
-    const STICKER_LIBRARY = [
-      { id: 's1', cat: 'LOVE', text: '❤️', label: 'Red Heart' },
-      { id: 's2', cat: 'LOVE', text: '💖', label: 'Sparkle Heart' },
-      { id: 's3', cat: 'LOVE', text: '💌', label: 'Love Letter' },
-      { id: 's4', cat: 'LOVE', text: 'ღ', label: 'Symbol Heart' },
-      { id: 's5', cat: 'LOVE', text: '❣', label: 'Exclamation Heart' },
-      { id: 's6', cat: 'LOVE', text: '𐙚', label: 'Coquette Bow' },
-      { id: 's7', cat: 'RIBBON', text: '🎀', label: 'Pink Ribbon' },
-      { id: 's8', cat: 'RIBBON', text: '୨୧', label: 'Ribbon Symbol' },
-      { id: 's9', cat: 'RIBBON', text: '୨ৎ', label: 'Bow Tie' },
-      { id: 's10', cat: 'SPARKLE', text: '✦', label: 'Four Point Star' },
-      { id: 's11', cat: 'SPARKLE', text: '✧', label: 'Outline Star' },
-      { id: 's12', cat: 'SPARKLE', text: '✨', label: 'Sparkles' },
-      { id: 's13', cat: 'SPARKLE', text: '⋆', label: 'Tiny Star' },
-      { id: 's14', cat: 'FLOWERS', text: '🌸', label: 'Cherry Blossom' },
-      { id: 's15', cat: 'FLOWERS', text: '🌷', label: 'Tulip' },
-      { id: 's16', cat: 'FLOWERS', text: '🌹', label: 'Rose' },
-      { id: 's17', cat: 'FLOWERS', text: '🌻', label: 'Sunflower' },
-      { id: 's18', cat: 'FLOWERS', text: '❀', label: 'Flower Symbol' },
-      { id: 's19', cat: 'CUTE', text: '🧸', label: 'Teddy Bear' },
-      { id: 's20', cat: 'CUTE', text: '🐰', label: 'Bunny' },
-      { id: 's21', cat: 'CUTE', text: '🍓', label: 'Strawberry' },
-      { id: 's22', cat: 'CUTE', text: '☁️', label: 'Cloud' },
-      { id: 's23', cat: 'CUTE', text: 'ʚɞ', label: 'Butterfly Symbol' },
-      { id: 's24', cat: 'KAOMOJI', text: '(˶ᵔ ᵕ ᵔ˶)', label: 'Happy Smile' },
-      { id: 's25', cat: 'KAOMOJI', text: ' (ฅ 𐦍 ฅ)', label: 'Cute Cat Paw' },
-      { id: 's26', cat: 'KAOMOJI', text: ' (  •̀  - •́  )', label: 'Pouty Cute' },
-      { id: 's27', cat: 'KAOMOJI', text: ' ૮꒰ ˶• ༝ •˶꒱ა', label: 'Soft Bunny' }
+    /* ==========================================================================
+       GLOBAL GIFT STUDIO STATE & CONFIGURATION
+       ========================================================================== */
+    
+    // Sample fallback images
+    const SAMPLE_IMAGES = [
+      'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80'
     ];
 
-    // --- PHOTO TEMPLATE PRESETS ---
-    const PHOTO_TEMPLATES = [
-      { id: 'polaroid-single', name: 'Single Polaroid', desc: 'Classic instant photo style with caption space' },
-      { id: 'polaroid-wall', name: 'Polaroid Stack', desc: 'Overlapping twin polaroid photos' },
-      { id: 'film-strip', name: 'Film Strip', desc: 'Retro 35mm photo roll aesthetic' },
-      { id: 'heart-frame', name: 'Heart Frame', desc: 'Romantic heart-shaped border photo' },
-      { id: 'washi-tape', name: 'Scrapbook Washi Tape', desc: 'Cute taped photo memory card' },
-      { id: 'flip-card', name: 'Interactive Flip Card', desc: 'Clickable photo card with secret back text' }
-    ];
-
-    // --- LETTER TEMPLATES ---
-    const LETTER_TEMPLATES = [
-      { id: 'classic-envelope', name: 'Classic Sealed Envelope', icon: 'fa-envelope', bg: '#FFF0F5' },
-      { id: 'ribbon-letter', name: 'Ribbon Tied Note', icon: 'fa-ribbon', bg: '#F3E8FF' },
-      { id: 'secret-scratch', name: 'Secret Scratch Letter', icon: 'fa-mask', bg: '#FEF3C7' },
-      { id: 'folded-paper', name: 'Folded Love Note', icon: 'fa-scroll', bg: '#E0F2FE' },
-      { id: 'typewriter', name: 'Vintage Typewriter Letter', icon: 'fa-keyboard', bg: '#F5F5F4' },
-      { id: 'cute-kawaii', name: 'Kawaii Pastel Note', icon: 'fa-heart', bg: '#FCE7F3' }
-    ];
-
-    // --- MINI GAMES LIBRARY ---
-    const GAMES_LIBRARY = [
-      { id: 'memory-match', name: 'Memory Card Match', icon: 'fa-table-cells', desc: 'Find matching pairs to unlock hidden surprise.' },
-      { id: 'scratch-card', name: 'Scratch Card Reveal', icon: 'fa-wand-magic-sparkles', desc: 'Scratch cover layer to reveal secret love message.' },
-      { id: 'pick-heart', name: 'Pick a Lucky Heart', icon: 'fa-heart', desc: 'Choose 1 of 3 hearts to find special message.' },
-      { id: 'spin-wheel', name: 'Spin the Wheel of Love', icon: 'fa-dharmachakra', desc: 'Fun wheel spin for dates, compliments & gifts.' },
-      { id: 'love-quiz', name: 'How Well Do You Know Me?', icon: 'fa-circle-question', desc: 'Interactive quiz with custom Q&A.' },
-      { id: 'balloon-pop', name: 'Pop the Hearts & Balloons', icon: 'fa-bullseye', desc: 'Tap floating balloons before time runs out.' }
-    ];
-
-    // --- STORAGE MANAGEMENT ---
-    function loadSavedData() {
-      try {
-        const savedDrafts = localStorage.getItem('dgm_drafts');
-        const savedPublished = localStorage.getItem('dgm_published');
-        const savedFavs = localStorage.getItem('dgm_sticker_favs');
-
-        if (savedDrafts) STATE.drafts = JSON.parse(savedDrafts);
-        if (savedPublished) STATE.publishedGifts = JSON.parse(savedPublished);
-        if (savedFavs) STATE.stickerFavorites = JSON.parse(savedFavs);
-      } catch (e) {
-        console.error('Error loading data from localStorage', e);
-      }
-    }
-
-    function saveDraftsToStorage() {
-      try {
-        localStorage.setItem('dgm_drafts', JSON.stringify(STATE.drafts));
-      } catch (e) {
-        console.error('Failed to save drafts', e);
-      }
-    }
-
-    function savePublishedToStorage() {
-      try {
-        localStorage.setItem('dgm_published', JSON.stringify(STATE.publishedGifts));
-      } catch (e) {
-        console.error('Failed to save published gifts', e);
-      }
-    }
-
-    function showToast(message, type = 'info') {
-      const toastContainer = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      
-      const bgColors = {
-        info: 'bg-brand-primary text-white',
-        success: 'bg-emerald-500 text-white',
-        warning: 'bg-amber-500 text-white',
-        error: 'bg-rose-500 text-white'
-      };
-
-      toast.className = `px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all transform translate-y-2 opacity-0 flex items-center gap-2 ${bgColors[type] || bgColors.info}`;
-      toast.innerHTML = `<span>${message}</span>`;
-      
-      toastContainer.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      }, 10);
-
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function showModal(title, contentHtml, onConfirm = null) {
-      const container = document.getElementById('modalContainer');
-      const content = document.getElementById('modalContent');
-
-      content.innerHTML = `
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold text-brand-dark">${title}</h3>
-          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-        <div class="mb-6 text-sm text-brand-text">${contentHtml}</div>
-        <div class="flex justify-end gap-3">
-          <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition">Cancel</button>
-          ${onConfirm ? `<button id="modalConfirmBtn" class="px-5 py-2 rounded-xl text-sm font-medium bg-brand-primary hover:bg-brand-hover text-white transition shadow-md">Confirm</button>` : ''}
-        </div>
-      `;
-
-      container.classList.remove('hidden');
-      setTimeout(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-      }, 10);
-
-      if (onConfirm) {
-        document.getElementById('modalConfirmBtn').onclick = () => {
-          onConfirm();
-          closeModal();
-        };
-      }
-    }
-
-    function closeModal() {
-      const container = document.getElementById('modalContainer');
-      const content = document.getElementById('modalContent');
-      content.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => {
-        container.classList.add('hidden');
-      }, 200);
-    }
-
-    // --- CANVAS PARTICLE SYSTEM ---
-    class ParticleEngine {
-      constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.type = 'hearts'; // hearts, sparkles, petals, snow, confetti
-        this.animationFrame = null;
-        this.resize();
-
-        window.addEventListener('resize', () => this.resize());
-      }
-
-      resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-      }
-
-      setEffect(type) {
-        this.type = type;
-        this.particles = [];
-        if (type === 'none') {
-          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
-          return;
-        }
-        
-        const count = window.innerWidth < 768 ? 20 : 45; // Performance limit for mobile
-        for (let i = 0; i < count; i++) {
-          this.particles.push(this.createParticle());
-        }
-
-        if (!this.animationFrame) {
-          this.loop();
-        }
-      }
-
-      createParticle() {
-        return {
-          x: Math.random() * this.canvas.width,
-          y: Math.random() * this.canvas.height,
-          size: Math.random() * 14 + 8,
-          speedY: Math.random() * 1.5 + 0.5,
-          speedX: Math.sin(Math.random() * Math.PI * 2) * 0.8,
-          opacity: Math.random() * 0.7 + 0.3,
-          rotation: Math.random() * 360,
-          rotSpeed: (Math.random() - 0.5) * 2,
-          char: this.getCharForType()
-        };
-      }
-
-      getCharForType() {
-        switch (this.type) {
-          case 'hearts': return ['❤️', '💖', '💕', '🌸', '✨'][Math.floor(Math.random() * 5)];
-          case 'sparkles': return ['✦', '✧', '✨', '⭐', '⋆'][Math.floor(Math.random() * 5)];
-          case 'petals': return ['🌸', '🌺', '🌷', '🍃'][Math.floor(Math.random() * 4)];
-          case 'snow': return ['❄️', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
-          default: return '❤️';
-        }
-      }
-
-      loop() {
-        if (this.type === 'none') return;
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.particles.forEach((p) => {
-          p.y += p.speedY;
-          p.x += Math.sin(p.y * 0.01) * p.speedX;
-          p.rotation += p.rotSpeed;
-
-          if (p.y > this.canvas.height + 20) {
-            p.y = -20;
-            p.x = Math.random() * this.canvas.width;
-          }
-
-          this.ctx.save();
-          this.ctx.translate(p.x, p.y);
-          this.ctx.rotate((p.rotation * Math.PI) / 180);
-          this.ctx.globalAlpha = p.opacity;
-          this.ctx.font = `${p.size}px sans-serif`;
-          this.ctx.textAlign = 'center';
-          this.ctx.textBaseline = 'middle';
-          this.ctx.fillText(p.char, 0, 0);
-          this.ctx.restore();
-        });
-
-        this.animationFrame = requestAnimationFrame(() => this.loop());
-      }
-    }
-
-    // --- HELPER UNIFIED PROJECT MAKER ---
-    function createNewBlankGift(title = 'My Little Surprise', type = 'Love', recipient = 'Someone Special') {
-      return {
-        id: 'gift_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
-        title: title,
-        type: type,
-        recipientName: recipient,
-        senderName: 'Your Special Someone',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        theme: 'Soft Pink',
-        effect: 'hearts',
-        musicUrl: '',
-        replies: [],
-        pages: [
+    // Main Gift Project Data Model
+    let giftProject = {
+      title: "Our Love Story Gift",
+      theme: "romantic", // romantic, vintage, cute, midnight
+      openingScreen: {
+        title: "A Special Secret Gift For You 🎁",
+        subtitle: "Tap the present box to open your personalized memory journey",
+        boxColor: "#f43f5e",
+        ribbonColor: "#fb7185"
+      },
+      musicSettings: {
+        mode: "global", // global vs per-page
+        autoplayTrigger: "gift-open", // gift-open, first-click, page-load
+        playerStyle: "mini", // mini, compact, card, hidden
+        volume: 0.8,
+        activeTrackIndex: 0,
+        tracks: [
           {
-            id: 'page_1',
-            title: 'Welcome Card',
-            bgColor: '#FFFFFF',
-            elements: [
-              {
-                id: 'el_title',
-                type: 'text',
-                x: 100, y: 120, width: 400, height: 80,
-                content: 'For ' + recipient + ' 💕',
-                fontFamily: 'Dancing Script',
-                fontSize: 42,
-                fontWeight: 'bold',
-                color: '#9B76A7',
-                align: 'center',
-                animation: 'bounce',
-                zIndex: 1
-              },
-              {
-                id: 'el_sub',
-                type: 'text',
-                x: 120, y: 220, width: 360, height: 60,
-                content: 'I made something special just for you. Click next to explore!',
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                fontWeight: 'normal',
-                color: '#5D5061',
-                align: 'center',
-                animation: 'fade',
-                zIndex: 2
-              },
-              {
-                id: 'el_sticker1',
-                type: 'sticker',
-                x: 270, y: 300, width: 60, height: 60,
-                content: '🎁',
-                fontSize: 48,
-                zIndex: 3
-              }
-            ]
+            title: "Acoustic Romantic Melodies",
+            artist: "Gift Studio Sound Library",
+            url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+            cover: SAMPLE_IMAGES[0]
           }
         ]
-      };
-    }
-
-    // --- HISTORY UNDO / REDO SYSTEM ---
-    function pushHistoryState() {
-      if (!STATE.currentGift) return;
-      const snapshot = JSON.parse(JSON.stringify(STATE.currentGift));
-      
-      // Trim forward history if we are in middle of stack
-      if (STATE.historyIndex < STATE.history.length - 1) {
-        STATE.history = STATE.history.slice(0, STATE.historyIndex + 1);
-      }
-
-      STATE.history.push(snapshot);
-      if (STATE.history.length > STATE.maxHistory) {
-        STATE.history.shift();
-      } else {
-        STATE.historyIndex++;
-      }
-      triggerAutosave();
-    }
-
-    function undo() {
-      if (STATE.historyIndex > 0) {
-        STATE.historyIndex--;
-        STATE.currentGift = JSON.parse(JSON.stringify(STATE.history[STATE.historyIndex]));
-        renderApp();
-        showToast('Undo performed', 'info');
-      }
-    }
-
-    function redo() {
-      if (STATE.historyIndex < STATE.history.length - 1) {
-        STATE.historyIndex++;
-        STATE.currentGift = JSON.parse(JSON.stringify(STATE.history[STATE.historyIndex]));
-        renderApp();
-        showToast('Redo performed', 'info');
-      }
-    }
-
-    function triggerAutosave() {
-      STATE.autosaveStatus = 'Saving...';
-      const statusEl = document.getElementById('autosaveStatusText');
-      if (statusEl) statusEl.innerText = STATE.autosaveStatus;
-
-      clearTimeout(STATE.autosaveTimer);
-      STATE.autosaveTimer = setTimeout(() => {
-        if (STATE.currentGift) {
-          const idx = STATE.drafts.findIndex(d => d.id === STATE.currentGift.id);
-          STATE.currentGift.updatedAt = new Date().toISOString();
-          if (idx >= 0) {
-            STATE.drafts[idx] = STATE.currentGift;
-          } else {
-            STATE.drafts.push(STATE.currentGift);
-          }
-          saveDraftsToStorage();
+      },
+      pages: [
+        {
+          id: "page-1",
+          title: "Intro Memory",
+          background: "#ffffff",
+          elements: []
         }
-        STATE.autosaveStatus = 'Saved ✓';
-        if (statusEl) statusEl.innerText = STATE.autosaveStatus;
-      }, 1000);
-    }
+      ]
+    };
 
-    function renderApp() {
-      const app = document.getElementById('app');
-      app.innerHTML = '';
+    let activePageIndex = 0;
+    let activeElementId = null;
+    let editingGameTempConfig = null;
+    let editingGameTemplateId = null;
 
-      if (!STATE.particleInstance) {
-        STATE.particleInstance = new ParticleEngine('particleCanvas');
-      }
-
-      if (STATE.currentGift && STATE.currentGift.effect) {
-        STATE.particleInstance.setEffect(STATE.currentGift.effect);
-      } else {
-        STATE.particleInstance.setEffect('hearts');
-      }
-
-      // Check URL Hash for shared recipient links
-      const hash = window.location.hash;
-      if (hash.startsWith('#gift/')) {
-        const giftId = hash.replace('#gift/', '');
-        const pub = STATE.publishedGifts.find(g => g.id === giftId || g.shareId === giftId);
-        if (pub) {
-          STATE.currentGift = pub;
-          STATE.view = 'RECIPIENT_OPENING';
-        } else {
-          showToast('Gift link not found or expired', 'error');
-          window.location.hash = '';
-          STATE.view = 'DASHBOARD';
+    /* ==========================================================================
+       GAME ENGINE LIBRARY SCHEMAS & DEFAULT ENGINE CATALOG
+       ========================================================================== */
+    
+    const GAME_CATALOG = [
+      {
+        id: "memory-match",
+        name: "Memory Card Match",
+        category: "puzzle",
+        icon: "grid",
+        badge: "Interactive",
+        desc: "Match pairs of romantic cards or custom photos before time runs out.",
+        defaultConfig: {
+          pairsCount: 4,
+          cardBackEmoji: "💖",
+          cardImages: [SAMPLE_IMAGES[0], SAMPLE_IMAGES[1], SAMPLE_IMAGES[2], SAMPLE_IMAGES[3]],
+          successMessage: "You matched all our memories! 💗",
+          onSuccessAction: "confetti" // confetti, next-page, open-letter
         }
-      }
-
-      switch (STATE.view) {
-        case 'DASHBOARD':
-          renderDashboardView(app);
-          break;
-        case 'EDITOR':
-          renderEditorView(app);
-          break;
-        case 'PREVIEW':
-          renderRecipientView(app, true);
-          break;
-        case 'RECIPIENT_OPENING':
-          renderGiftOpeningCeremony(app);
-          break;
-        case 'RECIPIENT_MAIN':
-          renderRecipientView(app, false);
-          break;
-        default:
-          renderDashboardView(app);
-      }
-    }
-
-    // --- VIEW 1: DASHBOARD ---
-    function renderDashboardView(container) {
-      container.innerHTML = `
-        <!-- Top Navbar -->
-        <header class="w-full glass-panel sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-3 cursor-pointer" onclick="STATE.view='DASHBOARD'; renderApp();">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-accent flex items-center justify-center text-white font-cute text-xl shadow-md">
-              🎁
-            </div>
-            <div>
-              <h1 class="text-lg font-bold text-brand-dark tracking-tight leading-none">GiftCraft</h1>
-              <span class="text-xs text-brand-primary font-medium">Digital Gift Maker</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <button onclick="promptImportJSON()" class="px-3 py-2 rounded-xl border border-brand-accent/50 text-xs font-semibold text-brand-text hover:bg-brand-accent/20 transition flex items-center gap-2">
-              <i class="fa-solid fa-file-import text-brand-primary"></i> Import JSON
-            </button>
-            <button onclick="openCreateGiftModal()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-primary to-brand-hover text-white font-semibold text-sm shadow-lg shadow-brand-primary/30 hover:scale-[1.02] active:scale-95 transition flex items-center gap-2">
-              <i class="fa-solid fa-plus"></i> Create New Gift
-            </button>
-          </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="max-w-6xl w-full mx-auto px-6 py-8 flex-1 flex flex-col gap-10">
-          <!-- Hero Section -->
-          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-100/80 via-purple-50/60 to-brand-bg p-8 md:p-12 border border-brand-accent/30 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
-            <div class="max-w-lg">
-              <span class="px-3.5 py-1.5 rounded-full bg-brand-accent/30 text-brand-dark font-medium text-xs tracking-wide uppercase inline-block mb-4">
-                ✨ Create Interactive Memories
-              </span>
-              <h2 class="text-3xl md:text-4xl font-extrabold text-brand-dark font-poppins leading-tight mb-3">
-                Create a Little Something Special
-              </h2>
-              <p class="text-brand-text text-sm md:text-base mb-6 leading-relaxed">
-                Turn your memories, messages, letters and little interactive games into an unforgettable digital surprise gift for someone you love.
-              </p>
-              <button onclick="openCreateGiftModal()" class="px-6 py-3 rounded-2xl bg-brand-primary text-white font-semibold text-sm shadow-lg hover:bg-brand-hover transition">
-                Start Creating Now 💌
-              </button>
-            </div>
-            <div class="relative flex-1 max-w-sm flex items-center justify-center">
-              <div class="w-64 h-64 rounded-3xl bg-white/70 glass-panel shadow-xl flex flex-col items-center justify-center p-6 text-center transform rotate-2 animate-float">
-                <span class="text-6xl mb-3">💝</span>
-                <span class="font-romantic text-2xl text-brand-primary font-bold">For Someone Special</span>
-                <span class="text-xs text-gray-400 mt-2">Interactive Gift Box & Mini Games</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- My Drafts Section -->
-          <section>
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-brand-dark flex items-center gap-2">
-                <i class="fa-solid fa-pen-ruler text-brand-primary"></i> My Drafts (${STATE.drafts.length})
-              </h3>
-            </div>
-            ${STATE.drafts.length === 0 ? `
-              <div class="bg-white/60 rounded-3xl p-8 text-center border border-dashed border-brand-accent/50">
-                <div class="text-4xl mb-2">🎨</div>
-                <p class="text-sm text-brand-text font-medium mb-4">You have no draft gifts yet.</p>
-                <button onclick="openCreateGiftModal()" class="px-4 py-2 rounded-xl bg-brand-accent/30 text-brand-dark text-xs font-semibold hover:bg-brand-accent/50 transition">
-                  Create Your First Gift
-                </button>
-              </div>
-            ` : `
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                ${STATE.drafts.map(draft => `
-                  <div class="bg-white rounded-3xl p-5 border border-brand-accent/30 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
-                    <div>
-                      <div class="flex items-center justify-between mb-3">
-                        <span class="px-2.5 py-1 rounded-full bg-pink-100 text-brand-primary text-[11px] font-bold uppercase tracking-wider">${draft.type}</span>
-                        <span class="text-[11px] text-gray-400">${new Date(draft.updatedAt).toLocaleDateString()}</span>
-                      </div>
-                      <h4 class="font-bold text-brand-dark text-lg mb-1 group-hover:text-brand-primary transition">${draft.title}</h4>
-                      <p class="text-xs text-gray-500 mb-4">For: <span class="font-semibold text-brand-dark">${draft.recipientName}</span></p>
-                    </div>
-                    <div class="flex items-center gap-2 pt-3 border-t border-gray-100">
-                      <button onclick="openDraftEditor('${draft.id}')" class="flex-1 py-2 rounded-xl bg-brand-primary/10 text-brand-primary font-semibold text-xs hover:bg-brand-primary hover:text-white transition text-center">
-                        Edit Gift
-                      </button>
-                      <button onclick="exportGiftJSON('${draft.id}')" title="Export JSON" class="p-2 rounded-xl border border-gray-200 text-gray-500 hover:text-brand-primary transition">
-                        <i class="fa-solid fa-download text-xs"></i>
-                      </button>
-                      <button onclick="confirmDeleteDraft('${draft.id}')" title="Delete Draft" class="p-2 rounded-xl border border-gray-200 text-rose-500 hover:bg-rose-50 transition">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                      </button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            `}
-          </section>
-
-          <!-- Published Gifts Section -->
-          <section>
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-brand-dark flex items-center gap-2">
-                <i class="fa-solid fa-paper-plane text-emerald-500"></i> Published Gifts (${STATE.publishedGifts.length})
-              </h3>
-            </div>
-            ${STATE.publishedGifts.length === 0 ? `
-              <div class="bg-white/60 rounded-3xl p-6 text-center border border-gray-200 text-xs text-gray-400">
-                No published gifts yet. Create and publish a gift to share link!
-              </div>
-            ` : `
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                ${STATE.publishedGifts.map(pub => `
-                  <div class="bg-gradient-to-br from-white to-pink-50/50 rounded-3xl p-5 border border-emerald-200/60 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between mb-2">
-                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">READY TO SHARE</span>
-                        <span class="text-[11px] text-gray-400">${new Date(pub.createdAt).toLocaleDateString()}</span>
-                      </div>
-                      <h4 class="font-bold text-brand-dark text-base mb-1">${pub.title}</h4>
-                      <p class="text-xs text-gray-500 mb-3">To: ${pub.recipientName}</p>
-                    </div>
-                    <div class="flex flex-col gap-2 pt-2 border-t border-emerald-100">
-                      <button onclick="copyGiftLink('${pub.id}')" class="w-full py-2 rounded-xl bg-emerald-500 text-white font-semibold text-xs shadow-sm hover:bg-emerald-600 transition flex items-center justify-center gap-1.5">
-                        <i class="fa-regular fa-copy"></i> Copy Share Link
-                      </button>
-                      <div class="flex gap-2">
-                        <button onclick="viewPublishedAsRecipient('${pub.id}')" class="flex-1 py-1.5 rounded-xl border border-emerald-300 text-emerald-800 font-medium text-xs hover:bg-emerald-50 transition">
-                          View Gift
-                        </button>
-                        <button onclick="confirmDeletePublished('${pub.id}')" class="px-3 py-1.5 rounded-xl border border-rose-200 text-rose-500 text-xs hover:bg-rose-50 transition">
-                          <i class="fa-solid fa-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            `}
-          </section>
-        </main>
-      `;
-    }
-
-    function openCreateGiftModal() {
-      const types = ['Love', 'Birthday', 'Anniversary', 'Friendship', 'Apology', 'Custom'];
-      const html = `
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Gift Title</label>
-            <input type="text" id="newGiftTitle" value="Our Memories & Surprises" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Gift Type</label>
-            <select id="newGiftType" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
-              ${types.map(t => `<option value="${t}">${t}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Recipient Name</label>
-            <input type="text" id="newRecipientName" value="Alex" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
-          </div>
-        </div>
-      `;
-
-      showModal('Create New Digital Gift', html, () => {
-        const title = document.getElementById('newGiftTitle').value.trim();
-        const type = document.getElementById('newGiftType').value;
-        const recipient = document.getElementById('newRecipientName').value.trim();
-
-        if (!title || !recipient) {
-          showToast('Please fill in title and recipient name', 'warning');
-          return;
+      },
+      {
+        id: "photo-jigsaw",
+        name: "Photo Jigsaw Puzzle",
+        category: "puzzle",
+        icon: "puzzle",
+        badge: "Popular",
+        desc: "Drag or tap puzzle tiles to assemble a full memory photo.",
+        defaultConfig: {
+          gridSize: 3, // 3x3 = 9 pieces
+          photoUrl: SAMPLE_IMAGES[0],
+          successMessage: "Puzzle Solved! Beautiful memory. ✨",
+          onSuccessAction: "confetti"
         }
-
-        const newGift = createNewBlankGift(title, type, recipient);
-        STATE.drafts.push(newGift);
-        saveDraftsToStorage();
-        STATE.currentGift = newGift;
-        STATE.activePageIndex = 0;
-        STATE.history = [JSON.parse(JSON.stringify(newGift))];
-        STATE.historyIndex = 0;
-        STATE.view = 'EDITOR';
-        renderApp();
-      });
-    }
-
-    function openDraftEditor(draftId) {
-      const draft = STATE.drafts.find(d => d.id === draftId);
-      if (draft) {
-        STATE.currentGift = JSON.parse(JSON.stringify(draft));
-        STATE.activePageIndex = 0;
-        STATE.history = [JSON.parse(JSON.stringify(draft))];
-        STATE.historyIndex = 0;
-        STATE.view = 'EDITOR';
-        renderApp();
-      }
-    }
-
-    function confirmDeleteDraft(draftId) {
-      showModal('Delete Draft', 'Are you sure you want to delete this gift draft? This action cannot be undone.', () => {
-        STATE.drafts = STATE.drafts.filter(d => d.id !== draftId);
-        saveDraftsToStorage();
-        renderApp();
-        showToast('Draft deleted', 'info');
-      });
-    }
-
-    function confirmDeletePublished(pubId) {
-      showModal('Delete Published Gift', 'Delete this published gift link?', () => {
-        STATE.publishedGifts = STATE.publishedGifts.filter(p => p.id !== pubId);
-        savePublishedToStorage();
-        renderApp();
-        showToast('Published gift deleted', 'info');
-      });
-    }
-
-    function exportGiftJSON(draftId) {
-      const draft = STATE.drafts.find(d => d.id === draftId);
-      if (!draft) return;
-      const jsonStr = JSON.stringify(draft, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${draft.title.toLowerCase().replace(/\s+/g, '_')}_gift.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast('Project JSON exported!', 'success');
-    }
-
-    function promptImportJSON() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
-      input.onchange = e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = event => {
-          try {
-            const imported = JSON.parse(event.target.result);
-            if (imported && imported.id && imported.pages) {
-              STATE.drafts.push(imported);
-              saveDraftsToStorage();
-              renderApp();
-              showToast('Gift project imported successfully!', 'success');
-            } else {
-              showToast('Invalid gift JSON format', 'error');
+      },
+      {
+        id: "couple-quiz",
+        name: "Couple Memory Quiz",
+        category: "quiz",
+        icon: "help-circle",
+        badge: "Fun",
+        desc: "Interactive multiple choice questions with scores & instant feedback.",
+        defaultConfig: {
+          questions: [
+            {
+              question: "Where was our first coffee date?",
+              options: ["Starbucks Cafe", "Cozy Corner Bakery", "Beachside Bistro", "Parks Park"],
+              correctIndex: 1
+            },
+            {
+              question: "What is my absolute favorite movie genre?",
+              options: ["Sci-Fi", "Romantic Comedy", "Horror", "Documentaries"],
+              correctIndex: 1
             }
-          } catch (err) {
-            showToast('Error parsing JSON file', 'error');
-          }
-        };
-        reader.readAsText(file);
-      };
-      input.click();
-    }
-
-    function copyGiftLink(pubId) {
-      const url = `${window.location.origin}${window.location.pathname}#gift/${pubId}`;
-      navigator.clipboard.writeText(url).then(() => {
-        showToast('Share link copied to clipboard! 📋', 'success');
-      }).catch(() => {
-        // Fallback for clipboard
-        const input = document.createElement('input');
-        input.value = url;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        showToast('Share link copied!', 'success');
-      });
-    }
-
-    function viewPublishedAsRecipient(pubId) {
-      window.location.hash = `#gift/${pubId}`;
-      renderApp();
-    }
-
-    // --- VIEW 2: CREATOR / EDITOR MODE ---
-    function renderEditorView(container) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex] || STATE.currentGift.pages[0];
-      const selectedEl = currentPage.elements.find(e => e.id === STATE.selectedElementId);
-
-      container.innerHTML = `
-        <!-- EDITOR TOP NAVBAR -->
-        <header class="w-full bg-white border-b border-brand-accent/40 px-4 py-2.5 flex items-center justify-between z-30 shadow-sm">
-          <div class="flex items-center gap-3">
-            <button onclick="STATE.view='DASHBOARD'; renderApp();" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 text-sm transition" title="Back to Dashboard">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <div class="flex flex-col">
-              <span class="text-xs font-bold text-brand-dark">${STATE.currentGift.title}</span>
-              <span id="autosaveStatusText" class="text-[10px] text-emerald-600 font-medium">${STATE.autosaveStatus}</span>
-            </div>
-          </div>
-
-          <!-- Undo / Redo & Mode Controls -->
-          <div class="flex items-center gap-2">
-            <button onclick="undo()" ${STATE.historyIndex <= 0 ? 'disabled class="p-2 text-gray-300 cursor-not-allowed"' : 'class="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition"'} title="Undo">
-              <i class="fa-solid fa-rotate-left text-sm"></i>
-            </button>
-            <button onclick="redo()" ${STATE.historyIndex >= STATE.history.length - 1 ? 'disabled class="p-2 text-gray-300 cursor-not-allowed"' : 'class="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition"'} title="Redo">
-              <i class="fa-solid fa-rotate-right text-sm"></i>
-            </button>
-            <div class="h-4 w-px bg-gray-200 mx-1"></div>
-            <button onclick="STATE.view='PREVIEW'; renderApp();" class="px-3.5 py-1.5 rounded-xl border border-brand-primary/40 text-brand-primary text-xs font-semibold hover:bg-brand-primary/10 transition flex items-center gap-1.5">
-              <i class="fa-regular fa-eye"></i> Preview
-            </button>
-            <button onclick="publishGift()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-hover text-white text-xs font-bold shadow-md hover:opacity-95 transition flex items-center gap-1.5">
-              <i class="fa-solid fa-paper-plane"></i> Publish
-            </button>
-          </div>
-        </header>
-
-        <!-- EDITOR BODY: SIDEBAR + CANVAS + PROPERTIES -->
-        <div class="flex-1 flex overflow-hidden">
-          
-          <!-- LEFT SIDEBAR TAB SELECTOR -->
-          <aside class="w-16 bg-white border-r border-brand-accent/30 flex flex-col items-center py-4 gap-4 z-20">
-            ${[
-              { id: 'text', icon: 'fa-font', label: 'Text' },
-              { id: 'photo', icon: 'fa-image', label: 'Photos' },
-              { id: 'stickers', icon: 'fa-icons', label: 'Stickers' },
-              { id: 'letters', icon: 'fa-envelope-open-text', label: 'Letters' },
-              { id: 'games', icon: 'fa-gamepad', label: 'Games' },
-              { id: 'effects', icon: 'fa-wand-magic-sparkles', label: 'Effects' },
-              { id: 'music', icon: 'fa-music', label: 'Music' },
-              { id: 'theme', icon: 'fa-palette', label: 'Theme' }
-            ].map(tab => `
-              <button onclick="STATE.activeSidebarTab='${tab.id}'; renderApp();" class="flex flex-col items-center gap-1 text-[10px] font-medium transition ${STATE.activeSidebarTab === tab.id ? 'text-brand-primary font-bold' : 'text-gray-400 hover:text-gray-600'}">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-sm transition ${STATE.activeSidebarTab === tab.id ? 'bg-brand-primary/15 text-brand-primary' : 'hover:bg-gray-100'}">
-                  <i class="fa-solid ${tab.icon}"></i>
-                </div>
-                ${tab.label}
-              </button>
-            `).join('')}
-          </aside>
-
-          <!-- SIDEBAR DRAWER PANEL -->
-          <div class="w-72 bg-white/95 border-r border-brand-accent/30 flex flex-col overflow-y-auto p-4 z-10 shadow-sm">
-            ${renderSidebarDrawerContent()}
-          </div>
-
-          <!-- CANVAS AREA -->
-          <main class="flex-1 bg-gray-100/70 overflow-auto p-8 flex items-center justify-center relative bg-grid-pattern" onclick="deselectCanvasElement(event)">
-            <!-- Canvas Board Page Container -->
-            <div id="canvasBoard" class="relative w-[600px] h-[750px] bg-white rounded-3xl shadow-xl border border-brand-accent/30 overflow-hidden transition-all" style="background-color: ${currentPage.bgColor || '#FFFFFF'}">
-              ${currentPage.elements.map(el => renderCanvasElement(el)).join('')}
-            </div>
-          </main>
-
-          <!-- RIGHT PROPERTIES PANEL -->
-          <aside class="w-64 bg-white border-l border-brand-accent/30 p-4 overflow-y-auto z-10">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark mb-4 pb-2 border-b border-gray-100">
-              Element Properties
-            </h4>
-            ${selectedEl ? renderPropertiesPanel(selectedEl) : `
-              <div class="text-center py-10 text-xs text-gray-400">
-                <i class="fa-solid fa-hand-pointer text-2xl mb-2 text-gray-300"></i>
-                <p>Click any canvas item to edit font, size, colors, or layers.</p>
-              </div>
-            `}
-          </aside>
-
-        </div>
-
-        <!-- BOTTOM PAGE THUMBNAILS BAR -->
-        <footer class="h-20 bg-white border-t border-brand-accent/30 px-6 flex items-center gap-4 overflow-x-auto z-20">
-          <span class="text-xs font-bold text-brand-dark flex items-center gap-1">
-            <i class="fa-regular fa-copy text-brand-primary"></i> Pages:
-          </span>
-          <div class="flex items-center gap-3">
-            ${STATE.currentGift.pages.map((p, idx) => `
-              <div onclick="switchActivePage(${idx})" class="relative w-14 h-14 rounded-xl border-2 flex items-center justify-center cursor-pointer transition ${STATE.activePageIndex === idx ? 'border-brand-primary bg-pink-50/50 shadow-sm' : 'border-gray-200 hover:border-gray-300'}">
-                <span class="text-xs font-bold text-brand-dark">${idx + 1}</span>
-                ${STATE.currentGift.pages.length > 1 ? `
-                  <button onclick="event.stopPropagation(); deletePage(${idx});" class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] flex items-center justify-center hover:bg-rose-600">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                ` : ''}
-              </div>
-            `).join('')}
-            <button onclick="addNewPage()" class="w-14 h-14 rounded-xl border-2 border-dashed border-brand-primary/50 text-brand-primary flex flex-col items-center justify-center text-xs font-bold hover:bg-brand-primary/10 transition">
-              <i class="fa-solid fa-plus"></i>
-              <span class="text-[9px]">Add</span>
-            </button>
-          </div>
-        </footer>
-      `;
-    }
-
-    function renderSidebarDrawerContent() {
-      switch (STATE.activeSidebarTab) {
-        case 'text':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Add Text Styles</h3>
-            <div class="space-y-2">
-              <button onclick="addTextElement('Big Title', 36, 'bold')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-lg font-bold font-poppins text-brand-dark transition">
-                Big Title
-              </button>
-              <button onclick="addTextElement('Love Message', 24, 'normal', 'Dancing Script')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-base font-romantic text-brand-primary transition">
-                Love Message 💌
-              </button>
-              <button onclick="addTextElement('Handwritten Note', 20, 'normal', 'Caveat')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-base font-handwritten text-gray-700 transition">
-                Handwritten Note ✍️
-              </button>
-              <button onclick="addTextElement('Cute Paragraph text goes here...', 14, 'normal', 'Poppins')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-xs font-poppins text-gray-600 transition">
-                Standard Body Text
-              </button>
-            </div>
-          `;
-
-        case 'photo':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Photo & Frame Presets</h3>
-            <div class="space-y-3 mb-4">
-              <label class="block w-full py-2.5 rounded-xl border-2 border-dashed border-brand-primary/50 text-center text-xs font-semibold text-brand-primary cursor-pointer hover:bg-pink-50 transition">
-                <i class="fa-solid fa-upload mb-1 block text-base"></i> Upload Photo
-                <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
-              </label>
-            </div>
-            <h4 class="text-xs font-bold text-gray-500 mb-2">Photo Layout Presets</h4>
-            <div class="grid grid-cols-1 gap-2">
-              ${PHOTO_TEMPLATES.map(tpl => `
-                <div onclick="addPhotoTemplate('${tpl.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition bg-pink-50/20">
-                  <span class="block text-xs font-bold text-brand-dark">${tpl.name}</span>
-                  <span class="text-[10px] text-gray-400">${tpl.desc}</span>
-                </div>
-              `).join('')}
-            </div>
-          `;
-
-        case 'stickers':
-          const filteredStickers = STICKER_LIBRARY.filter(s => {
-            const matchesCat = STATE.stickerCategory === 'ALL' || s.cat === STATE.stickerCategory;
-            const matchesSearch = s.label.toLowerCase().includes(STATE.searchTerm.toLowerCase()) || s.text.includes(STATE.searchTerm);
-            return matchesCat && matchesSearch;
-          });
-
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-2">Stickers & Symbols</h3>
-            <input type="text" placeholder="Search stickers..." value="${STATE.searchTerm}" oninput="STATE.searchTerm=this.value; renderApp();" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs mb-3 focus:outline-none focus:border-brand-primary">
-            
-            <!-- Categories -->
-            <div class="flex gap-1 overflow-x-auto pb-2 mb-2 no-scrollbar">
-              ${['ALL', 'LOVE', 'RIBBON', 'SPARKLE', 'FLOWERS', 'CUTE', 'KAOMOJI'].map(cat => `
-                <button onclick="STATE.stickerCategory='${cat}'; renderApp();" class="px-2.5 py-1 rounded-lg text-[10px] font-semibold whitespace-nowrap transition ${STATE.stickerCategory === cat ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">
-                  ${cat}
-                </button>
-              `).join('')}
-            </div>
-
-            <!-- Sticker Virtualized Grid -->
-            <div class="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto p-1">
-              ${filteredStickers.map(st => `
-                <button onclick="addStickerElement('${st.text}')" title="${st.label}" class="h-12 rounded-xl bg-pink-50/40 hover:bg-pink-100 border border-brand-accent/20 flex items-center justify-center text-2xl transition hover:scale-110">
-                  ${st.text}
-                </button>
-              `).join('')}
-            </div>
-          `;
-
-        case 'letters':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Interactive Envelopes</h3>
-            <div class="space-y-2">
-              ${LETTER_TEMPLATES.map(l => `
-                <div onclick="addLetterElement('${l.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-pink-100 text-brand-primary flex items-center justify-center text-sm">
-                    <i class="fa-solid ${l.icon}"></i>
-                  </div>
-                  <div>
-                    <span class="block text-xs font-bold text-brand-dark">${l.name}</span>
-                    <span class="text-[10px] text-gray-400">Click to open & read</span>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `;
-
-        case 'games':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Mini-Games Library</h3>
-            <div class="space-y-2">
-              ${GAMES_LIBRARY.map(g => `
-                <div onclick="addGameElement('${g.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-purple-100 text-brand-primary flex items-center justify-center text-sm">
-                    <i class="fa-solid ${g.icon}"></i>
-                  </div>
-                  <div>
-                    <span class="block text-xs font-bold text-brand-dark">${g.name}</span>
-                    <span class="text-[10px] text-gray-400">${g.desc}</span>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `;
-
-        case 'effects':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Background Particle Effect</h3>
-            <div class="space-y-2">
-              ${[
-                { id: 'hearts', label: 'Floating Hearts 💕' },
-                { id: 'sparkles', label: 'Glitter Sparkles ✨' },
-                { id: 'petals', label: 'Rose & Sakura Petals 🌸' },
-                { id: 'snow', label: 'Winter Snow ❄️' },
-                { id: 'none', label: 'None (Clean)' }
-              ].map(eff => `
-                <button onclick="changeBackgroundEffect('${eff.id}')" class="w-full p-2.5 rounded-xl border text-xs font-semibold text-left transition ${STATE.currentGift.effect === eff.id ? 'border-brand-primary bg-pink-50 text-brand-primary' : 'border-gray-200 text-gray-700 hover:bg-gray-50'}">
-                  ${eff.label}
-                </button>
-              `).join('')}
-            </div>
-          `;
-
-        case 'music':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Background Music</h3>
-            <div class="space-y-3">
-              <div>
-                <label class="block text-[11px] font-bold text-gray-600 mb-1">Audio Direct URL (.mp3)</label>
-                <input type="text" id="musicUrlInput" placeholder="https://..." value="${STATE.currentGift.musicUrl || ''}" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-brand-primary mb-2">
-                <button onclick="saveMusicUrl()" class="w-full py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold hover:bg-brand-hover transition">
-                  Save Background Track
-                </button>
-              </div>
-            </div>
-          `;
-
-        case 'theme':
-          return `
-            <h3 class="font-bold text-sm text-brand-dark mb-3">Page Background Color</h3>
-            <div class="grid grid-cols-4 gap-2">
-              ${['#FFFFFF', '#FFF7FB', '#FFF0F5', '#F3E8FF', '#FEF3C7', '#E0F2FE', '#E8F5E9', '#F5F5F4'].map(color => `
-                <button onclick="setPageBgColor('${color}')" class="h-10 rounded-xl border border-gray-300 transition hover:scale-105" style="background-color: ${color}"></button>
-              `).join('')}
-            </div>
-          `;
-
-        default:
-          return '';
-      }
-    }
-
-    function renderCanvasElement(el) {
-      const isSelected = el.id === STATE.selectedElementId;
-      const selectionClass = isSelected ? 'canvas-element-selected' : '';
-
-      switch (el.type) {
-        case 'text':
-          return `
-            <div id="${el.id}" 
-                 onclick="selectCanvasElement(event, '${el.id}')"
-                 onmousedown="startDragCanvasElement(event, '${el.id}')"
-                 class="absolute cursor-move select-none p-2 ${selectionClass}"
-                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; z-index: ${el.zIndex || 1}; transform: rotate(${el.rotation || 0}deg);">
-              <div contenteditable="true" 
-                   onblur="updateTextContent('${el.id}', this.innerText)"
-                   class="w-full h-full outline-none"
-                   style="font-family: '${el.fontFamily || 'Poppins'}'; font-size: ${el.fontSize || 16}px; font-weight: ${el.fontWeight || 'normal'}; color: ${el.color || '#5D5061'}; text-align: ${el.align || 'left'};">
-                ${el.content}
-              </div>
-            </div>
-          `;
-
-        case 'photo':
-          return `
-            <div id="${el.id}"
-                 onclick="selectCanvasElement(event, '${el.id}')"
-                 onmousedown="startDragCanvasElement(event, '${el.id}')"
-                 class="absolute cursor-move select-none p-3 bg-white rounded-2xl shadow-md border border-gray-100 ${selectionClass}"
-                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 200}px; z-index: ${el.zIndex || 1};">
-              <img src="${el.content}" class="w-full h-40 object-cover rounded-xl pointer-events-none" />
-              ${el.caption ? `<p class="text-center font-handwritten text-sm text-gray-700 mt-2">${el.caption}</p>` : ''}
-            </div>
-          `;
-
-        case 'sticker':
-          return `
-            <div id="${el.id}"
-                 onclick="selectCanvasElement(event, '${el.id}')"
-                 onmousedown="startDragCanvasElement(event, '${el.id}')"
-                 class="absolute cursor-move select-none ${selectionClass}"
-                 style="left: ${el.x}px; top: ${el.y}px; font-size: ${el.fontSize || 40}px; z-index: ${el.zIndex || 1};">
-              ${el.content}
-            </div>
-          `;
-
-        case 'letter':
-          return `
-            <div id="${el.id}"
-                 onclick="selectCanvasElement(event, '${el.id}')"
-                 onmousedown="startDragCanvasElement(event, '${el.id}')"
-                 class="absolute cursor-move select-none p-4 bg-pink-100/80 rounded-3xl border border-pink-200 shadow-sm ${selectionClass}"
-                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 280}px; z-index: ${el.zIndex || 1};">
-              <div class="flex items-center gap-2 mb-2">
-                <i class="fa-solid fa-envelope text-brand-primary"></i>
-                <span class="text-xs font-bold text-brand-dark">Interactive Letter</span>
-              </div>
-              <p class="font-romantic text-base text-brand-primary font-bold line-clamp-2">${el.letterTitle || 'Click to open my secret letter...'}</p>
-            </div>
-          `;
-
-        case 'game':
-          return `
-            <div id="${el.id}"
-                 onclick="selectCanvasElement(event, '${el.id}')"
-                 onmousedown="startDragCanvasElement(event, '${el.id}')"
-                 class="absolute cursor-move select-none p-4 bg-purple-50 rounded-3xl border border-purple-200 shadow-md ${selectionClass}"
-                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 300}px; z-index: ${el.zIndex || 1};">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-gamepad text-brand-primary"></i>
-                <span class="text-xs font-bold text-brand-dark">${el.gameTitle || 'Mini Game'}</span>
-              </div>
-              <p class="text-[11px] text-gray-500">Interactive game embedded for recipient</p>
-            </div>
-          `;
-
-        default:
-          return '';
-      }
-    }
-
-    // --- ELEMENT ADDERS & DRAGGING LOGIC ---
-    function selectCanvasElement(e, id) {
-      e.stopPropagation();
-      STATE.selectedElementId = id;
-      renderApp();
-    }
-
-    function deselectCanvasElement(e) {
-      if (e.target.id === 'canvasBoard') {
-        STATE.selectedElementId = null;
-        renderApp();
-      }
-    }
-
-    let dragItem = null;
-    let dragStartX = 0, dragStartY = 0;
-    let initialElX = 0, initialElY = 0;
-
-    function startDragCanvasElement(e, id) {
-      dragItem = id;
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const el = currentPage.elements.find(item => item.id === id);
-      if (el) {
-        initialElX = el.x;
-        initialElY = el.y;
-      }
-
-      window.addEventListener('mousemove', onDragCanvasElement);
-      window.addEventListener('mouseup', stopDragCanvasElement);
-    }
-
-    function onDragCanvasElement(e) {
-      if (!dragItem) return;
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
-
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const el = currentPage.elements.find(item => item.id === dragItem);
-      if (el) {
-        el.x = Math.max(0, initialElX + dx);
-        el.y = Math.max(0, initialElY + dy);
-        const domEl = document.getElementById(dragItem);
-        if (domEl) {
-          domEl.style.left = el.x + 'px';
-          domEl.style.top = el.y + 'px';
+          ],
+          successMessage: "You know me so well! Perfect score! 🥰",
+          onSuccessAction: "next-page"
+        }
+      },
+      {
+        id: "this-or-that",
+        name: "This or That Date Game",
+        category: "love",
+        icon: "heart-handshake",
+        badge: "Romantic",
+        desc: "Choose between two romantic options for our next date adventure.",
+        defaultConfig: {
+          questions: [
+            { title: "Next Date Choice", optionA: "🏖️ Beach Sunset", optionB: "🏔️ Mountain Cabin" },
+            { title: "Evening Vibe", optionA: "🎬 Movie Marathon", optionB: "🍽️ Fancy Candlelight Dinner" }
+          ],
+          successMessage: "Great choices! Date night locked in. 🥂",
+          onSuccessAction: "confetti"
+        }
+      },
+      {
+        id: "scratch-card",
+        name: "Secret Scratch Reveal",
+        category: "love",
+        icon: "sparkles",
+        badge: "Surprise",
+        desc: "Scratch off the silver coat to reveal a hidden love message or voucher.",
+        defaultConfig: {
+          hiddenText: "🎁 VOUCHER: Unlimited Hugs & Ice Cream Date!",
+          hiddenImage: SAMPLE_IMAGES[1],
+          coverColor: "#cbd5e1",
+          successMessage: "You revealed the secret gift!",
+          onSuccessAction: "confetti"
+        }
+      },
+      {
+        id: "spin-wheel",
+        name: "Spin Date Wheel",
+        category: "arcade",
+        icon: "disc",
+        badge: "Random",
+        desc: "Spin the fortune wheel to randomly select a date activity or compliment.",
+        defaultConfig: {
+          slices: ["Romantic Dinner", "Late Night Walk", "Shopping Spree", "Movie Night", "Bake Cookies Together"],
+          successMessage: "Wheel decided our fate!",
+          onSuccessAction: "confetti"
+        }
+      },
+      {
+        id: "heart-clicker",
+        name: "Heart Collector Rush",
+        category: "arcade",
+        icon: "flame",
+        badge: "Arcade",
+        desc: "Tap as many floating hearts as possible within 10 seconds.",
+        defaultConfig: {
+          targetScore: 12,
+          timeLimit: 10,
+          successMessage: "Fast fingers! Heart score crushed! 💕",
+          onSuccessAction: "confetti"
+        }
+      },
+      {
+        id: "tic-tac-toe",
+        name: "Love Tic-Tac-Toe",
+        category: "arcade",
+        icon: "x-circle",
+        badge: "Classic",
+        desc: "Play classic Tic-Tac-Toe using ❤️ and 💖 heart tokens.",
+        defaultConfig: {
+          playerSymbol: "❤️",
+          aiSymbol: "💖",
+          successMessage: "Three in a row! Love wins!",
+          onSuccessAction: "confetti"
         }
       }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      renderSidebarGameCatalog();
+      renderSidebarPhotoTemplates();
+      renderSidebarStickers();
+      renderPlaylist();
+      renderCanvasStage();
+      renderPageTabs();
+      renderInspector();
+    });
+
+    // Theme Toggle Function
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
     }
 
-    function stopDragCanvasElement() {
-      if (dragItem) {
-        pushHistoryState();
+    // Tab Navigation
+    function switchSidebarTab(tabKey) {
+      document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'text-brand-600', 'bg-white', 'dark:bg-slate-800', 'dark:text-brand-400', 'shadow-sm');
+        btn.classList.add('text-slate-500');
+      });
+      const activeBtn = document.getElementById(`stab-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active', 'text-brand-600', 'bg-white', 'dark:bg-slate-800', 'dark:text-brand-400', 'shadow-sm');
       }
-      dragItem = null;
-      window.removeEventListener('mousemove', onDragCanvasElement);
-      window.removeEventListener('mouseup', stopDragCanvasElement);
+
+      document.querySelectorAll('.sidebar-panel').forEach(panel => panel.classList.add('hidden'));
+      const activePanel = document.getElementById(`spanel-${tabKey}`);
+      if (activePanel) activePanel.classList.remove('hidden');
     }
 
-    // --- CANVAS ACTIONS ---
-    function addTextElement(text, size, weight = 'normal', font = 'Poppins') {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const newEl = {
-        id: 'el_' + Date.now(),
-        type: 'text',
-        x: 100, y: 150, width: 300,
-        content: text,
-        fontSize: size,
-        fontWeight: weight,
-        fontFamily: font,
-        color: '#5D5061',
-        align: 'left',
-        zIndex: currentPage.elements.length + 1
-      };
-      currentPage.elements.push(newEl);
-      STATE.selectedElementId = newEl.id;
-      pushHistoryState();
-      renderApp();
+    /* ==========================================================================
+       SIDEBAR RENDERERS: GAMES, PHOTOS & STICKERS
+       ========================================================================== */
+
+    function renderSidebarGameCatalog(filteredCategory = 'all', searchQuery = '') {
+      const grid = document.getElementById('game-catalog-grid');
+      if (!grid) return;
+
+      grid.innerHTML = '';
+      const list = GAME_CATALOG.filter(game => {
+        const matchesCat = (filteredCategory === 'all' || game.category === filteredCategory);
+        const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase()) || game.desc.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCat && matchesSearch;
+      });
+
+      list.forEach(game => {
+        const card = document.createElement('div');
+        card.className = "p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-300 dark:hover:border-brand-700 transition shadow-xs group flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <div class="flex items-center space-x-2">
+                <div class="w-7 h-7 rounded-lg bg-brand-50 dark:bg-brand-950/80 text-brand-500 flex items-center justify-center">
+                  <i data-lucide="${game.icon}" class="w-4 h-4"></i>
+                </div>
+                <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100">${game.name}</h4>
+              </div>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium">${game.badge}</span>
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mb-2">${game.desc}</p>
+          </div>
+          <div class="flex items-center gap-1.5 pt-1">
+            <button onclick="openGameCustomizerModal('${game.id}')" class="flex-1 py-1 px-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-[11px] font-semibold transition flex items-center justify-center gap-1">
+              <i data-lucide="settings" class="w-3 h-3"></i> Customize & Add
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
     }
 
-    function addStickerElement(stickerText) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const newEl = {
-        id: 'el_' + Date.now(),
-        type: 'sticker',
-        x: 200, y: 200,
-        content: stickerText,
-        fontSize: 48,
-        zIndex: currentPage.elements.length + 1
-      };
-      currentPage.elements.push(newEl);
-      STATE.selectedElementId = newEl.id;
-      pushHistoryState();
-      renderApp();
+    function filterGameCategory(category) {
+      document.querySelectorAll('.gcat-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-500', 'text-white');
+        btn.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+      });
+      event.target.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+      event.target.classList.add('bg-brand-500', 'text-white');
+
+      const searchQuery = document.getElementById('game-search-input').value;
+      renderSidebarGameCatalog(category, searchQuery);
     }
+
+    function filterGameCatalog() {
+      const searchQuery = document.getElementById('game-search-input').value;
+      renderSidebarGameCatalog('all', searchQuery);
+    }
+
+    function renderSidebarPhotoTemplates() {
+      const grid = document.getElementById('photo-templates-grid');
+      if (!grid) return;
+
+      const templates = [
+        { id: "polaroid-single", name: "Polaroid Frame", icon: "square" },
+        { id: "polaroid-wall", name: "Polaroid Wall Grid", icon: "layout-grid" },
+        { id: "film-strip", name: "35mm Film Strip", icon: "film" },
+        { id: "heart-frame", name: "Romantic Heart Photo", icon: "heart" },
+        { id: "scrapbook", name: "Scrapbook Memory", icon: "file-image" },
+        { id: "photo-story", name: "Photo Story Timeline", icon: "clock" }
+      ];
+
+      grid.innerHTML = templates.map(t => `
+        <button onclick="addPhotoTemplateToCanvas('${t.id}')" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-brand-400 dark:hover:border-brand-500 transition text-left group">
+          <i data-lucide="${t.icon}" class="w-4 h-4 text-brand-500 mb-1"></i>
+          <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">${t.name}</p>
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function renderSidebarStickers() {
+      const grid = document.getElementById('stickers-grid');
+      if (!grid) return;
+
+      const stickers = ["💖", "🌸", "👑", "💌", "🧸", "✨", "🎀", "🌹", "🥂", "🎀", "🕊️", "🎁"];
+      grid.innerHTML = stickers.map(s => `
+        <button onclick="addStickerToCanvas('${s}')" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:scale-110 hover:bg-rose-100 transition duration-150">
+          ${s}
+        </button>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       PHOTO UPLOAD & EDITOR LOGIC
+       ========================================================================== */
 
     function handlePhotoUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = event => {
-        const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-        const newEl = {
-          id: 'el_' + Date.now(),
-          type: 'photo',
-          x: 150, y: 150, width: 220,
-          content: event.target.result,
-          caption: 'Sweet Memory ✨',
-          zIndex: currentPage.elements.length + 1
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          addPhotoToCanvas(evt.target.result);
         };
-        currentPage.elements.push(newEl);
-        STATE.selectedElementId = newEl.id;
-        pushHistoryState();
-        renderApp();
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function addPhotoFromUrl() {
+      const input = document.getElementById('photo-url-input');
+      const url = input.value.trim();
+      if (!url) return;
+      addPhotoToCanvas(url);
+      input.value = '';
+    }
+
+    function addPhotoToCanvas(srcUrl, layoutStyle = 'polaroid-single') {
+      const currentPage = giftProject.pages[activePageIndex];
+      const newElem = {
+        id: "photo-" + Date.now() + Math.random().toString(36).substr(2, 4),
+        type: "photo",
+        src: srcUrl,
+        layout: layoutStyle,
+        caption: "Our Special Moment ❤️",
+        filter: "none",
+        brightness: 100,
+        contrast: 100,
+        radius: 12
       };
-      reader.readAsDataURL(file);
+      currentPage.elements.push(newElem);
+      renderCanvasStage();
+      selectCanvasElement(newElem.id);
     }
 
-    function addPhotoTemplate(templateId) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const sampleImg = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=400&q=80';
-      const newEl = {
-        id: 'el_' + Date.now(),
-        type: 'photo',
-        template: templateId,
-        x: 120, y: 180, width: 240,
-        content: sampleImg,
-        caption: 'Our Special Day',
-        zIndex: currentPage.elements.length + 1
-      };
-      currentPage.elements.push(newEl);
-      STATE.selectedElementId = newEl.id;
-      pushHistoryState();
-      renderApp();
+    function addPhotoTemplateToCanvas(layoutType) {
+      addPhotoToCanvas(SAMPLE_IMAGES[Math.floor(Math.random() * SAMPLE_IMAGES.length)], layoutType);
     }
 
-    function addLetterElement(letterType) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const newEl = {
-        id: 'el_' + Date.now(),
-        type: 'letter',
-        letterType: letterType,
-        x: 100, y: 200, width: 320,
-        letterTitle: 'Open When You Read This ❤️',
-        letterBody: 'My Dearest,\n\nI just wanted to remind you how deeply loved and appreciated you are every single day.\n\nAlways yours,',
-        zIndex: currentPage.elements.length + 1
-      };
-      currentPage.elements.push(newEl);
-      STATE.selectedElementId = newEl.id;
-      pushHistoryState();
-      renderApp();
+    function convertUploadedPhotoToPuzzle() {
+      const currentPage = giftProject.pages[activePageIndex];
+      const photoElem = currentPage.elements.find(e => e.type === 'photo');
+      const photoUrl = photoElem ? photoElem.src : SAMPLE_IMAGES[0];
+
+      // Open customizer directly for Photo Jigsaw
+      openGameCustomizerModal('photo-jigsaw');
+      editingGameTempConfig.photoUrl = photoUrl;
+      renderGameCustomizerForm();
+      renderLiveGameSandbox();
     }
 
-    function addGameElement(gameType) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const newEl = {
-        id: 'el_' + Date.now(),
-        type: 'game',
-        gameType: gameType,
-        gameTitle: GAMES_LIBRARY.find(g => g.id === gameType)?.name || 'Interactive Game',
-        x: 80, y: 180, width: 340,
-        zIndex: currentPage.elements.length + 1
-      };
-      currentPage.elements.push(newEl);
-      STATE.selectedElementId = newEl.id;
-      pushHistoryState();
-      renderApp();
+    /* ==========================================================================
+       GAME ENGINE CUSTOMIZER & LIVE SANDBOX MODAL
+       ========================================================================== */
+
+    function openGameCustomizerModal(gameCatalogId) {
+      const template = GAME_CATALOG.find(g => g.id === gameCatalogId);
+      if (!template) return;
+
+      editingGameTemplateId = gameCatalogId;
+      editingGameTempConfig = JSON.parse(JSON.stringify(template.defaultConfig));
+
+      document.getElementById('modal-game-title').innerText = `Customize ${template.name}`;
+      document.getElementById('game-customizer-modal').classList.remove('hidden');
+
+      renderGameCustomizerForm();
+      renderLiveGameSandbox();
     }
 
-    function updateTextContent(id, val) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const el = currentPage.elements.find(e => e.id === id);
-      if (el) {
-        el.content = val;
-        pushHistoryState();
-      }
+    function closeGameCustomizerModal() {
+      document.getElementById('game-customizer-modal').classList.add('hidden');
     }
 
-    function renderPropertiesPanel(el) {
-      return `
-        <div class="space-y-4">
-          <!-- Text Styling options -->
-          ${el.type === 'text' ? `
+    function renderGameCustomizerForm() {
+      const container = document.getElementById('game-customizer-form-container');
+      if (!container) return;
+
+      let html = '';
+
+      if (editingGameTemplateId === 'memory-match') {
+        html = `
+          <div class="space-y-4 text-xs">
             <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Family</label>
-              <select onchange="updateSelectedProp('fontFamily', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">
-                <option value="Poppins" ${el.fontFamily === 'Poppins' ? 'selected' : ''}>Poppins</option>
-                <option value="Dancing Script" ${el.fontFamily === 'Dancing Script' ? 'selected' : ''}>Dancing Script</option>
-                <option value="Caveat" ${el.fontFamily === 'Caveat' ? 'selected' : ''}>Caveat</option>
-                <option value="Pacifico" ${el.fontFamily === 'Pacifico' ? 'selected' : ''}>Pacifico</option>
-                <option value="Sacramento" ${el.fontFamily === 'Sacramento' ? 'selected' : ''}>Sacramento</option>
+              <label class="font-bold block mb-1">Number of Pairs</label>
+              <select onchange="editingGameTempConfig.pairsCount = parseInt(this.value); renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <option value="3" ${editingGameTempConfig.pairsCount === 3 ? 'selected':''}>3 Pairs (Easy)</option>
+                <option value="4" ${editingGameTempConfig.pairsCount === 4 ? 'selected':''}>4 Pairs (Medium)</option>
+                <option value="6" ${editingGameTempConfig.pairsCount === 6 ? 'selected':''}>6 Pairs (Hard)</option>
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Size (${el.fontSize || 16}px)</label>
-              <input type="range" min="12" max="64" value="${el.fontSize || 16}" oninput="updateSelectedProp('fontSize', parseInt(this.value))" class="w-full">
+              <label class="font-bold block mb-1">Success Message</label>
+              <input type="text" value="${editingGameTempConfig.successMessage}" oninput="editingGameTempConfig.successMessage = this.value;" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
             </div>
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Color</label>
-              <input type="color" value="${el.color || '#5D5061'}" onchange="updateSelectedProp('color', this.value)" class="w-full h-8 rounded-lg cursor-pointer">
-            </div>
-          ` : ''}
-
-          ${el.type === 'letter' ? `
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">Letter Cover Title</label>
-              <input type="text" value="${el.letterTitle || ''}" onchange="updateSelectedProp('letterTitle', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">Letter Body Message</label>
-              <textarea rows="4" onchange="updateSelectedProp('letterBody', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">${el.letterBody || ''}</textarea>
-            </div>
-          ` : ''}
-
-          <!-- Layer & Delete Actions -->
-          <div class="pt-4 border-t border-gray-100 flex flex-col gap-2">
-            <button onclick="duplicateSelectedElement()" class="w-full py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold text-xs hover:bg-gray-200 transition">
-              <i class="fa-solid fa-copy"></i> Duplicate Element
-            </button>
-            <button onclick="deleteSelectedElement()" class="w-full py-2 rounded-xl bg-rose-50 text-rose-600 font-semibold text-xs hover:bg-rose-100 transition">
-              <i class="fa-solid fa-trash"></i> Delete Element
-            </button>
           </div>
+        `;
+      } else if (editingGameTemplateId === 'photo-jigsaw') {
+        html = `
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="font-bold block mb-1">Puzzle Image URL</label>
+              <input type="text" value="${editingGameTempConfig.photoUrl}" onchange="editingGameTempConfig.photoUrl = this.value; renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+            </div>
+            <div>
+              <label class="font-bold block mb-1">Grid Complexity</label>
+              <select onchange="editingGameTempConfig.gridSize = parseInt(this.value); renderLiveGameSandbox();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <option value="2" ${editingGameTempConfig.gridSize === 2 ? 'selected':''}>2 x 2 (4 Pieces)</option>
+                <option value="3" ${editingGameTempConfig.gridSize === 3 ? 'selected':''}>3 x 3 (9 Pieces)</option>
+              </select>
+            </div>
+          </div>
+        `;
+      } else if (editingGameTemplateId === 'couple-quiz') {
+        html = `
+          <div class="space-y-4 text-xs">
+            <h4 class="font-bold">Quiz Questions</h4>
+            ${editingGameTempConfig.questions.map((q, qIdx) => `
+              <div class="p-3 border rounded-xl border-slate-200 dark:border-slate-800 space-y-2 bg-slate-50 dark:bg-slate-800/40">
+                <input type="text" value="${q.question}" oninput="editingGameTempConfig.questions[${qIdx}].question = this.value;" placeholder="Question title..." class="w-full p-1.5 font-bold border rounded bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+                <div class="grid grid-cols-2 gap-1.5">
+                  ${q.options.map((opt, optIdx) => `
+                    <input type="text" value="${opt}" oninput="editingGameTempConfig.questions[${qIdx}].options[${optIdx}] = this.value;" class="p-1 border rounded bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        html = `<p class="text-xs text-slate-500">Default settings active for this game template.</p>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderLiveGameSandbox() {
+      const stage = document.getElementById('game-preview-stage');
+      if (!stage) return;
+      stage.innerHTML = renderGameEngineHTML(editingGameTemplateId, editingGameTempConfig);
+    }
+
+    function saveAndAddGameToPage() {
+      const currentPage = giftProject.pages[activePageIndex];
+      const template = GAME_CATALOG.find(g => g.id === editingGameTemplateId);
+
+      const gameElement = {
+        id: "game-" + Date.now(),
+        type: "game",
+        gameId: editingGameTemplateId,
+        title: template.name,
+        config: JSON.parse(JSON.stringify(editingGameTempConfig))
+      };
+
+      currentPage.elements.push(gameElement);
+      closeGameCustomizerModal();
+      renderCanvasStage();
+      selectCanvasElement(gameElement.id);
+    }
+
+    function testPlayCustomGame() {
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+    }
+
+    /* ==========================================================================
+       GAME ENGINE HTML & INTERACTIVE EXECUTION RENDERING
+       ========================================================================== */
+
+    function renderGameEngineHTML(gameId, config) {
+      if (gameId === 'memory-match') {
+        const totalCards = config.pairsCount * 2;
+        return `
+          <div class="flex flex-col h-full justify-between items-center text-center p-2">
+            <h4 class="font-bold text-xs text-brand-600 dark:text-brand-400">Match the Pairs 💖</h4>
+            <div class="grid grid-cols-3 gap-2 w-full my-auto">
+              ${Array.from({length: totalCards}).map((_, i) => `
+                <button onclick="handleSandboxMemoryClick(this)" class="h-16 rounded-xl bg-gradient-to-tr from-brand-500 to-rose-400 text-white font-bold text-xl flex items-center justify-center shadow hover:scale-105 transition">
+                  ${config.cardBackEmoji || '💖'}
+                </button>
+              `).join('')}
+            </div>
+            <p class="text-[10px] text-slate-400">Tap cards to flip & match</p>
+          </div>
+        `;
+      }
+
+      if (gameId === 'photo-jigsaw') {
+        const gridClass = config.gridSize === 2 ? 'grid-cols-2' : 'grid-cols-3';
+        return `
+          <div class="flex flex-col h-full justify-between items-center text-center p-2">
+            <h4 class="font-bold text-xs text-indigo-600">Solve Jigsaw Puzzle 🧩</h4>
+            <div class="grid ${gridClass} gap-1 w-full aspect-square border-2 border-slate-200 rounded-xl overflow-hidden my-auto bg-slate-100">
+              ${Array.from({length: config.gridSize * config.gridSize}).map((_, i) => `
+                <div class="bg-cover bg-center border border-white/40 cursor-pointer hover:opacity-80" style="background-image: url('${config.photoUrl}'); filter: hue-rotate(${i * 30}deg);"></div>
+              `).join('')}
+            </div>
+            <p class="text-[10px] text-slate-400">Tap pieces to swap and arrange</p>
+          </div>
+        `;
+      }
+
+      if (gameId === 'couple-quiz') {
+        const q = config.questions[0] || { question: "Sample Quiz", options: ["A", "B"] };
+        return `
+          <div class="flex flex-col h-full justify-between p-2 text-center">
+            <span class="text-[10px] font-bold text-brand-500 uppercase">Question 1</span>
+            <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100 my-2">${q.question}</h4>
+            <div class="space-y-1.5 w-full my-auto">
+              ${q.options.map((opt, i) => `
+                <button onclick="confetti()" class="w-full py-2 px-3 text-xs rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-brand-50 dark:hover:bg-brand-950 font-medium transition text-left">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (gameId === 'scratch-card') {
+        return `
+          <div class="flex flex-col h-full justify-between items-center text-center p-2">
+            <h4 class="font-bold text-xs text-slate-700 dark:text-slate-200">Scratch to Reveal 🎁</h4>
+            <div onclick="this.innerHTML='<div class=\'text-xs font-bold text-brand-600 p-2\'>${config.hiddenText}</div>'; confetti();" class="w-full h-32 rounded-xl bg-slate-300 dark:bg-slate-700 flex items-center justify-center cursor-pointer font-bold text-slate-600 dark:text-slate-300 border-2 border-dashed border-slate-400 my-auto">
+              ✨ Scratch Here
+            </div>
+            <p class="text-[10px] text-slate-400">Click or swipe silver area</p>
+          </div>
+        `;
+      }
+
+      // Default Game Placeholder Engine
+      return `
+        <div class="flex flex-col h-full items-center justify-center text-center p-4">
+          <i data-lucide="gamepad-2" class="w-10 h-10 text-brand-500 mb-2"></i>
+          <h4 class="font-bold text-sm mb-1">${config.title || 'Interactive Mini Game'}</h4>
+          <p class="text-xs text-slate-400 mb-4">Tap start button to launch game action.</p>
+          <button onclick="confetti()" class="px-4 py-2 bg-brand-500 text-white font-bold text-xs rounded-xl shadow hover:bg-brand-600">Start Mini Game</button>
         </div>
       `;
     }
 
-    function updateSelectedProp(prop, val) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const el = currentPage.elements.find(e => e.id === STATE.selectedElementId);
-      if (el) {
-        el[prop] = val;
-        pushHistoryState();
-        renderApp();
-      }
+    function handleSandboxMemoryClick(btn) {
+      btn.innerText = '💖';
+      btn.classList.add('bg-emerald-500');
     }
 
-    function duplicateSelectedElement() {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      const el = currentPage.elements.find(e => e.id === STATE.selectedElementId);
-      if (el) {
-        const copy = JSON.parse(JSON.stringify(el));
-        copy.id = 'el_' + Date.now();
-        copy.x += 20;
-        copy.y += 20;
-        currentPage.elements.push(copy);
-        STATE.selectedElementId = copy.id;
-        pushHistoryState();
-        renderApp();
-      }
+    /* ==========================================================================
+       MUSIC PLAYLIST ENGINE & AUDIO CONTROLS
+       ========================================================================== */
+
+    function renderPlaylist() {
+      const container = document.getElementById('playlist-container');
+      if (!container) return;
+
+      container.innerHTML = giftProject.musicSettings.tracks.map((track, idx) => `
+        <div class="p-2.5 rounded-xl border ${idx === giftProject.musicSettings.activeTrackIndex ? 'border-brand-400 bg-brand-50/50 dark:bg-brand-950/30' : 'border-slate-200 dark:border-slate-800'} bg-white dark:bg-slate-900 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2 overflow-hidden">
+            <img src="${track.cover}" class="w-8 h-8 rounded-lg object-cover">
+            <div class="truncate">
+              <p class="font-semibold text-slate-800 dark:text-slate-100 truncate">${track.title}</p>
+              <p class="text-[10px] text-slate-400 truncate">${track.artist}</p>
+            </div>
+          </div>
+          <button onclick="removeAudioTrack(${idx})" class="text-slate-400 hover:text-rose-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        </div>
+      `).join('');
+      lucide.createIcons();
     }
 
-    function deleteSelectedElement() {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      currentPage.elements = currentPage.elements.filter(e => e.id !== STATE.selectedElementId);
-      STATE.selectedElementId = null;
-      pushHistoryState();
-      renderApp();
+    function addAudioTrackFromUrl() {
+      const input = document.getElementById('audio-url-input');
+      const url = input.value.trim();
+      if (!url) return;
+
+      giftProject.musicSettings.tracks.push({
+        title: "Custom Romantic Track",
+        artist: "Uploaded Audio",
+        url: url,
+        cover: SAMPLE_IMAGES[1]
+      });
+
+      input.value = '';
+      renderPlaylist();
     }
 
-    // --- PAGE CONTROLS ---
-    function switchActivePage(index) {
-      STATE.activePageIndex = index;
-      STATE.selectedElementId = null;
-      renderApp();
+    function removeAudioTrack(idx) {
+      if (giftProject.musicSettings.tracks.length <= 1) return;
+      giftProject.musicSettings.tracks.splice(idx, 1);
+      renderPlaylist();
+    }
+
+    function updateMusicSettings() {
+      giftProject.musicSettings.autoplayTrigger = document.getElementById('music-start-trigger').value;
+      giftProject.musicSettings.playerStyle = document.getElementById('music-player-style').value;
+    }
+
+    function updateMusicVolume(val) {
+      giftProject.musicSettings.volume = parseFloat(val);
+    }
+
+    /* ==========================================================================
+       CANVAS STAGE RENDERING & PAGE MANAGEMENT
+       ========================================================================== */
+
+    function renderPageTabs() {
+      const bar = document.getElementById('page-tabs-bar');
+      if (!bar) return;
+
+      bar.innerHTML = giftProject.pages.map((p, idx) => `
+        <button onclick="switchActivePage(${idx})" class="px-3 py-1 rounded-md transition font-medium ${idx === activePageIndex ? 'bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-xs border border-slate-200 dark:border-slate-700' : 'text-slate-500 hover:text-slate-800'}">
+          ${p.title}
+        </button>
+      `).join('');
+
+      document.getElementById('page-counter-indicator').innerText = `Page ${activePageIndex + 1} of ${giftProject.pages.length}`;
+    }
+
+    function switchActivePage(idx) {
+      activePageIndex = idx;
+      activeElementId = null;
+      renderPageTabs();
+      renderCanvasStage();
+      renderInspector();
     }
 
     function addNewPage() {
-      const newPage = {
-        id: 'page_' + (STATE.currentGift.pages.length + 1),
-        title: 'Page ' + (STATE.currentGift.pages.length + 1),
-        bgColor: '#FFFFFF',
+      giftProject.pages.push({
+        id: "page-" + (giftProject.pages.length + 1),
+        title: `Page ${giftProject.pages.length + 1}`,
+        background: "#ffffff",
         elements: []
+      });
+      switchActivePage(giftProject.pages.length - 1);
+    }
+
+    function duplicateCurrentPage() {
+      const pageToDup = giftProject.pages[activePageIndex];
+      const newPage = JSON.parse(JSON.stringify(pageToDup));
+      newPage.id = "page-" + Date.now();
+      newPage.title = `${pageToDup.title} (Copy)`;
+      giftProject.pages.push(newPage);
+      switchActivePage(giftProject.pages.length - 1);
+    }
+
+    function deleteCurrentPage() {
+      if (giftProject.pages.length <= 1) return;
+      giftProject.pages.splice(activePageIndex, 1);
+      activePageIndex = Math.max(0, activePageIndex - 1);
+      switchActivePage(activePageIndex);
+    }
+
+    function navigatePage(dir) {
+      if (dir === 'prev' && activePageIndex > 0) switchActivePage(activePageIndex - 1);
+      if (dir === 'next' && activePageIndex < giftProject.pages.length - 1) switchActivePage(activePageIndex + 1);
+    }
+
+    function renderCanvasStage() {
+      const pageContainer = document.getElementById('active-page-content');
+      if (!pageContainer) return;
+
+      const currentPage = giftProject.pages[activePageIndex];
+      pageContainer.style.backgroundColor = currentPage.background;
+      pageContainer.innerHTML = '';
+
+      if (currentPage.elements.length === 0) {
+        pageContainer.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center text-slate-400 p-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+            <i data-lucide="layout" class="w-8 h-8 mb-2 stroke-1"></i>
+            <p class="text-xs font-semibold">Page Canvas Empty</p>
+            <p class="text-[11px]">Click Games, Photos, or Letters from sidebar to insert items.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      currentPage.elements.forEach(elem => {
+        const wrapper = document.createElement('div');
+        wrapper.className = `relative rounded-xl border-2 transition ${elem.id === activeElementId ? 'border-brand-500 shadow-lg ring-2 ring-brand-500/20' : 'border-transparent hover:border-slate-300'}`;
+        wrapper.onclick = (e) => {
+          e.stopPropagation();
+          selectCanvasElement(elem.id);
+        };
+
+        if (elem.type === 'photo') {
+          wrapper.innerHTML = `
+            <div class="p-3 bg-white dark:bg-slate-900 rounded-xl shadow-md overflow-hidden ${elem.filter || ''}">
+              <img src="${elem.src}" class="w-full object-cover rounded-lg" style="brightness: ${elem.brightness}%; contrast: ${elem.contrast}%; border-radius: ${elem.radius}px;">
+              ${elem.caption ? `<p class="font-handwriting text-center text-lg mt-2 text-slate-700 dark:text-slate-200">${elem.caption}</p>` : ''}
+            </div>
+          `;
+        } else if (elem.type === 'game') {
+          wrapper.innerHTML = `
+            <div class="p-3 bg-white dark:bg-slate-900 rounded-xl shadow-md border border-slate-100 dark:border-slate-800">
+              ${renderGameEngineHTML(elem.gameId, elem.config)}
+            </div>
+          `;
+        } else if (elem.type === 'letter') {
+          wrapper.innerHTML = `
+            <div class="p-4 bg-rose-50/70 dark:bg-rose-950/40 rounded-xl shadow-sm border border-rose-200 dark:border-rose-900/40 font-romantic text-lg text-rose-900 dark:text-rose-100 leading-relaxed">
+              ${elem.text}
+            </div>
+          `;
+        } else if (elem.type === 'sticker') {
+          wrapper.innerHTML = `<div class="text-5xl text-center py-2 animate-bounce">${elem.symbol}</div>`;
+        }
+
+        pageContainer.appendChild(wrapper);
+      });
+
+      lucide.createIcons();
+    }
+
+    function selectCanvasElement(id) {
+      activeElementId = id;
+      renderCanvasStage();
+      renderInspector();
+    }
+
+    function addLetterToCanvas(style) {
+      const currentPage = giftProject.pages[activePageIndex];
+      const newElem = {
+        id: "letter-" + Date.now(),
+        type: "letter",
+        text: "My Dearest,\n\nEvery single day with you feels like a beautiful dream. Thank you for filling my life with endless warmth, laughter, and pure happiness.\n\nForever Yours ❤️"
       };
-      STATE.currentGift.pages.push(newPage);
-      STATE.activePageIndex = STATE.currentGift.pages.length - 1;
-      pushHistoryState();
-      renderApp();
+      currentPage.elements.push(newElem);
+      renderCanvasStage();
+      selectCanvasElement(newElem.id);
     }
 
-    function deletePage(index) {
-      if (STATE.currentGift.pages.length <= 1) return;
-      STATE.currentGift.pages.splice(index, 1);
-      STATE.activePageIndex = Math.max(0, index - 1);
-      pushHistoryState();
-      renderApp();
+    function addStickerToCanvas(symbol) {
+      const currentPage = giftProject.pages[activePageIndex];
+      const newElem = {
+        id: "sticker-" + Date.now(),
+        type: "sticker",
+        symbol: symbol
+      };
+      currentPage.elements.push(newElem);
+      renderCanvasStage();
+      selectCanvasElement(newElem.id);
     }
 
-    function changeBackgroundEffect(effectId) {
-      STATE.currentGift.effect = effectId;
-      pushHistoryState();
-      renderApp();
+    /* ==========================================================================
+       RIGHT INSPECTOR PANEL LOGIC
+       ========================================================================== */
+
+    function renderInspector() {
+      const container = document.getElementById('inspector-body');
+      const badge = document.getElementById('inspector-target-type');
+      if (!container) return;
+
+      const currentPage = giftProject.pages[activePageIndex];
+
+      if (!activeElementId) {
+        badge.innerText = "Page Level";
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="font-bold block mb-1">Page Title</label>
+              <input type="text" value="${currentPage.title}" oninput="giftProject.pages[${activePageIndex}].title = this.value; renderPageTabs();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+            </div>
+            <div>
+              <label class="font-bold block mb-1">Canvas Background Color</label>
+              <input type="color" value="${currentPage.background}" onchange="giftProject.pages[${activePageIndex}].background = this.value; renderCanvasStage();" class="w-full h-8 rounded cursor-pointer">
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const activeElem = currentPage.elements.find(e => e.id === activeElementId);
+      if (!activeElem) return;
+
+      badge.innerText = activeElem.type.toUpperCase();
+
+      if (activeElem.type === 'photo') {
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="font-bold block mb-1">Caption</label>
+              <input type="text" value="${activeElem.caption}" oninput="activeElem.caption = this.value; renderCanvasStage();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+            </div>
+            <button onclick="openPhotoEditorModal('${activeElem.id}')" class="w-full py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-lg font-semibold flex items-center justify-center gap-1.5">
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Open Photo Studio Editor
+            </button>
+            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
+              Delete Photo
+            </button>
+          </div>
+        `;
+      } else if (activeElem.type === 'letter') {
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="font-bold block mb-1">Letter Message</label>
+              <textarea rows="6" oninput="activeElem.text = this.value; renderCanvasStage();" class="w-full p-2 border rounded border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">${activeElem.text}</textarea>
+            </div>
+            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
+              Delete Letter
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <button onclick="deleteActiveElement()" class="w-full py-2 bg-rose-50 text-rose-600 rounded-lg font-semibold border border-rose-200">
+              Delete Element
+            </button>
+          </div>
+        `;
+      }
+
+      lucide.createIcons();
     }
 
-    function setPageBgColor(color) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
-      currentPage.bgColor = color;
-      pushHistoryState();
-      renderApp();
+    function deleteActiveElement() {
+      const currentPage = giftProject.pages[activePageIndex];
+      currentPage.elements = currentPage.elements.filter(e => e.id !== activeElementId);
+      activeElementId = null;
+      renderCanvasStage();
+      renderInspector();
     }
 
-    function saveMusicUrl() {
-      const url = document.getElementById('musicUrlInput').value.trim();
-      STATE.currentGift.musicUrl = url;
-      pushHistoryState();
-      showToast('Music URL updated', 'success');
+    /* ==========================================================================
+       PHOTO STUDIO ADJUSTMENTS MODAL LOGIC
+       ========================================================================== */
+
+    let editingPhotoElemId = null;
+
+    function openPhotoEditorModal(photoElemId) {
+      editingPhotoElemId = photoElemId;
+      const currentPage = giftProject.pages[activePageIndex];
+      const elem = currentPage.elements.find(e => e.id === photoElemId);
+      if (!elem) return;
+
+      document.getElementById('photo-editor-preview-target').src = elem.src;
+      document.getElementById('pe-filter-select').value = elem.filter || 'none';
+      document.getElementById('pe-brightness').value = elem.brightness || 100;
+      document.getElementById('pe-contrast').value = elem.contrast || 100;
+      document.getElementById('pe-radius').value = elem.radius || 12;
+
+      document.getElementById('photo-editor-modal').classList.remove('hidden');
+      applyPhotoEditorAdjustments();
+    }
+
+    function closePhotoEditorModal() {
+      document.getElementById('photo-editor-modal').classList.add('hidden');
+    }
+
+    function applyPhotoEditorAdjustments() {
+      const img = document.getElementById('photo-editor-preview-target');
+      const filter = document.getElementById('pe-filter-select').value;
+      const brightness = document.getElementById('pe-brightness').value;
+      const contrast = document.getElementById('pe-contrast').value;
+      const radius = document.getElementById('pe-radius').value;
+
+      document.getElementById('lbl-pe-brightness').innerText = `${brightness}%`;
+      document.getElementById('lbl-pe-contrast').innerText = `${contrast}%`;
+      document.getElementById('lbl-pe-radius').innerText = `${radius}px`;
+
+      img.className = `max-h-[300px] object-contain rounded shadow-md transition-all duration-200 ${filter !== 'none' ? filter : ''}`;
+      img.style.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+      img.style.borderRadius = `${radius}px`;
+    }
+
+    function savePhotoEditorChanges() {
+      const currentPage = giftProject.pages[activePageIndex];
+      const elem = currentPage.elements.find(e => e.id === editingPhotoElemId);
+      if (elem) {
+        elem.filter = document.getElementById('pe-filter-select').value;
+        elem.brightness = document.getElementById('pe-brightness').value;
+        elem.contrast = document.getElementById('pe-contrast').value;
+        elem.radius = document.getElementById('pe-radius').value;
+      }
+      closePhotoEditorModal();
+      renderCanvasStage();
+    }
+
+    /* ==========================================================================
+       RECIPIENT PREVIEW EXPERIENCE MODAL
+       ========================================================================== */
+
+    function openPreviewModal() {
+      const modal = document.getElementById('recipient-experience-modal');
+      const stage = document.getElementById('recipient-stage');
+      modal.classList.remove('hidden');
+
+      // Opening Screen Step
+      stage.innerHTML = `
+        <div class="h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-b from-slate-900 via-rose-950 to-slate-900 relative overflow-hidden">
+          <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-brand-500 to-rose-400 flex items-center justify-center shadow-2xl animate-float cursor-pointer mb-6" onclick="startRecipientJourney()">
+            <i data-lucide="gift" class="w-12 h-12 text-white"></i>
+          </div>
+          <h2 class="font-display font-bold text-2xl mb-2">${giftProject.openingScreen.title}</h2>
+          <p class="text-xs text-rose-200 max-w-xs mb-8">${giftProject.openingScreen.subtitle}</p>
+          <button onclick="startRecipientJourney()" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 font-bold text-xs rounded-full shadow-lg transition animate-pulse">
+            Open Secret Gift 🎁
+          </button>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function closePreviewModal() {
+      document.getElementById('recipient-experience-modal').classList.add('hidden');
+    }
+
+    function startRecipientJourney() {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      renderRecipientPage(0);
+    }
+
+    function renderRecipientPage(pageIdx) {
+      const stage = document.getElementById('recipient-stage');
+      const page = giftProject.pages[pageIdx];
+
+      stage.innerHTML = `
+        <div class="h-full flex flex-col justify-between p-4 bg-white dark:bg-slate-900 overflow-y-auto">
+          <div class="space-y-4">
+            <h3 class="font-bold text-base text-center text-slate-800 dark:text-slate-100">${page.title}</h3>
+            ${page.elements.map(e => {
+              if (e.type === 'photo') return `<img src="${e.src}" class="w-full rounded-xl shadow-md">`;
+              if (e.type === 'letter') return `<div class="p-4 bg-rose-50 text-rose-900 rounded-xl font-romantic text-lg">${e.text}</div>`;
+              if (e.type === 'game') return `<div class="p-3 border rounded-xl">${renderGameEngineHTML(e.gameId, e.config)}</div>`;
+              return `<div class="text-4xl text-center">${e.symbol}</div>`;
+            }).join('')}
+          </div>
+
+          <!-- Bottom Nav -->
+          <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <button onclick="${pageIdx > 0 ? `renderRecipientPage(${pageIdx - 1})` : ''}" class="px-3 py-1.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium ${pageIdx === 0 ? 'opacity-30' : ''}">Back</button>
+            <span>${pageIdx + 1} / ${giftProject.pages.length}</span>
+            <button onclick="${pageIdx < giftProject.pages.length - 1 ? `renderRecipientPage(${pageIdx + 1})` : 'closePreviewModal()'}" class="px-3 py-1.5 rounded bg-brand-500 text-white font-medium">
+              ${pageIdx < giftProject.pages.length - 1 ? 'Next' : 'Finish ✨'}
+            </button>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
     }
 
     function publishGift() {
-      if (!STATE.currentGift) return;
-      
-      const pubId = 'gift_' + Date.now().toString(36);
-      const published = JSON.parse(JSON.stringify(STATE.currentGift));
-      published.id = pubId;
-      published.shareId = pubId;
-      published.publishedAt = new Date().toISOString();
-
-      STATE.publishedGifts.push(published);
-      savePublishedToStorage();
-
-      showModal('Gift Published Successfully! 🎉', `
-        <div class="text-center py-2">
-          <p class="text-xs text-gray-500 mb-4">Your digital gift is now ready to share with ${published.recipientName}.</p>
-          <div class="p-3 bg-gray-50 rounded-2xl border border-gray-200 text-xs font-mono break-all mb-4">
-            ${window.location.origin}${window.location.pathname}#gift/${pubId}
-          </div>
-          <button onclick="copyGiftLink('${pubId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 text-white font-bold text-xs shadow-md hover:bg-emerald-600 transition">
-            <i class="fa-regular fa-copy"></i> Copy Gift Share Link
-          </button>
-        </div>
-      `, () => {
-        STATE.view = 'DASHBOARD';
-        renderApp();
-      });
+      confetti({ particleCount: 80, spread: 80 });
+      alert("🎁 Gift Published Successfully!\n\nShareable link copied to your clipboard!");
     }
-
-    // --- VIEW 3: RECIPIENT GIFT OPENING CEREMONY ---
-    function renderGiftOpeningCeremony(container) {
-      container.innerHTML = `
-        <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-          <div class="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl border border-brand-accent/40 flex flex-col items-center animate-pulse-soft">
-            <span class="text-xs font-bold uppercase tracking-widest text-brand-primary mb-2">Special Gift For You</span>
-            <h2 class="font-romantic text-4xl text-brand-dark font-bold mb-6">${STATE.currentGift.recipientName}</h2>
-            
-            <!-- Animated 3D Gift Box Container -->
-            <div id="giftBoxContainer" onclick="openGiftCeremony()" class="relative w-48 h-48 cursor-pointer group mb-6">
-              <div class="w-full h-full bg-gradient-to-tr from-pink-400 to-brand-primary rounded-3xl shadow-xl flex items-center justify-center transform group-hover:scale-105 transition-all">
-                <i class="fa-solid fa-gift text-white text-7xl"></i>
-              </div>
-            </div>
-
-            <p class="text-xs text-gray-500 mb-6">Click the gift box to unwrap your surprise!</p>
-            <button onclick="openGiftCeremony()" class="px-6 py-3 rounded-2xl bg-brand-primary text-white font-bold text-sm shadow-lg hover:bg-brand-hover transition">
-              Open Your Gift 🎁
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function openGiftCeremony() {
-      // Trigger Confetti Explosion
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-      }
-
-      // Audio trigger if set
-      if (STATE.currentGift.musicUrl) {
-        STATE.audioPlayer.src = STATE.currentGift.musicUrl;
-        STATE.audioPlayer.play().catch(() => {});
-      }
-
-      STATE.view = 'RECIPIENT_MAIN';
-      STATE.activePageIndex = 0;
-      renderApp();
-    }
-
-    // --- VIEW 4: RECIPIENT IMMERSIVE VIEW ---
-    function renderRecipientView(container, isPreviewMode = false) {
-      const currentPage = STATE.currentGift.pages[STATE.activePageIndex] || STATE.currentGift.pages[0];
-
-      container.innerHTML = `
-        <!-- Top Recipient Header Bar -->
-        <header class="w-full px-6 py-4 flex items-center justify-between z-30">
-          <div class="flex items-center gap-2">
-            ${isPreviewMode ? `
-              <button onclick="STATE.view='EDITOR'; renderApp();" class="px-3 py-1.5 rounded-xl bg-white/80 shadow-sm border border-brand-accent/40 text-xs font-bold text-brand-dark hover:bg-white transition flex items-center gap-1.5">
-                <i class="fa-solid fa-xmark"></i> Exit Preview Mode
-              </button>
-            ` : `
-              <span class="text-xs font-bold text-brand-dark bg-white/80 px-3 py-1.5 rounded-xl border border-brand-accent/40 shadow-sm">
-                For ${STATE.currentGift.recipientName} 💕
-              </span>
-            `}
-          </div>
-
-          <!-- Page Progress Counter -->
-          <div class="bg-white/80 px-4 py-1.5 rounded-xl border border-brand-accent/40 text-xs font-bold text-brand-dark shadow-sm">
-            ${STATE.activePageIndex + 1} / ${STATE.currentGift.pages.length}
-          </div>
-        </header>
-
-        <!-- MAIN RECIPIENT CANVAS VIEW -->
-        <main class="flex-1 flex items-center justify-center p-6 relative">
-          <div class="relative w-[600px] h-[750px] bg-white rounded-3xl shadow-2xl border border-brand-accent/30 overflow-hidden" style="background-color: ${currentPage.bgColor || '#FFFFFF'}">
-            ${currentPage.elements.map(el => renderRecipientCanvasElement(el)).join('')}
-          </div>
-        </main>
-
-        <!-- BOTTOM RECIPIENT NAVIGATION & REPLY BAR -->
-        <footer class="p-6 flex items-center justify-between max-w-md mx-auto w-full gap-4 z-30">
-          <button onclick="prevRecipientPage()" ${STATE.activePageIndex === 0 ? 'disabled class="opacity-30 cursor-not-allowed px-4 py-2 rounded-2xl bg-white shadow-sm text-xs font-bold text-gray-500"' : 'class="px-5 py-2.5 rounded-2xl bg-white shadow-md border border-pink-100 text-xs font-bold text-brand-dark hover:bg-pink-50 transition"'}>
-            <i class="fa-solid fa-arrow-left"></i> Previous
-          </button>
-
-          ${!isPreviewMode && STATE.activePageIndex === STATE.currentGift.pages.length - 1 ? `
-            <button onclick="openRecipientReplyModal()" class="px-5 py-2.5 rounded-2xl bg-brand-primary text-white font-bold text-xs shadow-lg hover:bg-brand-hover transition">
-              Leave Reply 💬
-            </button>
-          ` : ''}
-
-          <button onclick="nextRecipientPage()" ${STATE.activePageIndex === STATE.currentGift.pages.length - 1 ? 'disabled class="opacity-30 cursor-not-allowed px-4 py-2 rounded-2xl bg-white shadow-sm text-xs font-bold text-gray-500"' : 'class="px-5 py-2.5 rounded-2xl bg-white shadow-md border border-pink-100 text-xs font-bold text-brand-dark hover:bg-pink-50 transition"'}>
-            Next <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </footer>
-      `;
-    }
-
-    function renderRecipientCanvasElement(el) {
-      switch (el.type) {
-        case 'text':
-          return `
-            <div class="absolute p-2 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; z-index: ${el.zIndex || 1}; transform: rotate(${el.rotation || 0}deg);">
-              <div style="font-family: '${el.fontFamily || 'Poppins'}'; font-size: ${el.fontSize || 16}px; font-weight: ${el.fontWeight || 'normal'}; color: ${el.color || '#5D5061'}; text-align: ${el.align || 'left'};">
-                ${el.content}
-              </div>
-            </div>
-          `;
-
-        case 'photo':
-          return `
-            <div class="absolute p-3 bg-white rounded-2xl shadow-md border border-gray-100 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 200}px; z-index: ${el.zIndex || 1};">
-              <img src="${el.content}" class="w-full h-40 object-cover rounded-xl pointer-events-none" />
-              ${el.caption ? `<p class="text-center font-handwritten text-sm text-gray-700 mt-2">${el.caption}</p>` : ''}
-            </div>
-          `;
-
-        case 'sticker':
-          return `
-            <div class="absolute select-none" style="left: ${el.x}px; top: ${el.y}px; font-size: ${el.fontSize || 40}px; z-index: ${el.zIndex || 1};">
-              ${el.content}
-            </div>
-          `;
-
-        case 'letter':
-          return `
-            <div onclick="openLetterModal('${el.letterTitle || ''}', '${encodeURIComponent(el.letterBody || '')}')" class="absolute p-4 bg-pink-100/90 hover:bg-pink-200/90 cursor-pointer rounded-3xl border border-pink-200 shadow-md transition transform hover:scale-105 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 280}px; z-index: ${el.zIndex || 1};">
-              <div class="flex items-center gap-2 mb-2">
-                <i class="fa-solid fa-envelope text-brand-primary"></i>
-                <span class="text-xs font-bold text-brand-dark">Click To Open Letter</span>
-              </div>
-              <p class="font-romantic text-base text-brand-primary font-bold line-clamp-2">${el.letterTitle || 'Secret Letter'}</p>
-            </div>
-          `;
-
-        case 'game':
-          return `
-            <div onclick="openMiniGameModal('${el.gameType}')" class="absolute p-4 bg-purple-100 hover:bg-purple-200 cursor-pointer rounded-3xl border border-purple-200 shadow-md transition transform hover:scale-105 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 300}px; z-index: ${el.zIndex || 1};">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-gamepad text-brand-primary"></i>
-                <span class="text-xs font-bold text-brand-dark">${el.gameTitle || 'Mini Game'}</span>
-              </div>
-              <p class="text-[11px] text-gray-600">Click to play game!</p>
-            </div>
-          `;
-
-        default:
-          return '';
-      }
-    }
-
-    function prevRecipientPage() {
-      if (STATE.activePageIndex > 0) {
-        STATE.activePageIndex--;
-        renderApp();
-      }
-    }
-
-    function nextRecipientPage() {
-      if (STATE.activePageIndex < STATE.currentGift.pages.length - 1) {
-        STATE.activePageIndex++;
-        renderApp();
-      }
-    }
-
-    function openLetterModal(title, encodedBody) {
-      const body = decodeURIComponent(encodedBody);
-      showModal(title || 'A Letter For You 💌', `
-        <div class="p-4 bg-pink-50/60 rounded-2xl border border-pink-100 font-romantic text-lg text-brand-dark leading-relaxed whitespace-pre-wrap">
-          ${body}
-        </div>
-      `);
-    }
-
-    function openMiniGameModal(gameType) {
-      if (gameType === 'scratch-card') {
-        showModal('Scratch Card Game 🪄', `
-          <div class="flex flex-col items-center">
-            <p class="text-xs text-gray-500 mb-3">Scratch below to reveal secret surprise!</p>
-            <div id="scratchTarget" class="w-64 h-32 bg-gradient-to-r from-brand-primary to-brand-accent rounded-2xl flex items-center justify-center text-white font-romantic text-xl font-bold p-4 text-center cursor-pointer shadow-inner" onclick="this.innerHTML='❤️ You Are My Favorite Person! ❤️'">
-              Click / Scratch Here
-            </div>
-          </div>
-        `);
-      } else {
-        showModal('Mini Game Surprise 🎮', `
-          <div class="text-center py-4">
-            <span class="text-5xl mb-3 block">💖</span>
-            <p class="text-sm font-bold text-brand-dark mb-2">You Won The Mini Challenge!</p>
-            <p class="text-xs text-gray-500">Unlocking next special memory page...</p>
-          </div>
-        `);
-      }
-    }
-
-    function openRecipientReplyModal() {
-      showModal('Leave a Reply 💌', `
-        <div class="space-y-4">
-          <p class="text-xs text-gray-500">Send a lovely response back to the creator!</p>
-          <textarea id="recipientReplyMsg" rows="3" placeholder="Write something sweet..." class="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-brand-primary"></textarea>
-        </div>
-      `, () => {
-        const msg = document.getElementById('recipientReplyMsg').value.trim();
-        if (msg) {
-          showToast('Reply sent to creator! 💖', 'success');
-        }
-      });
-    }
-
-    // --- INITIALIZATION ---
-    window.onload = function() {
-      loadSavedData();
-      renderApp();
-    };
   </script>
 </body>
 </html>
