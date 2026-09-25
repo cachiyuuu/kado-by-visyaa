@@ -31,7 +31,7 @@ export const GiftSchema = z.object({
 
 export type GiftData = z.infer<typeof GiftSchema>;
 export type ModuleData = z.infer<typeof ModuleSchema>;
-  'use client';
+'use client';
 import React from 'react';
 import { z } from 'zod';
 import { ThemeConfigSchema } from '@/types/gift';
@@ -57,7 +57,7 @@ export default function ThemeProvider({ theme, children }: { theme: ThemeConfig;
     </div>
   );
 }
-  'use client';
+'use client';
 import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
@@ -79,7 +79,7 @@ export default function UnboxingModule({ config, onComplete }: { config: any; on
     </div>
   );
 }
-  'use client';
+'use client';
 export default function WelcomeModule({ config, onComplete }: { config: any; onComplete: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
@@ -91,7 +91,7 @@ export default function WelcomeModule({ config, onComplete }: { config: any; onC
     </div>
   );
 }
-  'use client';
+'use client';
 export default function LetterModule({ config, onComplete }: { config: any; onComplete: () => void }) {
   return (
     <div className="flex flex-col justify-between flex-1 space-y-4">
@@ -106,7 +106,7 @@ export default function LetterModule({ config, onComplete }: { config: any; onCo
     </div>
   );
 }
-  'use client';
+'use client';
 export default function PhotosModule({ config, onComplete }: { config: any; onComplete: () => void }) {
   return (
     <div className="flex flex-col justify-between flex-1 space-y-4">
@@ -126,7 +126,7 @@ export default function PhotosModule({ config, onComplete }: { config: any; onCo
     </div>
   );
 }
-  'use client';
+'use client';
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
@@ -143,7 +143,8 @@ export default function FinaleModule({ config }: { config: any }) {
       <div className="pt-4 text-xs font-bold opacity-60 uppercase tracking-widest">GiftVerse Studio</div>
     </div>
   );
-}'use client';
+}
+'use client';
 import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
@@ -178,7 +179,7 @@ export default function QuizGame({ data, onWin }: { data: any; onWin: () => void
     </div>
   );
 }
-    'use client';
+'use client';
 import { useState } from 'react';
 
 export default function MemoryGame({ data, onWin }: { data: any; onWin: () => void }) {
@@ -192,7 +193,7 @@ export default function MemoryGame({ data, onWin }: { data: any; onWin: () => vo
     </div>
   );
 }
-    'use client';
+'use client';
 import QuizGame from './QuizGame';
 import MemoryGame from './MemoryGame';
 
@@ -212,8 +213,8 @@ export default function GameEngine({ config, onComplete }: { config: any; onComp
       </div>
     </div>
   );
-}
-  'use client';
+  }
+'use client';
 import { useState } from 'react';
 import { GiftData, ModuleData } from '@/types/gift';
 import ThemeProvider from '../themes/ThemeProvider';
@@ -249,7 +250,7 @@ export default function GiftRenderer({ gift }: { gift: GiftData }) {
     </ThemeProvider>
   );
 }
-  import GiftRenderer from '@/components/renderer/GiftRenderer';
+import GiftRenderer from '@/components/renderer/GiftRenderer';
 import { GiftSchema } from '@/types/gift';
 
 const mockGiftDB = {
