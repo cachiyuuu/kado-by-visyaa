@@ -1,1270 +1,699 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Aesthetic Interactive World</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Sacramento&family=VT323&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            handwriting: ['"Sacramento"', 'cursive'],
-            pixel: ['"VT323"', 'monospace'],
-            serif: ['"Lora"', 'serif']
-          },
-          colors: {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftNest Ultimate - Kado Virtual 20+ Mini Games & Kustomisasi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
             theme: {
-              bg: 'var(--bg-main)',
-              card: 'var(--bg-card)',
-              primary: 'var(--primary)',
-              accent: 'var(--accent)',
-              text: 'var(--text-main)',
-              muted: 'var(--text-muted)',
-              border: 'var(--border-color)'
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        cute: ['Fredoka', 'cursive', 'sans-serif'],
+                    }
+                }
             }
-          },
-          animation: {
-            'spin-slow': 'spin 8s linear infinite',
-            'bounce-soft': 'bounce 2s infinite',
-            'pulse-glow': 'pulseGlow 2s infinite alternate',
-          },
-          keyframes: {
-            pulseGlow: {
-              '0%': { boxShadow: '0 0 10px var(--primary)' },
-              '100%': { boxShadow: '0 0 25px var(--accent)' }
-            }
-          }
         }
-      }
-    }
-  </script>
-
-  <style>
-    :root[data-theme="pastel"] {
-      --bg-main: #fdf6f0;
-      --bg-card: #ffffff;
-      --primary: #f4a261;
-      --accent: #e76f51;
-      --text-main: #2b2d42;
-      --text-muted: #8d99ae;
-      --border-color: #f8edeb;
-      --gradient: linear-gradient(135deg, #ffedd5 0%, #ffe4e6 100%);
-    }
-
-    :root[data-theme="dark"] {
-      --bg-main: #0f172a;
-      --bg-card: #1e293b;
-      --primary: #818cf8;
-      --accent: #c084fc;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #334155;
-      --gradient: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
-    }
-
-    :root[data-theme="cyberpunk"] {
-      --bg-main: #050505;
-      --bg-card: #121212;
-      --primary: #00f0ff;
-      --accent: #ff007f;
-      --text-main: #00f0ff;
-      --text-muted: #7000ff;
-      --border-color: #00f0ff;
-      --gradient: linear-gradient(135deg, #00f0ff22 0%, #ff007f22 100%);
-    }
-
-    :root[data-theme="retro"] {
-      --bg-main: #f4ebd9;
-      --bg-card: #fffbf0;
-      --primary: #c85a32;
-      --accent: #2d5a27;
-      --text-main: #332211;
-      --text-muted: #776655;
-      --border-color: #e6d7bc;
-      --gradient: linear-gradient(135deg, #e0cbab 0%, #c85a3222 100%);
-    }
-
-    :root[data-theme="kawaii"] {
-      --bg-main: #fff0f5;
-      --bg-card: #ffffff;
-      --primary: #ff69b4;
-      --accent: #ffb6c1;
-      --text-main: #4a2e35;
-      --text-muted: #b8860b;
-      --border-color: #ffdae9;
-      --gradient: linear-gradient(135deg, #ffe4e1 0%, #fff0f5 100%);
-    }
-
-    :root[data-theme="sage"] {
-      --bg-main: #f2f5f3;
-      --bg-card: #ffffff;
-      --primary: #6b8e23;
-      --accent: #8fbc8f;
-      --text-main: #2e3b32;
-      --text-muted: #7c9482;
-      --border-color: #e2e8e4;
-      --gradient: linear-gradient(135deg, #e6efe8 0%, #d8e5db 100%);
-    }
-
-    body {
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      transition: all 0.3s ease;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: var(--text-muted);
-      border-radius: 999px;
-      opacity: 0.3;
-    }
-
-    .glass-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-    }
-  </style>
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        .cute-font { font-family: 'Fredoka', cursive, sans-serif; }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
+        }
+        .floating { animation: floatSlow 4s ease-in-out infinite; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fdf2f8; }
+        ::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 4px; }
+    </style>
 </head>
-<body class="h-full font-sans antialiased flex flex-col md:flex-row overflow-hidden" data-theme="pastel">
+<body id="mainBody" class="bg-pink-50 text-slate-700 min-h-screen flex flex-col transition-colors duration-500 relative">
 
-  <!-- Toast Notification Container -->
-  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="bgParticles" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
 
-  <aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-theme-border flex-shrink-0 bg-theme-card flex flex-col justify-between z-20">
-    <div class="p-4 md:p-6">
-      <!-- User Profile Summary -->
-      <div class="flex items-center gap-3 mb-6">
-        <div class="relative">
-          <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AestheticSpace" class="w-12 h-12 rounded-full bg-theme-bg p-1 border border-theme-border" alt="Avatar">
-          <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+    <!-- Header / Navbar -->
+    <header class="w-full py-4 px-4 sm:px-8 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 flex justify-between items-center border-b border-pink-100">
+        <div class="flex items-center space-x-2">
+            <span class="text-3xl">🎁</span>
+            <h1 class="cute-font text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">GiftNest Ultimate</h1>
         </div>
-        <div class="overflow-hidden">
-          <h2 id="user-name-display" class="font-bold text-lg truncate">Aesthetic Zone</h2>
-          <p class="text-xs text-theme-muted truncate">✨ Welcome to my space ✨</p>
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <button onclick="toggleMusic()" id="musicBtn" class="bg-pink-100 text-pink-600 px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm">
+                <i class="fa-solid fa-music animate-bounce"></i>
+                <span id="musicText" class="hidden sm:inline">BGM: Off</span>
+            </button>
+            <button onclick="switchTab('builder')" id="tabBuilder" class="bg-pink-500 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition">
+                <i class="fa-solid fa-sliders mr-1"></i> Editor
+            </button>
+            <button onclick="switchTab('preview')" id="tabPreview" class="bg-purple-100 text-purple-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition">
+                <i class="fa-solid fa-eye mr-1"></i> Preview & Share
+            </button>
         </div>
-      </div>
-
-      <!-- Navigation Links -->
-      <nav class="flex md:flex-col gap-1 overflow-x-auto custom-scrollbar pb-2 md:pb-0">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap bg-theme-primary/10 text-theme-primary">
-          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-        </button>
-        <button onclick="switchTab('letters')" id="nav-letters" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
-          <i data-lucide="mail" class="w-4 h-4"></i> Letters & Journal
-        </button>
-        <button onclick="switchTab('games')" id="nav-games" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
-          <i data-lucide="gamepad-2" class="w-4 h-4"></i> Mini Games (4)
-        </button>
-        <button onclick="switchTab('symbols')" id="nav-symbols" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
-          <i data-lucide="sparkles" class="w-4 h-4"></i> Simbol & Fancy Text
-        </button>
-        <button onclick="switchTab('share')" id="nav-share" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm whitespace-nowrap hover:bg-theme-bg text-theme-muted hover:text-theme-text">
-          <i data-lucide="share-2" class="w-4 h-4"></i> Linktree & Salin
-        </button>
-      </nav>
-    </div>
-
-    <div class="p-4 md:p-6 border-t border-theme-border flex flex-col gap-3">
-      <button onclick="togglePublishModal()" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-sm shadow-md hover:opacity-90 transition">
-        <i data-lucide="globe" class="w-4 h-4"></i> Live Preview / Publish
-      </button>
-    </div>
-  </aside>
-
-  <main class="flex-1 flex flex-col h-full overflow-hidden bg-theme-bg relative">
-    
-    <header class="p-4 md:p-6 flex justify-between items-center border-b border-theme-border bg-theme-card/50 backdrop-blur-md">
-      <div>
-        <h1 id="page-title" class="text-xl md:text-2xl font-bold">Interactive Dashboard</h1>
-        <p id="page-subtitle" class="text-xs md:text-sm text-theme-muted">Kelola space, main game, dan salin kaomoji favoritmu.</p>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <div class="relative inline-block text-left">
-          <select id="theme-select" onchange="changeTheme(this.value)" class="appearance-none bg-theme-card border border-theme-border text-theme-text text-sm rounded-xl px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-theme-primary cursor-pointer shadow-sm">
-            <option value="pastel">🌸 Pastel Light</option>
-            <option value="dark">🌙 Dark Mode</option>
-            <option value="cyberpunk">⚡ Cyberpunk Neon</option>
-            <option value="retro">📻 Warm Retro</option>
-            <option value="kawaii">🎀 Kawaii Pink</option>
-            <option value="sage">🌿 Sage Green</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-theme-muted">
-            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-          </div>
-        </div>
-      </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar space-y-6 pb-28">
+    <!-- Main Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 z-10 relative mb-12">
 
-      <!-- TAB 1: DASHBOARD -->
-      <section id="tab-dashboard" class="tab-content block space-y-6">
-        <div class="glass-card rounded-2xl p-6 md:p-8 relative overflow-hidden" style="background: var(--gradient);">
-          <div class="relative z-10 max-w-xl">
-            <span class="inline-block px-3 py-1 bg-white/40 backdrop-blur-md rounded-full text-xs font-semibold mb-3">✨ Daily Inspiration</span>
-            <h2 class="text-2xl md:text-3xl font-extrabold mb-2">"Bikin karya estetik dengan caramu sendiri."</h2>
-            <p class="text-sm opacity-90 mb-4">Gunakan semua fitur interaktif: pemutar musik, koleksi kaomoji, mini game, hingga buku catat/surat rahasia.</p>
-            <div class="flex flex-wrap gap-3">
-              <button onclick="switchTab('letters')" class="px-4 py-2 rounded-xl bg-white text-gray-900 font-bold text-sm shadow hover:bg-opacity-90 transition">Tulis Surat</button>
-              <button onclick="switchTab('symbols')" class="px-4 py-2 rounded-xl bg-black/20 text-white font-bold text-sm backdrop-blur-md hover:bg-black/30 transition">Cari Kaomoji</button>
+        <!-- ================= EDITOR / BUILDER TAB ================= -->
+        <div id="builderSection" class="space-y-6">
+            
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100 text-center relative overflow-hidden">
+                <div class="absolute -top-6 -right-6 text-pink-100 text-8xl pointer-events-none font-cute select-none">✨</div>
+                <h2 class="cute-font text-3xl sm:text-4xl font-bold text-pink-600 mb-2">Pusat Kustomisasi Kado Virtual</h2>
+                <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">Atur tema warna, edit galeri foto satu per satu, tulis surat dengan berbagai template amplop, dan pilih dari 20+ mini games seru untuk pasangan atau temanmu!</p>
             </div>
-          </div>
-          <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none">
-            <i data-lucide="sparkles" class="w-64 h-64 text-theme-primary"></i>
-          </div>
+
+            <!-- 1. Theme Selector -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
+                <h3 class="cute-font text-xl font-bold text-slate-800 mb-3 flex items-center">
+                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">1</span> 
+                    Pilih Tema Warna Kado 🎨
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="themePickerContainer"></div>
+            </div>
+
+            <!-- 2. Profile & Info -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
+                <h3 class="cute-font text-xl font-bold text-slate-800 mb-3 flex items-center">
+                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> 
+                    Informasi Pengirim & Penerima 🧸
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Penerima</label>
+                        <input type="text" id="inputRecipient" value="Sayangku Tercinta" oninput="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Pengirim</label>
+                        <input type="text" id="inputSender" value="Navisyah" oninput="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Sampul Utama</label>
+                        <select id="inputMainSticker" onchange="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none">
+                            <option value="🧸">🧸 Beruang Imut</option>
+                            <option value="💖">💖 Hati Berkilau</option>
+                            <option value="🍓">🍓 Strawberry Manis</option>
+                            <option value="🐱">🐱 Kucing Lucu</option>
+                            <option value="🌷">🌷 Bunga Tulip</option>
+                            <option value="🎀">🎀 Pita Cantik</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Photo Templates & Individual Customization -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="cute-font text-xl font-bold text-slate-800 flex items-center">
+                        <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">3</span> 
+                        Galeri Foto & Template (Edit Satu-Satu) 📸
+                    </h3>
+                    <button onclick="addPhotoSlot()" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah Slot Foto
+                    </button>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Kamu bisa mengedit URL foto, caption, frame, dan stiker untuk setiap slot foto secara individual.</p>
+                <div id="photoEditorContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- 4. Letters Templates & Individual Customization -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="cute-font text-xl font-bold text-slate-800 flex items-center">
+                        <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">4</span> 
+                        Amplop & Surat Digital (Edit Satu-Satu) 💌
+                    </h3>
+                    <button onclick="addLetterSlot()" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah Surat Baru
+                    </button>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Buat beberapa surat berbeda (misal: Surat Cinta, Pesan Semangat, Kenangan Manis) dengan amplop dan tema kertas masing-masing.</p>
+                <div id="letterEditorContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- 5. Mini Games Selection (20+ Games) -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
+                <h3 class="cute-font text-xl font-bold text-slate-800 mb-2 flex items-center">
+                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">5</span> 
+                    Pilih Mini Games Aktif untuk Kado Ini (20+ Pilihan) 🎮
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">Centang game yang ingin ditampilkan di kado virtual agar bisa dimainkan oleh penerima.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto p-2 border border-pink-100 rounded-2xl bg-pink-50/20" id="gamesSelectionContainer"></div>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button onclick="switchTab('preview')" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
+                    <i class="fa-solid fa-eye"></i>
+                    <span>Preview Hasil Kado</span>
+                </button>
+                <button onclick="openShareModal()" class="flex-1 bg-white hover:bg-pink-50 text-pink-600 border-2 border-pink-400 font-bold py-3.5 px-6 rounded-2xl shadow-md transition flex items-center justify-center space-x-2 text-sm">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Generate & Salin Link 🔗</span>
+                </button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-            <div class="p-3 bg-pink-500/10 text-pink-500 rounded-xl">
-              <i data-lucide="mail-check" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <p class="text-xs text-theme-muted">Surat Tersimpan</p>
-              <h3 id="stat-letters-count" class="text-xl font-bold">0 Surat</h3>
-            </div>
-          </div>
 
-          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-            <div class="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
-              <i data-lucide="trophy" class="w-6 h-6"></i>
+        <!-- ================= PREVIEW / RECIPIENT TAB ================= -->
+        <div id="previewSection" class="hidden space-y-6">
+            
+            <div class="flex justify-between items-center bg-white/80 backdrop-blur-md px-4 py-3 rounded-2xl border border-pink-100 shadow-sm">
+                <button onclick="switchTab('builder')" class="text-xs sm:text-sm font-semibold text-pink-600 hover:text-pink-700 flex items-center space-x-1">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Editor</span>
+                </button>
+                <span class="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">Mode Preview Live</span>
+                <button onclick="openShareModal()" class="text-xs sm:text-sm font-semibold bg-pink-500 text-white px-3 py-1.5 rounded-xl shadow hover:bg-pink-600 transition">
+                    <i class="fa-solid fa-share-nodes mr-1"></i> Bagikan
+                </button>
             </div>
-            <div>
-              <p class="text-xs text-theme-muted">Best Score 2048</p>
-              <h3 id="stat-2048-score" class="text-xl font-bold">0 Poin</h3>
-            </div>
-          </div>
 
-          <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-            <div class="p-3 bg-blue-500/10 text-blue-500 rounded-xl">
-              <i data-lucide="smile" class="w-6 h-6"></i>
+            <!-- Main Gift Display Card -->
+            <div id="previewCardWrapper" class="rounded-3xl p-6 sm:p-10 shadow-2xl border transition-all duration-500 relative overflow-hidden space-y-8">
+                
+                <!-- Card Header -->
+                <div class="text-center space-y-3">
+                    <div id="prevMainSticker" class="text-6xl sm:text-7xl floating inline-block">🧸</div>
+                    <h2 id="prevRecipientTitle" class="cute-font text-3xl sm:text-4xl font-bold text-slate-800">Untuk: Sayangku Tercinta</h2>
+                    <p id="prevSenderTitle" class="text-xs sm:text-sm font-medium opacity-90">Kado Spesial dari: Navisyah</p>
+                </div>
+
+                <!-- Section: Letters Preview -->
+                <div class="space-y-4">
+                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
+                        <i class="fa-solid fa-envelope-open-text text-pink-500 mr-2"></i> Kotak Surat & Pesan Spesial 💌
+                    </h3>
+                    <div id="previewLettersContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+
+                <!-- Section: Photos Gallery Preview -->
+                <div class="space-y-4">
+                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
+                        <i class="fa-solid fa-images text-pink-500 mr-2"></i> Kenangan & Galeri Foto 📸
+                    </h3>
+                    <div id="previewPhotosContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+
+                <!-- Section: Mini Games Preview Container -->
+                <div class="space-y-4">
+                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-purple-500 mr-2"></i> Zona Mini Games Interaktif 🎮
+                    </h3>
+                    <p class="text-xs text-slate-500 text-center">Mainkan game-game di bawah ini yang sudah dipilih khusus untukmu!</p>
+                    <div id="previewActiveGamesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+
             </div>
-            <div>
-              <p class="text-xs text-theme-muted">Koleksi Kaomoji & Simbol</p>
-              <h3 class="text-xl font-bold">120+ Item</h3>
-            </div>
-          </div>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-theme-primary"></i> Catatan Cepat / Quick Note</h3>
-            <button onclick="saveQuickNote()" class="text-xs bg-theme-primary text-white px-3 py-1.5 rounded-lg hover:opacity-90">Simpan Note</button>
-          </div>
-          <textarea id="quick-note-input" rows="4" placeholder="Tulis sesuatu di sini... (otomatis tersimpan secara lokal)" class="w-full bg-theme-bg border border-theme-border rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none"></textarea>
-        </div>
-      </section>
+    </main>
 
-      <section id="tab-letters" class="tab-content hidden space-y-6">
-        <!-- Template Selection Bar -->
-        <div class="glass-card p-4 rounded-2xl space-y-3">
-          <h4 class="text-xs font-bold text-theme-primary flex items-center gap-2">
-            <i data-lucide="layout" class="w-4 h-4"></i> Pilih Template Surat / Jurnal Presets:
-          </h4>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            <button onclick="applyTemplate('love')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>💌 Love Letter</span>
+    <!-- ================= SHARE MODAL ================= -->
+    <div id="shareModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-pink-100 space-y-5 animate-fadeIn relative">
+            <button onclick="closeShareModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
             </button>
-            <button onclick="applyTemplate('future')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>🕯️ Masa Depan</span>
-            </button>
-            <button onclick="applyTemplate('gratitude')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>📖 Jurnal Syukur</span>
-            </button>
-            <button onclick="applyTemplate('birthday')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>🌸 Ulang Tahun</span>
-            </button>
-            <button onclick="applyTemplate('diary')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>🌧️ Dear Diary</span>
-            </button>
-            <button onclick="applyTemplate('apology')" class="p-2 bg-theme-bg border border-theme-border hover:border-theme-primary rounded-xl text-xs font-semibold text-center transition flex flex-col items-center gap-1">
-              <span>✉️ Permintaan Maaf</span>
-            </button>
-          </div>
+            <div class="text-center space-y-2">
+                <div class="text-5xl">🔗</div>
+                <h3 class="cute-font text-2xl font-bold text-slate-800">Link Kado Siap Dibagikan!</h3>
+                <p class="text-xs text-slate-500">Salin tautan unik di bawah ini dan kirimkan ke pasangan atau temanmu melalui WhatsApp, Telegram, atau Line.</p>
+            </div>
+            
+            <div class="flex items-center space-x-2 bg-pink-50/70 p-2 rounded-2xl border border-pink-200">
+                <input type="text" id="shareLinkInput" readonly class="bg-transparent text-xs text-slate-600 flex-1 px-2 focus:outline-none select-all">
+                <button onclick="copyShareLink()" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition flex items-center space-x-1">
+                    <i class="fa-solid fa-copy"></i>
+                    <span id="copyBtnText">Salin</span>
+                </button>
+            </div>
+
+            <div class="pt-2 text-center">
+                <button onclick="closeShareModal()" class="text-xs text-slate-500 hover:text-slate-700 font-medium">Tutup</button>
+            </div>
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1 glass-card p-6 rounded-2xl space-y-4">
-            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="pen-tool" class="w-5 h-5 text-theme-primary"></i> Editor Surat</h3>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Judul Surat</label>
-              <input type="text" id="letter-title" placeholder="Contoh: Pesan Rahasia..." class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Penerima / Tanggal</label>
-              <input type="text" id="letter-recipient" placeholder="Untuk: Sahabat Terbaik" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Pilih Style Font</label>
-              <select id="letter-font-style" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm focus:outline-none">
-                <option value="font-sans">Modern Clean (Plus Jakarta)</option>
-                <option value="font-handwriting">Handwriting Estetik (Sacramento)</option>
-                <option value="font-serif">Classic Serif (Lora)</option>
-                <option value="font-pixel">Retro Pixel (VT323)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Isi Pesan</label>
-              <textarea id="letter-content" rows="8" placeholder="Tulis isi surat atau pilih template di atas..." class="w-full bg-theme-bg border border-theme-border rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none custom-scrollbar"></textarea>
-            </div>
-            <button onclick="createLetter()" class="w-full bg-theme-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
-              <i data-lucide="send" class="w-4 h-4"></i> Simpan Surat
-            </button>
-          </div>
-
-          <div class="lg:col-span-2 space-y-4">
-            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="folder-open" class="w-5 h-5 text-theme-primary"></i> Kotak Surat Saya</h3>
-            <div id="letters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Cards dynamic -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-games" class="tab-content hidden space-y-6">
-        <!-- Game Switcher Bar -->
-        <div class="flex gap-2 border-b border-theme-border pb-3 overflow-x-auto custom-scrollbar">
-          <button onclick="selectGame('2048')" id="btn-game-2048" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-primary text-white whitespace-nowrap">2048 Puzzle</button>
-          <button onclick="selectGame('mole')" id="btn-game-mole" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Whack-A-Mole 🎯</button>
-          <button onclick="selectGame('memory')" id="btn-game-memory" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Memory Match 🧩</button>
-          <button onclick="selectGame('tictactoe')" id="btn-game-tictactoe" class="px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap">Tic-Tac-Toe AI ❌⭕</button>
-        </div>
-
-        <!-- GAME 1: 2048 PUZZLE -->
-        <div id="game-2048-container" class="glass-card p-6 rounded-2xl text-center space-y-4">
-          <div class="flex justify-between items-center max-w-sm mx-auto">
-            <div class="text-left">
-              <h3 class="font-bold text-lg">2048 Mini Puzzle 🎮</h3>
-              <p class="text-xs text-theme-muted">Gunakan Keyboard Arrow / Swipe untuk geser tile!</p>
-            </div>
-            <div class="bg-theme-bg px-4 py-2 rounded-xl border border-theme-border text-right">
-              <p class="text-[10px] text-theme-muted font-bold">SCORE</p>
-              <span id="score-2048" class="text-lg font-bold text-theme-primary">0</span>
-            </div>
-          </div>
-
-          <div id="board-2048" class="grid grid-cols-4 gap-2 w-64 h-64 md:w-72 md:h-72 mx-auto bg-theme-border/40 p-2 rounded-2xl touch-none">
-            <!-- 16 tiles -->
-          </div>
-
-          <button onclick="init2048()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
-            Reset 2048 Game
-          </button>
-        </div>
-
-        <!-- GAME 2: WHACK A MOLE -->
-        <div id="game-mole-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
-          <div class="flex justify-between items-center max-w-md mx-auto">
-            <div class="text-left">
-              <h3 class="font-bold text-lg">Catch The Cute Stars 🎯</h3>
-              <p class="text-xs text-theme-muted">Klik karakter yang muncul sebelum hilang!</p>
-            </div>
-            <div class="flex gap-3 text-sm font-bold">
-              <span>Time: <span id="mole-timer" class="text-red-500">20s</span></span>
-              <span>Score: <span id="mole-score" class="text-theme-primary">0</span></span>
-            </div>
-          </div>
-
-          <div id="mole-grid" class="grid grid-cols-3 gap-3 max-w-xs mx-auto">
-            <!-- 9 holes -->
-          </div>
-
-          <button onclick="startMoleGame()" id="btn-start-mole" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
-            Start Whack Game
-          </button>
-        </div>
-
-        <!-- GAME 3: MEMORY MATCH -->
-        <div id="game-memory-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
-          <div class="flex flex-wrap justify-between items-center max-w-md mx-auto gap-2">
-            <div class="text-left">
-              <h3 class="font-bold text-lg">Memory Match 🧩</h3>
-              <p class="text-xs text-theme-muted">Temukan pasangan emoji yang sama!</p>
-            </div>
-            <div class="flex gap-3 text-xs font-semibold">
-              <select id="memory-difficulty" onchange="initMemoryGame()" class="bg-theme-bg border border-theme-border rounded-lg px-2 py-1">
-                <option value="easy">Easy (6 pasang)</option>
-                <option value="hard">Hard (8 pasang)</option>
-              </select>
-              <span>Moves: <span id="memory-moves" class="text-theme-primary">0</span></span>
-            </div>
-          </div>
-
-          <div id="memory-board" class="grid grid-cols-3 md:grid-cols-4 gap-3 max-w-md mx-auto">
-            <!-- Cards injected via JS -->
-          </div>
-
-          <button onclick="initMemoryGame()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
-            Reset Memory
-          </button>
-        </div>
-
-        <!-- GAME 4: TIC TAC TOE AI -->
-        <div id="game-tictactoe-container" class="glass-card p-6 rounded-2xl text-center space-y-4 hidden">
-          <div class="flex justify-between items-center max-w-xs mx-auto">
-            <div class="text-left">
-              <h3 class="font-bold text-lg">Tic-Tac-Toe AI ❌⭕</h3>
-              <p class="text-xs text-theme-muted">Lawan Robot AI Pintar!</p>
-            </div>
-            <div id="ttt-status" class="text-xs font-bold text-theme-primary">Giliran Kamu (X)</div>
-          </div>
-
-          <div id="ttt-board" class="grid grid-cols-3 gap-3 max-w-xs mx-auto">
-            <!-- 9 cells -->
-          </div>
-
-          <button onclick="initTicTacToe()" class="px-6 py-2 rounded-xl bg-theme-primary text-white font-bold text-sm hover:opacity-90 transition">
-            Main Lagi
-          </button>
-        </div>
-      </section>
-
-      <section id="tab-symbols" class="tab-content hidden space-y-6">
-        <!-- Fancy Text Generator -->
-        <div class="glass-card p-6 rounded-2xl space-y-4">
-          <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="type" class="w-5 h-5 text-theme-primary"></i> Fancy Text Decorator Generator</h3>
-          <p class="text-xs text-theme-muted">Ketik teks biasa lalu klik hasil font estetik di bawah untuk menyalin langsung!</p>
-          <input type="text" id="fancy-input" value="Aesthetic World" oninput="generateFancyText()" placeholder="Ketik nama atau kata estetik..." class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary">
-          
-          <div id="fancy-results" class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
-            <!-- Dynamic font previews -->
-          </div>
-        </div>
-
-        <!-- Categorized Symbols & Kaomojis -->
-        <div class="glass-card p-6 rounded-2xl space-y-6">
-          <h3 class="font-bold text-lg">Koleksi Simbol & Kaomoji Lengkap ✧˚·</h3>
-
-          <!-- Sub Tabs for Symbols -->
-          <div class="flex gap-2 border-b border-theme-border pb-3 overflow-x-auto custom-scrollbar">
-            <button onclick="filterSymbols('all')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-primary text-white">Semua</button>
-            <button onclick="filterSymbols('stars')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🌸 Stars & Sparkles</button>
-            <button onclick="filterSymbols('kaomoji')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">ʕ•ᴥ•ʔ Cute Kaomoji</button>
-            <button onclick="filterSymbols('borders')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🎀 Borders & Lines</button>
-            <button onclick="filterSymbols('magical')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">🪐 Space & Magic</button>
-            <button onclick="filterSymbols('hearts')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-bg text-theme-muted hover:text-theme-text">💌 Hearts & Arrows</button>
-          </div>
-
-          <div id="symbols-grid-container" class="space-y-6">
-            <!-- Symbols categorized injected here -->
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-share" class="tab-content hidden space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="glass-card p-6 rounded-2xl space-y-4">
-            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-theme-primary"></i> Bio & Link Tree Editor</h3>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Nama Tampilan</label>
-              <input type="text" id="edit-name" value="Aesthetic Zone" oninput="updateProfileCard()" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Bio Ringkas</label>
-              <input type="text" id="edit-bio" value="Digital Creator & Dreamer ✨" oninput="updateProfileCard()" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Custom Link Instagram</label>
-              <input type="text" id="edit-ig" value="https://instagram.com" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-theme-muted mb-1">Custom Link Spotify / TikTok</label>
-              <input type="text" id="edit-tiktok" value="https://tiktok.com" class="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-2 text-sm">
-            </div>
-            <button onclick="copyProfileLink()" class="w-full bg-theme-primary text-white font-bold py-2.5 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
-              <i data-lucide="copy" class="w-4 h-4"></i> Salin Link Profil Saya
-            </button>
-          </div>
-
-          <div class="glass-card p-6 rounded-2xl text-center space-y-4 flex flex-col items-center justify-center border-2 border-dashed border-theme-primary/30">
-            <img id="preview-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AestheticSpace" class="w-20 h-20 rounded-full border-2 border-theme-primary p-1 bg-theme-bg" alt="Profile">
-            <div>
-              <h4 id="preview-name" class="font-bold text-xl">Aesthetic Zone</h4>
-              <p id="preview-bio" class="text-xs text-theme-muted">Digital Creator & Dreamer ✨</p>
-            </div>
-
-            <div class="w-full max-w-xs space-y-2 pt-2">
-              <a id="preview-ig-btn" href="#" target="_blank" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-theme-bg border border-theme-border text-xs font-semibold hover:border-theme-primary transition">
-                <span>Instagram</span>
-                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-              </a>
-              <a id="preview-tiktok-btn" href="#" target="_blank" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-theme-bg border border-theme-border text-xs font-semibold hover:border-theme-primary transition">
-                <span>TikTok / Music</span>
-                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
 
-    <!-- Music Player Floating Widget -->
-    <div class="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 glass-card rounded-2xl p-3 shadow-2xl border border-theme-border z-30 flex items-center gap-3 backdrop-blur-lg">
-      <div class="relative flex-shrink-0">
-        <div id="music-vinyl" class="w-12 h-12 rounded-full bg-gray-900 border-2 border-gray-700 flex items-center justify-center shadow-inner">
-          <div class="w-4 h-4 rounded-full bg-theme-primary border border-white"></div>
-        </div>
-      </div>
-
-      <div class="flex-1 min-w-0">
-        <h4 id="track-title" class="text-xs font-bold truncate">Lofi Chill Beats</h4>
-        <p id="track-artist" class="text-[10px] text-theme-muted truncate">Aesthetic Chill Vibe</p>
-        
-        <div class="w-full bg-theme-bg h-1.5 rounded-full mt-1.5 overflow-hidden cursor-pointer" onclick="seekAudio(event)">
-          <div id="track-progress" class="bg-theme-primary h-full w-0 transition-all"></div>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-1">
-        <button onclick="prevTrack()" class="p-1.5 text-theme-muted hover:text-theme-text rounded-lg">
-          <i data-lucide="skip-back" class="w-4 h-4"></i>
-        </button>
-        <button onclick="togglePlayMusic()" id="btn-play-music" class="p-2 bg-theme-primary text-white rounded-full hover:opacity-90 shadow">
-          <i data-lucide="play" class="w-4 h-4"></i>
-        </button>
-        <button onclick="nextTrack()" class="p-1.5 text-theme-muted hover:text-theme-text rounded-lg">
-          <i data-lucide="skip-forward" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <audio id="audio-player" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 bg-slate-900/90 text-white text-xs px-4 py-3 rounded-2xl shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toastText">Berhasil!</span>
     </div>
 
-  </main>
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-pink-400 font-medium z-10">
+        GiftNest Ultimate • Made with 💖 for Navisyah & Everyone
+    </footer>
 
-  <!-- Publish Modal -->
-  <div id="publish-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="glass-card w-full max-w-md rounded-2xl p-6 space-y-5 relative">
-      <button onclick="togglePublishModal()" class="absolute top-4 right-4 text-theme-muted hover:text-theme-text">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
+    <script>
+        // 1. Daftar Tema Warna
+        const themes = [
+            { id: 'pastel', name: 'Pastel Pink', bg: 'bg-pink-50', card: 'bg-gradient-to-br from-pink-100 via-rose-50 to-pink-200', text: 'text-pink-600', border: 'border-pink-200' },
+            { id: 'sunset', name: 'Sunset Peach', bg: 'bg-orange-50', card: 'bg-gradient-to-br from-orange-100 via-amber-50 to-rose-100', text: 'text-orange-600', border: 'border-orange-200' },
+            { id: 'lavender', name: 'Lavender Dream', bg: 'bg-purple-50', card: 'bg-gradient-to-br from-purple-100 via-violet-50 to-indigo-100', text: 'text-purple-600', border: 'border-purple-200' },
+            { id: 'minty', name: 'Minty Fresh', bg: 'bg-teal-50', card: 'bg-gradient-to-br from-teal-100 via-emerald-50 to-cyan-100', text: 'text-teal-600', border: 'border-teal-200' },
+            { id: 'dark', name: 'Dark Romance', bg: 'bg-slate-900 text-slate-100', card: 'bg-gradient-to-br from-slate-800 via-rose-950 to-slate-900 text-slate-100', text: 'text-rose-400', border: 'border-rose-900' }
+        ];
 
-      <div class="text-center space-y-2">
-        <div class="w-12 h-12 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto">
-          <i data-lucide="check-circle-2" class="w-6 h-6"></i>
-        </div>
-        <h3 class="text-xl font-bold">Siap Dipublish! 🚀</h3>
-        <p class="text-xs text-theme-muted">Website kustomisasi estetikmu dapat langsung disalin dan dibagikan ke teman-temanmu.</p>
-      </div>
+        // 2. Daftar 20+ Mini Games Berbeda
+        const allGamesList = [
+            { id: 'game1', name: '🎯 Love Quiz (Seberapa Kenal)', desc: 'Kuis interaktif pertanyaan personal hubungan kalian.' },
+            { id: 'game2', name: '💖 Catch The Hearts', desc: 'Tangkap hati yang jatuh secepat mungkin dalam waktu tertentu.' },
+            { id: 'game3', name: '🧠 Memory Card Matching', desc: 'Cocokkan kartu ikon romantis yang berpasangan.' },
+            { id: 'game4', name: '⭐ Tangkap Bintang Harapan', desc: 'Kumpulkan bintang impian sebanyak-banyaknya.' },
+            { id: 'game5', name: '🧩 Susun Kata Cinta', desc: 'Tebak dan susun kata rahasia yang manis.' },
+            { id: 'game6', name: '❌ Tic Tac Toe Spesial', desc: 'Bermain simbol hati vs bintang bersama pasangan.' },
+            { id: 'game7', name: '🧸 Ketuk Beruang Keberuntungan', desc: 'Ketuk beruang imut untuk memunculkan pesan semangat.' },
+            { id: 'game8', name: '🎁 Kotak Hadiah Misteri', desc: 'Pilih kotak kejutan yang berisi hadiah virtual lucu.' },
+            { id: 'game9', name: '🎡 Putar Roda Keputusan', desc: 'Mau makan/jalan ke mana? Putar rodanya!' },
+            { id: 'game10', name: '🍫 Tangkap Coklat Manis', desc: 'Hindari sayuran, tangkap coklat lezat.' },
+            { id: 'game11', name: '🌸 Tebak Tanggal Spesial', desc: 'Kuis tanggal jadian atau momen penting kalian.' },
+            { id: 'game12', name: '🔮 Bola Keajaiban Cinta', desc: 'Kocok bola ramalan untuk mendapat jawaban romantis.' },
+            { id: 'game13', name: '✨ Hitung Mundur Romantis', desc: 'Hitung detik kebersamaan kalian.' },
+            { id: 'game14', name: '🐾 Jejak Kaki Kucing', desc: 'Ikuti jejak kucing menuju hadiah rahasia.' },
+            { id: 'game15', name: '💌 Temukan Amplop Rahasia', desc: 'Pilih amplop yang benar di antara 3 pilihan.' },
+            { id: 'game16', name: '🍰 Hias Kue Ulang Tahun', desc: 'Ketuk lilin kue untuk meniup dan mendapat ucapan.' },
+            { id: 'game17', name: '🎨 Palet Warna Perasaan', desc: 'Pilih warna mood hari ini dan lihat artinya.' },
+            { id: 'game18', name: '🎈 Letuskan Balon Harapan', desc: 'Letuskan balon untuk membaca kalimat motivasi.' },
+            { id: 'game19', name: '🍵 Seduh Secangkir Kopi Virtual', desc: 'Sajikan kopi hangat virtual untuk si dia.' },
+            { id: 'game20', name: '🌙 Starlight Wish Generator', desc: 'Tulis harapan bintang jatuh dan simpan.' },
+            { id: 'game21', name: '🏆 Kuis Paling Jagoan', desc: 'Tantangan trivia singkat untuk si doi.' }
+        ];
 
-      <div class="bg-theme-bg p-3 rounded-xl border border-theme-border flex items-center justify-between gap-2">
-        <span id="published-url" class="text-xs font-mono text-theme-muted truncate">https://my-space.aesthetic/user-1029</span>
-        <button onclick="copyPublishedLink()" class="px-3 py-1.5 bg-theme-primary text-white text-xs font-bold rounded-lg whitespace-nowrap hover:opacity-90">Salin Link</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // --- APP STATE ---
-    let currentTheme = localStorage.getItem('theme') || 'pastel';
-    let letters = JSON.parse(localStorage.getItem('letters')) || [
-      { id: 1, title: 'Selamat Datang! ✨', recipient: 'Kamu', font: 'font-handwriting', content: 'Selamat datang di website estetik interaktif milikmu! Pilih template untuk membuat jurnal atau surat estetik baru.', date: 'Today' }
-    ];
-    let isPlaying = false;
-    let currentTrackIndex = 0;
-
-    const playlist = [
-      { title: 'Lofi Chill Study', artist: 'Aesthetic Beats', src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3' },
-      { title: 'Cozy Coffee Vibe', artist: 'Chillhop Community', src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=cozy-vibes-13074.mp3' },
-    ];
-
-    // --- INITIALIZATION ---
-    window.onload = function() {
-      lucide.createIcons();
-      changeTheme(currentTheme);
-      document.getElementById('theme-select').value = currentTheme;
-
-      renderLetters();
-      initSymbolsAndKaomojis();
-      generateFancyText();
-      init2048();
-      setupAudioPlayer();
-      loadQuickNote();
-      updateStats();
-
-      // Keyboard Controls for 2048
-      window.addEventListener('keydown', handle2048Key);
-    };
-
-    // --- TOAST NOTIFICATIONS ---
-    function showToast(message, icon = 'check-circle') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'glass-card bg-theme-card border border-theme-border text-theme-text px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold pointer-events-auto transition-all transform translate-y-2 opacity-0';
-      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 text-theme-primary"></i> <span>${message}</span>`;
-      
-      container.appendChild(toast);
-      lucide.createIcons();
-
-      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 50);
-      setTimeout(() => {
-        toast.classList.add('opacity-0', '-translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 2500);
-    }
-
-    function changeTheme(themeName) {
-      document.documentElement.setAttribute('data-theme', themeName);
-      localStorage.setItem('theme', themeName);
-      currentTheme = themeName;
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(el => {
-        el.classList.remove('bg-theme-primary/10', 'text-theme-primary');
-        el.classList.add('text-theme-muted');
-      });
-
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if(activeNav) {
-        activeNav.classList.add('bg-theme-primary/10', 'text-theme-primary');
-        activeNav.classList.remove('text-theme-muted');
-      }
-    }
-
-    // --- STREAMING_CHUNK:Letter Templates & Logic... ---
-    const letterTemplates = {
-      love: {
-        title: "Surat Cinta / Love Letter 💌",
-        recipient: "Untuk Seseorang yang Istimewa",
-        font: "font-handwriting",
-        content: `Halo manis,\n\nAku cuma mau bilang kalau hadirmu selalu membawa kehangatan di hari-hariku. Terima kasih sudah menjadi alasan di balik senyumku belakangan ini...\n\nSemoga harimu penuh kebahagiaan 💖`
-      },
-      future: {
-        title: "Pesan Untuk Diriku di Masa Depan 🕯️",
-        recipient: "Diriku di Masa Depan",
-        font: "font-serif",
-        content: `Hai diriku di masa depan,\n\nSaat menulis ini, aku sedang berusaha mengejar mimpi-mimpiku. Apakah kamu di sana sudah berhasil meraih apa yang kita cita-citakan?\n\nIngatlah untuk selalu bersyukur dan jangan lupa tersenyum ya!`
-      },
-      gratitude: {
-        title: "Jurnal Syukur Hari Ini 📖",
-        recipient: "Self Reflection",
-        font: "font-sans",
-        content: `✨ 3 Hal Yang Aku Syukuri Hari Ini:\n1. Cuaca yang cerah dan secangkir kopi hangat.\n2. Waktu luang untuk menikmati hobi.\n3. Suasana hati yang tenang dan damai.\n\nMood Hari Ini: 🌟🌟🌟🌟🌟`
-      },
-      birthday: {
-        title: "Selamat Ulang Tahun! 🌸🎂",
-        recipient: "Sahabat Tersayang",
-        font: "font-sans",
-        content: `Selamat Ulang Tahun! 🎉✨\n\nSemoga di usiamu yang baru ini, makin banyak kebahagiaan, kesehatan, dan keberhasilan yang menghampirimu. Tetaplah menjadi pribadi yang hangat dan menginspirasi!\n\nWish you all the best! 🧁`
-      },
-      diary: {
-        title: "Dear Diary 🌧️",
-        recipient: "Private Note",
-        font: "font-handwriting",
-        content: `Dear Diary,\n\nHari ini ada banyak hal yang terjadi. Ada momen lelah, tapi aku bangga bisa melewatinya dengan baik. Esok hari adalah kesempatan baru untuk memulai kembali dengan semangat baru... ✨`
-      },
-      apology: {
-        title: "Permintaan Maaf Hangat ✉️",
-        recipient: "Teman Baik",
-        font: "font-sans",
-        content: `Halo,\n\nAku ingin meminta maaf secara tulus atas kesalahpahaman kemarin. Hubungan baik denganmu sangat berarti bagiku, dan aku berharap kita bisa ngobrol santai kembali... 🤍`
-      }
-    };
-
-    function applyTemplate(key) {
-      const t = letterTemplates[key];
-      if(!t) return;
-      document.getElementById('letter-title').value = t.title;
-      document.getElementById('letter-recipient').value = t.recipient;
-      document.getElementById('letter-font-style').value = t.font;
-      document.getElementById('letter-content').value = t.content;
-      showToast('Template diterapkan! Edit sesuai keinginanmu ✨');
-    }
-
-    function createLetter() {
-      const title = document.getElementById('letter-title').value || 'Tanpa Judul';
-      const recipient = document.getElementById('letter-recipient').value || 'Seseorang';
-      const font = document.getElementById('letter-font-style').value;
-      const content = document.getElementById('letter-content').value;
-
-      if(!content.trim()) {
-        showToast('Isi surat tidak boleh kosong!', 'alert-circle');
-        return;
-      }
-
-      const newLetter = {
-        id: Date.now(),
-        title,
-        recipient,
-        font,
-        content,
-        date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-      };
-
-      letters.unshift(newLetter);
-      localStorage.setItem('letters', JSON.stringify(letters));
-      
-      document.getElementById('letter-title').value = '';
-      document.getElementById('letter-recipient').value = '';
-      document.getElementById('letter-content').value = '';
-
-      renderLetters();
-      updateStats();
-      showToast('Surat berhasil disimpan! 💌');
-    }
-
-    function deleteLetter(id) {
-      letters = letters.filter(l => l.id !== id);
-      localStorage.setItem('letters', JSON.stringify(letters));
-      renderLetters();
-      updateStats();
-      showToast('Surat dihapus.');
-    }
-
-    function renderLetters() {
-      const grid = document.getElementById('letters-grid');
-      grid.innerHTML = '';
-
-      if(letters.length === 0) {
-        grid.innerHTML = `<p class="text-xs text-theme-muted col-span-2 text-center py-8">Belum ada surat tersimpan. Tulis surat pertamamu!</p>`;
-        return;
-      }
-
-      letters.forEach(letter => {
-        const card = document.createElement('div');
-        card.className = 'glass-card p-5 rounded-2xl relative space-y-3 border border-theme-border flex flex-col justify-between';
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start">
-              <span class="text-[10px] bg-theme-primary/10 text-theme-primary px-2.5 py-1 rounded-full font-bold">${letter.recipient}</span>
-              <button onclick="deleteLetter(${letter.id})" class="text-theme-muted hover:text-red-500 transition">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-            <h4 class="font-bold text-base mt-2">${letter.title}</h4>
-            <p class="text-sm text-theme-text/80 mt-1 whitespace-pre-line ${letter.font}">${letter.content}</p>
-          </div>
-          <div class="text-[10px] text-theme-muted text-right border-t border-theme-border/50 pt-2">
-            ${letter.date}
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      lucide.createIcons();
-    }
-
-    // --- STREAMING_CHUNK:Expanded Mini Games Implementation (2048, Whack, Memory, TicTacToe)... ---
-    function selectGame(game) {
-      ['2048', 'mole', 'memory', 'tictactoe'].forEach(g => {
-        document.getElementById(`game-${g}-container`).classList.toggle('hidden', g !== game);
-        const btn = document.getElementById(`btn-game-${g}`);
-        if(btn) btn.className = g === game ? 'px-4 py-2 rounded-xl text-sm font-bold bg-theme-primary text-white whitespace-nowrap' : 'px-4 py-2 rounded-xl text-sm font-bold bg-theme-card text-theme-muted hover:text-theme-text whitespace-nowrap';
-      });
-
-      if(game === '2048') init2048();
-      if(game === 'memory') initMemoryGame();
-      if(game === 'tictactoe') initTicTacToe();
-      if(game === 'mole') initMoleGrid();
-    }
-
-    // GAME 1: 2048 LOGIC
-    let board2048 = Array(16).fill(0);
-    let score2048 = 0;
-
-    function init2048() {
-      board2048 = Array(16).fill(0);
-      score2048 = 0;
-      add2048Tile();
-      add2048Tile();
-      render2048();
-    }
-
-    function add2048Tile() {
-      const empty = board2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
-      if(empty.length > 0) {
-        const rand = empty[Math.floor(Math.random() * empty.length)];
-        board2048[rand] = Math.random() < 0.9 ? 2 : 4;
-      }
-    }
-
-    function render2048() {
-      const boardEl = document.getElementById('board-2048');
-      boardEl.innerHTML = '';
-      document.getElementById('score-2048').innerText = score2048;
-
-      board2048.forEach(val => {
-        const tile = document.createElement('div');
-        tile.className = 'w-full h-full rounded-xl flex items-center justify-center font-bold text-sm md:text-base transition-all transform';
-        if(val > 0) {
-          tile.innerText = val;
-          tile.classList.add('bg-theme-primary', 'text-white', 'scale-100');
-        } else {
-          tile.classList.add('bg-theme-bg/60');
-        }
-        boardEl.appendChild(tile);
-      });
-
-      const hs = Math.max(localStorage.getItem('score2048') || 0, score2048);
-      localStorage.setItem('score2048', hs);
-      updateStats();
-    }
-
-    function handle2048Key(e) {
-      if(document.getElementById('game-2048-container').classList.contains('hidden')) return;
-
-      let moved = false;
-      if(e.key === 'ArrowLeft') moved = move2048Left();
-      if(e.key === 'ArrowRight') moved = move2048Right();
-      if(e.key === 'ArrowUp') moved = move2048Up();
-      if(e.key === 'ArrowDown') moved = move2048Down();
-
-      if(moved) {
-        add2048Tile();
-        render2048();
-      }
-    }
-
-    function slideRow(row) {
-      let arr = row.filter(val => val);
-      for(let i = 0; i < arr.length - 1; i++) {
-        if(arr[i] === arr[i+1]) {
-          arr[i] *= 2;
-          score2048 += arr[i];
-          arr[i+1] = 0;
-        }
-      }
-      arr = arr.filter(val => val);
-      while(arr.length < 4) arr.push(0);
-      return arr;
-    }
-
-    function move2048Left() {
-      let moved = false;
-      for(let r = 0; r < 4; r++) {
-        const row = board2048.slice(r * 4, r * 4 + 4);
-        const newRow = slideRow(row);
-        for(let c = 0; c < 4; c++) {
-          if(board2048[r * 4 + c] !== newRow[c]) moved = true;
-          board2048[r * 4 + c] = newRow[c];
-        }
-      }
-      return moved;
-    }
-
-    function move2048Right() {
-      let moved = false;
-      for(let r = 0; r < 4; r++) {
-        const row = board2048.slice(r * 4, r * 4 + 4).reverse();
-        const newRow = slideRow(row).reverse();
-        for(let c = 0; c < 4; c++) {
-          if(board2048[r * 4 + c] !== newRow[c]) moved = true;
-          board2048[r * 4 + c] = newRow[c];
-        }
-      }
-      return moved;
-    }
-
-    function move2048Up() {
-      let moved = false;
-      for(let c = 0; c < 4; c++) {
-        const col = [board2048[c], board2048[c+4], board2048[c+8], board2048[c+12]];
-        const newCol = slideRow(col);
-        for(let r = 0; r < 4; r++) {
-          if(board2048[r * 4 + c] !== newCol[r]) moved = true;
-          board2048[r * 4 + c] = newCol[r];
-        }
-      }
-      return moved;
-    }
-
-    function move2048Down() {
-      let moved = false;
-      for(let c = 0; c < 4; c++) {
-        const col = [board2048[c], board2048[c+4], board2048[c+8], board2048[c+12]].reverse();
-        const newCol = slideRow(col).reverse();
-        for(let r = 0; r < 4; r++) {
-          if(board2048[r * 4 + c] !== newCol[r]) moved = true;
-          board2048[r * 4 + c] = newCol[r];
-        }
-      }
-      return moved;
-    }
-
-    // GAME 2: WHACK A MOLE
-    let moleTimer = null;
-    let moleTimeLeft = 20;
-    let moleScore = 0;
-
-    function initMoleGrid() {
-      const grid = document.getElementById('mole-grid');
-      grid.innerHTML = '';
-      for(let i=0; i<9; i++) {
-        const hole = document.createElement('button');
-        hole.className = 'w-20 h-20 bg-theme-bg border border-theme-border rounded-2xl text-2xl flex items-center justify-center hover:border-theme-primary transition';
-        hole.id = `mole-hole-${i}`;
-        hole.innerText = '🕳️';
-        grid.appendChild(hole);
-      }
-    }
-
-    function startMoleGame() {
-      initMoleGrid();
-      moleScore = 0;
-      moleTimeLeft = 20;
-      document.getElementById('mole-score').innerText = moleScore;
-      document.getElementById('mole-timer').innerText = `${moleTimeLeft}s`;
-
-      clearInterval(moleTimer);
-      moleTimer = setInterval(() => {
-        moleTimeLeft--;
-        document.getElementById('mole-timer').innerText = `${moleTimeLeft}s`;
-        popMole();
-
-        if(moleTimeLeft <= 0) {
-          clearInterval(moleTimer);
-          showToast(`Game Over! Skor kamu: ${moleScore}`);
-          confetti({ particleCount: 70 });
-        }
-      }, 800);
-    }
-
-    function popMole() {
-      for(let i=0; i<9; i++) {
-        const h = document.getElementById(`mole-hole-${i}`);
-        if(h) {
-          h.innerText = '🕳️';
-          h.onclick = null;
-        }
-      }
-      const rand = Math.floor(Math.random() * 9);
-      const target = document.getElementById(`mole-hole-${rand}`);
-      if(target) {
-        target.innerText = '⭐';
-        target.onclick = () => {
-          moleScore += 10;
-          document.getElementById('mole-score').innerText = moleScore;
-          target.innerText = '💥';
-          target.onclick = null;
+        // State Utama Aplikasi
+        let appState = {
+            theme: themes[0],
+            recipient: 'Sayangku Tercinta',
+            sender: 'Navisyah',
+            mainSticker: '🧸',
+            photos: [
+                { id: 1, url: 'https://placehold.co/400x300/ffb6c1/ffffff?text=Kenangan+1', caption: 'Hari pertama kita jalan bareng 🌸', sticker: '✨' },
+                { id: 2, url: 'https://placehold.co/400x300/ff69b4/ffffff?text=Kenangan+2', caption: 'Senyum paling manis yang bikin tenang 🥰', sticker: '💖' }
+            ],
+            letters: [
+                { id: 1, title: 'Untuk Kamu yang Spesial 💌', content: 'Hai! Terima kasih ya udah selalu jadi alasan di balik senyumku setiap hari. Semoga kado virtual ini bikin harimu makin ceria!', envelopeSticker: '💌' },
+                { id: 2, title: 'Catatan Kecil Hari Ini ✨', content: 'Ingat ya, apapun yang terjadi kamu hebat banget udah bertahan sejauh ini. Aku bangga sama kamu!', envelopeSticker: '🌷' }
+            ],
+            activeGameIds: ['game1', 'game2', 'game3', 'game7', 'game8']
         };
-      }
-    }
 
-    // GAME 3: MEMORY MATCH
-    let memoryEmojis = ['🌸', '🎀', '🧸', '✨', '🍓', '🧁', '🌙', '💌'];
-    let memoryCards = [];
-    let flippedCards = [];
-    let moves = 0;
+        // Inisialisasi Builder saat Load
+        window.onload = function() {
+            initThemePicker();
+            renderPhotoEditors();
+            renderLetterEditors();
+            renderGamesCheckboxes();
+            setupParticles();
+        };
 
-    function initMemoryGame() {
-      const diff = document.getElementById('memory-difficulty').value;
-      const count = diff === 'easy' ? 6 : 8;
-      const selected = memoryEmojis.slice(0, count);
-
-      const board = document.getElementById('memory-board');
-      board.innerHTML = '';
-      memoryCards = [...selected, ...selected].sort(() => Math.random() - 0.5);
-      flippedCards = [];
-      moves = 0;
-      document.getElementById('memory-moves').innerText = moves;
-
-      memoryCards.forEach((emoji, index) => {
-        const card = document.createElement('button');
-        card.className = 'w-16 h-16 md:w-20 md:h-20 bg-theme-bg border border-theme-border rounded-xl text-2xl flex items-center justify-center font-bold hover:border-theme-primary transition transform active:scale-95';
-        card.dataset.index = index;
-        card.dataset.emoji = emoji;
-        card.innerText = '❓';
-        card.onclick = () => flipCard(card);
-        board.appendChild(card);
-      });
-    }
-
-    function flipCard(card) {
-      if(flippedCards.length === 2 || card.innerText !== '❓') return;
-
-      card.innerText = card.dataset.emoji;
-      card.classList.add('bg-theme-primary/20', 'border-theme-primary');
-      flippedCards.push(card);
-
-      if(flippedCards.length === 2) {
-        moves++;
-        document.getElementById('memory-moves').innerText = moves;
-        checkMemoryMatch();
-      }
-    }
-
-    function checkMemoryMatch() {
-      const [c1, c2] = flippedCards;
-      if(c1.dataset.emoji === c2.dataset.emoji) {
-        flippedCards = [];
-      } else {
-        setTimeout(() => {
-          c1.innerText = '❓';
-          c2.innerText = '❓';
-          c1.classList.remove('bg-theme-primary/20', 'border-theme-primary');
-          c2.classList.remove('bg-theme-primary/20', 'border-theme-primary');
-          flippedCards = [];
-        }, 800);
-      }
-    }
-
-    // GAME 4: TIC TAC TOE AI
-    let tttBoard = Array(9).fill(null);
-    let tttActive = true;
-
-    function initTicTacToe() {
-      const board = document.getElementById('ttt-board');
-      board.innerHTML = '';
-      tttBoard = Array(9).fill(null);
-      tttActive = true;
-      document.getElementById('ttt-status').innerText = 'Giliran Kamu (X)';
-
-      for(let i = 0; i < 9; i++) {
-        const cell = document.createElement('button');
-        cell.className = 'w-20 h-20 bg-theme-bg border border-theme-border rounded-2xl text-2xl font-bold flex items-center justify-center hover:bg-theme-primary/10 transition';
-        cell.onclick = () => handleTTTClick(i, cell);
-        board.appendChild(cell);
-      }
-    }
-
-    function handleTTTClick(i, cell) {
-      if(!tttActive || tttBoard[i]) return;
-
-      tttBoard[i] = 'X';
-      cell.innerText = 'X';
-      cell.classList.add('text-theme-primary');
-
-      if(checkTTTWinner('X')) {
-        document.getElementById('ttt-status').innerText = `🎉 Kamu Menang!`;
-        confetti({ particleCount: 80 });
-        tttActive = false;
-        return;
-      }
-
-      if(tttBoard.every(c => c)) {
-        document.getElementById('ttt-status').innerText = 'Hasil Seri! 🤝';
-        tttActive = false;
-        return;
-      }
-
-      // AI Move
-      setTimeout(makeAIMove, 400);
-    }
-
-    function makeAIMove() {
-      if(!tttActive) return;
-      const empty = tttBoard.map((v, i) => v === null ? i : null).filter(v => v !== null);
-      if(empty.length > 0) {
-        const rand = empty[Math.floor(Math.random() * empty.length)];
-        tttBoard[rand] = 'O';
-        const cells = document.getElementById('ttt-board').children;
-        cells[rand].innerText = 'O';
-        cells[rand].classList.add('text-theme-accent');
-
-        if(checkTTTWinner('O')) {
-          document.getElementById('ttt-status').innerText = `🤖 Robot AI Menang!`;
-          tttActive = false;
+        function setupParticles() {
+            const container = document.getElementById('bgParticles');
+            container.innerHTML = '';
+            const symbols = ['💖', '✨', '🌸', '⭐', '🎈'];
+            for(let i=0; i<12; i++) {
+                const el = document.createElement('div');
+                el.className = 'absolute text-pink-300 opacity-30 floating select-none';
+                el.style.left = Math.random() * 100 + '%';
+                el.style.top = Math.random() * 100 + '%';
+                el.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                el.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                container.appendChild(el);
+            }
         }
-      }
-    }
 
-    function checkTTTWinner(player) {
-      const winPatterns = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
-      return winPatterns.some(pattern => {
-        const [a,b,c] = pattern;
-        return tttBoard[a] === player && tttBoard[b] === player && tttBoard[c] === player;
-      });
-    }
-
-    // --- STREAMING_CHUNK:Fancy Text Generator & Symbols Data... ---
-    function generateFancyText() {
-      const input = document.getElementById('fancy-input').value || 'Aesthetic';
-      const container = document.getElementById('fancy-results');
-      container.innerHTML = '';
-
-      const styles = [
-        text => text.split('').map(c => '𝔜𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔟𝔮𝔯𝔰𝔱𝔲𝔳𝔮𝔭𝔶𝔷'[c.charCodeAt(0) - 97] || c).join(''),
-        text => text.split('').map(c => 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ'[c.charCodeAt(0) - 97] || c).join(''),
-        text => text.split('').map(c => '🄰🄱🄲🄳🄴🄵🄺🄷🄸🄹🄺🄻🄼 any'[c.charCodeAt(0) - 97] || c).join(''),
-        text => `✧˚· ${text} ·˚✧`,
-        text => `𓆩♡𓆪 ${text} 𓆩♡𓆪`,
-        text => `─── ⋆⋅ ${text} ⋅⋆ ───`
-      ];
-
-      styles.forEach(fn => {
-        const styled = fn(input.toLowerCase());
-        const btn = document.createElement('button');
-        btn.className = 'p-3 bg-theme-bg border border-theme-border rounded-xl text-xs font-semibold hover:border-theme-primary transition text-left flex justify-between items-center';
-        btn.innerHTML = `<span class="truncate">${styled}</span> <i data-lucide="copy" class="w-3.5 h-3.5 text-theme-muted"></i>`;
-        btn.onclick = () => copyText(styled);
-        container.appendChild(btn);
-      });
-      lucide.createIcons();
-    }
-
-    const symbolsData = {
-      stars: ['✦', '✧', '★', '☆', '✮', '✰', '✵', '✶', '✷', '✸', '✹', '✺', '𓆩♡𓆪', '˚˖𓍢ִ🌾', '✧˚·.'],
-      kaomoji: ['( ˶ˆ 📜 ˆ˶ )', '₍ᐢ. ◣.ᐢ₎', '(っ 🏃 )っ', '( •⩊• )', '⸜(｡˃ ᵕ ˂ )⸝', '(´｡• ᵕ •｡`)', 'ฅ(≈> 🐾 <≈)ฅ', '(  •̀ - •́  )', 'ʕ•ᴥ•ʔ', '(•⩊•)'],
-      borders: ['┊', '┊✧', '┌─── ⋆⋅☆⋅⋆ ───┐', '───────── 𝒵𝓏', '╭───────┈➤', '────── 𖥸 ──────', '✧･ﾟ: *✧･ﾟ:* *:･ﾟ✧*:･ﾟ✧'],
-      magical: ['☾', '☽', '☼', '☀', '☁', '⚡', '☄', '🪐', '🌌', '🔮', '🧿', '🪞'],
-      hearts: ['♡', '❥', '♥', '❣', '❦', '❧', '➳', '🏹', '🏹♡', '𓆩♥𓆪']
-    };
-
-    function initSymbolsAndKaomojis() {
-      filterSymbols('all');
-    }
-
-    function filterSymbols(cat) {
-      const container = document.getElementById('symbols-grid-container');
-      container.innerHTML = '';
-
-      const categories = cat === 'all' ? Object.keys(symbolsData) : [cat];
-
-      categories.forEach(key => {
-        const items = symbolsData[key];
-        if(!items) return;
-
-        const section = document.createElement('div');
-        section.className = 'space-y-2';
-        section.innerHTML = `<h4 class="text-xs font-bold text-theme-primary capitalize">${key}</h4>`;
-
-        const list = document.createElement('div');
-        list.className = 'flex flex-wrap gap-2';
-
-        items.forEach(item => {
-          const btn = document.createElement('button');
-          btn.className = 'px-3 py-2 bg-theme-bg border border-theme-border rounded-xl text-xs font-semibold hover:border-theme-primary transition active:scale-95';
-          btn.innerText = item;
-          btn.onclick = () => copyText(item);
-          list.appendChild(btn);
-        });
-
-        section.appendChild(list);
-        container.appendChild(section);
-      });
-    }
-
-    function copyText(text) {
-      const tempInput = document.createElement('textarea');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      showToast(`Disalin: ${text}`);
-    }
-
-    // --- MUSIC & HELPERS ---
-    function setupAudioPlayer() {
-      const audio = document.getElementById('audio-player');
-      audio.ontimeupdate = () => {
-        if(audio.duration) {
-          const pct = (audio.currentTime / audio.duration) * 100;
-          document.getElementById('track-progress').style.width = `${pct}%`;
+        // Render Tema
+        function initThemePicker() {
+            const container = document.getElementById('themePickerContainer');
+            container.innerHTML = themes.map(t => `
+                <div onclick="selectTheme('${t.id}')" class="cursor-pointer p-3 rounded-2xl border-2 text-center transition ${appState.theme.id === t.id ? 'border-pink-500 bg-pink-100/50 shadow-sm' : 'border-slate-200 bg-white hover:border-pink-300'}">
+                    <div class="w-full h-6 rounded-lg mb-1 ${t.card}"></div>
+                    <span class="text-xs font-semibold text-slate-700">${t.name}</span>
+                </div>
+            `).join('');
         }
-      };
-      audio.onended = () => nextTrack();
-    }
 
-    function togglePlayMusic() {
-      const audio = document.getElementById('audio-player');
-      const vinyl = document.getElementById('music-vinyl');
-      const btn = document.getElementById('btn-play-music');
+        function selectTheme(id) {
+            appState.theme = themes.find(t => t.id === id);
+            initThemePicker();
+        }
 
-      if(isPlaying) {
-        audio.pause();
-        vinyl.classList.remove('animate-spin-slow');
-        btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i>`;
-      } else {
-        audio.play().catch(() => showToast('Klik layar untuk memainkan audio!'));
-        vinyl.classList.add('animate-spin-slow');
-        btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i>`;
-      }
-      isPlaying = !isPlaying;
-      lucide.createIcons();
-    }
+        // Update State Input Umum
+        function updateStateValue() {
+            appState.recipient = document.getElementById('inputRecipient').value;
+            appState.sender = document.getElementById('inputSender').value;
+            appState.mainSticker = document.getElementById('inputMainSticker').value;
+        }
 
-    function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      loadTrack(currentTrackIndex);
-    }
+        // ================= PHOTO EDITORS (SATU-SATU) =================
+        function renderPhotoEditors() {
+            const container = document.getElementById('photoEditorContainer');
+            container.innerHTML = appState.photos.map((p, index) => `
+                <div class="p-4 rounded-2xl border border-pink-200 bg-pink-50/40 space-y-3 relative">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-pink-600 uppercase">Slot Foto #${index + 1}</span>
+                        ${appState.photos.length > 1 ? `<button onclick="removePhotoSlot(${p.id})" class="text-xs text-red-500 hover:text-red-700"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>` : ''}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">URL Gambar</label>
+                            <input type="text" value="${p.url}" oninput="updatePhotoProp(${p.id}, 'url', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Caption Foto</label>
+                            <input type="text" value="${p.caption}" oninput="updatePhotoProp(${p.id}, 'caption', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Foto</label>
+                            <input type="text" value="${p.sticker}" oninput="updatePhotoProp(${p.id}, 'sticker', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-    function prevTrack() {
-      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-      loadTrack(currentTrackIndex);
-    }
+        function addPhotoSlot() {
+            const newId = appState.photos.length > 0 ? Math.max(...appState.photos.map(p => p.id)) + 1 : 1;
+            appState.photos.push({ id: newId, url: 'https://placehold.co/400x300/ffb6c1/ffffff?text=Foto+Baru', caption: 'Kenangan manis baru ✨', sticker: '💖' });
+            renderPhotoEditors();
+        }
 
-    function loadTrack(index) {
-      const track = playlist[index];
-      const audio = document.getElementById('audio-player');
-      audio.src = track.src;
-      document.getElementById('track-title').innerText = track.title;
-      document.getElementById('track-artist').innerText = track.artist;
-      if(isPlaying) audio.play();
-    }
+        function removePhotoSlot(id) {
+            appState.photos = appState.photos.filter(p => p.id !== id);
+            renderPhotoEditors();
+        }
 
-    function seekAudio(e) {
-      const audio = document.getElementById('audio-player');
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      if(audio.duration) audio.currentTime = pos * audio.duration;
-    }
+        function updatePhotoProp(id, prop, val) {
+            const photo = appState.photos.find(p => p.id === id);
+            if(photo) photo[prop] = val;
+        }
 
-    function updateProfileCard() {
-      const name = document.getElementById('edit-name').value || 'Aesthetic Zone';
-      const bio = document.getElementById('edit-bio').value || 'Digital Creator';
-      document.getElementById('preview-name').innerText = name;
-      document.getElementById('preview-bio').innerText = bio;
-      document.getElementById('user-name-display').innerText = name;
-    }
+        // ================= LETTER EDITORS (SATU-SATU) =================
+        function renderLetterEditors() {
+            const container = document.getElementById('letterEditorContainer');
+            container.innerHTML = appState.letters.map((l, index) => `
+                <div class="p-4 rounded-2xl border border-purple-200 bg-purple-50/30 space-y-3 relative">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-purple-600 uppercase">Surat Amplop #${index + 1}</span>
+                        ${appState.letters.length > 1 ? `<button onclick="removeLetterSlot(${l.id})" class="text-xs text-red-500 hover:text-red-700"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>` : ''}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Judul Surat</label>
+                            <input type="text" value="${l.title}" oninput="updateLetterProp(${l.id}, 'title', this.value)" class="w-full px-3 py-2 rounded-xl border border-purple-200 text-xs bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Amplop</label>
+                            <input type="text" value="${l.envelopeSticker}" oninput="updateLetterProp(${l.id}, 'envelopeSticker', this.value)" class="w-full px-3 py-2 rounded-xl border border-purple-200 text-xs bg-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Isi Pesan Surat</label>
+                        <textarea rows="3" oninput="updateLetterProp(${l.id}, 'content', this.value)" class="w-full p-3 rounded-xl border border-purple-200 text-xs bg-white">${l.content}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-    function saveQuickNote() {
-      const note = document.getElementById('quick-note-input').value;
-      localStorage.setItem('quickNote', note);
-      showToast('Quick Note tersimpan! 📝');
-    }
+        function addLetterSlot() {
+            const newId = appState.letters.length > 0 ? Math.max(...appState.letters.map(l => l.id)) + 1 : 1;
+            appState.letters.push({ id: newId, title: 'Surat Spesial Baru 💌', content: 'Tulis pesan manismu di sini...', envelopeSticker: '💌' });
+            renderLetterEditors();
+        }
 
-    function loadQuickNote() {
-      document.getElementById('quick-note-input').value = localStorage.getItem('quickNote') || '';
-    }
+        function removeLetterSlot(id) {
+            appState.letters = appState.letters.filter(l => l.id !== id);
+            renderLetterEditors();
+        }
 
-    function updateStats() {
-      document.getElementById('stat-letters-count').innerText = `${letters.length} Surat`;
-      const hs = localStorage.getItem('score2048') || 0;
-      document.getElementById('stat-2048-score').innerText = `${hs} Poin`;
-    }
+        function updateLetterProp(id, prop, val) {
+            const letter = appState.letters.find(l => l.id === id);
+            if(letter) letter[prop] = val;
+        }
 
-    function copyProfileLink() {
-      copyText(window.location.href);
-    }
+        // ================= GAMES CHECKBOXES =================
+        function renderGamesCheckboxes() {
+            const container = document.getElementById('gamesSelectionContainer');
+            container.innerHTML = allGamesList.map(g => `
+                <label class="flex items-start space-x-2 p-2.5 rounded-xl bg-white border border-pink-100 cursor-pointer hover:border-pink-300 transition">
+                    <input type="checkbox" value="${g.id}" ${appState.activeGameIds.includes(g.id) ? 'checked' : ''} onchange="toggleGameSelection('${g.id}')" class="mt-1 accent-pink-500 rounded">
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">${g.name}</div>
+                        <div class="text-[10px] text-slate-500">${g.desc}</div>
+                    </div>
+                </label>
+            `).join('');
+        }
 
-    function togglePublishModal() {
-      const modal = document.getElementById('publish-modal');
-      modal.classList.toggle('hidden');
-    }
+        function toggleGameSelection(id) {
+            if(appState.activeGameIds.includes(id)) {
+                appState.activeGameIds = appState.activeGameIds.filter(gId => gId !== id);
+            } else {
+                appState.activeGameIds.push(id);
+            }
+        }
 
-    function copyPublishedLink() {
-      copyText('https://my-space.aesthetic/user-1029');
-    }
-  </script>
+        // ================= SWITCH TABS & PREVIEW =================
+        function switchTab(tab) {
+            updateStateValue();
+            const builder = document.getElementById('builderSection');
+            const preview = document.getElementById('previewSection');
+            const btnB = document.getElementById('tabBuilder');
+            const btnP = document.getElementById('tabPreview');
+
+            if(tab === 'preview') {
+                builder.classList.add('hidden');
+                preview.classList.remove('hidden');
+                btnB.className = "bg-pink-100 text-pink-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition";
+                btnP.className = "bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition";
+                renderPreviewContent();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            } else {
+                builder.classList.remove('hidden');
+                preview.classList.add('hidden');
+                btnB.className = "bg-pink-500 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition";
+                btnP.className = "bg-purple-100 text-purple-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition";
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        function renderPreviewContent() {
+            // Apply Theme
+            const wrapper = document.getElementById('previewCardWrapper');
+            wrapper.className = `rounded-3xl p-6 sm:p-10 shadow-2xl border transition-all duration-500 relative overflow-hidden space-y-8 ${appState.theme.card} ${appState.theme.border}`;
+            document.getElementById('mainBody').className = `${appState.theme.bg} text-slate-700 min-h-screen flex flex-col transition-colors duration-500 relative`;
+
+            // Header info
+            document.getElementById('prevMainSticker').innerText = appState.mainSticker;
+            document.getElementById('prevRecipientTitle').innerText = `Untuk: ${appState.recipient}`;
+            document.getElementById('prevSenderTitle').innerText = `Kado Spesial dari: ${appState.sender}`;
+
+            // Letters Preview
+            const lettersCont = document.getElementById('previewLettersContainer');
+            lettersCont.innerHTML = appState.letters.map((l, idx) => `
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-pink-100 space-y-3">
+                    <div class="flex justify-between items-center border-b border-pink-100 pb-2">
+                        <span class="cute-font text-xs font-bold text-pink-600">${l.envelopeSticker} ${l.title}</span>
+                        <button onclick="toggleEnvelope(${idx})" class="text-xs bg-pink-100 hover:bg-pink-200 text-pink-700 px-2.5 py-1 rounded-lg font-medium transition">Buka/Tutup</button>
+                    </div>
+                    <p id="envContent_${idx}" class="text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed hidden">${l.content}</p>
+                    <p id="envHint_${idx}" class="text-[11px] text-slate-400 italic">Klik tombol di atas untuk membuka surat.</p>
+                </div>
+            `).join('');
+
+            // Photos Preview
+            const photosCont = document.getElementById('previewPhotosContainer');
+            photosCont.innerHTML = appState.photos.map(p => `
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-sm border border-pink-100 space-y-2 text-center">
+                    <div class="relative overflow-hidden rounded-xl aspect-video bg-pink-50">
+                        <img src="${p.url}" alt="Foto" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/ffb6c1/ffffff?text=Foto'">
+                        <span class="absolute top-2 right-2 text-2xl bg-white/80 rounded-full p-1">${p.sticker}</span>
+                    </div>
+                    <p class="text-xs font-medium text-slate-700">${p.caption}</p>
+                </div>
+            `).join('');
+
+            // Active Games Preview (Render interaktif untuk game yang dicentang)
+            const gamesCont = document.getElementById('previewActiveGamesContainer');
+            if(appState.activeGameIds.length === 0) {
+                gamesCont.innerHTML = `<p class="col-span-2 text-center text-xs text-slate-500 py-4">Belum ada mini game yang dipilih di editor.</p>`;
+            } else {
+                gamesCont.innerHTML = appState.activeGameIds.map(gId => {
+                    const gameObj = allGamesList.find(g => g.id === gId);
+                    return renderGameWidget(gameObj);
+                }).join('');
+            }
+        }
+
+        function toggleEnvelope(idx) {
+            const content = document.getElementById(`envContent_${idx}`);
+            const hint = document.getElementById(`envHint_${idx}`);
+            content.classList.toggle('hidden');
+            hint.classList.toggle('hidden');
+        }
+
+        // Generator Widget untuk Mini Games agar interaktif di preview
+        function renderGameWidget(game) {
+            if(!game) return '';
+            let innerHtml = '';
+
+            switch(game.id) {
+                case 'game1': // Love Quiz
+                    innerHtml = `
+                        <div class="space-y-2 text-center">
+                            <p class="text-xs font-semibold text-slate-700">Siapa yang paling sering ngambek kalau lagi lapar?</p>
+                            <div class="flex justify-center gap-2">
+                                <button onclick="alertGameWin('Wah benar banget! Jagoan tahu aja 😜')" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-500 hover:text-white text-pink-700 text-xs rounded-xl transition">Kamu Pastinya</button>
+                                <button onclick="alertGameWin('Hmm, yakin bukan kamu? Coba lagi! 😇')" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-500 hover:text-white text-pink-700 text-xs rounded-xl transition">Aku Dong</button>
+                            </div>
+                        </div>`;
+                    break;
+                case 'game2': // Catch Hearts
+                    innerHtml = `
+                        <div class="text-center space-y-2">
+                            <p class="text-xs text-slate-600">Ketuk hati sebanyak 3 kali!</p>
+                            <button onclick="catchHeartMini(this)" class="text-3xl hover:scale-125 transition inline-block">💖 <span class="score text-xs font-bold text-pink-600">(0/3)</span></button>
+                        </div>`;
+                    break;
+                case 'game3': // Memory card simple
+                    innerHtml = `
+                        <div class="text-center space-y-2">
+                            <p class="text-xs text-slate-600">Temukan pasangan kartu yang cocok:</p>
+                            <div class="flex justify-center gap-2">
+                                <button onclick="this.innerText='🌸'; alertGameWin('Hebat! Kartu terbuka ✨')" class="w-10 h-10 bg-white border border-pink-200 rounded-xl text-lg shadow-sm">❓</button>
+                                <button onclick="this.innerText='🌸'; alertGameWin('Hebat! Kartu terbuka ✨')" class="w-10 h-10 bg-white border border-pink-200 rounded-xl text-lg shadow-sm">❓</button>
+                            </div>
+                        </div>`;
+                    break;
+                case 'game6': // Tic Tac Toe Mini
+                    innerHtml = `
+                        <div class="text-center space-y-2">
+                            <p class="text-xs text-slate-600">Ketuk kotak untuk isi tanda ❤️:</p>
+                            <div class="grid grid-cols-3 gap-1 max-w-[120px] mx-auto">
+                                <button onclick="this.innerText='❤️'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-pink-500"></button>
+                                <button onclick="this.innerText='⭐'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-amber-500"></button>
+                                <button onclick="this.innerText='❤️'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-pink-500"></button>
+                            </div>
+                        </div>`;
+                    break;
+                default:
+                    innerHtml = `
+                        <div class="text-center space-y-2">
+                            <p class="text-xs text-slate-600">${game.desc}</p>
+                            <button onclick="alertGameWin('Yeay! Berhasil menyelesaikan tantangan ${game.name} 🎉')" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold rounded-xl shadow transition">Mainkan Game Ini</button>
+                        </div>`;
+            }
+
+            return `
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-pink-100 flex flex-col justify-between space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl">🎮</span>
+                        <h4 class="font-bold text-slate-800 text-sm">${game.name}</h4>
+                    </div>
+                    ${innerHtml}
+                </div>
+            `;
+        }
+
+        let catchCount = 0;
+        function catchHeartMini(btn) {
+            catchCount++;
+            if(catchCount >= 3) {
+                showToast("🏆 Yey! Berhasil menangkap semua hati!");
+                catchCount = 0;
+            } else {
+                showToast(`Hati tertangkap! (${catchCount}/3)`);
+            }
+        }
+
+        function alertGameWin(msg) {
+            showToast(msg);
+        }
+
+        // ================= SHARE & COPY LINK =================
+        function openShareModal() {
+            updateStateValue();
+            const encoded = btoa(encodeURIComponent(JSON.stringify(appState)));
+            const dummyLink = `https://giftnest.app/v/${encoded.substring(0, 20)}...`;
+            document.getElementById('shareLinkInput').value = dummyLink;
+            document.getElementById('shareModal').classList.remove('hidden');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+        }
+
+        function copyShareLink() {
+            const input = document.getElementById('shareLinkInput');
+            input.select();
+            try {
+                document.execCommand('copy');
+                showToast("Link kado berhasil disalin ke clipboard! 🔗✨");
+                document.getElementById('copyBtnText').innerText = "Tersalin";
+                setTimeout(() => document.getElementById('copyBtnText').innerText = "Salin", 2000);
+            } catch(e) {
+                showToast("Gagal menyalin link.");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastText').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        // ================= AUDIO LOFI PLAYER =================
+        let audioCtx = null;
+        let isPlaying = false;
+        let audioInterval = null;
+
+        function toggleMusic() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+
+            isPlaying = !isPlaying;
+            const btnText = document.getElementById('musicText');
+            const btn = document.getElementById('musicBtn');
+
+            if(isPlaying) {
+                btnText.innerText = "BGM: On 🎶";
+                btn.className = "bg-pink-500 text-white px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-md";
+                playLofiNote();
+                audioInterval = setInterval(playLofiNote, 3500);
+            } else {
+                btnText.innerText = "BGM: Off";
+                btn.className = "bg-pink-100 text-pink-600 px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm";
+                clearInterval(audioInterval);
+            }
+        }
+
+        function playLofiNote() {
+            if(!isPlaying || !audioCtx) return;
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(261.63, now); // C4
+                osc.frequency.setValueAtTime(329.63, now + 1.2); // E4
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 3.0);
+            } catch(e) {}
+        }
+    </script>
 </body>
 </html>
