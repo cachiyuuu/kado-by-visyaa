@@ -1,3384 +1,1770 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" class="h-full bg-[#FFF7FB]">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scraply — Digital Scrapbook</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Gift Maker - Create Little Interactive Surprises</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Pacifico&family=Poppins:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&family=Patrick+Hand&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#FFF7FB',
+              text: '#5D5061',
+              primary: '#9B76A7',
+              accent: '#E8B5CA',
+              card: '#FFFFFF',
+              dark: '#433448',
+              hover: '#8A6396'
+            }
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            handwritten: ['Caveat', 'cursive'],
+            romantic: ['Dancing Script', 'cursive'],
+            cute: ['Pacifico', 'cursive'],
+            graceful: ['Sacramento', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
 
-<style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-:root{
-    --pink:#f3c4d7;
-    --pink-light:#fff0f5;
-    --pink-soft:#fde5ed;
-    --purple:#9b76a7;
-    --purple-light:#eee5f3;
-    --cream:#fffaf3;
-    --paper:#fffdf9;
-    --text:#5d5061;
-    --muted:#978b96;
-    --border:#eadde4;
-    --shadow:0 12px 35px rgba(88,67,83,.12);
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    font-family:"DM Sans",sans-serif;
-    background:#fff7fb;
-    color:var(--text);
-    overflow-x:hidden;
-}
-
-button,
-input,
-textarea,
-select{
-    font:inherit;
-}
-
-button{
-    border:0;
-    cursor:pointer;
-}
-
-.hidden{
-    display:none!important;
-}
-
-
-/* =========================================================
-   LANDING
-========================================================= */
-
-#landing{
-    min-height:100vh;
-    position:relative;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:
-        radial-gradient(circle at 15% 20%,rgba(246,199,218,.6),transparent 25%),
-        radial-gradient(circle at 85% 75%,rgba(210,193,229,.55),transparent 28%),
-        linear-gradient(135deg,#fff8fb,#fffaf5);
-}
-
-.landing-content{
-    width:min(720px,92%);
-    text-align:center;
-    position:relative;
-    z-index:20;
-    padding:40px 20px;
-}
-
-.landing-mini{
-    font-size:13px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    color:#9b8994;
-    margin-bottom:20px;
-}
-
-.logo{
-    font-family:"Pacifico",cursive;
-    font-size:clamp(58px,11vw,110px);
-    line-height:1;
-    color:var(--purple);
-    text-shadow:
-        4px 5px 0 #f1dce7,
-        8px 9px 0 rgba(155,118,167,.08);
-}
-
-.landing-content h1{
-    font-family:"Patrick Hand",cursive;
-    font-size:clamp(30px,5vw,48px);
-    margin-top:25px;
-    font-weight:400;
-}
-
-.landing-content p{
-    max-width:550px;
-    margin:15px auto 0;
-    line-height:1.8;
-    color:#857783;
-}
-
-.create-main{
-    margin-top:32px;
-    padding:16px 30px;
-    border-radius:999px;
-    background:var(--purple);
-    color:white;
-    box-shadow:0 12px 30px rgba(155,118,167,.3);
-    transition:.3s;
-}
-
-.create-main:hover{
-    transform:translateY(-4px);
-    box-shadow:0 16px 35px rgba(155,118,167,.38);
-}
-
-
-/* =========================================================
-   LANDING DECOR
-========================================================= */
-
-.cloud{
-    position:absolute;
-    width:180px;
-    height:60px;
-    background:rgba(255,255,255,.8);
-    border-radius:100px;
-    opacity:.75;
-}
-
-.cloud::before,
-.cloud::after{
-    content:"";
-    position:absolute;
-    background:inherit;
-    border-radius:50%;
-}
-
-.cloud::before{
-    width:80px;
-    height:80px;
-    left:25px;
-    top:-35px;
-}
-
-.cloud::after{
-    width:100px;
-    height:100px;
-    right:20px;
-    top:-50px;
-}
-
-.cloud-one{
-    top:15%;
-    left:-180px;
-    animation:cloudMove 24s linear infinite;
-}
-
-.cloud-two{
-    top:65%;
-    left:100%;
-    transform:scale(.65);
-    animation:cloudMoveReverse 28s linear infinite;
-}
-
-@keyframes cloudMove{
-    from{transform:translateX(0)}
-    to{transform:translateX(125vw)}
-}
-
-@keyframes cloudMoveReverse{
-    from{transform:translateX(0)}
-    to{transform:translateX(-135vw)}
-}
-
-
-/* =========================================================
-   BALLOONS
-========================================================= */
-
-.balloon{
-    position:absolute;
-    width:48px;
-    height:62px;
-    border-radius:50% 50% 47% 47%;
-    bottom:-120px;
-    z-index:5;
-    opacity:.8;
-    animation:balloonFly 15s linear infinite;
-}
-
-.balloon::before{
-    content:"";
-    position:absolute;
-    bottom:-5px;
-    left:50%;
-    transform:translateX(-50%);
-    border-left:5px solid transparent;
-    border-right:5px solid transparent;
-    border-top:9px solid currentColor;
-}
-
-.balloon::after{
-    content:"";
-    position:absolute;
-    width:1px;
-    height:130px;
-    background:#857681;
-    left:50%;
-    top:57px;
-}
-
-.balloon-a{
-    left:8%;
-    background:#f2aec8;
-    color:#f2aec8;
-    animation-duration:16s;
-}
-
-.balloon-b{
-    left:30%;
-    background:#bba7d7;
-    color:#bba7d7;
-    animation-duration:19s;
-    animation-delay:3s;
-}
-
-.balloon-c{
-    left:70%;
-    background:#f4d092;
-    color:#f4d092;
-    animation-duration:17s;
-    animation-delay:1s;
-}
-
-.balloon-d{
-    left:88%;
-    background:#a8dadd;
-    color:#a8dadd;
-    animation-duration:21s;
-    animation-delay:5s;
-}
-
-@keyframes balloonFly{
-
-    0%{
-        transform:translateY(0) rotate(-5deg);
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #5D5061;
+      background-color: #FFF7FB;
+      user-select: none;
+    }
+    
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(232, 181, 202, 0.15);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(155, 118, 167, 0.4);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(155, 118, 167, 0.7);
     }
 
-    50%{
-        transform:translateY(-60vh) translateX(35px) rotate(6deg);
+    /* Glassmorphism */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(232, 181, 202, 0.3);
     }
 
-    100%{
-        transform:translateY(-125vh) translateX(-30px) rotate(-5deg);
-    }
-}
-
-
-/* =========================================================
-   FLOATING LANDING ELEMENTS
-========================================================= */
-
-.landing-flower{
-    position:absolute;
-    font-size:35px;
-    animation:floatFlower 4s ease-in-out infinite;
-}
-
-.flower-a{
-    top:20%;
-    left:12%;
-}
-
-.flower-b{
-    right:10%;
-    bottom:20%;
-    animation-delay:1.5s;
-}
-
-@keyframes floatFlower{
-
-    0%,100%{
-        transform:translateY(0) rotate(-5deg);
+    /* Selection outline for Canvas elements */
+    .canvas-element-selected {
+      outline: 2px dashed #9B76A7;
+      outline-offset: 4px;
     }
 
-    50%{
-        transform:translateY(-15px) rotate(7deg);
+    /* Keyframe Animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
     }
-}
-
-
-/* =========================================================
-   EDITOR
-========================================================= */
-
-#editor{
-    min-height:100vh;
-    background:#f7f3f5;
-}
-
-.topbar{
-    height:68px;
-    background:white;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 20px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-}
-
-.brand{
-    font-family:"Pacifico",cursive;
-    font-size:25px;
-    color:var(--purple);
-}
-
-.top-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.top-button{
-    padding:10px 15px;
-    border-radius:12px;
-    background:#f8f1f5;
-    color:var(--text);
-}
-
-.top-button:hover{
-    background:#f2e7ed;
-}
-
-.top-button.primary{
-    color:white;
-    background:var(--purple);
-}
-
-
-/* =========================================================
-   EDITOR GRID
-========================================================= */
-
-.editor-grid{
-    display:grid;
-    grid-template-columns:235px 1fr 245px;
-    min-height:calc(100vh - 68px);
-}
-
-
-/* =========================================================
-   LEFT SIDEBAR
-========================================================= */
-
-.left-panel{
-    background:white;
-    border-right:1px solid var(--border);
-    padding:18px 14px;
-    overflow-y:auto;
-}
-
-.panel-heading{
-    font-size:13px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:#8b7c87;
-    margin-bottom:12px;
-}
-
-.tool-button{
-    width:100%;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:12px;
-    border-radius:12px;
-    background:white;
-    color:var(--text);
-    margin-bottom:6px;
-    text-align:left;
-    transition:.2s;
-}
-
-.tool-button:hover{
-    background:#fff0f5;
-    transform:translateX(2px);
-}
-
-.tool-icon{
-    width:32px;
-    height:32px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:9px;
-    background:#faf1f5;
-    font-size:17px;
-    flex-shrink:0;
-}
-
-.panel-divider{
-    height:1px;
-    background:var(--border);
-    margin:20px 0;
-}
-
-
-/* =========================================================
-   WORKSPACE
-========================================================= */
-
-.workspace{
-    position:relative;
-    min-width:0;
-    padding:35px 20px 135px;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 15% 20%,rgba(255,255,255,.8),transparent 20%),
-        #f7f3f5;
-}
-
-.canvas-wrap{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.scrapbook{
-    position:relative;
-    width:min(760px,92vw);
-    height:min(600px,72vh);
-    min-height:450px;
-
-    background:
-        linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),
-        repeating-linear-gradient(
-            0deg,
-            transparent 0,
-            transparent 29px,
-            rgba(215,199,208,.55) 30px
-        );
-
-    box-shadow:
-        0 25px 60px rgba(70,51,65,.16),
-        0 3px 6px rgba(0,0,0,.05);
-
-    overflow:hidden;
-    border-radius:4px;
-
-    transition:
-        background .3s,
-        transform .4s;
-}
-
-.scrapbook::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    background:
-        radial-gradient(circle at 20% 20%,rgba(245,200,217,.2),transparent 20%),
-        radial-gradient(circle at 80% 75%,rgba(210,190,225,.18),transparent 25%);
-}
-
-.scrap-content{
-    position:absolute;
-    inset:0;
-    z-index:2;
-}
-
-
-/* =========================================================
-   SCRAPBOOK DECOR
-========================================================= */
-
-.page-title{
-    position:absolute;
-    top:55px;
-    left:65px;
-    max-width:55%;
-    font-family:"Patrick Hand",cursive;
-    font-size:50px;
-    color:#85658c;
-    transform:rotate(-2deg);
-    outline:none;
-    z-index:10;
-}
-
-.page-subtitle{
-    position:absolute;
-    top:120px;
-    left:68px;
-    max-width:47%;
-    font-family:"Patrick Hand",cursive;
-    font-size:21px;
-    line-height:1.4;
-    outline:none;
-    color:#766873;
-    z-index:10;
-}
-
-.tape{
-    position:absolute;
-    width:120px;
-    height:30px;
-    background:rgba(241,208,196,.72);
-    z-index:20;
-}
-
-.tape.top-left{
-    left:50px;
-    top:25px;
-    transform:rotate(-8deg);
-}
-
-.tape.top-right{
-    right:50px;
-    top:25px;
-    transform:rotate(8deg);
-}
-
-.scrap-photo{
-    position:absolute;
-    background:#fff;
-    padding:9px 9px 35px;
-    box-shadow:0 9px 20px rgba(40,30,40,.13);
-    z-index:8;
-    cursor:grab;
-    user-select:none;
-    transition:box-shadow .2s;
-}
-
-.scrap-photo:active{
-    cursor:grabbing;
-}
-
-.scrap-photo:hover{
-    box-shadow:0 15px 28px rgba(40,30,40,.18);
-}
-
-.scrap-photo img{
-    display:block;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    pointer-events:none;
-}
-
-.photo-one{
-    width:200px;
-    height:190px;
-    right:90px;
-    top:150px;
-    transform:rotate(5deg);
-}
-
-.photo-two{
-    width:185px;
-    height:180px;
-    left:65px;
-    bottom:55px;
-    transform:rotate(-6deg);
-}
-
-.scrap-sticker{
-    position:absolute;
-    font-size:45px;
-    z-index:30;
-    user-select:none;
-    cursor:grab;
-    animation:stickerFloat 3.5s ease-in-out infinite;
-}
-
-.scrap-sticker:hover{
-    animation-play-state:paused;
-}
-
-.sticker-one{
-    right:42px;
-    bottom:40px;
-}
-
-.sticker-two{
-    left:35px;
-    top:52px;
-    animation-delay:1s;
-}
-
-.sticker-three{
-    right:315px;
-    bottom:60px;
-    font-size:35px;
-    animation-delay:1.7s;
-}
-
-@keyframes stickerFloat{
-
-    0%,100%{
-        transform:translateY(0) rotate(-4deg);
+    .animate-float {
+      animation: floatSlow 4s ease-in-out infinite;
     }
 
-    50%{
-        transform:translateY(-8px) rotate(5deg);
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
     }
-}
-
-
-/* =========================================================
-   ELEMENTS CREATED BY JS
-========================================================= */
-
-.element{
-    position:absolute;
-    user-select:none;
-    cursor:grab;
-    z-index:50;
-}
-
-.element:active{
-    cursor:grabbing;
-}
-
-.element.selected{
-    outline:2px dashed #b88ba1;
-    outline-offset:5px;
-}
-
-.element-text{
-    font-family:"Patrick Hand",cursive;
-    font-size:28px;
-    color:#675767;
-    min-width:100px;
-    max-width:350px;
-    outline:none;
-}
-
-.element-sticker{
-    font-size:48px;
-}
-
-.element-tape{
-    width:120px;
-    height:30px;
-    background:rgba(236,193,196,.7);
-}
-
-.element-letter{
-    width:260px;
-    min-height:190px;
-    background:#fff7d9;
-    padding:25px;
-    box-shadow:0 12px 25px rgba(60,45,50,.15);
-    font-family:"Patrick Hand",cursive;
-    font-size:21px;
-    line-height:1.4;
-    transform:rotate(-3deg);
-}
-
-.element-letter::before{
-    content:"💌";
-    position:absolute;
-    top:-20px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:30px;
-}
-
-.element-heart{
-    font-size:55px;
-}
-
-.element-balloon{
-    font-size:50px;
-    animation:miniBalloon 5s ease-in-out infinite;
-}
-
-@keyframes miniBalloon{
-
-    0%,100%{
-        transform:translateY(0) rotate(-4deg);
+    .animate-pulse-soft {
+      animation: pulseSoft 2.5s ease-in-out infinite;
     }
 
-    50%{
-        transform:translateY(-25px) rotate(5deg);
+    @keyframes shakeBox {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-5deg); }
+      40% { transform: rotate(5deg); }
+      60% { transform: rotate(-3deg); }
+      80% { transform: rotate(3deg); }
     }
-}
-
-
-/* =========================================================
-   RIGHT PANEL
-========================================================= */
-
-.right-panel{
-    background:white;
-    border-left:1px solid var(--border);
-    padding:18px;
-    overflow-y:auto;
-}
-
-.property-card{
-    background:#faf6f8;
-    padding:14px;
-    border-radius:14px;
-    margin-bottom:10px;
-}
-
-.property-card label{
-    display:block;
-    font-size:11px;
-    color:#988b95;
-    margin-bottom:6px;
-}
-
-.property-card input,
-.property-card select{
-    width:100%;
-    border:1px solid #e6dce2;
-    background:white;
-    border-radius:9px;
-    padding:9px;
-    color:var(--text);
-}
-
-.property-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:7px;
-}
-
-.danger{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    background:#fdecef;
-    color:#b45d76;
-    margin-top:8px;
-}
-
-
-/* =========================================================
-   PAGE BAR
-========================================================= */
-
-.pages-bar{
-    position:absolute;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
-
-    display:flex;
-    align-items:center;
-    gap:8px;
-
-    max-width:90%;
-    padding:10px;
-
-    background:rgba(255,255,255,.95);
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-    border-radius:18px;
-
-    overflow-x:auto;
-    z-index:200;
-}
-
-.page-thumb{
-    width:80px;
-    height:58px;
-    border-radius:10px;
-    flex-shrink:0;
-
-    background:
-        linear-gradient(#fffdf8,#fffdf8),
-        repeating-linear-gradient(
-            0deg,
-            transparent 0,
-            transparent 10px,
-            #eadfe4 11px
-        );
-
-    border:2px solid transparent;
-    color:#806f7c;
-    font-family:"Patrick Hand",cursive;
-    font-size:19px;
-
-    transition:.2s;
-}
-
-.page-thumb:hover{
-    transform:translateY(-2px);
-}
-
-.page-thumb.active{
-    border-color:#ad7e97;
-    box-shadow:0 4px 10px rgba(80,50,70,.12);
-}
-
-.add-page{
-    width:58px;
-    height:58px;
-    border-radius:11px;
-    flex-shrink:0;
-    background:#f7e8ef;
-    color:#9b76a7;
-    font-size:26px;
-}
-
-
-/* =========================================================
-   TRANSITIONS
-========================================================= */
-
-.transition-layer{
-    position:fixed;
-    inset:0;
-    z-index:5000;
-    pointer-events:none;
-    opacity:0;
-}
-
-.transition-layer.active{
-    opacity:1;
-}
-
-
-/* PAGE TURN */
-
-.transition-page{
-    background:#fffdf8;
-    transform-origin:left center;
-}
-
-.transition-page.active{
-    animation:realPageTurn .9s ease forwards;
-}
-
-@keyframes realPageTurn{
-
-    0%{
-        transform:rotateY(0deg);
+    .animate-shake {
+      animation: shakeBox 0.6s ease-in-out;
     }
 
-    100%{
-        transform:rotateY(-180deg);
+    /* Letter Fold Opening Effects */
+    .envelope-wrapper {
+      perspective: 1000px;
     }
-}
-
-
-/* FLY */
-
-.transition-fly{
-    background:
-        radial-gradient(circle at 20% 30%,#fff 0 5%,transparent 6%),
-        radial-gradient(circle at 70% 60%,#fff 0 7%,transparent 8%),
-        #dff3f4;
-}
-
-.transition-fly.active{
-    animation:flyScene .9s ease forwards;
-}
-
-@keyframes flyScene{
-
-    0%{
-        opacity:0;
-        transform:translateX(-100%);
+    .envelope-flap {
+      transform-origin: top;
+      transition: transform 0.6s ease-in-out;
+    }
+    .envelope-open .envelope-flap {
+      transform: rotateX(180deg);
     }
 
-    30%{
-        opacity:1;
+    /* Scratch Canvas CSS */
+    .scratch-container {
+      position: relative;
+      user-select: none;
     }
 
-    100%{
-        opacity:0;
-        transform:translateX(100%);
+    /* Grid Snap Background */
+    .bg-grid-pattern {
+      background-size: 20px 20px;
+      background-image: radial-gradient(circle, rgba(155, 118, 167, 0.15) 1px, transparent 1px);
     }
-}
-
-
-/* CLOUD */
-
-.transition-cloud{
-    background:#fff;
-}
-
-.transition-cloud::before,
-.transition-cloud::after{
-    content:"☁️";
-    position:absolute;
-    font-size:35vw;
-    top:20%;
-}
-
-.transition-cloud::before{
-    left:-5%;
-}
-
-.transition-cloud::after{
-    right:-5%;
-}
-
-.transition-cloud.active{
-    animation:cloudScene .9s ease forwards;
-}
-
-@keyframes cloudScene{
-
-    0%{
-        opacity:0;
-        transform:scale(1.5);
-    }
-
-    40%{
-        opacity:1;
-        transform:scale(1);
-    }
-
-    100%{
-        opacity:0;
-        transform:scale(.7);
-    }
-}
-
-
-/* FLOWER */
-
-.transition-flower{
-    background:transparent;
-}
-
-.transition-flower::before{
-    content:"🌸 🌷 🌸 🌷 🌸 🌷 🌸";
-    position:absolute;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:12vw;
-    animation:flowerScene .9s ease forwards;
-}
-
-@keyframes flowerScene{
-
-    0%{
-        transform:scale(.3) rotate(-10deg);
-        opacity:0;
-    }
-
-    50%{
-        transform:scale(1.3);
-        opacity:1;
-    }
-
-    100%{
-        transform:scale(2);
-        opacity:0;
-    }
-}
-
-
-/* SPARKLE */
-
-.transition-sparkle{
-    background:#fffafc;
-}
-
-.transition-sparkle::before{
-    content:"✦  ✧  ✦  ✧  ✦  ✧  ✦";
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:12vw;
-    color:#c395b4;
-}
-
-.transition-sparkle.active{
-    animation:sparkleScene .9s ease forwards;
-}
-
-@keyframes sparkleScene{
-
-    0%{
-        opacity:0;
-        transform:scale(.5);
-    }
-
-    45%{
-        opacity:1;
-        transform:scale(1);
-    }
-
-    100%{
-        opacity:0;
-        transform:scale(1.5);
-    }
-}
-
-
-/* LETTER */
-
-.transition-letter{
-    background:#fff3df;
-}
-
-.transition-letter::before{
-    content:"💌";
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    font-size:120px;
-}
-
-.transition-letter.active{
-    animation:letterScene 1s ease forwards;
-}
-
-@keyframes letterScene{
-
-    0%{
-        opacity:0;
-        transform:scale(.5) rotate(-8deg);
-    }
-
-    35%{
-        opacity:1;
-        transform:scale(1) rotate(0);
-    }
-
-    100%{
-        opacity:0;
-        transform:scale(1.5) rotate(8deg);
-    }
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-#preview{
-    position:fixed;
-    inset:0;
-    background:
-        radial-gradient(circle at center,#fff9fc,#ded2dc);
-    z-index:4000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.preview-close{
-    position:absolute;
-    top:20px;
-    right:25px;
-    width:45px;
-    height:45px;
-    border-radius:50%;
-    background:white;
-    color:#6e5d6b;
-    font-size:19px;
-    z-index:50;
-}
-
-.preview-book{
-    width:min(900px,92vw);
-    height:min(620px,78vh);
-    position:relative;
-    perspective:1800px;
-}
-
-.preview-page{
-    position:absolute;
-    inset:0;
-    background:#fffdf8;
-    box-shadow:0 25px 70px rgba(50,35,50,.25);
-    padding:60px;
-    transform-origin:left center;
-    transition:transform 1s ease;
-    overflow:hidden;
-}
-
-.preview-page.turn{
-    transform:rotateY(-180deg);
-}
-
-.preview-title{
-    font-family:"Patrick Hand",cursive;
-    font-size:55px;
-    color:#86678d;
-}
-
-.preview-text{
-    margin-top:20px;
-    max-width:550px;
-    font-family:"Patrick Hand",cursive;
-    font-size:25px;
-    line-height:1.6;
-}
-
-.preview-decoration{
-    position:absolute;
-    font-size:70px;
-}
-
-.preview-decoration.one{
-    right:70px;
-    top:70px;
-}
-
-.preview-decoration.two{
-    left:70px;
-    bottom:60px;
-}
-
-.preview-controls{
-    position:absolute;
-    bottom:28px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:10px;
-    z-index:100;
-}
-
-.preview-controls button{
-    padding:12px 20px;
-    border-radius:999px;
-    background:white;
-    box-shadow:0 5px 15px rgba(50,30,50,.12);
-}
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-
-.particle{
-    position:fixed;
-    pointer-events:none;
-    z-index:9000;
-    animation:particleFly 1.8s ease forwards;
-}
-
-@keyframes particleFly{
-
-    0%{
-        transform:translateY(0) scale(.4) rotate(0);
-        opacity:0;
-    }
-
-    15%{
-        opacity:1;
-    }
-
-    100%{
-        transform:translateY(-180px) scale(1.2) rotate(180deg);
-        opacity:0;
-    }
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:25px;
-    transform:translateX(-50%) translateY(20px);
-    background:#5d5061;
-    color:white;
-    padding:12px 18px;
-    border-radius:999px;
-    opacity:0;
-    pointer-events:none;
-    z-index:9999;
-    transition:.3s;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:1000px){
-
-    .editor-grid{
-        grid-template-columns:78px 1fr;
-    }
-
-    .right-panel{
-        display:none;
-    }
-
-    .left-panel{
-        padding:10px 7px;
-    }
-
-    .panel-heading{
-        display:none;
-    }
-
-    .tool-button{
-        justify-content:center;
-        padding:9px 5px;
-    }
-
-    .tool-button span:last-child{
-        display:none;
-    }
-
-    .tool-icon{
-        margin:0;
-    }
-}
-
-
-@media(max-width:650px){
-
-    .topbar{
-        height:60px;
-        padding:0 10px;
-    }
-
-    .brand{
-        font-size:21px;
-    }
-
-    .top-button{
-        padding:8px 10px;
-        font-size:12px;
-    }
-
-    .editor-grid{
-        display:block;
-    }
-
-    .left-panel{
-        position:fixed;
-        bottom:0;
-        left:0;
-        right:0;
-        height:68px;
-        z-index:1000;
-
-        display:flex;
-        align-items:center;
-        gap:5px;
-
-        border-top:1px solid var(--border);
-        border-right:0;
-
-        overflow-x:auto;
-        padding:5px;
-    }
-
-    .panel-divider{
-        display:none;
-    }
-
-    .tool-button{
-        min-width:56px;
-        height:55px;
-        margin:0;
-    }
-
-    .workspace{
-        padding:20px 8px 100px;
-        min-height:calc(100vh - 60px);
-    }
-
-    .scrapbook{
-        width:96vw;
-        height:470px;
-        min-height:470px;
-    }
-
-    .page-title{
-        left:30px;
-        top:45px;
-        font-size:37px;
-        max-width:70%;
-    }
-
-    .page-subtitle{
-        left:32px;
-        top:98px;
-        font-size:17px;
-        max-width:65%;
-    }
-
-    .photo-one{
-        width:145px;
-        height:145px;
-        right:20px;
-        top:145px;
-    }
-
-    .photo-two{
-        width:135px;
-        height:135px;
-        left:25px;
-        bottom:35px;
-    }
-
-    .pages-bar{
-        bottom:78px;
-    }
-
-    .page-thumb{
-        width:60px;
-        height:48px;
-    }
-
-    .add-page{
-        width:48px;
-        height:48px;
-    }
-
-    .preview-page{
-        padding:30px;
-    }
-
-    .preview-title{
-        font-size:40px;
-    }
-
-    .preview-text{
-        font-size:20px;
-    }
-}
-
-</style>
+  </style>
 </head>
+<body class="h-full overflow-x-hidden flex flex-col">
 
+  <!-- BACKGROUND PARTICLE CANVAS -->
+  <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-<body>
+  <!-- APP ROOT -->
+  <div id="app" class="relative z-10 min-h-screen flex flex-col">
+    <!-- Dynamic views will render here via JavaScript -->
+  </div>
 
+  <!-- NOTIFICATION TOAST CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-<!-- =========================================================
-     LANDING
-========================================================= -->
+  <!-- MODAL CONTAINER -->
+  <div id="modalContainer" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden">
+    <div id="modalContent" class="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border border-brand-accent transform transition-all scale-95 opacity-0"></div>
+  </div>
 
-<section id="landing">
+  <script>
+    // --- APP STATE ---
+    const STATE = {
+      view: 'DASHBOARD', // DASHBOARD | EDITOR | PREVIEW | RECIPIENT
+      drafts: [],
+      publishedGifts: [],
+      currentGift: null,
+      activePageIndex: 0,
+      selectedElementId: null,
+      history: [],
+      historyIndex: -1,
+      maxHistory: 50,
+      activeSidebarTab: 'text',
+      searchTerm: '',
+      stickerCategory: 'ALL',
+      stickerFavorites: [],
+      activeEffect: 'hearts', // hearts, sparkles, petals, snow, confetti, none
+      particleInstance: null,
+      audioPlayer: new Audio(),
+      isMusicPlaying: false,
+      gridSnap: true,
+      autosaveTimer: null,
+      autosaveStatus: 'Saved ✓'
+    };
 
-    <div class="cloud cloud-one"></div>
-    <div class="cloud cloud-two"></div>
+    // --- STICKERS DATA LIBRARY ---
+    const STICKER_LIBRARY = [
+      { id: 's1', cat: 'LOVE', text: '❤️', label: 'Red Heart' },
+      { id: 's2', cat: 'LOVE', text: '💖', label: 'Sparkle Heart' },
+      { id: 's3', cat: 'LOVE', text: '💌', label: 'Love Letter' },
+      { id: 's4', cat: 'LOVE', text: 'ღ', label: 'Symbol Heart' },
+      { id: 's5', cat: 'LOVE', text: '❣', label: 'Exclamation Heart' },
+      { id: 's6', cat: 'LOVE', text: '𐙚', label: 'Coquette Bow' },
+      { id: 's7', cat: 'RIBBON', text: '🎀', label: 'Pink Ribbon' },
+      { id: 's8', cat: 'RIBBON', text: '୨୧', label: 'Ribbon Symbol' },
+      { id: 's9', cat: 'RIBBON', text: '୨ৎ', label: 'Bow Tie' },
+      { id: 's10', cat: 'SPARKLE', text: '✦', label: 'Four Point Star' },
+      { id: 's11', cat: 'SPARKLE', text: '✧', label: 'Outline Star' },
+      { id: 's12', cat: 'SPARKLE', text: '✨', label: 'Sparkles' },
+      { id: 's13', cat: 'SPARKLE', text: '⋆', label: 'Tiny Star' },
+      { id: 's14', cat: 'FLOWERS', text: '🌸', label: 'Cherry Blossom' },
+      { id: 's15', cat: 'FLOWERS', text: '🌷', label: 'Tulip' },
+      { id: 's16', cat: 'FLOWERS', text: '🌹', label: 'Rose' },
+      { id: 's17', cat: 'FLOWERS', text: '🌻', label: 'Sunflower' },
+      { id: 's18', cat: 'FLOWERS', text: '❀', label: 'Flower Symbol' },
+      { id: 's19', cat: 'CUTE', text: '🧸', label: 'Teddy Bear' },
+      { id: 's20', cat: 'CUTE', text: '🐰', label: 'Bunny' },
+      { id: 's21', cat: 'CUTE', text: '🍓', label: 'Strawberry' },
+      { id: 's22', cat: 'CUTE', text: '☁️', label: 'Cloud' },
+      { id: 's23', cat: 'CUTE', text: 'ʚɞ', label: 'Butterfly Symbol' },
+      { id: 's24', cat: 'KAOMOJI', text: '(˶ᵔ ᵕ ᵔ˶)', label: 'Happy Smile' },
+      { id: 's25', cat: 'KAOMOJI', text: ' (ฅ 𐦍 ฅ)', label: 'Cute Cat Paw' },
+      { id: 's26', cat: 'KAOMOJI', text: ' (  •̀  - •́  )', label: 'Pouty Cute' },
+      { id: 's27', cat: 'KAOMOJI', text: ' ૮꒰ ˶• ༝ •˶꒱ა', label: 'Soft Bunny' }
+    ];
 
-    <div class="balloon balloon-a"></div>
-    <div class="balloon balloon-b"></div>
-    <div class="balloon balloon-c"></div>
-    <div class="balloon balloon-d"></div>
+    // --- PHOTO TEMPLATE PRESETS ---
+    const PHOTO_TEMPLATES = [
+      { id: 'polaroid-single', name: 'Single Polaroid', desc: 'Classic instant photo style with caption space' },
+      { id: 'polaroid-wall', name: 'Polaroid Stack', desc: 'Overlapping twin polaroid photos' },
+      { id: 'film-strip', name: 'Film Strip', desc: 'Retro 35mm photo roll aesthetic' },
+      { id: 'heart-frame', name: 'Heart Frame', desc: 'Romantic heart-shaped border photo' },
+      { id: 'washi-tape', name: 'Scrapbook Washi Tape', desc: 'Cute taped photo memory card' },
+      { id: 'flip-card', name: 'Interactive Flip Card', desc: 'Clickable photo card with secret back text' }
+    ];
 
-    <div class="landing-flower flower-a">🌸</div>
-    <div class="landing-flower flower-b">🦋</div>
+    // --- LETTER TEMPLATES ---
+    const LETTER_TEMPLATES = [
+      { id: 'classic-envelope', name: 'Classic Sealed Envelope', icon: 'fa-envelope', bg: '#FFF0F5' },
+      { id: 'ribbon-letter', name: 'Ribbon Tied Note', icon: 'fa-ribbon', bg: '#F3E8FF' },
+      { id: 'secret-scratch', name: 'Secret Scratch Letter', icon: 'fa-mask', bg: '#FEF3C7' },
+      { id: 'folded-paper', name: 'Folded Love Note', icon: 'fa-scroll', bg: '#E0F2FE' },
+      { id: 'typewriter', name: 'Vintage Typewriter Letter', icon: 'fa-keyboard', bg: '#F5F5F4' },
+      { id: 'cute-kawaii', name: 'Kawaii Pastel Note', icon: 'fa-heart', bg: '#FCE7F3' }
+    ];
 
-    <div class="landing-content">
+    // --- MINI GAMES LIBRARY ---
+    const GAMES_LIBRARY = [
+      { id: 'memory-match', name: 'Memory Card Match', icon: 'fa-table-cells', desc: 'Find matching pairs to unlock hidden surprise.' },
+      { id: 'scratch-card', name: 'Scratch Card Reveal', icon: 'fa-wand-magic-sparkles', desc: 'Scratch cover layer to reveal secret love message.' },
+      { id: 'pick-heart', name: 'Pick a Lucky Heart', icon: 'fa-heart', desc: 'Choose 1 of 3 hearts to find special message.' },
+      { id: 'spin-wheel', name: 'Spin the Wheel of Love', icon: 'fa-dharmachakra', desc: 'Fun wheel spin for dates, compliments & gifts.' },
+      { id: 'love-quiz', name: 'How Well Do You Know Me?', icon: 'fa-circle-question', desc: 'Interactive quiz with custom Q&A.' },
+      { id: 'balloon-pop', name: 'Pop the Hearts & Balloons', icon: 'fa-bullseye', desc: 'Tap floating balloons before time runs out.' }
+    ];
 
-        <div class="landing-mini">
-            ✿ a little place for your memories ✿
+    // --- STORAGE MANAGEMENT ---
+    function loadSavedData() {
+      try {
+        const savedDrafts = localStorage.getItem('dgm_drafts');
+        const savedPublished = localStorage.getItem('dgm_published');
+        const savedFavs = localStorage.getItem('dgm_sticker_favs');
+
+        if (savedDrafts) STATE.drafts = JSON.parse(savedDrafts);
+        if (savedPublished) STATE.publishedGifts = JSON.parse(savedPublished);
+        if (savedFavs) STATE.stickerFavorites = JSON.parse(savedFavs);
+      } catch (e) {
+        console.error('Error loading data from localStorage', e);
+      }
+    }
+
+    function saveDraftsToStorage() {
+      try {
+        localStorage.setItem('dgm_drafts', JSON.stringify(STATE.drafts));
+      } catch (e) {
+        console.error('Failed to save drafts', e);
+      }
+    }
+
+    function savePublishedToStorage() {
+      try {
+        localStorage.setItem('dgm_published', JSON.stringify(STATE.publishedGifts));
+      } catch (e) {
+        console.error('Failed to save published gifts', e);
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toastContainer = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const bgColors = {
+        info: 'bg-brand-primary text-white',
+        success: 'bg-emerald-500 text-white',
+        warning: 'bg-amber-500 text-white',
+        error: 'bg-rose-500 text-white'
+      };
+
+      toast.className = `px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all transform translate-y-2 opacity-0 flex items-center gap-2 ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      
+      toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function showModal(title, contentHtml, onConfirm = null) {
+      const container = document.getElementById('modalContainer');
+      const content = document.getElementById('modalContent');
+
+      content.innerHTML = `
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-brand-dark">${title}</h3>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
-
-        <div class="logo">
-            Scraply
+        <div class="mb-6 text-sm text-brand-text">${contentHtml}</div>
+        <div class="flex justify-end gap-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition">Cancel</button>
+          ${onConfirm ? `<button id="modalConfirmBtn" class="px-5 py-2 rounded-xl text-sm font-medium bg-brand-primary hover:bg-brand-hover text-white transition shadow-md">Confirm</button>` : ''}
         </div>
+      `;
 
-        <h1>
-            Create something worth remembering.
-        </h1>
+      container.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
 
-        <p>
-            Buat scrapbook digitalmu sendiri.
-            Simpan foto, surat, cerita, sticker,
-            dan kenangan kecil dalam satu tempat.
-        </p>
+      if (onConfirm) {
+        document.getElementById('modalConfirmBtn').onclick = () => {
+          onConfirm();
+          closeModal();
+        };
+      }
+    }
 
-        <button
-            class="create-main"
-            onclick="startEditor()"
-        >
-            ✿ Create New Scrapbook
-        </button>
+    function closeModal() {
+      const container = document.getElementById('modalContainer');
+      const content = document.getElementById('modalContent');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        container.classList.add('hidden');
+      }, 200);
+    }
 
-    </div>
+    // --- CANVAS PARTICLE SYSTEM ---
+    class ParticleEngine {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.type = 'hearts'; // hearts, sparkles, petals, snow, confetti
+        this.animationFrame = null;
+        this.resize();
 
-</section>
+        window.addEventListener('resize', () => this.resize());
+      }
 
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
 
+      setEffect(type) {
+        this.type = type;
+        this.particles = [];
+        if (type === 'none') {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+          return;
+        }
+        
+        const count = window.innerWidth < 768 ? 20 : 45; // Performance limit for mobile
+        for (let i = 0; i < count; i++) {
+          this.particles.push(this.createParticle());
+        }
 
-<!-- =========================================================
-     EDITOR
-========================================================= -->
+        if (!this.animationFrame) {
+          this.loop();
+        }
+      }
 
-<section id="editor" class="hidden">
+      createParticle() {
+        return {
+          x: Math.random() * this.canvas.width,
+          y: Math.random() * this.canvas.height,
+          size: Math.random() * 14 + 8,
+          speedY: Math.random() * 1.5 + 0.5,
+          speedX: Math.sin(Math.random() * Math.PI * 2) * 0.8,
+          opacity: Math.random() * 0.7 + 0.3,
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 2,
+          char: this.getCharForType()
+        };
+      }
 
-    <header class="topbar">
+      getCharForType() {
+        switch (this.type) {
+          case 'hearts': return ['❤️', '💖', '💕', '🌸', '✨'][Math.floor(Math.random() * 5)];
+          case 'sparkles': return ['✦', '✧', '✨', '⭐', '⋆'][Math.floor(Math.random() * 5)];
+          case 'petals': return ['🌸', '🌺', '🌷', '🍃'][Math.floor(Math.random() * 4)];
+          case 'snow': return ['❄️', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
+          default: return '❤️';
+        }
+      }
 
-        <div class="brand">
-            Scraply
-        </div>
+      loop() {
+        if (this.type === 'none') return;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        <div class="top-actions">
+        this.particles.forEach((p) => {
+          p.y += p.speedY;
+          p.x += Math.sin(p.y * 0.01) * p.speedX;
+          p.rotation += p.rotSpeed;
 
-            <button
-                class="top-button"
-                onclick="undo()"
-            >
-                ↶
-            </button>
+          if (p.y > this.canvas.height + 20) {
+            p.y = -20;
+            p.x = Math.random() * this.canvas.width;
+          }
 
-            <button
-                class="top-button"
-                onclick="redo()"
-            >
-                ↷
-            </button>
+          this.ctx.save();
+          this.ctx.translate(p.x, p.y);
+          this.ctx.rotate((p.rotation * Math.PI) / 180);
+          this.ctx.globalAlpha = p.opacity;
+          this.ctx.font = `${p.size}px sans-serif`;
+          this.ctx.textAlign = 'center';
+          this.ctx.textBaseline = 'middle';
+          this.ctx.fillText(p.char, 0, 0);
+          this.ctx.restore();
+        });
 
-            <button
-                class="top-button"
-                onclick="saveProject()"
-            >
-                💾 Save
-            </button>
+        this.animationFrame = requestAnimationFrame(() => this.loop());
+      }
+    }
 
-            <button
-                class="top-button primary"
-                onclick="openPreview()"
-            >
-                👀 Preview
-            </button>
+    // --- HELPER UNIFIED PROJECT MAKER ---
+    function createNewBlankGift(title = 'My Little Surprise', type = 'Love', recipient = 'Someone Special') {
+      return {
+        id: 'gift_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+        title: title,
+        type: type,
+        recipientName: recipient,
+        senderName: 'Your Special Someone',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        theme: 'Soft Pink',
+        effect: 'hearts',
+        musicUrl: '',
+        replies: [],
+        pages: [
+          {
+            id: 'page_1',
+            title: 'Welcome Card',
+            bgColor: '#FFFFFF',
+            elements: [
+              {
+                id: 'el_title',
+                type: 'text',
+                x: 100, y: 120, width: 400, height: 80,
+                content: 'For ' + recipient + ' 💕',
+                fontFamily: 'Dancing Script',
+                fontSize: 42,
+                fontWeight: 'bold',
+                color: '#9B76A7',
+                align: 'center',
+                animation: 'bounce',
+                zIndex: 1
+              },
+              {
+                id: 'el_sub',
+                type: 'text',
+                x: 120, y: 220, width: 360, height: 60,
+                content: 'I made something special just for you. Click next to explore!',
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                fontWeight: 'normal',
+                color: '#5D5061',
+                align: 'center',
+                animation: 'fade',
+                zIndex: 2
+              },
+              {
+                id: 'el_sticker1',
+                type: 'sticker',
+                x: 270, y: 300, width: 60, height: 60,
+                content: '🎁',
+                fontSize: 48,
+                zIndex: 3
+              }
+            ]
+          }
+        ]
+      };
+    }
 
-        </div>
+    // --- HISTORY UNDO / REDO SYSTEM ---
+    function pushHistoryState() {
+      if (!STATE.currentGift) return;
+      const snapshot = JSON.parse(JSON.stringify(STATE.currentGift));
+      
+      // Trim forward history if we are in middle of stack
+      if (STATE.historyIndex < STATE.history.length - 1) {
+        STATE.history = STATE.history.slice(0, STATE.historyIndex + 1);
+      }
 
-    </header>
+      STATE.history.push(snapshot);
+      if (STATE.history.length > STATE.maxHistory) {
+        STATE.history.shift();
+      } else {
+        STATE.historyIndex++;
+      }
+      triggerAutosave();
+    }
 
+    function undo() {
+      if (STATE.historyIndex > 0) {
+        STATE.historyIndex--;
+        STATE.currentGift = JSON.parse(JSON.stringify(STATE.history[STATE.historyIndex]));
+        renderApp();
+        showToast('Undo performed', 'info');
+      }
+    }
 
-    <div class="editor-grid">
+    function redo() {
+      if (STATE.historyIndex < STATE.history.length - 1) {
+        STATE.historyIndex++;
+        STATE.currentGift = JSON.parse(JSON.stringify(STATE.history[STATE.historyIndex]));
+        renderApp();
+        showToast('Redo performed', 'info');
+      }
+    }
 
+    function triggerAutosave() {
+      STATE.autosaveStatus = 'Saving...';
+      const statusEl = document.getElementById('autosaveStatusText');
+      if (statusEl) statusEl.innerText = STATE.autosaveStatus;
 
-        <!-- =================================================
-             LEFT
-        ================================================= -->
+      clearTimeout(STATE.autosaveTimer);
+      STATE.autosaveTimer = setTimeout(() => {
+        if (STATE.currentGift) {
+          const idx = STATE.drafts.findIndex(d => d.id === STATE.currentGift.id);
+          STATE.currentGift.updatedAt = new Date().toISOString();
+          if (idx >= 0) {
+            STATE.drafts[idx] = STATE.currentGift;
+          } else {
+            STATE.drafts.push(STATE.currentGift);
+          }
+          saveDraftsToStorage();
+        }
+        STATE.autosaveStatus = 'Saved ✓';
+        if (statusEl) statusEl.innerText = STATE.autosaveStatus;
+      }, 1000);
+    }
 
-        <aside class="left-panel">
+    function renderApp() {
+      const app = document.getElementById('app');
+      app.innerHTML = '';
 
-            <div class="panel-heading">
-                Elements
+      if (!STATE.particleInstance) {
+        STATE.particleInstance = new ParticleEngine('particleCanvas');
+      }
+
+      if (STATE.currentGift && STATE.currentGift.effect) {
+        STATE.particleInstance.setEffect(STATE.currentGift.effect);
+      } else {
+        STATE.particleInstance.setEffect('hearts');
+      }
+
+      // Check URL Hash for shared recipient links
+      const hash = window.location.hash;
+      if (hash.startsWith('#gift/')) {
+        const giftId = hash.replace('#gift/', '');
+        const pub = STATE.publishedGifts.find(g => g.id === giftId || g.shareId === giftId);
+        if (pub) {
+          STATE.currentGift = pub;
+          STATE.view = 'RECIPIENT_OPENING';
+        } else {
+          showToast('Gift link not found or expired', 'error');
+          window.location.hash = '';
+          STATE.view = 'DASHBOARD';
+        }
+      }
+
+      switch (STATE.view) {
+        case 'DASHBOARD':
+          renderDashboardView(app);
+          break;
+        case 'EDITOR':
+          renderEditorView(app);
+          break;
+        case 'PREVIEW':
+          renderRecipientView(app, true);
+          break;
+        case 'RECIPIENT_OPENING':
+          renderGiftOpeningCeremony(app);
+          break;
+        case 'RECIPIENT_MAIN':
+          renderRecipientView(app, false);
+          break;
+        default:
+          renderDashboardView(app);
+      }
+    }
+
+    // --- VIEW 1: DASHBOARD ---
+    function renderDashboardView(container) {
+      container.innerHTML = `
+        <!-- Top Navbar -->
+        <header class="w-full glass-panel sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-3 cursor-pointer" onclick="STATE.view='DASHBOARD'; renderApp();">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-accent flex items-center justify-center text-white font-cute text-xl shadow-md">
+              🎁
             </div>
-
-            <button
-                class="tool-button"
-                onclick="addText()"
-            >
-                <span class="tool-icon">✏️</span>
-                <span>Text</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="uploadPhoto()"
-            >
-                <span class="tool-icon">📸</span>
-                <span>Photo</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="addSticker()"
-            >
-                <span class="tool-icon">🧸</span>
-                <span>Sticker</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="addTape()"
-            >
-                <span class="tool-icon">🎀</span>
-                <span>Tape</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="addLetter()"
-            >
-                <span class="tool-icon">💌</span>
-                <span>Letter</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="addHeart()"
-            >
-                <span class="tool-icon">💗</span>
-                <span>Heart</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="addBalloonElement()"
-            >
-                <span class="tool-icon">🎈</span>
-                <span>Balloon</span>
-            </button>
-
-
-            <div class="panel-divider"></div>
-
-
-            <div class="panel-heading">
-                Paper
+            <div>
+              <h1 class="text-lg font-bold text-brand-dark tracking-tight leading-none">GiftCraft</h1>
+              <span class="text-xs text-brand-primary font-medium">Digital Gift Maker</span>
             </div>
-
-            <button
-                class="tool-button"
-                onclick="setPaper('lined')"
-            >
-                <span class="tool-icon">📓</span>
-                <span>Lined</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="promptImportJSON()" class="px-3 py-2 rounded-xl border border-brand-accent/50 text-xs font-semibold text-brand-text hover:bg-brand-accent/20 transition flex items-center gap-2">
+              <i class="fa-solid fa-file-import text-brand-primary"></i> Import JSON
             </button>
-
-            <button
-                class="tool-button"
-                onclick="setPaper('plain')"
-            >
-                <span class="tool-icon">📄</span>
-                <span>Plain</span>
+            <button onclick="openCreateGiftModal()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-primary to-brand-hover text-white font-semibold text-sm shadow-lg shadow-brand-primary/30 hover:scale-[1.02] active:scale-95 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i> Create New Gift
             </button>
+          </div>
+        </header>
 
-            <button
-                class="tool-button"
-                onclick="setPaper('grid')"
-            >
-                <span class="tool-icon">▦</span>
-                <span>Grid</span>
-            </button>
+        <!-- Main Content -->
+        <main class="max-w-6xl w-full mx-auto px-6 py-8 flex-1 flex flex-col gap-10">
+          <!-- Hero Section -->
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-100/80 via-purple-50/60 to-brand-bg p-8 md:p-12 border border-brand-accent/30 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="max-w-lg">
+              <span class="px-3.5 py-1.5 rounded-full bg-brand-accent/30 text-brand-dark font-medium text-xs tracking-wide uppercase inline-block mb-4">
+                ✨ Create Interactive Memories
+              </span>
+              <h2 class="text-3xl md:text-4xl font-extrabold text-brand-dark font-poppins leading-tight mb-3">
+                Create a Little Something Special
+              </h2>
+              <p class="text-brand-text text-sm md:text-base mb-6 leading-relaxed">
+                Turn your memories, messages, letters and little interactive games into an unforgettable digital surprise gift for someone you love.
+              </p>
+              <button onclick="openCreateGiftModal()" class="px-6 py-3 rounded-2xl bg-brand-primary text-white font-semibold text-sm shadow-lg hover:bg-brand-hover transition">
+                Start Creating Now 💌
+              </button>
+            </div>
+            <div class="relative flex-1 max-w-sm flex items-center justify-center">
+              <div class="w-64 h-64 rounded-3xl bg-white/70 glass-panel shadow-xl flex flex-col items-center justify-center p-6 text-center transform rotate-2 animate-float">
+                <span class="text-6xl mb-3">💝</span>
+                <span class="font-romantic text-2xl text-brand-primary font-bold">For Someone Special</span>
+                <span class="text-xs text-gray-400 mt-2">Interactive Gift Box & Mini Games</span>
+              </div>
+            </div>
+          </div>
 
-            <button
-                class="tool-button"
-                onclick="setPaper('pink')"
-            >
-                <span class="tool-icon">🌸</span>
-                <span>Pink</span>
-            </button>
-
-            <button
-                class="tool-button"
-                onclick="setPaper('lavender')"
-            >
-                <span class="tool-icon">💜</span>
-                <span>Lavender</span>
-            </button>
-
-        </aside>
-
-
-
-        <!-- =================================================
-             CENTER
-        ================================================= -->
-
-        <main class="workspace">
-
-            <div class="canvas-wrap">
-
-                <div
-                    class="scrapbook"
-                    id="scrapbook"
-                >
-
-                    <div class="scrap-content">
-
-                        <div
-                            class="tape top-left"
-                        ></div>
-
-                        <div
-                            class="tape top-right"
-                        ></div>
-
-
-                        <div
-                            class="page-title"
-                            contenteditable="true"
-                            id="pageTitle"
-                        >
-                            Our Little Story ♡
-                        </div>
-
-
-                        <div
-                            class="page-subtitle"
-                            contenteditable="true"
-                            id="pageSubtitle"
-                        >
-                            halaman pertama dari cerita kecil kita...
-                        </div>
-
-
-                        <div
-                            class="scrap-photo photo-one"
-                            draggable="false"
-                        >
-
-                            <img
-                                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=600&q=75"
-                                alt="memory"
-                            >
-
-                        </div>
-
-
-                        <div
-                            class="scrap-photo photo-two"
-                            draggable="false"
-                        >
-
-                            <img
-                                src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=75"
-                                alt="memory"
-                            >
-
-                        </div>
-
-
-                        <div class="scrap-sticker sticker-one">
-                            💗
-                        </div>
-
-                        <div class="scrap-sticker sticker-two">
-                            ✿
-                        </div>
-
-                        <div class="scrap-sticker sticker-three">
-                            🦋
-                        </div>
-
+          <!-- My Drafts Section -->
+          <section>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold text-brand-dark flex items-center gap-2">
+                <i class="fa-solid fa-pen-ruler text-brand-primary"></i> My Drafts (${STATE.drafts.length})
+              </h3>
+            </div>
+            ${STATE.drafts.length === 0 ? `
+              <div class="bg-white/60 rounded-3xl p-8 text-center border border-dashed border-brand-accent/50">
+                <div class="text-4xl mb-2">🎨</div>
+                <p class="text-sm text-brand-text font-medium mb-4">You have no draft gifts yet.</p>
+                <button onclick="openCreateGiftModal()" class="px-4 py-2 rounded-xl bg-brand-accent/30 text-brand-dark text-xs font-semibold hover:bg-brand-accent/50 transition">
+                  Create Your First Gift
+                </button>
+              </div>
+            ` : `
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                ${STATE.drafts.map(draft => `
+                  <div class="bg-white rounded-3xl p-5 border border-brand-accent/30 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                    <div>
+                      <div class="flex items-center justify-between mb-3">
+                        <span class="px-2.5 py-1 rounded-full bg-pink-100 text-brand-primary text-[11px] font-bold uppercase tracking-wider">${draft.type}</span>
+                        <span class="text-[11px] text-gray-400">${new Date(draft.updatedAt).toLocaleDateString()}</span>
+                      </div>
+                      <h4 class="font-bold text-brand-dark text-lg mb-1 group-hover:text-brand-primary transition">${draft.title}</h4>
+                      <p class="text-xs text-gray-500 mb-4">For: <span class="font-semibold text-brand-dark">${draft.recipientName}</span></p>
                     </div>
+                    <div class="flex items-center gap-2 pt-3 border-t border-gray-100">
+                      <button onclick="openDraftEditor('${draft.id}')" class="flex-1 py-2 rounded-xl bg-brand-primary/10 text-brand-primary font-semibold text-xs hover:bg-brand-primary hover:text-white transition text-center">
+                        Edit Gift
+                      </button>
+                      <button onclick="exportGiftJSON('${draft.id}')" title="Export JSON" class="p-2 rounded-xl border border-gray-200 text-gray-500 hover:text-brand-primary transition">
+                        <i class="fa-solid fa-download text-xs"></i>
+                      </button>
+                      <button onclick="confirmDeleteDraft('${draft.id}')" title="Delete Draft" class="p-2 rounded-xl border border-gray-200 text-rose-500 hover:bg-rose-50 transition">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </section>
 
+          <!-- Published Gifts Section -->
+          <section>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold text-brand-dark flex items-center gap-2">
+                <i class="fa-solid fa-paper-plane text-emerald-500"></i> Published Gifts (${STATE.publishedGifts.length})
+              </h3>
+            </div>
+            ${STATE.publishedGifts.length === 0 ? `
+              <div class="bg-white/60 rounded-3xl p-6 text-center border border-gray-200 text-xs text-gray-400">
+                No published gifts yet. Create and publish a gift to share link!
+              </div>
+            ` : `
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                ${STATE.publishedGifts.map(pub => `
+                  <div class="bg-gradient-to-br from-white to-pink-50/50 rounded-3xl p-5 border border-emerald-200/60 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">READY TO SHARE</span>
+                        <span class="text-[11px] text-gray-400">${new Date(pub.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <h4 class="font-bold text-brand-dark text-base mb-1">${pub.title}</h4>
+                      <p class="text-xs text-gray-500 mb-3">To: ${pub.recipientName}</p>
+                    </div>
+                    <div class="flex flex-col gap-2 pt-2 border-t border-emerald-100">
+                      <button onclick="copyGiftLink('${pub.id}')" class="w-full py-2 rounded-xl bg-emerald-500 text-white font-semibold text-xs shadow-sm hover:bg-emerald-600 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-regular fa-copy"></i> Copy Share Link
+                      </button>
+                      <div class="flex gap-2">
+                        <button onclick="viewPublishedAsRecipient('${pub.id}')" class="flex-1 py-1.5 rounded-xl border border-emerald-300 text-emerald-800 font-medium text-xs hover:bg-emerald-50 transition">
+                          View Gift
+                        </button>
+                        <button onclick="confirmDeletePublished('${pub.id}')" class="px-3 py-1.5 rounded-xl border border-rose-200 text-rose-500 text-xs hover:bg-rose-50 transition">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </section>
+        </main>
+      `;
+    }
+
+    function openCreateGiftModal() {
+      const types = ['Love', 'Birthday', 'Anniversary', 'Friendship', 'Apology', 'Custom'];
+      const html = `
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Gift Title</label>
+            <input type="text" id="newGiftTitle" value="Our Memories & Surprises" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Gift Type</label>
+            <select id="newGiftType" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
+              ${types.map(t => `<option value="${t}">${t}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Recipient Name</label>
+            <input type="text" id="newRecipientName" value="Alex" class="w-full px-4 py-2.5 rounded-xl border border-brand-accent/60 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm">
+          </div>
+        </div>
+      `;
+
+      showModal('Create New Digital Gift', html, () => {
+        const title = document.getElementById('newGiftTitle').value.trim();
+        const type = document.getElementById('newGiftType').value;
+        const recipient = document.getElementById('newRecipientName').value.trim();
+
+        if (!title || !recipient) {
+          showToast('Please fill in title and recipient name', 'warning');
+          return;
+        }
+
+        const newGift = createNewBlankGift(title, type, recipient);
+        STATE.drafts.push(newGift);
+        saveDraftsToStorage();
+        STATE.currentGift = newGift;
+        STATE.activePageIndex = 0;
+        STATE.history = [JSON.parse(JSON.stringify(newGift))];
+        STATE.historyIndex = 0;
+        STATE.view = 'EDITOR';
+        renderApp();
+      });
+    }
+
+    function openDraftEditor(draftId) {
+      const draft = STATE.drafts.find(d => d.id === draftId);
+      if (draft) {
+        STATE.currentGift = JSON.parse(JSON.stringify(draft));
+        STATE.activePageIndex = 0;
+        STATE.history = [JSON.parse(JSON.stringify(draft))];
+        STATE.historyIndex = 0;
+        STATE.view = 'EDITOR';
+        renderApp();
+      }
+    }
+
+    function confirmDeleteDraft(draftId) {
+      showModal('Delete Draft', 'Are you sure you want to delete this gift draft? This action cannot be undone.', () => {
+        STATE.drafts = STATE.drafts.filter(d => d.id !== draftId);
+        saveDraftsToStorage();
+        renderApp();
+        showToast('Draft deleted', 'info');
+      });
+    }
+
+    function confirmDeletePublished(pubId) {
+      showModal('Delete Published Gift', 'Delete this published gift link?', () => {
+        STATE.publishedGifts = STATE.publishedGifts.filter(p => p.id !== pubId);
+        savePublishedToStorage();
+        renderApp();
+        showToast('Published gift deleted', 'info');
+      });
+    }
+
+    function exportGiftJSON(draftId) {
+      const draft = STATE.drafts.find(d => d.id === draftId);
+      if (!draft) return;
+      const jsonStr = JSON.stringify(draft, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${draft.title.toLowerCase().replace(/\s+/g, '_')}_gift.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Project JSON exported!', 'success');
+    }
+
+    function promptImportJSON() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            const imported = JSON.parse(event.target.result);
+            if (imported && imported.id && imported.pages) {
+              STATE.drafts.push(imported);
+              saveDraftsToStorage();
+              renderApp();
+              showToast('Gift project imported successfully!', 'success');
+            } else {
+              showToast('Invalid gift JSON format', 'error');
+            }
+          } catch (err) {
+            showToast('Error parsing JSON file', 'error');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    function copyGiftLink(pubId) {
+      const url = `${window.location.origin}${window.location.pathname}#gift/${pubId}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Share link copied to clipboard! 📋', 'success');
+      }).catch(() => {
+        // Fallback for clipboard
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showToast('Share link copied!', 'success');
+      });
+    }
+
+    function viewPublishedAsRecipient(pubId) {
+      window.location.hash = `#gift/${pubId}`;
+      renderApp();
+    }
+
+    // --- VIEW 2: CREATOR / EDITOR MODE ---
+    function renderEditorView(container) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex] || STATE.currentGift.pages[0];
+      const selectedEl = currentPage.elements.find(e => e.id === STATE.selectedElementId);
+
+      container.innerHTML = `
+        <!-- EDITOR TOP NAVBAR -->
+        <header class="w-full bg-white border-b border-brand-accent/40 px-4 py-2.5 flex items-center justify-between z-30 shadow-sm">
+          <div class="flex items-center gap-3">
+            <button onclick="STATE.view='DASHBOARD'; renderApp();" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 text-sm transition" title="Back to Dashboard">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="flex flex-col">
+              <span class="text-xs font-bold text-brand-dark">${STATE.currentGift.title}</span>
+              <span id="autosaveStatusText" class="text-[10px] text-emerald-600 font-medium">${STATE.autosaveStatus}</span>
+            </div>
+          </div>
+
+          <!-- Undo / Redo & Mode Controls -->
+          <div class="flex items-center gap-2">
+            <button onclick="undo()" ${STATE.historyIndex <= 0 ? 'disabled class="p-2 text-gray-300 cursor-not-allowed"' : 'class="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition"'} title="Undo">
+              <i class="fa-solid fa-rotate-left text-sm"></i>
+            </button>
+            <button onclick="redo()" ${STATE.historyIndex >= STATE.history.length - 1 ? 'disabled class="p-2 text-gray-300 cursor-not-allowed"' : 'class="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition"'} title="Redo">
+              <i class="fa-solid fa-rotate-right text-sm"></i>
+            </button>
+            <div class="h-4 w-px bg-gray-200 mx-1"></div>
+            <button onclick="STATE.view='PREVIEW'; renderApp();" class="px-3.5 py-1.5 rounded-xl border border-brand-primary/40 text-brand-primary text-xs font-semibold hover:bg-brand-primary/10 transition flex items-center gap-1.5">
+              <i class="fa-regular fa-eye"></i> Preview
+            </button>
+            <button onclick="publishGift()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-hover text-white text-xs font-bold shadow-md hover:opacity-95 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-paper-plane"></i> Publish
+            </button>
+          </div>
+        </header>
+
+        <!-- EDITOR BODY: SIDEBAR + CANVAS + PROPERTIES -->
+        <div class="flex-1 flex overflow-hidden">
+          
+          <!-- LEFT SIDEBAR TAB SELECTOR -->
+          <aside class="w-16 bg-white border-r border-brand-accent/30 flex flex-col items-center py-4 gap-4 z-20">
+            ${[
+              { id: 'text', icon: 'fa-font', label: 'Text' },
+              { id: 'photo', icon: 'fa-image', label: 'Photos' },
+              { id: 'stickers', icon: 'fa-icons', label: 'Stickers' },
+              { id: 'letters', icon: 'fa-envelope-open-text', label: 'Letters' },
+              { id: 'games', icon: 'fa-gamepad', label: 'Games' },
+              { id: 'effects', icon: 'fa-wand-magic-sparkles', label: 'Effects' },
+              { id: 'music', icon: 'fa-music', label: 'Music' },
+              { id: 'theme', icon: 'fa-palette', label: 'Theme' }
+            ].map(tab => `
+              <button onclick="STATE.activeSidebarTab='${tab.id}'; renderApp();" class="flex flex-col items-center gap-1 text-[10px] font-medium transition ${STATE.activeSidebarTab === tab.id ? 'text-brand-primary font-bold' : 'text-gray-400 hover:text-gray-600'}">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-sm transition ${STATE.activeSidebarTab === tab.id ? 'bg-brand-primary/15 text-brand-primary' : 'hover:bg-gray-100'}">
+                  <i class="fa-solid ${tab.icon}"></i>
                 </div>
+                ${tab.label}
+              </button>
+            `).join('')}
+          </aside>
 
+          <!-- SIDEBAR DRAWER PANEL -->
+          <div class="w-72 bg-white/95 border-r border-brand-accent/30 flex flex-col overflow-y-auto p-4 z-10 shadow-sm">
+            ${renderSidebarDrawerContent()}
+          </div>
+
+          <!-- CANVAS AREA -->
+          <main class="flex-1 bg-gray-100/70 overflow-auto p-8 flex items-center justify-center relative bg-grid-pattern" onclick="deselectCanvasElement(event)">
+            <!-- Canvas Board Page Container -->
+            <div id="canvasBoard" class="relative w-[600px] h-[750px] bg-white rounded-3xl shadow-xl border border-brand-accent/30 overflow-hidden transition-all" style="background-color: ${currentPage.bgColor || '#FFFFFF'}">
+              ${currentPage.elements.map(el => renderCanvasElement(el)).join('')}
+            </div>
+          </main>
+
+          <!-- RIGHT PROPERTIES PANEL -->
+          <aside class="w-64 bg-white border-l border-brand-accent/30 p-4 overflow-y-auto z-10">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark mb-4 pb-2 border-b border-gray-100">
+              Element Properties
+            </h4>
+            ${selectedEl ? renderPropertiesPanel(selectedEl) : `
+              <div class="text-center py-10 text-xs text-gray-400">
+                <i class="fa-solid fa-hand-pointer text-2xl mb-2 text-gray-300"></i>
+                <p>Click any canvas item to edit font, size, colors, or layers.</p>
+              </div>
+            `}
+          </aside>
+
+        </div>
+
+        <!-- BOTTOM PAGE THUMBNAILS BAR -->
+        <footer class="h-20 bg-white border-t border-brand-accent/30 px-6 flex items-center gap-4 overflow-x-auto z-20">
+          <span class="text-xs font-bold text-brand-dark flex items-center gap-1">
+            <i class="fa-regular fa-copy text-brand-primary"></i> Pages:
+          </span>
+          <div class="flex items-center gap-3">
+            ${STATE.currentGift.pages.map((p, idx) => `
+              <div onclick="switchActivePage(${idx})" class="relative w-14 h-14 rounded-xl border-2 flex items-center justify-center cursor-pointer transition ${STATE.activePageIndex === idx ? 'border-brand-primary bg-pink-50/50 shadow-sm' : 'border-gray-200 hover:border-gray-300'}">
+                <span class="text-xs font-bold text-brand-dark">${idx + 1}</span>
+                ${STATE.currentGift.pages.length > 1 ? `
+                  <button onclick="event.stopPropagation(); deletePage(${idx});" class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] flex items-center justify-center hover:bg-rose-600">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                ` : ''}
+              </div>
+            `).join('')}
+            <button onclick="addNewPage()" class="w-14 h-14 rounded-xl border-2 border-dashed border-brand-primary/50 text-brand-primary flex flex-col items-center justify-center text-xs font-bold hover:bg-brand-primary/10 transition">
+              <i class="fa-solid fa-plus"></i>
+              <span class="text-[9px]">Add</span>
+            </button>
+          </div>
+        </footer>
+      `;
+    }
+
+    function renderSidebarDrawerContent() {
+      switch (STATE.activeSidebarTab) {
+        case 'text':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Add Text Styles</h3>
+            <div class="space-y-2">
+              <button onclick="addTextElement('Big Title', 36, 'bold')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-lg font-bold font-poppins text-brand-dark transition">
+                Big Title
+              </button>
+              <button onclick="addTextElement('Love Message', 24, 'normal', 'Dancing Script')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-base font-romantic text-brand-primary transition">
+                Love Message 💌
+              </button>
+              <button onclick="addTextElement('Handwritten Note', 20, 'normal', 'Caveat')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-base font-handwritten text-gray-700 transition">
+                Handwritten Note ✍️
+              </button>
+              <button onclick="addTextElement('Cute Paragraph text goes here...', 14, 'normal', 'Poppins')" class="w-full p-3 rounded-xl border border-gray-200 hover:border-brand-primary text-left text-xs font-poppins text-gray-600 transition">
+                Standard Body Text
+              </button>
+            </div>
+          `;
+
+        case 'photo':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Photo & Frame Presets</h3>
+            <div class="space-y-3 mb-4">
+              <label class="block w-full py-2.5 rounded-xl border-2 border-dashed border-brand-primary/50 text-center text-xs font-semibold text-brand-primary cursor-pointer hover:bg-pink-50 transition">
+                <i class="fa-solid fa-upload mb-1 block text-base"></i> Upload Photo
+                <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+              </label>
+            </div>
+            <h4 class="text-xs font-bold text-gray-500 mb-2">Photo Layout Presets</h4>
+            <div class="grid grid-cols-1 gap-2">
+              ${PHOTO_TEMPLATES.map(tpl => `
+                <div onclick="addPhotoTemplate('${tpl.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition bg-pink-50/20">
+                  <span class="block text-xs font-bold text-brand-dark">${tpl.name}</span>
+                  <span class="text-[10px] text-gray-400">${tpl.desc}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+        case 'stickers':
+          const filteredStickers = STICKER_LIBRARY.filter(s => {
+            const matchesCat = STATE.stickerCategory === 'ALL' || s.cat === STATE.stickerCategory;
+            const matchesSearch = s.label.toLowerCase().includes(STATE.searchTerm.toLowerCase()) || s.text.includes(STATE.searchTerm);
+            return matchesCat && matchesSearch;
+          });
+
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-2">Stickers & Symbols</h3>
+            <input type="text" placeholder="Search stickers..." value="${STATE.searchTerm}" oninput="STATE.searchTerm=this.value; renderApp();" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs mb-3 focus:outline-none focus:border-brand-primary">
+            
+            <!-- Categories -->
+            <div class="flex gap-1 overflow-x-auto pb-2 mb-2 no-scrollbar">
+              ${['ALL', 'LOVE', 'RIBBON', 'SPARKLE', 'FLOWERS', 'CUTE', 'KAOMOJI'].map(cat => `
+                <button onclick="STATE.stickerCategory='${cat}'; renderApp();" class="px-2.5 py-1 rounded-lg text-[10px] font-semibold whitespace-nowrap transition ${STATE.stickerCategory === cat ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">
+                  ${cat}
+                </button>
+              `).join('')}
             </div>
 
-
-
-            <!-- PAGE BAR -->
-
-            <div class="pages-bar" id="pagesBar">
-
-                <button
-                    class="page-thumb active"
-                    data-page="1"
-                    onclick="goToPage(1)"
-                >
-                    01
+            <!-- Sticker Virtualized Grid -->
+            <div class="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto p-1">
+              ${filteredStickers.map(st => `
+                <button onclick="addStickerElement('${st.text}')" title="${st.label}" class="h-12 rounded-xl bg-pink-50/40 hover:bg-pink-100 border border-brand-accent/20 flex items-center justify-center text-2xl transition hover:scale-110">
+                  ${st.text}
                 </button>
+              `).join('')}
+            </div>
+          `;
 
-                <button
-                    class="page-thumb"
-                    data-page="2"
-                    onclick="goToPage(2)"
-                >
-                    02
+        case 'letters':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Interactive Envelopes</h3>
+            <div class="space-y-2">
+              ${LETTER_TEMPLATES.map(l => `
+                <div onclick="addLetterElement('${l.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-pink-100 text-brand-primary flex items-center justify-center text-sm">
+                    <i class="fa-solid ${l.icon}"></i>
+                  </div>
+                  <div>
+                    <span class="block text-xs font-bold text-brand-dark">${l.name}</span>
+                    <span class="text-[10px] text-gray-400">Click to open & read</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+        case 'games':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Mini-Games Library</h3>
+            <div class="space-y-2">
+              ${GAMES_LIBRARY.map(g => `
+                <div onclick="addGameElement('${g.id}')" class="p-3 rounded-xl border border-gray-200 hover:border-brand-primary cursor-pointer transition flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-100 text-brand-primary flex items-center justify-center text-sm">
+                    <i class="fa-solid ${g.icon}"></i>
+                  </div>
+                  <div>
+                    <span class="block text-xs font-bold text-brand-dark">${g.name}</span>
+                    <span class="text-[10px] text-gray-400">${g.desc}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+        case 'effects':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Background Particle Effect</h3>
+            <div class="space-y-2">
+              ${[
+                { id: 'hearts', label: 'Floating Hearts 💕' },
+                { id: 'sparkles', label: 'Glitter Sparkles ✨' },
+                { id: 'petals', label: 'Rose & Sakura Petals 🌸' },
+                { id: 'snow', label: 'Winter Snow ❄️' },
+                { id: 'none', label: 'None (Clean)' }
+              ].map(eff => `
+                <button onclick="changeBackgroundEffect('${eff.id}')" class="w-full p-2.5 rounded-xl border text-xs font-semibold text-left transition ${STATE.currentGift.effect === eff.id ? 'border-brand-primary bg-pink-50 text-brand-primary' : 'border-gray-200 text-gray-700 hover:bg-gray-50'}">
+                  ${eff.label}
                 </button>
+              `).join('')}
+            </div>
+          `;
 
-                <button
-                    class="page-thumb"
-                    data-page="3"
-                    onclick="goToPage(3)"
-                >
-                    03
+        case 'music':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Background Music</h3>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">Audio Direct URL (.mp3)</label>
+                <input type="text" id="musicUrlInput" placeholder="https://..." value="${STATE.currentGift.musicUrl || ''}" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-brand-primary mb-2">
+                <button onclick="saveMusicUrl()" class="w-full py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold hover:bg-brand-hover transition">
+                  Save Background Track
                 </button>
+              </div>
+            </div>
+          `;
 
-                <button
-                    class="add-page"
-                    onclick="addPage()"
-                >
-                    +
-                </button>
+        case 'theme':
+          return `
+            <h3 class="font-bold text-sm text-brand-dark mb-3">Page Background Color</h3>
+            <div class="grid grid-cols-4 gap-2">
+              ${['#FFFFFF', '#FFF7FB', '#FFF0F5', '#F3E8FF', '#FEF3C7', '#E0F2FE', '#E8F5E9', '#F5F5F4'].map(color => `
+                <button onclick="setPageBgColor('${color}')" class="h-10 rounded-xl border border-gray-300 transition hover:scale-105" style="background-color: ${color}"></button>
+              `).join('')}
+            </div>
+          `;
 
+        default:
+          return '';
+      }
+    }
+
+    function renderCanvasElement(el) {
+      const isSelected = el.id === STATE.selectedElementId;
+      const selectionClass = isSelected ? 'canvas-element-selected' : '';
+
+      switch (el.type) {
+        case 'text':
+          return `
+            <div id="${el.id}" 
+                 onclick="selectCanvasElement(event, '${el.id}')"
+                 onmousedown="startDragCanvasElement(event, '${el.id}')"
+                 class="absolute cursor-move select-none p-2 ${selectionClass}"
+                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; z-index: ${el.zIndex || 1}; transform: rotate(${el.rotation || 0}deg);">
+              <div contenteditable="true" 
+                   onblur="updateTextContent('${el.id}', this.innerText)"
+                   class="w-full h-full outline-none"
+                   style="font-family: '${el.fontFamily || 'Poppins'}'; font-size: ${el.fontSize || 16}px; font-weight: ${el.fontWeight || 'normal'}; color: ${el.color || '#5D5061'}; text-align: ${el.align || 'left'};">
+                ${el.content}
+              </div>
+            </div>
+          `;
+
+        case 'photo':
+          return `
+            <div id="${el.id}"
+                 onclick="selectCanvasElement(event, '${el.id}')"
+                 onmousedown="startDragCanvasElement(event, '${el.id}')"
+                 class="absolute cursor-move select-none p-3 bg-white rounded-2xl shadow-md border border-gray-100 ${selectionClass}"
+                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 200}px; z-index: ${el.zIndex || 1};">
+              <img src="${el.content}" class="w-full h-40 object-cover rounded-xl pointer-events-none" />
+              ${el.caption ? `<p class="text-center font-handwritten text-sm text-gray-700 mt-2">${el.caption}</p>` : ''}
+            </div>
+          `;
+
+        case 'sticker':
+          return `
+            <div id="${el.id}"
+                 onclick="selectCanvasElement(event, '${el.id}')"
+                 onmousedown="startDragCanvasElement(event, '${el.id}')"
+                 class="absolute cursor-move select-none ${selectionClass}"
+                 style="left: ${el.x}px; top: ${el.y}px; font-size: ${el.fontSize || 40}px; z-index: ${el.zIndex || 1};">
+              ${el.content}
+            </div>
+          `;
+
+        case 'letter':
+          return `
+            <div id="${el.id}"
+                 onclick="selectCanvasElement(event, '${el.id}')"
+                 onmousedown="startDragCanvasElement(event, '${el.id}')"
+                 class="absolute cursor-move select-none p-4 bg-pink-100/80 rounded-3xl border border-pink-200 shadow-sm ${selectionClass}"
+                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 280}px; z-index: ${el.zIndex || 1};">
+              <div class="flex items-center gap-2 mb-2">
+                <i class="fa-solid fa-envelope text-brand-primary"></i>
+                <span class="text-xs font-bold text-brand-dark">Interactive Letter</span>
+              </div>
+              <p class="font-romantic text-base text-brand-primary font-bold line-clamp-2">${el.letterTitle || 'Click to open my secret letter...'}</p>
+            </div>
+          `;
+
+        case 'game':
+          return `
+            <div id="${el.id}"
+                 onclick="selectCanvasElement(event, '${el.id}')"
+                 onmousedown="startDragCanvasElement(event, '${el.id}')"
+                 class="absolute cursor-move select-none p-4 bg-purple-50 rounded-3xl border border-purple-200 shadow-md ${selectionClass}"
+                 style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 300}px; z-index: ${el.zIndex || 1};">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-gamepad text-brand-primary"></i>
+                <span class="text-xs font-bold text-brand-dark">${el.gameTitle || 'Mini Game'}</span>
+              </div>
+              <p class="text-[11px] text-gray-500">Interactive game embedded for recipient</p>
+            </div>
+          `;
+
+        default:
+          return '';
+      }
+    }
+
+    // --- ELEMENT ADDERS & DRAGGING LOGIC ---
+    function selectCanvasElement(e, id) {
+      e.stopPropagation();
+      STATE.selectedElementId = id;
+      renderApp();
+    }
+
+    function deselectCanvasElement(e) {
+      if (e.target.id === 'canvasBoard') {
+        STATE.selectedElementId = null;
+        renderApp();
+      }
+    }
+
+    let dragItem = null;
+    let dragStartX = 0, dragStartY = 0;
+    let initialElX = 0, initialElY = 0;
+
+    function startDragCanvasElement(e, id) {
+      dragItem = id;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const el = currentPage.elements.find(item => item.id === id);
+      if (el) {
+        initialElX = el.x;
+        initialElY = el.y;
+      }
+
+      window.addEventListener('mousemove', onDragCanvasElement);
+      window.addEventListener('mouseup', stopDragCanvasElement);
+    }
+
+    function onDragCanvasElement(e) {
+      if (!dragItem) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const el = currentPage.elements.find(item => item.id === dragItem);
+      if (el) {
+        el.x = Math.max(0, initialElX + dx);
+        el.y = Math.max(0, initialElY + dy);
+        const domEl = document.getElementById(dragItem);
+        if (domEl) {
+          domEl.style.left = el.x + 'px';
+          domEl.style.top = el.y + 'px';
+        }
+      }
+    }
+
+    function stopDragCanvasElement() {
+      if (dragItem) {
+        pushHistoryState();
+      }
+      dragItem = null;
+      window.removeEventListener('mousemove', onDragCanvasElement);
+      window.removeEventListener('mouseup', stopDragCanvasElement);
+    }
+
+    // --- CANVAS ACTIONS ---
+    function addTextElement(text, size, weight = 'normal', font = 'Poppins') {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const newEl = {
+        id: 'el_' + Date.now(),
+        type: 'text',
+        x: 100, y: 150, width: 300,
+        content: text,
+        fontSize: size,
+        fontWeight: weight,
+        fontFamily: font,
+        color: '#5D5061',
+        align: 'left',
+        zIndex: currentPage.elements.length + 1
+      };
+      currentPage.elements.push(newEl);
+      STATE.selectedElementId = newEl.id;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function addStickerElement(stickerText) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const newEl = {
+        id: 'el_' + Date.now(),
+        type: 'sticker',
+        x: 200, y: 200,
+        content: stickerText,
+        fontSize: 48,
+        zIndex: currentPage.elements.length + 1
+      };
+      currentPage.elements.push(newEl);
+      STATE.selectedElementId = newEl.id;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = event => {
+        const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+        const newEl = {
+          id: 'el_' + Date.now(),
+          type: 'photo',
+          x: 150, y: 150, width: 220,
+          content: event.target.result,
+          caption: 'Sweet Memory ✨',
+          zIndex: currentPage.elements.length + 1
+        };
+        currentPage.elements.push(newEl);
+        STATE.selectedElementId = newEl.id;
+        pushHistoryState();
+        renderApp();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addPhotoTemplate(templateId) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const sampleImg = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=400&q=80';
+      const newEl = {
+        id: 'el_' + Date.now(),
+        type: 'photo',
+        template: templateId,
+        x: 120, y: 180, width: 240,
+        content: sampleImg,
+        caption: 'Our Special Day',
+        zIndex: currentPage.elements.length + 1
+      };
+      currentPage.elements.push(newEl);
+      STATE.selectedElementId = newEl.id;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function addLetterElement(letterType) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const newEl = {
+        id: 'el_' + Date.now(),
+        type: 'letter',
+        letterType: letterType,
+        x: 100, y: 200, width: 320,
+        letterTitle: 'Open When You Read This ❤️',
+        letterBody: 'My Dearest,\n\nI just wanted to remind you how deeply loved and appreciated you are every single day.\n\nAlways yours,',
+        zIndex: currentPage.elements.length + 1
+      };
+      currentPage.elements.push(newEl);
+      STATE.selectedElementId = newEl.id;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function addGameElement(gameType) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const newEl = {
+        id: 'el_' + Date.now(),
+        type: 'game',
+        gameType: gameType,
+        gameTitle: GAMES_LIBRARY.find(g => g.id === gameType)?.name || 'Interactive Game',
+        x: 80, y: 180, width: 340,
+        zIndex: currentPage.elements.length + 1
+      };
+      currentPage.elements.push(newEl);
+      STATE.selectedElementId = newEl.id;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function updateTextContent(id, val) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const el = currentPage.elements.find(e => e.id === id);
+      if (el) {
+        el.content = val;
+        pushHistoryState();
+      }
+    }
+
+    function renderPropertiesPanel(el) {
+      return `
+        <div class="space-y-4">
+          <!-- Text Styling options -->
+          ${el.type === 'text' ? `
+            <div>
+              <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Family</label>
+              <select onchange="updateSelectedProp('fontFamily', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">
+                <option value="Poppins" ${el.fontFamily === 'Poppins' ? 'selected' : ''}>Poppins</option>
+                <option value="Dancing Script" ${el.fontFamily === 'Dancing Script' ? 'selected' : ''}>Dancing Script</option>
+                <option value="Caveat" ${el.fontFamily === 'Caveat' ? 'selected' : ''}>Caveat</option>
+                <option value="Pacifico" ${el.fontFamily === 'Pacifico' ? 'selected' : ''}>Pacifico</option>
+                <option value="Sacramento" ${el.fontFamily === 'Sacramento' ? 'selected' : ''}>Sacramento</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Size (${el.fontSize || 16}px)</label>
+              <input type="range" min="12" max="64" value="${el.fontSize || 16}" oninput="updateSelectedProp('fontSize', parseInt(this.value))" class="w-full">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Color</label>
+              <input type="color" value="${el.color || '#5D5061'}" onchange="updateSelectedProp('color', this.value)" class="w-full h-8 rounded-lg cursor-pointer">
+            </div>
+          ` : ''}
+
+          ${el.type === 'letter' ? `
+            <div>
+              <label class="block text-[11px] font-bold text-gray-500 mb-1">Letter Cover Title</label>
+              <input type="text" value="${el.letterTitle || ''}" onchange="updateSelectedProp('letterTitle', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-500 mb-1">Letter Body Message</label>
+              <textarea rows="4" onchange="updateSelectedProp('letterBody', this.value)" class="w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs">${el.letterBody || ''}</textarea>
+            </div>
+          ` : ''}
+
+          <!-- Layer & Delete Actions -->
+          <div class="pt-4 border-t border-gray-100 flex flex-col gap-2">
+            <button onclick="duplicateSelectedElement()" class="w-full py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold text-xs hover:bg-gray-200 transition">
+              <i class="fa-solid fa-copy"></i> Duplicate Element
+            </button>
+            <button onclick="deleteSelectedElement()" class="w-full py-2 rounded-xl bg-rose-50 text-rose-600 font-semibold text-xs hover:bg-rose-100 transition">
+              <i class="fa-solid fa-trash"></i> Delete Element
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateSelectedProp(prop, val) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const el = currentPage.elements.find(e => e.id === STATE.selectedElementId);
+      if (el) {
+        el[prop] = val;
+        pushHistoryState();
+        renderApp();
+      }
+    }
+
+    function duplicateSelectedElement() {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      const el = currentPage.elements.find(e => e.id === STATE.selectedElementId);
+      if (el) {
+        const copy = JSON.parse(JSON.stringify(el));
+        copy.id = 'el_' + Date.now();
+        copy.x += 20;
+        copy.y += 20;
+        currentPage.elements.push(copy);
+        STATE.selectedElementId = copy.id;
+        pushHistoryState();
+        renderApp();
+      }
+    }
+
+    function deleteSelectedElement() {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      currentPage.elements = currentPage.elements.filter(e => e.id !== STATE.selectedElementId);
+      STATE.selectedElementId = null;
+      pushHistoryState();
+      renderApp();
+    }
+
+    // --- PAGE CONTROLS ---
+    function switchActivePage(index) {
+      STATE.activePageIndex = index;
+      STATE.selectedElementId = null;
+      renderApp();
+    }
+
+    function addNewPage() {
+      const newPage = {
+        id: 'page_' + (STATE.currentGift.pages.length + 1),
+        title: 'Page ' + (STATE.currentGift.pages.length + 1),
+        bgColor: '#FFFFFF',
+        elements: []
+      };
+      STATE.currentGift.pages.push(newPage);
+      STATE.activePageIndex = STATE.currentGift.pages.length - 1;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function deletePage(index) {
+      if (STATE.currentGift.pages.length <= 1) return;
+      STATE.currentGift.pages.splice(index, 1);
+      STATE.activePageIndex = Math.max(0, index - 1);
+      pushHistoryState();
+      renderApp();
+    }
+
+    function changeBackgroundEffect(effectId) {
+      STATE.currentGift.effect = effectId;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function setPageBgColor(color) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex];
+      currentPage.bgColor = color;
+      pushHistoryState();
+      renderApp();
+    }
+
+    function saveMusicUrl() {
+      const url = document.getElementById('musicUrlInput').value.trim();
+      STATE.currentGift.musicUrl = url;
+      pushHistoryState();
+      showToast('Music URL updated', 'success');
+    }
+
+    function publishGift() {
+      if (!STATE.currentGift) return;
+      
+      const pubId = 'gift_' + Date.now().toString(36);
+      const published = JSON.parse(JSON.stringify(STATE.currentGift));
+      published.id = pubId;
+      published.shareId = pubId;
+      published.publishedAt = new Date().toISOString();
+
+      STATE.publishedGifts.push(published);
+      savePublishedToStorage();
+
+      showModal('Gift Published Successfully! 🎉', `
+        <div class="text-center py-2">
+          <p class="text-xs text-gray-500 mb-4">Your digital gift is now ready to share with ${published.recipientName}.</p>
+          <div class="p-3 bg-gray-50 rounded-2xl border border-gray-200 text-xs font-mono break-all mb-4">
+            ${window.location.origin}${window.location.pathname}#gift/${pubId}
+          </div>
+          <button onclick="copyGiftLink('${pubId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 text-white font-bold text-xs shadow-md hover:bg-emerald-600 transition">
+            <i class="fa-regular fa-copy"></i> Copy Gift Share Link
+          </button>
+        </div>
+      `, () => {
+        STATE.view = 'DASHBOARD';
+        renderApp();
+      });
+    }
+
+    // --- VIEW 3: RECIPIENT GIFT OPENING CEREMONY ---
+    function renderGiftOpeningCeremony(container) {
+      container.innerHTML = `
+        <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+          <div class="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl border border-brand-accent/40 flex flex-col items-center animate-pulse-soft">
+            <span class="text-xs font-bold uppercase tracking-widest text-brand-primary mb-2">Special Gift For You</span>
+            <h2 class="font-romantic text-4xl text-brand-dark font-bold mb-6">${STATE.currentGift.recipientName}</h2>
+            
+            <!-- Animated 3D Gift Box Container -->
+            <div id="giftBoxContainer" onclick="openGiftCeremony()" class="relative w-48 h-48 cursor-pointer group mb-6">
+              <div class="w-full h-full bg-gradient-to-tr from-pink-400 to-brand-primary rounded-3xl shadow-xl flex items-center justify-center transform group-hover:scale-105 transition-all">
+                <i class="fa-solid fa-gift text-white text-7xl"></i>
+              </div>
             </div>
 
+            <p class="text-xs text-gray-500 mb-6">Click the gift box to unwrap your surprise!</p>
+            <button onclick="openGiftCeremony()" class="px-6 py-3 rounded-2xl bg-brand-primary text-white font-bold text-sm shadow-lg hover:bg-brand-hover transition">
+              Open Your Gift 🎁
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function openGiftCeremony() {
+      // Trigger Confetti Explosion
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+
+      // Audio trigger if set
+      if (STATE.currentGift.musicUrl) {
+        STATE.audioPlayer.src = STATE.currentGift.musicUrl;
+        STATE.audioPlayer.play().catch(() => {});
+      }
+
+      STATE.view = 'RECIPIENT_MAIN';
+      STATE.activePageIndex = 0;
+      renderApp();
+    }
+
+    // --- VIEW 4: RECIPIENT IMMERSIVE VIEW ---
+    function renderRecipientView(container, isPreviewMode = false) {
+      const currentPage = STATE.currentGift.pages[STATE.activePageIndex] || STATE.currentGift.pages[0];
+
+      container.innerHTML = `
+        <!-- Top Recipient Header Bar -->
+        <header class="w-full px-6 py-4 flex items-center justify-between z-30">
+          <div class="flex items-center gap-2">
+            ${isPreviewMode ? `
+              <button onclick="STATE.view='EDITOR'; renderApp();" class="px-3 py-1.5 rounded-xl bg-white/80 shadow-sm border border-brand-accent/40 text-xs font-bold text-brand-dark hover:bg-white transition flex items-center gap-1.5">
+                <i class="fa-solid fa-xmark"></i> Exit Preview Mode
+              </button>
+            ` : `
+              <span class="text-xs font-bold text-brand-dark bg-white/80 px-3 py-1.5 rounded-xl border border-brand-accent/40 shadow-sm">
+                For ${STATE.currentGift.recipientName} 💕
+              </span>
+            `}
+          </div>
+
+          <!-- Page Progress Counter -->
+          <div class="bg-white/80 px-4 py-1.5 rounded-xl border border-brand-accent/40 text-xs font-bold text-brand-dark shadow-sm">
+            ${STATE.activePageIndex + 1} / ${STATE.currentGift.pages.length}
+          </div>
+        </header>
+
+        <!-- MAIN RECIPIENT CANVAS VIEW -->
+        <main class="flex-1 flex items-center justify-center p-6 relative">
+          <div class="relative w-[600px] h-[750px] bg-white rounded-3xl shadow-2xl border border-brand-accent/30 overflow-hidden" style="background-color: ${currentPage.bgColor || '#FFFFFF'}">
+            ${currentPage.elements.map(el => renderRecipientCanvasElement(el)).join('')}
+          </div>
         </main>
 
+        <!-- BOTTOM RECIPIENT NAVIGATION & REPLY BAR -->
+        <footer class="p-6 flex items-center justify-between max-w-md mx-auto w-full gap-4 z-30">
+          <button onclick="prevRecipientPage()" ${STATE.activePageIndex === 0 ? 'disabled class="opacity-30 cursor-not-allowed px-4 py-2 rounded-2xl bg-white shadow-sm text-xs font-bold text-gray-500"' : 'class="px-5 py-2.5 rounded-2xl bg-white shadow-md border border-pink-100 text-xs font-bold text-brand-dark hover:bg-pink-50 transition"'}>
+            <i class="fa-solid fa-arrow-left"></i> Previous
+          </button>
 
+          ${!isPreviewMode && STATE.activePageIndex === STATE.currentGift.pages.length - 1 ? `
+            <button onclick="openRecipientReplyModal()" class="px-5 py-2.5 rounded-2xl bg-brand-primary text-white font-bold text-xs shadow-lg hover:bg-brand-hover transition">
+              Leave Reply 💬
+            </button>
+          ` : ''}
 
-        <!-- =================================================
-             RIGHT
-        ================================================= -->
+          <button onclick="nextRecipientPage()" ${STATE.activePageIndex === STATE.currentGift.pages.length - 1 ? 'disabled class="opacity-30 cursor-not-allowed px-4 py-2 rounded-2xl bg-white shadow-sm text-xs font-bold text-gray-500"' : 'class="px-5 py-2.5 rounded-2xl bg-white shadow-md border border-pink-100 text-xs font-bold text-brand-dark hover:bg-pink-50 transition"'}>
+            Next <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </footer>
+      `;
+    }
 
-        <aside class="right-panel">
-
-            <div class="panel-heading">
-                Page Settings
+    function renderRecipientCanvasElement(el) {
+      switch (el.type) {
+        case 'text':
+          return `
+            <div class="absolute p-2 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; z-index: ${el.zIndex || 1}; transform: rotate(${el.rotation || 0}deg);">
+              <div style="font-family: '${el.fontFamily || 'Poppins'}'; font-size: ${el.fontSize || 16}px; font-weight: ${el.fontWeight || 'normal'}; color: ${el.color || '#5D5061'}; text-align: ${el.align || 'left'};">
+                ${el.content}
+              </div>
             </div>
+          `;
 
-
-            <div class="property-card">
-
-                <label>
-                    Page title
-                </label>
-
-                <input
-                    id="titleInput"
-                    value="Our Little Story ♡"
-                    oninput="changeTitle(this.value)"
-                >
-
+        case 'photo':
+          return `
+            <div class="absolute p-3 bg-white rounded-2xl shadow-md border border-gray-100 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 200}px; z-index: ${el.zIndex || 1};">
+              <img src="${el.content}" class="w-full h-40 object-cover rounded-xl pointer-events-none" />
+              ${el.caption ? `<p class="text-center font-handwritten text-sm text-gray-700 mt-2">${el.caption}</p>` : ''}
             </div>
+          `;
 
-
-            <div class="property-card">
-
-                <label>
-                    Page transition
-                </label>
-
-                <select
-                    id="transitionSelect"
-                    onchange="changeTransition(this.value)"
-                >
-
-                    <option value="page">
-                        📖 Page Turn
-                    </option>
-
-                    <option value="fly">
-                        🎈 Fly Away
-                    </option>
-
-                    <option value="cloud">
-                        ☁️ Cloud
-                    </option>
-
-                    <option value="flower">
-                        🌸 Flower
-                    </option>
-
-                    <option value="sparkle">
-                        ✨ Sparkle
-                    </option>
-
-                    <option value="letter">
-                        💌 Letter
-                    </option>
-
-                </select>
-
+        case 'sticker':
+          return `
+            <div class="absolute select-none" style="left: ${el.x}px; top: ${el.y}px; font-size: ${el.fontSize || 40}px; z-index: ${el.zIndex || 1};">
+              ${el.content}
             </div>
+          `;
 
-
-            <div class="property-card">
-
-                <label>
-                    Element Animation
-                </label>
-
-                <select>
-
-                    <option>
-                        ✨ Floating
-                    </option>
-
-                    <option>
-                        💗 Heart
-                    </option>
-
-                    <option>
-                        🦋 Butterfly
-                    </option>
-
-                    <option>
-                        🌸 Petals
-                    </option>
-
-                    <option>
-                        None
-                    </option>
-
-                </select>
-
+        case 'letter':
+          return `
+            <div onclick="openLetterModal('${el.letterTitle || ''}', '${encodeURIComponent(el.letterBody || '')}')" class="absolute p-4 bg-pink-100/90 hover:bg-pink-200/90 cursor-pointer rounded-3xl border border-pink-200 shadow-md transition transform hover:scale-105 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 280}px; z-index: ${el.zIndex || 1};">
+              <div class="flex items-center gap-2 mb-2">
+                <i class="fa-solid fa-envelope text-brand-primary"></i>
+                <span class="text-xs font-bold text-brand-dark">Click To Open Letter</span>
+              </div>
+              <p class="font-romantic text-base text-brand-primary font-bold line-clamp-2">${el.letterTitle || 'Secret Letter'}</p>
             </div>
+          `;
 
-
-            <div class="property-card">
-
-                <label>
-                    Theme
-                </label>
-
-                <select onchange="changeTheme(this.value)">
-
-                    <option value="pink">
-                        Pink Dream
-                    </option>
-
-                    <option value="cream">
-                        Cream
-                    </option>
-
-                    <option value="lavender">
-                        Lavender
-                    </option>
-
-                </select>
-
+        case 'game':
+          return `
+            <div onclick="openMiniGameModal('${el.gameType}')" class="absolute p-4 bg-purple-100 hover:bg-purple-200 cursor-pointer rounded-3xl border border-purple-200 shadow-md transition transform hover:scale-105 select-none" style="left: ${el.x}px; top: ${el.y}px; width: ${el.width || 300}px; z-index: ${el.zIndex || 1};">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-gamepad text-brand-primary"></i>
+                <span class="text-xs font-bold text-brand-dark">${el.gameTitle || 'Mini Game'}</span>
+              </div>
+              <p class="text-[11px] text-gray-600">Click to play game!</p>
             </div>
+          `;
 
+        default:
+          return '';
+      }
+    }
 
-            <div class="property-card">
+    function prevRecipientPage() {
+      if (STATE.activePageIndex > 0) {
+        STATE.activePageIndex--;
+        renderApp();
+      }
+    }
 
-                <label>
-                    Page
-                </label>
+    function nextRecipientPage() {
+      if (STATE.activePageIndex < STATE.currentGift.pages.length - 1) {
+        STATE.activePageIndex++;
+        renderApp();
+      }
+    }
 
-                <div class="property-row">
-
-                    <button
-                        class="top-button"
-                        onclick="duplicatePage()"
-                    >
-                        Duplicate
-                    </button>
-
-                    <button
-                        class="top-button"
-                        onclick="deletePage()"
-                    >
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-        </aside>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     PREVIEW
-========================================================= -->
-
-<section
-    id="preview"
-    class="hidden"
->
-
-    <button
-        class="preview-close"
-        onclick="closePreview()"
-    >
-        ✕
-    </button>
-
-
-    <div class="preview-book">
-
-        <div
-            class="preview-page"
-            id="previewPage"
-        >
-
-            <div
-                class="preview-title"
-                id="previewTitle"
-            >
-                Our Little Story ♡
-            </div>
-
-            <div
-                class="preview-text"
-                id="previewText"
-            >
-                halaman pertama dari cerita kecil kita...
-            </div>
-
-            <div class="preview-decoration one">
-                💗
-            </div>
-
-            <div class="preview-decoration two">
-                🌸
-            </div>
-
+    function openLetterModal(title, encodedBody) {
+      const body = decodeURIComponent(encodedBody);
+      showModal(title || 'A Letter For You 💌', `
+        <div class="p-4 bg-pink-50/60 rounded-2xl border border-pink-100 font-romantic text-lg text-brand-dark leading-relaxed whitespace-pre-wrap">
+          ${body}
         </div>
-
-    </div>
-
-
-    <div class="preview-controls">
-
-        <button onclick="previewPrevious()">
-            ←
-        </button>
-
-        <button onclick="previewNext()">
-            →
-        </button>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     TRANSITION
-========================================================= -->
-
-<div
-    id="transitionLayer"
-    class="transition-layer"
-></div>
-
-
-<!-- =========================================================
-     TOAST
-========================================================= -->
-
-<div
-    id="toast"
-    class="toast"
->
-    Tersimpan ✿
-</div>
-
-
-<script>
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let currentPage = 1;
-
-let totalPages = 3;
-
-let currentTransition = "page";
-
-let historyStack = [];
-
-let redoStack = [];
-
-let pageData = {
-
-    1:{
-        title:"Our Little Story ♡",
-        subtitle:"halaman pertama dari cerita kecil kita...",
-        transition:"page",
-        paper:"lined"
-    },
-
-    2:{
-        title:"A Letter For You 💌",
-        subtitle:"ada sesuatu yang ingin aku sampaikan...",
-        transition:"letter",
-        paper:"pink"
-    },
-
-    3:{
-        title:"To Be Continued...",
-        subtitle:"ceritanya belum selesai sampai di sini ♡",
-        transition:"sparkle",
-        paper:"lavender"
+      `);
     }
 
-};
-
-
-/* =========================================================
-   START
-========================================================= */
-
-function startEditor(){
-
-    document
-        .getElementById("landing")
-        .classList.add("hidden");
-
-    document
-        .getElementById("editor")
-        .classList.remove("hidden");
-
-    loadSaved();
-
-    createParticles(18);
-
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function toast(message){
-
-    const t =
-        document.getElementById("toast");
-
-    t.textContent = message;
-
-    t.classList.add("show");
-
-    clearTimeout(window.toastTimer);
-
-    window.toastTimer =
-        setTimeout(()=>{
-
-            t.classList.remove("show");
-
-        },1800);
-
-}
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-
-function createParticles(amount = 12){
-
-    const symbols = [
-        "✦",
-        "✧",
-        "♡",
-        "✿",
-        "✨",
-        "🌸",
-        "🦋"
-    ];
-
-    for(let i=0;i<amount;i++){
-
-        const p =
-            document.createElement("div");
-
-        p.className = "particle";
-
-        p.textContent =
-            symbols[
-                Math.floor(
-                    Math.random()*symbols.length
-                )
-            ];
-
-        p.style.left =
-            Math.random()*100 + "vw";
-
-        p.style.top =
-            (55 + Math.random()*35) + "vh";
-
-        p.style.fontSize =
-            (12 + Math.random()*20) + "px";
-
-        document.body.appendChild(p);
-
-        setTimeout(()=>p.remove(),1900);
-
+    function openMiniGameModal(gameType) {
+      if (gameType === 'scratch-card') {
+        showModal('Scratch Card Game 🪄', `
+          <div class="flex flex-col items-center">
+            <p class="text-xs text-gray-500 mb-3">Scratch below to reveal secret surprise!</p>
+            <div id="scratchTarget" class="w-64 h-32 bg-gradient-to-r from-brand-primary to-brand-accent rounded-2xl flex items-center justify-center text-white font-romantic text-xl font-bold p-4 text-center cursor-pointer shadow-inner" onclick="this.innerHTML='❤️ You Are My Favorite Person! ❤️'">
+              Click / Scratch Here
+            </div>
+          </div>
+        `);
+      } else {
+        showModal('Mini Game Surprise 🎮', `
+          <div class="text-center py-4">
+            <span class="text-5xl mb-3 block">💖</span>
+            <p class="text-sm font-bold text-brand-dark mb-2">You Won The Mini Challenge!</p>
+            <p class="text-xs text-gray-500">Unlocking next special memory page...</p>
+          </div>
+        `);
+      }
     }
 
-}
-
-
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
-
-function goToPage(page){
-
-    if(page === currentPage){
-        return;
+    function openRecipientReplyModal() {
+      showModal('Leave a Reply 💌', `
+        <div class="space-y-4">
+          <p class="text-xs text-gray-500">Send a lovely response back to the creator!</p>
+          <textarea id="recipientReplyMsg" rows="3" placeholder="Write something sweet..." class="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-brand-primary"></textarea>
+        </div>
+      `, () => {
+        const msg = document.getElementById('recipientReplyMsg').value.trim();
+        if (msg) {
+          showToast('Reply sent to creator! 💖', 'success');
+        }
+      });
     }
 
-    saveCurrentPageData();
-
-    const oldPage = currentPage;
-
-    currentPage = page;
-
-    const transition =
-        pageData[page]?.transition ||
-        currentTransition;
-
-    playTransition(transition);
-
-    setTimeout(()=>{
-
-        loadPageData(page);
-
-        updateThumbs();
-
-    },420);
-
-    createParticles(14);
-
-}
-
-
-/* =========================================================
-   TRANSITION
-========================================================= */
-
-function playTransition(type){
-
-    const layer =
-        document.getElementById("transitionLayer");
-
-    layer.className =
-        "transition-layer transition-"+type;
-
-    void layer.offsetWidth;
-
-    layer.classList.add("active");
-
-    setTimeout(()=>{
-
-        layer.classList.remove("active");
-
-    },950);
-
-}
-
-
-/* =========================================================
-   LOAD PAGE
-========================================================= */
-
-function loadPageData(page){
-
-    const data =
-        pageData[page] || {
-
-            title:"New Memory ✿",
-
-            subtitle:"cerita baru dimulai di sini...",
-
-            transition:"page",
-
-            paper:"lined"
-
-        };
-
-    document
-        .getElementById("pageTitle")
-        .textContent = data.title;
-
-    document
-        .getElementById("pageSubtitle")
-        .textContent = data.subtitle;
-
-    document
-        .getElementById("titleInput")
-        .value = data.title;
-
-    document
-        .getElementById("transitionSelect")
-        .value = data.transition;
-
-    setPaper(data.paper);
-
-}
-
-
-/* =========================================================
-   SAVE CURRENT PAGE
-========================================================= */
-
-function saveCurrentPageData(){
-
-    if(!pageData[currentPage]){
-        pageData[currentPage] = {};
-    }
-
-    pageData[currentPage].title =
-        document
-            .getElementById("pageTitle")
-            .textContent;
-
-    pageData[currentPage].subtitle =
-        document
-            .getElementById("pageSubtitle")
-            .textContent;
-
-    pageData[currentPage].transition =
-        currentTransition;
-
-}
-
-
-/* =========================================================
-   TITLE
-========================================================= */
-
-function changeTitle(value){
-
-    document
-        .getElementById("pageTitle")
-        .textContent = value;
-
-    if(!pageData[currentPage]){
-        pageData[currentPage] = {};
-    }
-
-    pageData[currentPage].title = value;
-
-}
-
-
-/* =========================================================
-   TRANSITION SETTING
-========================================================= */
-
-function changeTransition(value){
-
-    currentTransition = value;
-
-    if(!pageData[currentPage]){
-        pageData[currentPage] = {};
-    }
-
-    pageData[currentPage].transition = value;
-
-    createParticles(8);
-
-}
-
-
-/* =========================================================
-   ADD PAGE
-========================================================= */
-
-function addPage(){
-
-    saveCurrentPageData();
-
-    totalPages++;
-
-    pageData[totalPages] = {
-
-        title:"New Memory ✿",
-
-        subtitle:"cerita baru dimulai di sini...",
-
-        transition:"page",
-
-        paper:"lined"
-
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      loadSavedData();
+      renderApp();
     };
-
-    const button =
-        document.createElement("button");
-
-    button.className = "page-thumb";
-
-    button.dataset.page = totalPages;
-
-    button.textContent =
-        String(totalPages).padStart(2,"0");
-
-    button.onclick =
-        () => goToPage(totalPages);
-
-    const addButton =
-        document.querySelector(".add-page");
-
-    addButton.before(button);
-
-    goToPage(totalPages);
-
-    toast("Halaman baru dibuat ✿");
-
-}
-
-
-/* =========================================================
-   DELETE PAGE
-========================================================= */
-
-function deletePage(){
-
-    if(totalPages <= 1){
-
-        toast("Minimal harus ada 1 halaman 💗");
-
-        return;
-
-    }
-
-    if(!confirm("Hapus halaman ini?")){
-        return;
-    }
-
-    delete pageData[currentPage];
-
-    const thumb =
-        document.querySelector(
-            `.page-thumb[data-page="${currentPage}"]`
-        );
-
-    if(thumb){
-        thumb.remove();
-    }
-
-    totalPages--;
-
-    const nextPage =
-        Math.min(currentPage,totalPages);
-
-    currentPage = nextPage;
-
-    loadPageData(currentPage);
-
-    updateThumbs();
-
-}
-
-
-/* =========================================================
-   DUPLICATE
-========================================================= */
-
-function duplicatePage(){
-
-    saveCurrentPageData();
-
-    totalPages++;
-
-    pageData[totalPages] =
-        JSON.parse(
-            JSON.stringify(
-                pageData[currentPage]
-            )
-        );
-
-    const button =
-        document.createElement("button");
-
-    button.className = "page-thumb";
-
-    button.dataset.page = totalPages;
-
-    button.textContent =
-        String(totalPages).padStart(2,"0");
-
-    button.onclick =
-        () => goToPage(totalPages);
-
-    document
-        .querySelector(".add-page")
-        .before(button);
-
-    goToPage(totalPages);
-
-    toast("Halaman berhasil diduplikasi ✿");
-
-}
-
-
-/* =========================================================
-   THUMBNAILS
-========================================================= */
-
-function updateThumbs(){
-
-    document
-        .querySelectorAll(".page-thumb")
-        .forEach(button=>{
-
-            button.classList.toggle(
-                "active",
-                Number(button.dataset.page) === currentPage
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   ADD TEXT
-========================================================= */
-
-function addText(){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-text";
-
-    el.contentEditable = true;
-
-    el.textContent =
-        "tulis sesuatu di sini...";
-
-    el.style.left =
-        "38%";
-
-    el.style.top =
-        "52%";
-
-    el.style.transform =
-        "rotate(-3deg)";
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   ADD STICKER
-========================================================= */
-
-function addSticker(){
-
-    const stickers = [
-        "🌸",
-        "🦋",
-        "🐻",
-        "🐰",
-        "🎀",
-        "🍓",
-        "⭐",
-        "🌷",
-        "☁️",
-        "💗",
-        "✨",
-        "🌙"
-    ];
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-sticker";
-
-    el.textContent =
-        stickers[
-            Math.floor(
-                Math.random()*stickers.length
-            )
-        ];
-
-    el.style.left =
-        (20 + Math.random()*60) + "%";
-
-    el.style.top =
-        (20 + Math.random()*60) + "%";
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    createParticles(8);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   ADD TAPE
-========================================================= */
-
-function addTape(){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-tape";
-
-    el.style.left =
-        (20 + Math.random()*60) + "%";
-
-    el.style.top =
-        (20 + Math.random()*60) + "%";
-
-    el.style.transform =
-        `rotate(${Math.random()*18-9}deg)`;
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   ADD LETTER
-========================================================= */
-
-function addLetter(){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-letter";
-
-    el.contentEditable = true;
-
-    el.innerHTML = `
-        Dear you... 💌<br><br>
-        Tulis surat kecilmu di sini.
-        <br><br>
-        With love ♡
-    `;
-
-    el.style.left = "32%";
-    el.style.top = "35%";
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    createParticles(18);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   ADD HEART
-========================================================= */
-
-function addHeart(){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-heart";
-
-    el.textContent =
-        ["💗","💕","💖","💞"][
-            Math.floor(Math.random()*4)
-        ];
-
-    el.style.left =
-        (20+Math.random()*65)+"%";
-
-    el.style.top =
-        (20+Math.random()*60)+"%";
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    createParticles(10);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   ADD BALLOON
-========================================================= */
-
-function addBalloonElement(){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element element-balloon";
-
-    el.textContent = "🎈";
-
-    el.style.left =
-        (20+Math.random()*65)+"%";
-
-    el.style.top =
-        "65%";
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   PHOTO UPLOAD
-========================================================= */
-
-function uploadPhoto(){
-
-    const input =
-        document.createElement("input");
-
-    input.type = "file";
-
-    input.accept =
-        "image/*";
-
-    input.onchange =
-        function(){
-
-            const file =
-                this.files[0];
-
-            if(!file){
-                return;
-            }
-
-            const reader =
-                new FileReader();
-
-            reader.onload =
-                function(event){
-
-                    createPhoto(
-                        event.target.result
-                    );
-
-                };
-
-            reader.readAsDataURL(file);
-
-        };
-
-    input.click();
-
-}
-
-
-/* =========================================================
-   CREATE PHOTO
-========================================================= */
-
-function createPhoto(src){
-
-    const el =
-        document.createElement("div");
-
-    el.className =
-        "element scrap-photo";
-
-    el.style.width = "180px";
-
-    el.style.height = "175px";
-
-    el.style.padding = "9px 9px 30px";
-
-    el.style.left = "35%";
-
-    el.style.top = "35%";
-
-    const img =
-        document.createElement("img");
-
-    img.src = src;
-
-    img.style.width = "100%";
-
-    img.style.height = "100%";
-
-    img.style.objectFit = "cover";
-
-    img.draggable = false;
-
-    el.appendChild(img);
-
-    makeDraggable(el);
-
-    selectElement(el);
-
-    document
-        .querySelector(".scrap-content")
-        .appendChild(el);
-
-    createParticles(10);
-
-    saveHistory();
-
-}
-
-
-/* =========================================================
-   DRAGGING
-========================================================= */
-
-function makeDraggable(el){
-
-    let dragging = false;
-
-    let offsetX = 0;
-
-    let offsetY = 0;
-
-    el.addEventListener(
-        "pointerdown",
-        startDrag
-    );
-
-    function startDrag(e){
-
-        if(
-            e.target.isContentEditable ||
-            e.target.tagName === "INPUT" ||
-            e.target.tagName === "TEXTAREA"
-        ){
-            return;
-        }
-
-        dragging = true;
-
-        el.setPointerCapture(e.pointerId);
-
-        const rect =
-            el.getBoundingClientRect();
-
-        offsetX =
-            e.clientX - rect.left;
-
-        offsetY =
-            e.clientY - rect.top;
-
-        selectElement(el);
-
-    }
-
-    el.addEventListener(
-        "pointermove",
-        e=>{
-
-            if(!dragging){
-                return;
-            }
-
-            const parent =
-                document
-                    .querySelector(".scrap-content")
-                    .getBoundingClientRect();
-
-            const x =
-                e.clientX -
-                parent.left -
-                offsetX;
-
-            const y =
-                e.clientY -
-                parent.top -
-                offsetY;
-
-            el.style.left =
-                Math.max(
-                    0,
-                    Math.min(
-                        parent.width-el.offsetWidth,
-                        x
-                    )
-                )+"px";
-
-            el.style.top =
-                Math.max(
-                    0,
-                    Math.min(
-                        parent.height-el.offsetHeight,
-                        y
-                    )
-                )+"px";
-
-        }
-    );
-
-    el.addEventListener(
-        "pointerup",
-        e=>{
-
-            dragging = false;
-
-            try{
-                el.releasePointerCapture(e.pointerId);
-            }catch(err){}
-
-            saveHistory();
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   SELECT ELEMENT
-========================================================= */
-
-function selectElement(el){
-
-    document
-        .querySelectorAll(".element")
-        .forEach(x=>
-            x.classList.remove("selected")
-        );
-
-    el.classList.add("selected");
-
-    window.selectedElement = el;
-
-}
-
-
-/* =========================================================
-   DELETE SELECTED
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    e=>{
-
-        if(
-            e.key === "Delete" &&
-            window.selectedElement
-        ){
-
-            if(
-                document.activeElement?.isContentEditable
-            ){
-                return;
-            }
-
-            window.selectedElement.remove();
-
-            window.selectedElement = null;
-
-            saveHistory();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   PAPER
-========================================================= */
-
-function setPaper(type){
-
-    const page =
-        document.getElementById("scrapbook");
-
-    if(type === "lined"){
-
-        page.style.background = `
-            linear-gradient(
-                rgba(255,255,255,.88),
-                rgba(255,255,255,.88)
-            ),
-            repeating-linear-gradient(
-                0deg,
-                transparent 0,
-                transparent 29px,
-                rgba(215,199,208,.55) 30px
-            )
-        `;
-
-    }
-
-    if(type === "plain"){
-
-        page.style.background =
-            "#fffdf9";
-
-    }
-
-    if(type === "grid"){
-
-        page.style.background = `
-            linear-gradient(
-                rgba(255,255,255,.9),
-                rgba(255,255,255,.9)
-            ),
-            linear-gradient(#eadfe4 1px,transparent 1px),
-            linear-gradient(90deg,#eadfe4 1px,transparent 1px)
-        `;
-
-        page.style.backgroundSize =
-            "auto,25px 25px,25px 25px";
-
-    }
-
-    if(type === "pink"){
-
-        page.style.background =
-            "linear-gradient(135deg,#fff0f5,#fff8fb)";
-
-    }
-
-    if(type === "lavender"){
-
-        page.style.background =
-            "linear-gradient(135deg,#f5efff,#fffaff)";
-
-    }
-
-    if(pageData[currentPage]){
-        pageData[currentPage].paper = type;
-    }
-
-}
-
-
-/* =========================================================
-   THEME
-========================================================= */
-
-function changeTheme(theme){
-
-    const page =
-        document.getElementById("scrapbook");
-
-    if(theme === "pink"){
-
-        page.style.background =
-            "linear-gradient(135deg,#fff0f5,#fff8fb)";
-
-    }
-
-    if(theme === "cream"){
-
-        page.style.background =
-            "#fff9ed";
-
-    }
-
-    if(theme === "lavender"){
-
-        page.style.background =
-            "linear-gradient(135deg,#f5efff,#fffaff)";
-
-    }
-
-}
-
-
-/* =========================================================
-   HISTORY
-========================================================= */
-
-function saveHistory(){
-
-    const content =
-        document
-            .querySelector(".scrap-content")
-            .innerHTML;
-
-    historyStack.push(content);
-
-    if(historyStack.length > 30){
-        historyStack.shift();
-    }
-
-    redoStack = [];
-
-}
-
-
-/* =========================================================
-   UNDO
-========================================================= */
-
-function undo(){
-
-    if(historyStack.length < 2){
-
-        toast("Belum ada perubahan ✿");
-
-        return;
-
-    }
-
-    const current =
-        historyStack.pop();
-
-    redoStack.push(current);
-
-    const previous =
-        historyStack[
-            historyStack.length-1
-        ];
-
-    document
-        .querySelector(".scrap-content")
-        .innerHTML = previous;
-
-    reconnectElements();
-
-}
-
-
-/* =========================================================
-   REDO
-========================================================= */
-
-function redo(){
-
-    if(!redoStack.length){
-
-        toast("Tidak ada yang bisa di-redo ✿");
-
-        return;
-
-    }
-
-    const next =
-        redoStack.pop();
-
-    historyStack.push(next);
-
-    document
-        .querySelector(".scrap-content")
-        .innerHTML = next;
-
-    reconnectElements();
-
-}
-
-
-/* =========================================================
-   RECONNECT
-========================================================= */
-
-function reconnectElements(){
-
-    document
-        .querySelectorAll(".element")
-        .forEach(el=>{
-
-            makeDraggable(el);
-
-            el.addEventListener(
-                "pointerdown",
-                ()=>selectElement(el)
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   SAVE PROJECT
-========================================================= */
-
-function saveProject(){
-
-    saveCurrentPageData();
-
-    const data = {
-
-        currentPage,
-
-        totalPages,
-
-        pageData,
-
-        content:
-            document
-                .querySelector(".scrap-content")
-                .innerHTML
-
-    };
-
-    localStorage.setItem(
-        "scraply-project",
-        JSON.stringify(data)
-    );
-
-    createParticles(18);
-
-    toast("Scrapbook tersimpan 💗");
-
-}
-
-
-/* =========================================================
-   LOAD PROJECT
-========================================================= */
-
-function loadSaved(){
-
-    const saved =
-        localStorage.getItem(
-            "scraply-project"
-        );
-
-    if(!saved){
-        return;
-    }
-
-    try{
-
-        const data =
-            JSON.parse(saved);
-
-        if(data.pageData){
-            pageData = data.pageData;
-        }
-
-        if(data.totalPages){
-            totalPages = data.totalPages;
-        }
-
-        if(data.currentPage){
-            currentPage = data.currentPage;
-        }
-
-        loadPageData(currentPage);
-
-    }catch(error){
-
-        console.log(
-            "Tidak bisa membaca project lama."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   AUTO SAVE
-========================================================= */
-
-setInterval(()=>{
-
-    if(
-        !document
-            .getElementById("editor")
-            .classList.contains("hidden")
-    ){
-
-        saveProject();
-
-    }
-
-},15000);
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-let previewPageNumber = 1;
-
-function openPreview(){
-
-    saveCurrentPageData();
-
-    previewPageNumber = 1;
-
-    document
-        .getElementById("preview")
-        .classList.remove("hidden");
-
-    updatePreview();
-
-    createParticles(25);
-
-}
-
-
-function closePreview(){
-
-    document
-        .getElementById("preview")
-        .classList.add("hidden");
-
-}
-
-
-function updatePreview(){
-
-    const data =
-        pageData[previewPageNumber] ||
-        pageData[1];
-
-    document
-        .getElementById("previewTitle")
-        .textContent =
-        data.title || "";
-
-    document
-        .getElementById("previewText")
-        .textContent =
-        data.subtitle || "";
-
-}
-
-
-/* =========================================================
-   PREVIEW NEXT
-========================================================= */
-
-function previewNext(){
-
-    if(previewPageNumber >= totalPages){
-
-        previewPageNumber = 1;
-
-    }else{
-
-        previewPageNumber++;
-
-    }
-
-    const type =
-        pageData[previewPageNumber]?.transition ||
-        "page";
-
-    playTransition(type);
-
-    setTimeout(
-        updatePreview,
-        350
-    );
-
-    createParticles(12);
-
-}
-
-
-/* =========================================================
-   PREVIEW PREVIOUS
-========================================================= */
-
-function previewPrevious(){
-
-    if(previewPageNumber <= 1){
-
-        previewPageNumber = totalPages;
-
-    }else{
-
-        previewPageNumber--;
-
-    }
-
-    const type =
-        pageData[previewPageNumber]?.transition ||
-        "page";
-
-    playTransition(type);
-
-    setTimeout(
-        updatePreview,
-        350
-    );
-
-    createParticles(10);
-
-}
-
-
-/* =========================================================
-   CLICK OUTSIDE ELEMENT
-========================================================= */
-
-document.addEventListener(
-    "pointerdown",
-    e=>{
-
-        if(
-            !e.target.closest(".element") &&
-            !e.target.closest(".right-panel") &&
-            !e.target.closest(".left-panel")
-        ){
-
-            document
-                .querySelectorAll(".element")
-                .forEach(el=>
-                    el.classList.remove("selected")
-                );
-
-            window.selectedElement = null;
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   INITIAL HISTORY
-========================================================= */
-
-window.addEventListener(
-    "load",
-    ()=>{
-
-        const content =
-            document
-                .querySelector(".scrap-content")
-                .innerHTML;
-
-        historyStack = [content];
-
-    }
-);
-
-</script>
-
+  </script>
 </body>
 </html>
