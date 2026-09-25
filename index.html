@@ -1,699 +1,969 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftNest Ultimate - Kado Virtual 20+ Mini Games & Kustomisasi</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                        cute: ['Fredoka', 'cursive', 'sans-serif'],
-                    }
-                }
-            }
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { 
+  Gift, Sparkles, Heart, Music, Image as ImageIcon, Type, Gamepad2, 
+  Share2, Undo2, Redo2, Eye, Layout, Palette, Smile, Lock, Unlock, 
+  Check, Copy, ExternalLink, Play, RotateCcw, Volume2, VolumeX, 
+  Upload, Trash2, Move, Plus, ChevronRight, ChevronLeft, Star, 
+  Flame, Award, Bookmark, ArrowRight, ShieldCheck, Zap, Send, 
+  HelpCircle, RefreshCw, Layers, CheckCircle2, MessageCircle
+} from 'lucide-react';
+
+const THEMES = [
+  { id: 'romantic', name: 'Romantic Rose', bg: 'bg-rose-50', primary: 'bg-rose-600', text: 'text-rose-900', accent: '#e11d48', font: 'font-serif' },
+  { id: 'neon', name: 'Cyberpunk Neon', bg: 'bg-slate-950', primary: 'bg-cyan-500', text: 'text-cyan-400', accent: '#06b6d4', font: 'font-mono' },
+  { id: 'cozy', name: 'Cozy Autumn', bg: 'bg-amber-50', primary: 'bg-amber-700', text: 'text-amber-950', accent: '#b45309', font: 'font-serif' },
+  { id: 'pastel', name: 'Pastel Dream', bg: 'bg-purple-50', primary: 'bg-purple-400', text: 'text-purple-900', accent: '#c084fc', font: 'font-sans' },
+  { id: 'luxury', name: 'Gold Luxury', bg: 'bg-stone-900', primary: 'bg-amber-500', text: 'text-amber-200', accent: '#f59e0b', font: 'font-serif' },
+  { id: 'minimal', name: 'Clean Minimal', bg: 'bg-white', primary: 'bg-black', text: 'text-gray-950', accent: '#000000', font: 'font-sans' },
+  { id: 'galaxy', name: 'Deep Galaxy', bg: 'bg-indigo-950', primary: 'bg-indigo-500', text: 'text-indigo-200', accent: '#6366f1', font: 'font-mono' },
+  { id: 'sakura', name: 'Sakura Blossom', bg: 'bg-pink-50', primary: 'bg-pink-400', text: 'text-pink-950', accent: '#f472b6', font: 'font-serif' },
+  { id: 'emerald', name: 'Emerald Forest', bg: 'bg-emerald-950', primary: 'bg-emerald-600', text: 'text-emerald-100', accent: '#059669', font: 'font-serif' },
+  { id: 'sunset', name: 'Sunset Glow', bg: 'bg-orange-50', primary: 'bg-orange-500', text: 'text-orange-950', accent: '#f97316', font: 'font-sans' },
+  { id: 'lavender', name: 'Lavender Mist', bg: 'bg-violet-50', primary: 'bg-violet-500', text: 'text-violet-950', accent: '#8b5cf6', font: 'font-sans' },
+  { id: 'retro', name: '80s Retro', bg: 'bg-fuchsia-950', primary: 'bg-yellow-400', text: 'text-yellow-300', accent: '#facc15', font: 'font-mono' },
+  { id: 'ocean', name: 'Deep Ocean', bg: 'bg-sky-950', primary: 'bg-sky-500', text: 'text-sky-100', accent: '#0ea5e9', font: 'font-sans' },
+  { id: 'candy', name: 'Candy Pop', bg: 'bg-red-50', primary: 'bg-red-500', text: 'text-red-950', accent: '#ef4444', font: 'font-sans' },
+  { id: 'midnight', name: 'Midnight Sparkle', bg: 'bg-zinc-900', primary: 'bg-yellow-500', text: 'text-zinc-100', accent: '#eab308', font: 'font-serif' },
+];
+
+const FONTS = [
+  { id: 'font-serif', name: 'Classic Serif', class: 'font-serif' },
+  { id: 'font-sans', name: 'Modern Sans', class: 'font-sans' },
+  { id: 'font-mono', name: 'Terminal Mono', class: 'font-mono' },
+];
+
+const PLAYLISTS = [
+  { id: 'romantic', name: 'Romantic Acoustic Guitar', url: 'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg' },
+  { id: 'lofi', name: 'Lofi Chill Beats', url: 'https://actions.google.com/sounds/v1/weather/light_rain.ogg' },
+  { id: 'piano', name: 'Melodic Piano', url: 'https://actions.google.com/sounds/v1/ambiences/daytime_forest_bonfire.ogg' },
+  { id: 'upbeat', name: 'Happy Ukulele', url: 'https://actions.google.com/sounds/v1/ambiences/summer_park.ogg' }
+];
+
+const STICKERS = ['❤️', '✨', '🌸', '🧸', '💌', '🌟', '🍫', '💍', '🥂', '🌹', '🦋', '🍰', '🎈', '🎁', '💖', '⭐'];
+
+const MINI_GAMES = [
+  { id: 'catch', name: 'Catch the Hearts', desc: 'Catch falling hearts before time runs out!', icon: '💖' },
+  { id: 'quiz', name: 'Couples / Friends Trivia', desc: 'Answer questions about each other!', icon: '🎯' },
+  { id: 'memory', name: 'Memory Card Match', desc: 'Find all matching pairs in fewest moves.', icon: '🃏' },
+  { id: 'scratch', name: 'Secret Scratch Card', desc: 'Scratch to reveal a hidden custom coupon!', icon: '🎫' },
+  { id: 'spinner', name: 'Compliment / Date Wheel', desc: 'Spin to win romantic coupons or compliments!', icon: '🎡' },
+  { id: 'puzzle', name: 'Love Slider Puzzle', desc: 'Unscramble the picture tile puzzle.', icon: '🧩' },
+  { id: 'balloon', name: 'Balloon Pop Surprises', desc: 'Pop balloons to reveal secret love notes.', icon: '🎈' },
+  { id: 'maze', name: 'Heart Maze Runner', desc: 'Guide the heart to the golden gift box.', icon: '🌀' }
+];
+
+function CatchHeartsGame({ onWin }) {
+  const [score, setScore] = useState(0);
+  const [hearts, setHearts] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
+
+  useEffect(() => {
+    if (gameOver) return;
+    const interval = setInterval(() => {
+      setHearts(prev => [
+        ...prev,
+        { id: Math.random(), x: Math.random() * 80 + 10, y: 0 }
+      ]);
+    }, 800);
+    return () => clearInterval(interval);
+  }, [gameOver]);
+
+  useEffect(() => {
+    if (gameOver) return;
+    const fallInterval = setInterval(() => {
+      setHearts(prev => prev.map(h => ({ ...h, y: h.y + 5 })).filter(h => {
+        if (h.y >= 90) {
+          return false;
         }
-    </script>
-    <style>
-        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
-        .cute-font { font-family: 'Fredoka', cursive, sans-serif; }
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(4deg); }
-        }
-        .floating { animation: floatSlow 4s ease-in-out infinite; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fdf2f8; }
-        ::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 4px; }
-    </style>
-</head>
-<body id="mainBody" class="bg-pink-50 text-slate-700 min-h-screen flex flex-col transition-colors duration-500 relative">
+        return true;
+      }));
+    }, 100);
+    return () => clearInterval(fallInterval);
+  }, [gameOver]);
 
-    <div id="bgParticles" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+  const catchHeart = (id) => {
+    setScore(s => {
+      const next = s + 1;
+      if (next >= 10) {
+        setGameOver(true);
+        if (onWin) onWin();
+      }
+      return next;
+    });
+    setHearts(prev => prev.filter(h => h.id !== id));
+  };
 
-    <!-- Header / Navbar -->
-    <header class="w-full py-4 px-4 sm:px-8 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 flex justify-between items-center border-b border-pink-100">
-        <div class="flex items-center space-x-2">
-            <span class="text-3xl">🎁</span>
-            <h1 class="cute-font text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">GiftNest Ultimate</h1>
+  return (
+    <div className="relative w-full h-72 bg-rose-950/10 rounded-2xl border border-rose-500/20 overflow-hidden flex flex-col items-center justify-between p-4">
+      <div className="flex justify-between w-full font-bold text-rose-600">
+        <span>Catch 10 Hearts!</span>
+        <span>Score: {score} / 10</span>
+      </div>
+      <div className="relative w-full flex-1">
+        {hearts.map(h => (
+          <button
+            key={h.id}
+            onClick={() => catchHeart(h.id)}
+            style={{ left: `${h.x}%`, top: `${h.y}%` }}
+            className="absolute text-3xl transform -translate-x-1/2 hover:scale-125 transition-transform animate-bounce cursor-pointer"
+          >
+            💖
+          </button>
+        ))}
+      </div>
+      {gameOver && (
+        <div className="absolute inset-0 bg-white/90 backdrop-blur flex flex-col items-center justify-center animate-fade-in">
+          <span className="text-4xl mb-2">🎉</span>
+          <h3 className="font-bold text-xl text-rose-700">You Won! Gift Unlocked!</h3>
         </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
-            <button onclick="toggleMusic()" id="musicBtn" class="bg-pink-100 text-pink-600 px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm">
-                <i class="fa-solid fa-music animate-bounce"></i>
-                <span id="musicText" class="hidden sm:inline">BGM: Off</span>
-            </button>
-            <button onclick="switchTab('builder')" id="tabBuilder" class="bg-pink-500 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition">
-                <i class="fa-solid fa-sliders mr-1"></i> Editor
-            </button>
-            <button onclick="switchTab('preview')" id="tabPreview" class="bg-purple-100 text-purple-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition">
-                <i class="fa-solid fa-eye mr-1"></i> Preview & Share
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 z-10 relative mb-12">
-
-        <!-- ================= EDITOR / BUILDER TAB ================= -->
-        <div id="builderSection" class="space-y-6">
-            
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100 text-center relative overflow-hidden">
-                <div class="absolute -top-6 -right-6 text-pink-100 text-8xl pointer-events-none font-cute select-none">✨</div>
-                <h2 class="cute-font text-3xl sm:text-4xl font-bold text-pink-600 mb-2">Pusat Kustomisasi Kado Virtual</h2>
-                <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">Atur tema warna, edit galeri foto satu per satu, tulis surat dengan berbagai template amplop, dan pilih dari 20+ mini games seru untuk pasangan atau temanmu!</p>
-            </div>
-
-            <!-- 1. Theme Selector -->
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
-                <h3 class="cute-font text-xl font-bold text-slate-800 mb-3 flex items-center">
-                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">1</span> 
-                    Pilih Tema Warna Kado 🎨
-                </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="themePickerContainer"></div>
-            </div>
-
-            <!-- 2. Profile & Info -->
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
-                <h3 class="cute-font text-xl font-bold text-slate-800 mb-3 flex items-center">
-                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> 
-                    Informasi Pengirim & Penerima 🧸
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Penerima</label>
-                        <input type="text" id="inputRecipient" value="Sayangku Tercinta" oninput="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Pengirim</label>
-                        <input type="text" id="inputSender" value="Navisyah" oninput="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Sampul Utama</label>
-                        <select id="inputMainSticker" onchange="updateStateValue()" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm bg-pink-50/40 focus:outline-none">
-                            <option value="🧸">🧸 Beruang Imut</option>
-                            <option value="💖">💖 Hati Berkilau</option>
-                            <option value="🍓">🍓 Strawberry Manis</option>
-                            <option value="🐱">🐱 Kucing Lucu</option>
-                            <option value="🌷">🌷 Bunga Tulip</option>
-                            <option value="🎀">🎀 Pita Cantik</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Photo Templates & Individual Customization -->
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="cute-font text-xl font-bold text-slate-800 flex items-center">
-                        <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">3</span> 
-                        Galeri Foto & Template (Edit Satu-Satu) 📸
-                    </h3>
-                    <button onclick="addPhotoSlot()" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition">
-                        <i class="fa-solid fa-plus mr-1"></i> Tambah Slot Foto
-                    </button>
-                </div>
-                <p class="text-xs text-slate-500 mb-4">Kamu bisa mengedit URL foto, caption, frame, dan stiker untuk setiap slot foto secara individual.</p>
-                <div id="photoEditorContainer" class="space-y-4"></div>
-            </div>
-
-            <!-- 4. Letters Templates & Individual Customization -->
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="cute-font text-xl font-bold text-slate-800 flex items-center">
-                        <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">4</span> 
-                        Amplop & Surat Digital (Edit Satu-Satu) 💌
-                    </h3>
-                    <button onclick="addLetterSlot()" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition">
-                        <i class="fa-solid fa-plus mr-1"></i> Tambah Surat Baru
-                    </button>
-                </div>
-                <p class="text-xs text-slate-500 mb-4">Buat beberapa surat berbeda (misal: Surat Cinta, Pesan Semangat, Kenangan Manis) dengan amplop dan tema kertas masing-masing.</p>
-                <div id="letterEditorContainer" class="space-y-4"></div>
-            </div>
-
-            <!-- 5. Mini Games Selection (20+ Games) -->
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-pink-100">
-                <h3 class="cute-font text-xl font-bold text-slate-800 mb-2 flex items-center">
-                    <span class="bg-pink-100 text-pink-500 w-7 h-7 rounded-full inline-flex items-center justify-center mr-2 text-xs">5</span> 
-                    Pilih Mini Games Aktif untuk Kado Ini (20+ Pilihan) 🎮
-                </h3>
-                <p class="text-xs text-slate-500 mb-4">Centang game yang ingin ditampilkan di kado virtual agar bisa dimainkan oleh penerima.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto p-2 border border-pink-100 rounded-2xl bg-pink-50/20" id="gamesSelectionContainer"></div>
-            </div>
-
-            <!-- Bottom Action Bar -->
-            <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                <button onclick="switchTab('preview')" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
-                    <i class="fa-solid fa-eye"></i>
-                    <span>Preview Hasil Kado</span>
-                </button>
-                <button onclick="openShareModal()" class="flex-1 bg-white hover:bg-pink-50 text-pink-600 border-2 border-pink-400 font-bold py-3.5 px-6 rounded-2xl shadow-md transition flex items-center justify-center space-x-2 text-sm">
-                    <i class="fa-solid fa-share-nodes"></i>
-                    <span>Generate & Salin Link 🔗</span>
-                </button>
-            </div>
-        </div>
-
-
-        <!-- ================= PREVIEW / RECIPIENT TAB ================= -->
-        <div id="previewSection" class="hidden space-y-6">
-            
-            <div class="flex justify-between items-center bg-white/80 backdrop-blur-md px-4 py-3 rounded-2xl border border-pink-100 shadow-sm">
-                <button onclick="switchTab('builder')" class="text-xs sm:text-sm font-semibold text-pink-600 hover:text-pink-700 flex items-center space-x-1">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Kembali ke Editor</span>
-                </button>
-                <span class="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">Mode Preview Live</span>
-                <button onclick="openShareModal()" class="text-xs sm:text-sm font-semibold bg-pink-500 text-white px-3 py-1.5 rounded-xl shadow hover:bg-pink-600 transition">
-                    <i class="fa-solid fa-share-nodes mr-1"></i> Bagikan
-                </button>
-            </div>
-
-            <!-- Main Gift Display Card -->
-            <div id="previewCardWrapper" class="rounded-3xl p-6 sm:p-10 shadow-2xl border transition-all duration-500 relative overflow-hidden space-y-8">
-                
-                <!-- Card Header -->
-                <div class="text-center space-y-3">
-                    <div id="prevMainSticker" class="text-6xl sm:text-7xl floating inline-block">🧸</div>
-                    <h2 id="prevRecipientTitle" class="cute-font text-3xl sm:text-4xl font-bold text-slate-800">Untuk: Sayangku Tercinta</h2>
-                    <p id="prevSenderTitle" class="text-xs sm:text-sm font-medium opacity-90">Kado Spesial dari: Navisyah</p>
-                </div>
-
-                <!-- Section: Letters Preview -->
-                <div class="space-y-4">
-                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
-                        <i class="fa-solid fa-envelope-open-text text-pink-500 mr-2"></i> Kotak Surat & Pesan Spesial 💌
-                    </h3>
-                    <div id="previewLettersContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-                </div>
-
-                <!-- Section: Photos Gallery Preview -->
-                <div class="space-y-4">
-                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
-                        <i class="fa-solid fa-images text-pink-500 mr-2"></i> Kenangan & Galeri Foto 📸
-                    </h3>
-                    <div id="previewPhotosContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
-                </div>
-
-                <!-- Section: Mini Games Preview Container -->
-                <div class="space-y-4">
-                    <h3 class="cute-font text-xl font-bold text-slate-800 text-center flex items-center justify-center">
-                        <i class="fa-solid fa-gamepad text-purple-500 mr-2"></i> Zona Mini Games Interaktif 🎮
-                    </h3>
-                    <p class="text-xs text-slate-500 text-center">Mainkan game-game di bawah ini yang sudah dipilih khusus untukmu!</p>
-                    <div id="previewActiveGamesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
-
-            </div>
-        </div>
-
-    </main>
-
-    <!-- ================= SHARE MODAL ================= -->
-    <div id="shareModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-pink-100 space-y-5 animate-fadeIn relative">
-            <button onclick="closeShareModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="text-center space-y-2">
-                <div class="text-5xl">🔗</div>
-                <h3 class="cute-font text-2xl font-bold text-slate-800">Link Kado Siap Dibagikan!</h3>
-                <p class="text-xs text-slate-500">Salin tautan unik di bawah ini dan kirimkan ke pasangan atau temanmu melalui WhatsApp, Telegram, atau Line.</p>
-            </div>
-            
-            <div class="flex items-center space-x-2 bg-pink-50/70 p-2 rounded-2xl border border-pink-200">
-                <input type="text" id="shareLinkInput" readonly class="bg-transparent text-xs text-slate-600 flex-1 px-2 focus:outline-none select-all">
-                <button onclick="copyShareLink()" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition flex items-center space-x-1">
-                    <i class="fa-solid fa-copy"></i>
-                    <span id="copyBtnText">Salin</span>
-                </button>
-            </div>
-
-            <div class="pt-2 text-center">
-                <button onclick="closeShareModal()" class="text-xs text-slate-500 hover:text-slate-700 font-medium">Tutup</button>
-            </div>
-        </div>
+      )}
     </div>
+  );
+}
 
-    <!-- Toast Notification -->
-    <div id="toastNotification" class="fixed bottom-6 right-6 bg-slate-900/90 text-white text-xs px-4 py-3 rounded-2xl shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2">
-        <i class="fa-solid fa-circle-check text-green-400"></i>
-        <span id="toastText">Berhasil!</span>
+function TriviaGame({ onWin }) {
+  const [step, setStep] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [correct, setCorrect] = useState(false);
+
+  const questions = [
+    { q: 'Where was our favorite date?', options: ['The Beach', 'Coffee Shop', 'Stargazing Park'], answer: 1 },
+    { q: 'What is my favorite snack?', options: ['Chocolate', 'Pizza', 'Sushi'], answer: 0 },
+    { q: 'Who said "I love you" first?', options: ['You did', 'I did', 'At the exact same time'], answer: 2 }
+  ];
+
+  const handleSelect = (idx) => {
+    setSelected(idx);
+    if (idx === questions[step].answer) {
+      setCorrect(true);
+      setTimeout(() => {
+        if (step + 1 < questions.length) {
+          setStep(s => s + 1);
+          setSelected(null);
+          setCorrect(false);
+        } else {
+          if (onWin) onWin();
+        }
+      }, 1000);
+    }
+  };
+
+  return (
+    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center">
+      {step < questions.length ? (
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-rose-500">Question {step + 1} of {questions.length}</span>
+          <h4 className="font-bold text-lg text-gray-800 mt-2 mb-4">{questions[step].q}</h4>
+          <div className="space-y-2">
+            {questions[step].options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => handleSelect(i)}
+                className={`w-full py-3 px-4 rounded-xl border font-medium transition-all ${
+                  selected === i 
+                    ? i === questions[step].answer ? 'bg-emerald-500 text-white border-emerald-600' : 'bg-rose-500 text-white border-rose-600'
+                    : 'bg-white hover:bg-rose-50 border-gray-200 text-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="py-8">
+          <span className="text-4xl">🏆</span>
+          <h4 className="font-bold text-xl text-rose-700 mt-2">All Trivia Answered Correctly!</h4>
+        </div>
+      )}
     </div>
+  );
+}
 
-    <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-pink-400 font-medium z-10">
-        GiftNest Ultimate • Made with 💖 for Navisyah & Everyone
-    </footer>
+function ScratchGame({ onWin }) {
+  const [scratched, setScratched] = useState(false);
+  return (
+    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center flex flex-col items-center justify-center">
+      <h4 className="font-bold text-lg text-gray-800 mb-4">Scratch to Reveal Your Prize!</h4>
+      <div 
+        onClick={() => { setScratched(true); if (onWin) onWin(); }}
+        className={`relative w-64 h-32 rounded-2xl flex items-center justify-center cursor-pointer shadow-inner overflow-hidden transition-all duration-500 ${scratched ? 'bg-gradient-to-r from-amber-200 to-yellow-300' : 'bg-gradient-to-r from-gray-400 to-gray-600'}`}
+      >
+        {scratched ? (
+          <div className="text-center p-2 animate-fade-in">
+            <span className="text-2xl">🎟️</span>
+            <p className="font-bold text-rose-900 text-sm mt-1">Free Unlimited Hugs & Dinner Date!</p>
+          </div>
+        ) : (
+          <div className="text-white font-bold tracking-widest flex items-center gap-2">
+            <Sparkles className="w-5 h-5 animate-spin" /> Click to Scratch Here
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
-    <script>
-        // 1. Daftar Tema Warna
-        const themes = [
-            { id: 'pastel', name: 'Pastel Pink', bg: 'bg-pink-50', card: 'bg-gradient-to-br from-pink-100 via-rose-50 to-pink-200', text: 'text-pink-600', border: 'border-pink-200' },
-            { id: 'sunset', name: 'Sunset Peach', bg: 'bg-orange-50', card: 'bg-gradient-to-br from-orange-100 via-amber-50 to-rose-100', text: 'text-orange-600', border: 'border-orange-200' },
-            { id: 'lavender', name: 'Lavender Dream', bg: 'bg-purple-50', card: 'bg-gradient-to-br from-purple-100 via-violet-50 to-indigo-100', text: 'text-purple-600', border: 'border-purple-200' },
-            { id: 'minty', name: 'Minty Fresh', bg: 'bg-teal-50', card: 'bg-gradient-to-br from-teal-100 via-emerald-50 to-cyan-100', text: 'text-teal-600', border: 'border-teal-200' },
-            { id: 'dark', name: 'Dark Romance', bg: 'bg-slate-900 text-slate-100', card: 'bg-gradient-to-br from-slate-800 via-rose-950 to-slate-900 text-slate-100', text: 'text-rose-400', border: 'border-rose-900' }
-        ];
+function WheelGame({ onWin }) {
+  const [spinning, setSpinning] = useState(false);
+  const [result, setResult] = useState('Click Spin!');
 
-        // 2. Daftar 20+ Mini Games Berbeda
-        const allGamesList = [
-            { id: 'game1', name: '🎯 Love Quiz (Seberapa Kenal)', desc: 'Kuis interaktif pertanyaan personal hubungan kalian.' },
-            { id: 'game2', name: '💖 Catch The Hearts', desc: 'Tangkap hati yang jatuh secepat mungkin dalam waktu tertentu.' },
-            { id: 'game3', name: '🧠 Memory Card Matching', desc: 'Cocokkan kartu ikon romantis yang berpasangan.' },
-            { id: 'game4', name: '⭐ Tangkap Bintang Harapan', desc: 'Kumpulkan bintang impian sebanyak-banyaknya.' },
-            { id: 'game5', name: '🧩 Susun Kata Cinta', desc: 'Tebak dan susun kata rahasia yang manis.' },
-            { id: 'game6', name: '❌ Tic Tac Toe Spesial', desc: 'Bermain simbol hati vs bintang bersama pasangan.' },
-            { id: 'game7', name: '🧸 Ketuk Beruang Keberuntungan', desc: 'Ketuk beruang imut untuk memunculkan pesan semangat.' },
-            { id: 'game8', name: '🎁 Kotak Hadiah Misteri', desc: 'Pilih kotak kejutan yang berisi hadiah virtual lucu.' },
-            { id: 'game9', name: '🎡 Putar Roda Keputusan', desc: 'Mau makan/jalan ke mana? Putar rodanya!' },
-            { id: 'game10', name: '🍫 Tangkap Coklat Manis', desc: 'Hindari sayuran, tangkap coklat lezat.' },
-            { id: 'game11', name: '🌸 Tebak Tanggal Spesial', desc: 'Kuis tanggal jadian atau momen penting kalian.' },
-            { id: 'game12', name: '🔮 Bola Keajaiban Cinta', desc: 'Kocok bola ramalan untuk mendapat jawaban romantis.' },
-            { id: 'game13', name: '✨ Hitung Mundur Romantis', desc: 'Hitung detik kebersamaan kalian.' },
-            { id: 'game14', name: '🐾 Jejak Kaki Kucing', desc: 'Ikuti jejak kucing menuju hadiah rahasia.' },
-            { id: 'game15', name: '💌 Temukan Amplop Rahasia', desc: 'Pilih amplop yang benar di antara 3 pilihan.' },
-            { id: 'game16', name: '🍰 Hias Kue Ulang Tahun', desc: 'Ketuk lilin kue untuk meniup dan mendapat ucapan.' },
-            { id: 'game17', name: '🎨 Palet Warna Perasaan', desc: 'Pilih warna mood hari ini dan lihat artinya.' },
-            { id: 'game18', name: '🎈 Letuskan Balon Harapan', desc: 'Letuskan balon untuk membaca kalimat motivasi.' },
-            { id: 'game19', name: '🍵 Seduh Secangkir Kopi Virtual', desc: 'Sajikan kopi hangat virtual untuk si dia.' },
-            { id: 'game20', name: '🌙 Starlight Wish Generator', desc: 'Tulis harapan bintang jatuh dan simpan.' },
-            { id: 'game21', name: '🏆 Kuis Paling Jagoan', desc: 'Tantangan trivia singkat untuk si doi.' }
-        ];
+  const items = ['Romantic Dinner', 'Movie Night', 'Weekend Trip', 'Breakfast in Bed', 'Massage Voucher', 'Infinite Kisses'];
 
-        // State Utama Aplikasi
-        let appState = {
-            theme: themes[0],
-            recipient: 'Sayangku Tercinta',
-            sender: 'Navisyah',
-            mainSticker: '🧸',
-            photos: [
-                { id: 1, url: 'https://placehold.co/400x300/ffb6c1/ffffff?text=Kenangan+1', caption: 'Hari pertama kita jalan bareng 🌸', sticker: '✨' },
-                { id: 2, url: 'https://placehold.co/400x300/ff69b4/ffffff?text=Kenangan+2', caption: 'Senyum paling manis yang bikin tenang 🥰', sticker: '💖' }
-            ],
-            letters: [
-                { id: 1, title: 'Untuk Kamu yang Spesial 💌', content: 'Hai! Terima kasih ya udah selalu jadi alasan di balik senyumku setiap hari. Semoga kado virtual ini bikin harimu makin ceria!', envelopeSticker: '💌' },
-                { id: 2, title: 'Catatan Kecil Hari Ini ✨', content: 'Ingat ya, apapun yang terjadi kamu hebat banget udah bertahan sejauh ini. Aku bangga sama kamu!', envelopeSticker: '🌷' }
-            ],
-            activeGameIds: ['game1', 'game2', 'game3', 'game7', 'game8']
-        };
+  const spin = () => {
+    if (spinning) return;
+    setSpinning(true);
+    let count = 0;
+    const interval = setInterval(() => {
+      setResult(items[Math.floor(Math.random() * items.length)]);
+      count++;
+      if (count > 15) {
+        clearInterval(interval);
+        setSpinning(false);
+        if (onWin) onWin();
+      }
+    }, 100);
+  };
 
-        // Inisialisasi Builder saat Load
-        window.onload = function() {
-            initThemePicker();
-            renderPhotoEditors();
-            renderLetterEditors();
-            renderGamesCheckboxes();
-            setupParticles();
-        };
+  return (
+    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center flex flex-col items-center justify-center">
+      <h4 className="font-bold text-lg text-gray-800 mb-2">Lucky Date Wheel</h4>
+      <div className="w-48 h-48 rounded-full border-8 border-rose-500 bg-rose-50 flex items-center justify-center shadow-lg my-4 relative overflow-hidden">
+        <div className={`text-center font-bold text-rose-900 p-4 ${spinning ? 'animate-pulse' : ''}`}>
+          {result}
+        </div>
+      </div>
+      <button 
+        onClick={spin}
+        disabled={spinning}
+        className="px-6 py-2.5 bg-rose-600 text-white rounded-xl font-bold shadow hover:bg-rose-700 transition-all cursor-pointer"
+      >
+        {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+      </button>
+    </div>
+  );
+}
 
-        function setupParticles() {
-            const container = document.getElementById('bgParticles');
-            container.innerHTML = '';
-            const symbols = ['💖', '✨', '🌸', '⭐', '🎈'];
-            for(let i=0; i<12; i++) {
-                const el = document.createElement('div');
-                el.className = 'absolute text-pink-300 opacity-30 floating select-none';
-                el.style.left = Math.random() * 100 + '%';
-                el.style.top = Math.random() * 100 + '%';
-                el.style.fontSize = (Math.random() * 20 + 15) + 'px';
-                el.style.animationDuration = (Math.random() * 4 + 3) + 's';
-                el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                container.appendChild(el);
-            }
+const STORAGE_KEY = 'gift_builder_database_v1';
+
+const CloudDB = {
+  saveGift: (giftData) => {
+    try {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      const id = giftData.id || Math.random().toString(36).substring(2, 9);
+      const record = { ...giftData, id, updatedAt: new Date().toISOString() };
+      existing[id] = record;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+      return record;
+    } catch (e) {
+      console.error('Storage save error:', e);
+      return null;
+    }
+  },
+  getGift: (id) => {
+    try {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      return existing[id] || null;
+    } catch (e) {
+      console.error('Storage fetch error:', e);
+      return null;
+    }
+  }
+};
+
+export default function App() {
+  const [view, setView] = useState('landing'); // 'landing', 'builder', 'receiver'
+  const [currentGiftId, setCurrentGiftId] = useState(null);
+
+  // Gift Builder State
+  const [giftData, setGiftData] = useState({
+    title: 'For My Special Someone ❤️',
+    recipient: 'Alex',
+    sender: 'Sam',
+    theme: THEMES[0].id,
+    font: FONTS[0].id,
+    coverStyle: 'giftbox', // 'giftbox', 'envelope', 'polaroid', 'heartlock'
+    music: PLAYLISTS[0].url,
+    letter: 'Dearest Alex,\n\nI created this special virtual gift just for you because you mean the world to me. Every moment with you is pure magic. Happy anniversary/birthday!\n\nForever yours,\nSam',
+    photos: [
+      { id: 1, url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop', caption: 'Our first date ☕' },
+      { id: 2, url: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500&auto=format&fit=crop', caption: 'Sunset walk 🌅' }
+    ],
+    stickers: [
+      { id: 1, emoji: '❤️', x: 20, y: 30 },
+      { id: 2, emoji: '✨', x: 70, y: 60 }
+    ],
+    miniGame: MINI_GAMES[0].id,
+    unlocked: false
+  });
+
+  // History for Undo/Redo
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  // Active builder tab
+  const [activeTab, setActiveTab] = useState('cover'); // 'cover', 'theme', 'letter', 'photos', 'games', 'music', 'stickers'
+  const [previewMode, setPreviewMode] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [autosaveStatus, setAutosaveStatus] = useState('All changes saved');
+
+  // Handle URL parameters for Receiver mode on load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const giftId = params.get('gift');
+    if (giftId) {
+      const fetched = CloudDB.getGift(giftId);
+      if (fetched) {
+        setGiftData(fetched);
+        setCurrentGiftId(giftId);
+        setView('receiver');
+      }
+    }
+  }, []);
+
+  // Autosave simulation
+  useEffect(() => {
+    if (view === 'builder') {
+      setAutosaveStatus('Saving...');
+      const timer = setTimeout(() => {
+        if (currentGiftId) {
+          CloudDB.saveGift({ ...giftData, id: currentGiftId });
         }
+        setAutosaveStatus('All changes saved locally & cloud');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [giftData, currentGiftId]);
 
-        // Render Tema
-        function initThemePicker() {
-            const container = document.getElementById('themePickerContainer');
-            container.innerHTML = themes.map(t => `
-                <div onclick="selectTheme('${t.id}')" class="cursor-pointer p-3 rounded-2xl border-2 text-center transition ${appState.theme.id === t.id ? 'border-pink-500 bg-pink-100/50 shadow-sm' : 'border-slate-200 bg-white hover:border-pink-300'}">
-                    <div class="w-full h-6 rounded-lg mb-1 ${t.card}"></div>
-                    <span class="text-xs font-semibold text-slate-700">${t.name}</span>
+  const updateGift = (updates) => {
+    setHistory(prev => [...prev.slice(0, historyIndex + 1), giftData]);
+    setHistoryIndex(prev => prev + 1);
+    setGiftData(prev => ({ ...prev, ...updates }));
+  };
+
+  const handleUndo = () => {
+    if (historyIndex >= 0) {
+      setGiftData(history[historyIndex]);
+      setHistoryIndex(prev => prev - 1);
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(prev => prev + 1);
+      setGiftData(history[historyIndex + 1]);
+    }
+  };
+
+  const handleSaveAndShare = () => {
+    const saved = CloudDB.saveGift(giftData);
+    if (saved) {
+      setCurrentGiftId(saved.id);
+      setShareModalOpen(true);
+    }
+  };
+
+  const currentTheme = THEMES.find(t => t.id === giftData.theme) || THEMES[0];
+  const currentFont = FONTS.find(f => f.id === giftData.font) || FONTS[0];
+
+  if (view === 'landing') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-100 to-amber-50 text-gray-900 font-sans flex flex-col items-center justify-between p-6">
+        <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center text-white shadow-lg shadow-rose-600/30">
+              <Gift className="w-6 h-6 animate-pulse" />
+            </div>
+            <span className="font-bold text-2xl bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+              GiftCraft Studio
+            </span>
+          </div>
+          <button 
+            onClick={() => setView('builder')}
+            className="px-6 py-2.5 rounded-full bg-rose-600 text-white font-semibold shadow-lg shadow-rose-600/30 hover:bg-rose-700 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+          >
+            Create Free Gift ✨
+          </button>
+        </header>
+
+        <main className="max-w-4xl mx-auto text-center py-16 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100 text-rose-700 font-medium text-sm mb-6 animate-fade-in">
+            <Sparkles className="w-4 h-4" /> The Ultimate Immersive Digital Gift Experience
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 leading-tight mb-6">
+            Craft Unforgettable <span className="bg-gradient-to-r from-rose-600 via-pink-600 to-amber-600 bg-clip-text text-transparent">Digital Memories</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10">
+            Build interactive, multimedia gift pages complete with customizable cover boxes, romantic letters, playable mini-games, polaroid photo memories, and custom background music.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <button 
+              onClick={() => setView('builder')}
+              className="px-8 py-4 rounded-2xl bg-rose-600 text-white font-bold text-lg shadow-xl shadow-rose-600/30 hover:bg-rose-700 transition-all transform hover:-translate-y-1 cursor-pointer flex items-center justify-center gap-3"
+            >
+              Start Building Now <ArrowRight className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => {
+                // Load demo gift
+                const demoId = 'demo_gift_123';
+                CloudDB.saveGift({
+                  id: demoId,
+                  title: 'Happy Anniversary, Love! 💖',
+                  recipient: 'Jessica',
+                  sender: 'Michael',
+                  theme: 'romantic',
+                  font: 'font-serif',
+                  coverStyle: 'giftbox',
+                  music: PLAYLISTS[0].url,
+                  letter: 'My dearest Jessica,\n\nEvery single day with you is a gift. I made this interactive space just to remind you how much I adore you!\n\nLove always,\nMichael',
+                  photos: [
+                    { id: 1, url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500&auto=format&fit=crop', caption: 'Magical Evening' }
+                  ],
+                  stickers: [{ id: 1, emoji: '💖', x: 30, y: 40 }],
+                  miniGame: 'catch'
+                });
+                window.location.search = `?gift=${demoId}`;
+              }}
+              className="px-8 py-4 rounded-2xl bg-white text-gray-800 font-bold text-lg border border-gray-200 shadow-md hover:bg-gray-50 transition-all cursor-pointer flex items-center justify-center gap-3"
+            >
+              Preview Sample Gift 🎁
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full text-left">
+            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 mb-4 font-bold text-xl">15+</div>
+              <h3 className="font-bold text-lg mb-1">Stunning Themes</h3>
+              <p className="text-gray-600 text-sm">Choose from Cyberpunk, Romantic Rose, Gold Luxury, Cozy Autumn and more.</p>
+            </div>
+            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600 mb-4">
+                <Gamepad2 className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Playable Mini-Games</h3>
+              <p className="text-gray-600 text-sm">Include catch games, quizzes, scratch cards, and lucky wheels that lock/unlock gifts.</p>
+            </div>
+            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 mb-4">
+                <Share2 className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Instant Share Links</h3>
+              <p className="text-gray-600 text-sm">Generate unique cloud links for your recipient to open with immersive animations.</p>
+            </div>
+          </div>
+        </main>
+
+        <footer className="text-sm text-gray-500 py-6">
+          GiftCraft Studio &bull; Built with React & Tailwind CSS
+        </footer>
+      </div>
+    );
+  }
+
+  if (view === 'receiver') {
+    return (
+      <div className={`min-h-screen ${currentTheme.bg} ${currentFont.class} flex flex-col items-center justify-center p-4 relative overflow-hidden transition-colors duration-700`}>
+        {/* Background ambient music player */}
+        <audio src={giftData.music} autoPlay loop />
+
+        {!giftData.unlocked ? (
+          <div className="max-w-md w-full bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/40 text-center animate-fade-in relative z-10">
+            <div className="w-20 h-20 bg-rose-100 text-rose-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg mb-6 transform hover:rotate-6 transition-transform">
+              <Gift className="w-10 h-10 animate-bounce" />
+            </div>
+            <span className="text-xs font-bold uppercase tracking-widest text-rose-500">Special Gift For {giftData.recipient}</span>
+            <h1 className="text-2xl md:text-3xl font-black text-gray-900 mt-2 mb-4">{giftData.title}</h1>
+            <p className="text-gray-600 mb-8 text-sm">Sent with love by <strong className="text-rose-600">{giftData.sender}</strong>. Complete the mini-challenge below to unlock your surprise!</p>
+
+            {/* Embedded Mini Game to Unlock */}
+            <div className="mb-6">
+              {giftData.miniGame === 'catch' && <CatchHeartsGame onWin={() => updateGift({ unlocked: true })} />}
+              {giftData.miniGame === 'quiz' && <TriviaGame onWin={() => updateGift({ unlocked: true })} />}
+              {giftData.miniGame === 'scratch' && <ScratchGame onWin={() => updateGift({ unlocked: true })} />}
+              {giftData.miniGame === 'spinner' && <WheelGame onWin={() => updateGift({ unlocked: true })} />}
+              {/* Fallback for other games */}
+              {!['catch', 'quiz', 'scratch', 'spinner'].includes(giftData.miniGame) && (
+                <div className="p-4 bg-rose-50 rounded-xl border border-rose-200">
+                  <p className="text-sm font-medium text-rose-800 mb-3">Mini-Game Challenge: Click below to instantly unlock!</p>
+                  <button 
+                    onClick={() => updateGift({ unlocked: true })}
+                    className="px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl shadow hover:bg-rose-700 transition-all"
+                  >
+                    Unlock Gift Box 🎁
+                  </button>
                 </div>
-            `).join('');
-        }
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="max-w-2xl w-full bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl border border-white/50 animate-fade-in relative z-10 my-8">
+            <div className="absolute top-4 right-4 flex gap-2">
+              <span className="px-3 py-1 bg-rose-100 text-rose-700 text-xs font-bold rounded-full">Unlocked ✨</span>
+            </div>
+            <div className="text-center mb-8">
+              <span className="text-xs font-bold uppercase tracking-widest text-rose-500">From {giftData.sender} To {giftData.recipient}</span>
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{giftData.title}</h1>
+            </div>
 
-        function selectTheme(id) {
-            appState.theme = themes.find(t => t.id === id);
-            initThemePicker();
-        }
+            {/* Letter Content */}
+            <div className="bg-rose-50/50 p-6 md:p-8 rounded-2xl border border-rose-100 mb-8 shadow-inner whitespace-pre-wrap text-gray-800 leading-relaxed text-lg">
+              {giftData.letter}
+            </div>
 
-        // Update State Input Umum
-        function updateStateValue() {
-            appState.recipient = document.getElementById('inputRecipient').value;
-            appState.sender = document.getElementById('inputSender').value;
-            appState.mainSticker = document.getElementById('inputMainSticker').value;
-        }
-
-        // ================= PHOTO EDITORS (SATU-SATU) =================
-        function renderPhotoEditors() {
-            const container = document.getElementById('photoEditorContainer');
-            container.innerHTML = appState.photos.map((p, index) => `
-                <div class="p-4 rounded-2xl border border-pink-200 bg-pink-50/40 space-y-3 relative">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-pink-600 uppercase">Slot Foto #${index + 1}</span>
-                        ${appState.photos.length > 1 ? `<button onclick="removePhotoSlot(${p.id})" class="text-xs text-red-500 hover:text-red-700"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>` : ''}
+            {/* Photos Section */}
+            {giftData.photos.length > 0 && (
+              <div className="mb-8">
+                <h3 className="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-rose-600" /> Memory Gallery
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {giftData.photos.map(p => (
+                    <div key={p.id} className="bg-white p-3 rounded-2xl shadow-md border border-gray-100 transform hover:rotate-1 transition-transform">
+                      <img src={p.url} alt="Memory" className="w-full h-48 object-cover rounded-xl mb-2" />
+                      <p className="text-xs font-medium text-gray-600 text-center">{p.caption}</p>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">URL Gambar</label>
-                            <input type="text" value="${p.url}" oninput="updatePhotoProp(${p.id}, 'url', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Caption Foto</label>
-                            <input type="text" value="${p.caption}" oninput="updatePhotoProp(${p.id}, 'caption', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Foto</label>
-                            <input type="text" value="${p.sticker}" oninput="updatePhotoProp(${p.id}, 'sticker', this.value)" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-xs bg-white">
-                        </div>
-                    </div>
+                  ))}
                 </div>
-            `).join('');
-        }
+              </div>
+            )}
 
-        function addPhotoSlot() {
-            const newId = appState.photos.length > 0 ? Math.max(...appState.photos.map(p => p.id)) + 1 : 1;
-            appState.photos.push({ id: newId, url: 'https://placehold.co/400x300/ffb6c1/ffffff?text=Foto+Baru', caption: 'Kenangan manis baru ✨', sticker: '💖' });
-            renderPhotoEditors();
-        }
+            <div className="text-center pt-4 border-t border-gray-100">
+              <button 
+                onClick={() => setView('landing')}
+                className="text-sm font-bold text-rose-600 hover:text-rose-700 underline cursor-pointer"
+              >
+                Create Your Own Gift with GiftCraft Studio
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
-        function removePhotoSlot(id) {
-            appState.photos = appState.photos.filter(p => p.id !== id);
-            renderPhotoEditors();
-        }
+  return (
+    <div className={`min-h-screen ${currentTheme.bg} ${currentFont.class} flex flex-col text-gray-900 selection:bg-rose-500 selection:text-white transition-colors duration-500`}>
+      {/* Top Navigation Bar */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30 px-6 py-3 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setView('landing')}
+            className="flex items-center gap-2 font-bold text-lg text-gray-900 hover:text-rose-600 transition-colors cursor-pointer"
+          >
+            <div className="w-8 h-8 rounded-xl bg-rose-600 flex items-center justify-center text-white shadow">
+              <Gift className="w-4 h-4" />
+            </div>
+            <span>GiftBuilder</span>
+          </button>
+          <span className="text-xs font-medium px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 hidden sm:inline-block">
+            {autosaveStatus}
+          </span>
+        </div>
 
-        function updatePhotoProp(id, prop, val) {
-            const photo = appState.photos.find(p => p.id === id);
-            if(photo) photo[prop] = val;
-        }
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-gray-100 rounded-xl p-1">
+            <button 
+              onClick={handleUndo} 
+              disabled={historyIndex < 0}
+              className="p-2 rounded-lg hover:bg-white text-gray-700 disabled:opacity-30 transition-all cursor-pointer"
+              title="Undo"
+            >
+              <Undo2 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={handleRedo} 
+              disabled={historyIndex >= history.length - 1}
+              className="p-2 rounded-lg hover:bg-white text-gray-700 disabled:opacity-30 transition-all cursor-pointer"
+              title="Redo"
+            >
+              <Redo2 className="w-4 h-4" />
+            </button>
+          </div>
 
-        // ================= LETTER EDITORS (SATU-SATU) =================
-        function renderLetterEditors() {
-            const container = document.getElementById('letterEditorContainer');
-            container.innerHTML = appState.letters.map((l, index) => `
-                <div class="p-4 rounded-2xl border border-purple-200 bg-purple-50/30 space-y-3 relative">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-purple-600 uppercase">Surat Amplop #${index + 1}</span>
-                        ${appState.letters.length > 1 ? `<button onclick="removeLetterSlot(${l.id})" class="text-xs text-red-500 hover:text-red-700"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>` : ''}
+          <button 
+            onClick={() => setPreviewMode(!previewMode)}
+            className={`px-4 py-2 rounded-xl font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+              previewMode ? 'bg-rose-600 text-white border-rose-600 shadow-md' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <Eye className="w-4 h-4" /> {previewMode ? 'Edit Mode' : 'Live Preview'}
+          </button>
+
+          <button 
+            onClick={handleSaveAndShare}
+            className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold flex items-center gap-2 shadow-lg shadow-rose-600/30 hover:opacity-95 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+          >
+            <Share2 className="w-4 h-4" /> Share Gift Link
+          </button>
+        </div>
+      </header>
+
+      {/* Main Builder Workspace */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        {/* Left Sidebar Tools */}
+        {!previewMode && (
+          <aside className="w-full lg:w-80 bg-white/90 backdrop-blur border-r border-gray-200 flex flex-col p-4 gap-2 overflow-y-auto max-h-[calc(100vh-65px)]">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 py-1">Customization Tools</span>
+            
+            {[
+              { id: 'cover', name: 'Cover & Titles', icon: Layout },
+              { id: 'theme', name: 'Themes & Styles', icon: Palette },
+              { id: 'letter', name: 'Love Letter & Fonts', icon: Type },
+              { id: 'photos', name: 'Photo Gallery', icon: ImageIcon },
+              { id: 'games', name: 'Interactive Mini-Game', icon: Gamepad2 },
+              { id: 'music', name: 'Background Music', icon: Music },
+              { id: 'stickers', name: 'Stickers & Badges', icon: Smile },
+            ].map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold transition-all text-left cursor-pointer ${
+                    isActive 
+                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20' 
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.name}</span>
+                </button>
+              );
+            })}
+          </aside>
+        )}
+
+        {/* Center Canvas Editor */}
+        <main className="flex-1 p-6 md:p-10 overflow-y-auto flex items-center justify-center">
+          <div className={`max-w-2xl w-full bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl border border-white/50 relative overflow-hidden transition-all duration-500`}>
+            
+            {/* Live interactive stickers overlay */}
+            {giftData.stickers.map(s => (
+              <div 
+                key={s.id} 
+                style={{ left: `${s.x}%`, top: `${s.y}%` }}
+                className="absolute text-3xl select-none pointer-events-none animate-bounce"
+              >
+                {s.emoji}
+              </div>
+            ))}
+
+            <div className="text-center mb-8">
+              <span className="text-xs font-bold uppercase tracking-widest text-rose-500">From {giftData.sender} To {giftData.recipient}</span>
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{giftData.title}</h1>
+            </div>
+
+            {/* Letter Preview in Editor */}
+            <div className="bg-rose-50/50 p-6 md:p-8 rounded-2xl border border-rose-100 mb-8 shadow-inner whitespace-pre-wrap text-gray-800 leading-relaxed text-lg">
+              {giftData.letter}
+            </div>
+
+            {/* Photos Preview in Editor */}
+            {giftData.photos.length > 0 && (
+              <div className="mb-8">
+                <h3 className="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-rose-600" /> Memory Gallery
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {giftData.photos.map(p => (
+                    <div key={p.id} className="bg-white p-3 rounded-2xl shadow-md border border-gray-100">
+                      <img src={p.url} alt="Memory" className="w-full h-40 object-cover rounded-xl mb-2" />
+                      <p className="text-xs font-medium text-gray-600 text-center">{p.caption}</p>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Judul Surat</label>
-                            <input type="text" value="${l.title}" oninput="updateLetterProp(${l.id}, 'title', this.value)" class="w-full px-3 py-2 rounded-xl border border-purple-200 text-xs bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Stiker Amplop</label>
-                            <input type="text" value="${l.envelopeSticker}" oninput="updateLetterProp(${l.id}, 'envelopeSticker', this.value)" class="w-full px-3 py-2 rounded-xl border border-purple-200 text-xs bg-white">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Isi Pesan Surat</label>
-                        <textarea rows="3" oninput="updateLetterProp(${l.id}, 'content', this.value)" class="w-full p-3 rounded-xl border border-purple-200 text-xs bg-white">${l.content}</textarea>
-                    </div>
+                  ))}
                 </div>
-            `).join('');
-        }
+              </div>
+            )}
 
-        function addLetterSlot() {
-            const newId = appState.letters.length > 0 ? Math.max(...appState.letters.map(l => l.id)) + 1 : 1;
-            appState.letters.push({ id: newId, title: 'Surat Spesial Baru 💌', content: 'Tulis pesan manismu di sini...', envelopeSticker: '💌' });
-            renderLetterEditors();
-        }
+            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center">
+              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 block mb-1">Attached Mini-Game</span>
+              <p className="font-bold text-gray-800">{MINI_GAMES.find(g => g.id === giftData.miniGame)?.name}</p>
+            </div>
+          </div>
+        </main>
 
-        function removeLetterSlot(id) {
-            appState.letters = appState.letters.filter(l => l.id !== id);
-            renderLetterEditors();
-        }
-
-        function updateLetterProp(id, prop, val) {
-            const letter = appState.letters.find(l => l.id === id);
-            if(letter) letter[prop] = val;
-        }
-
-        // ================= GAMES CHECKBOXES =================
-        function renderGamesCheckboxes() {
-            const container = document.getElementById('gamesSelectionContainer');
-            container.innerHTML = allGamesList.map(g => `
-                <label class="flex items-start space-x-2 p-2.5 rounded-xl bg-white border border-pink-100 cursor-pointer hover:border-pink-300 transition">
-                    <input type="checkbox" value="${g.id}" ${appState.activeGameIds.includes(g.id) ? 'checked' : ''} onchange="toggleGameSelection('${g.id}')" class="mt-1 accent-pink-500 rounded">
-                    <div>
-                        <div class="text-xs font-bold text-slate-800">${g.name}</div>
-                        <div class="text-[10px] text-slate-500">${g.desc}</div>
-                    </div>
-                </label>
-            `).join('');
-        }
-
-        function toggleGameSelection(id) {
-            if(appState.activeGameIds.includes(id)) {
-                appState.activeGameIds = appState.activeGameIds.filter(gId => gId !== id);
-            } else {
-                appState.activeGameIds.push(id);
-            }
-        }
-
-        // ================= SWITCH TABS & PREVIEW =================
-        function switchTab(tab) {
-            updateStateValue();
-            const builder = document.getElementById('builderSection');
-            const preview = document.getElementById('previewSection');
-            const btnB = document.getElementById('tabBuilder');
-            const btnP = document.getElementById('tabPreview');
-
-            if(tab === 'preview') {
-                builder.classList.add('hidden');
-                preview.classList.remove('hidden');
-                btnB.className = "bg-pink-100 text-pink-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition";
-                btnP.className = "bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition";
-                renderPreviewContent();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            } else {
-                builder.classList.remove('hidden');
-                preview.classList.add('hidden');
-                btnB.className = "bg-pink-500 text-white px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow transition";
-                btnP.className = "bg-purple-100 text-purple-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm transition";
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }
-
-        function renderPreviewContent() {
-            // Apply Theme
-            const wrapper = document.getElementById('previewCardWrapper');
-            wrapper.className = `rounded-3xl p-6 sm:p-10 shadow-2xl border transition-all duration-500 relative overflow-hidden space-y-8 ${appState.theme.card} ${appState.theme.border}`;
-            document.getElementById('mainBody').className = `${appState.theme.bg} text-slate-700 min-h-screen flex flex-col transition-colors duration-500 relative`;
-
-            // Header info
-            document.getElementById('prevMainSticker').innerText = appState.mainSticker;
-            document.getElementById('prevRecipientTitle').innerText = `Untuk: ${appState.recipient}`;
-            document.getElementById('prevSenderTitle').innerText = `Kado Spesial dari: ${appState.sender}`;
-
-            // Letters Preview
-            const lettersCont = document.getElementById('previewLettersContainer');
-            lettersCont.innerHTML = appState.letters.map((l, idx) => `
-                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-pink-100 space-y-3">
-                    <div class="flex justify-between items-center border-b border-pink-100 pb-2">
-                        <span class="cute-font text-xs font-bold text-pink-600">${l.envelopeSticker} ${l.title}</span>
-                        <button onclick="toggleEnvelope(${idx})" class="text-xs bg-pink-100 hover:bg-pink-200 text-pink-700 px-2.5 py-1 rounded-lg font-medium transition">Buka/Tutup</button>
-                    </div>
-                    <p id="envContent_${idx}" class="text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed hidden">${l.content}</p>
-                    <p id="envHint_${idx}" class="text-[11px] text-slate-400 italic">Klik tombol di atas untuk membuka surat.</p>
+        {/* Right Inspector Panel (Controls based on activeTab) */}
+        {!previewMode && (
+          <aside className="w-full lg:w-96 bg-white/90 backdrop-blur border-l border-gray-200 p-6 overflow-y-auto max-h-[calc(100vh-65px)]">
+            {activeTab === 'cover' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Cover & Titles</h3>
+                  <p className="text-xs text-gray-500">Customize gift headings and recipient details.</p>
                 </div>
-            `).join('');
-
-            // Photos Preview
-            const photosCont = document.getElementById('previewPhotosContainer');
-            photosCont.innerHTML = appState.photos.map(p => `
-                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-sm border border-pink-100 space-y-2 text-center">
-                    <div class="relative overflow-hidden rounded-xl aspect-video bg-pink-50">
-                        <img src="${p.url}" alt="Foto" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/ffb6c1/ffffff?text=Foto'">
-                        <span class="absolute top-2 right-2 text-2xl bg-white/80 rounded-full p-1">${p.sticker}</span>
-                    </div>
-                    <p class="text-xs font-medium text-slate-700">${p.caption}</p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Gift Title</label>
+                    <input 
+                      type="text" 
+                      value={giftData.title}
+                      onChange={e => updateGift({ title: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Recipient Name</label>
+                    <input 
+                      type="text" 
+                      value={giftData.recipient}
+                      onChange={e => updateGift({ recipient: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Sender Name</label>
+                    <input 
+                      type="text" 
+                      value={giftData.sender}
+                      onChange={e => updateGift({ sender: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
+                    />
+                  </div>
                 </div>
-            `).join('');
+              </div>
+            )}
 
-            // Active Games Preview (Render interaktif untuk game yang dicentang)
-            const gamesCont = document.getElementById('previewActiveGamesContainer');
-            if(appState.activeGameIds.length === 0) {
-                gamesCont.innerHTML = `<p class="col-span-2 text-center text-xs text-slate-500 py-4">Belum ada mini game yang dipilih di editor.</p>`;
-            } else {
-                gamesCont.innerHTML = appState.activeGameIds.map(gId => {
-                    const gameObj = allGamesList.find(g => g.id === gId);
-                    return renderGameWidget(gameObj);
-                }).join('');
-            }
-        }
-
-        function toggleEnvelope(idx) {
-            const content = document.getElementById(`envContent_${idx}`);
-            const hint = document.getElementById(`envHint_${idx}`);
-            content.classList.toggle('hidden');
-            hint.classList.toggle('hidden');
-        }
-
-        // Generator Widget untuk Mini Games agar interaktif di preview
-        function renderGameWidget(game) {
-            if(!game) return '';
-            let innerHtml = '';
-
-            switch(game.id) {
-                case 'game1': // Love Quiz
-                    innerHtml = `
-                        <div class="space-y-2 text-center">
-                            <p class="text-xs font-semibold text-slate-700">Siapa yang paling sering ngambek kalau lagi lapar?</p>
-                            <div class="flex justify-center gap-2">
-                                <button onclick="alertGameWin('Wah benar banget! Jagoan tahu aja 😜')" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-500 hover:text-white text-pink-700 text-xs rounded-xl transition">Kamu Pastinya</button>
-                                <button onclick="alertGameWin('Hmm, yakin bukan kamu? Coba lagi! 😇')" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-500 hover:text-white text-pink-700 text-xs rounded-xl transition">Aku Dong</button>
-                            </div>
-                        </div>`;
-                    break;
-                case 'game2': // Catch Hearts
-                    innerHtml = `
-                        <div class="text-center space-y-2">
-                            <p class="text-xs text-slate-600">Ketuk hati sebanyak 3 kali!</p>
-                            <button onclick="catchHeartMini(this)" class="text-3xl hover:scale-125 transition inline-block">💖 <span class="score text-xs font-bold text-pink-600">(0/3)</span></button>
-                        </div>`;
-                    break;
-                case 'game3': // Memory card simple
-                    innerHtml = `
-                        <div class="text-center space-y-2">
-                            <p class="text-xs text-slate-600">Temukan pasangan kartu yang cocok:</p>
-                            <div class="flex justify-center gap-2">
-                                <button onclick="this.innerText='🌸'; alertGameWin('Hebat! Kartu terbuka ✨')" class="w-10 h-10 bg-white border border-pink-200 rounded-xl text-lg shadow-sm">❓</button>
-                                <button onclick="this.innerText='🌸'; alertGameWin('Hebat! Kartu terbuka ✨')" class="w-10 h-10 bg-white border border-pink-200 rounded-xl text-lg shadow-sm">❓</button>
-                            </div>
-                        </div>`;
-                    break;
-                case 'game6': // Tic Tac Toe Mini
-                    innerHtml = `
-                        <div class="text-center space-y-2">
-                            <p class="text-xs text-slate-600">Ketuk kotak untuk isi tanda ❤️:</p>
-                            <div class="grid grid-cols-3 gap-1 max-w-[120px] mx-auto">
-                                <button onclick="this.innerText='❤️'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-pink-500"></button>
-                                <button onclick="this.innerText='⭐'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-amber-500"></button>
-                                <button onclick="this.innerText='❤️'" class="h-9 bg-white border border-pink-200 rounded text-sm font-bold text-pink-500"></button>
-                            </div>
-                        </div>`;
-                    break;
-                default:
-                    innerHtml = `
-                        <div class="text-center space-y-2">
-                            <p class="text-xs text-slate-600">${game.desc}</p>
-                            <button onclick="alertGameWin('Yeay! Berhasil menyelesaikan tantangan ${game.name} 🎉')" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold rounded-xl shadow transition">Mainkan Game Ini</button>
-                        </div>`;
-            }
-
-            return `
-                <div class="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-pink-100 flex flex-col justify-between space-y-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xl">🎮</span>
-                        <h4 class="font-bold text-slate-800 text-sm">${game.name}</h4>
-                    </div>
-                    ${innerHtml}
+            {activeTab === 'theme' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Themes & Styles</h3>
+                  <p className="text-xs text-gray-500">Pick from 15+ gorgeous aesthetic themes.</p>
                 </div>
-            `;
-        }
+                <div className="grid grid-cols-1 gap-2.5">
+                  {THEMES.map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => updateGift({ theme: t.id })}
+                      className={`w-full p-3 rounded-2xl border flex items-center justify-between font-semibold transition-all cursor-pointer ${
+                        giftData.theme === t.id ? 'border-rose-600 ring-2 ring-rose-500/20 bg-rose-50/50' : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-6 h-6 rounded-full ${t.primary}`} />
+                        <span>{t.name}</span>
+                      </div>
+                      {giftData.theme === t.id && <Check className="w-4 h-4 text-rose-600" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        let catchCount = 0;
-        function catchHeartMini(btn) {
-            catchCount++;
-            if(catchCount >= 3) {
-                showToast("🏆 Yey! Berhasil menangkap semua hati!");
-                catchCount = 0;
-            } else {
-                showToast(`Hati tertangkap! (${catchCount}/3)`);
-            }
-        }
+            {activeTab === 'letter' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Love Letter & Fonts</h3>
+                  <p className="text-xs text-gray-500">Write a heartfelt message and select your typography.</p>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Font Family</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {FONTS.map(f => (
+                        <button
+                          key={f.id}
+                          onClick={() => updateGift({ font: f.id })}
+                          className={`py-2 px-3 rounded-xl border font-semibold text-sm transition-all cursor-pointer ${
+                            giftData.font === f.id ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+                          }`}
+                        >
+                          {f.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Heartfelt Letter</label>
+                    <textarea 
+                      rows={8}
+                      value={giftData.letter}
+                      onChange={e => updateGift({ letter: e.target.value })}
+                      className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
-        function alertGameWin(msg) {
-            showToast(msg);
-        }
+            {activeTab === 'photos' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Photo Gallery</h3>
+                  <p className="text-xs text-gray-500">Add cherished polaroid photo memories.</p>
+                </div>
+                <div className="space-y-4">
+                  {giftData.photos.map((p, i) => (
+                    <div key={p.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-2">
+                      <input 
+                        type="text" 
+                        value={p.url}
+                        onChange={e => {
+                          const updated = [...giftData.photos];
+                          updated[i].url = e.target.value;
+                          updateGift({ photos: updated });
+                        }}
+                        placeholder="Image URL"
+                        className="w-full px-3 py-1.5 rounded-lg border text-xs bg-white"
+                      />
+                      <input 
+                        type="text" 
+                        value={p.caption}
+                        onChange={e => {
+                          const updated = [...giftData.photos];
+                          updated[i].caption = e.target.value;
+                          updateGift({ photos: updated });
+                        }}
+                        placeholder="Caption"
+                        className="w-full px-3 py-1.5 rounded-lg border text-xs bg-white"
+                      />
+                      <button 
+                        onClick={() => updateGift({ photos: giftData.photos.filter(x => x.id !== p.id) })}
+                        className="text-xs text-rose-600 font-bold hover:underline"
+                      >
+                        Remove Photo
+                      </button>
+                    </div>
+                  ))}
+                  <button 
+                    onClick={() => updateGift({ photos: [...giftData.photos, { id: Date.now(), url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop', caption: 'New Memory' }] })}
+                    className="w-full py-2.5 rounded-xl border border-dashed border-rose-300 text-rose-600 font-bold text-sm hover:bg-rose-50 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" /> Add Photo Memory
+                  </button>
+                </div>
+              </div>
+            )}
 
-        // ================= SHARE & COPY LINK =================
-        function openShareModal() {
-            updateStateValue();
-            const encoded = btoa(encodeURIComponent(JSON.stringify(appState)));
-            const dummyLink = `https://giftnest.app/v/${encoded.substring(0, 20)}...`;
-            document.getElementById('shareLinkInput').value = dummyLink;
-            document.getElementById('shareModal').classList.remove('hidden');
-        }
+            {activeTab === 'games' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Interactive Mini-Game</h3>
+                  <p className="text-xs text-gray-500">Select the unlocking challenge for your recipient.</p>
+                </div>
+                <div className="space-y-3">
+                  {MINI_GAMES.map(g => (
+                    <button
+                      key={g.id}
+                      onClick={() => updateGift({ miniGame: g.id })}
+                      className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
+                        giftData.miniGame === g.id ? 'border-rose-600 bg-rose-50/50 ring-2 ring-rose-500/20' : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="text-2xl">{g.icon}</span>
+                      <div>
+                        <h4 className="font-bold text-sm text-gray-900">{g.name}</h4>
+                        <p className="text-xs text-gray-500 mt-0.5">{g.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        function closeShareModal() {
-            document.getElementById('shareModal').classList.add('hidden');
-        }
+            {activeTab === 'music' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Background Music</h3>
+                  <p className="text-xs text-gray-500">Set the emotional ambiance.</p>
+                </div>
+                <div className="space-y-2">
+                  {PLAYLISTS.map(m => (
+                    <button
+                      key={m.id}
+                      onClick={() => updateGift({ music: m.url })}
+                      className={`w-full p-3 rounded-2xl border flex items-center justify-between font-semibold transition-all cursor-pointer ${
+                        giftData.music === m.url ? 'border-rose-600 bg-rose-50/50' : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="text-sm">{m.name}</span>
+                      <Music className={`w-4 h-4 ${giftData.music === m.url ? 'text-rose-600' : 'text-gray-400'}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        function copyShareLink() {
-            const input = document.getElementById('shareLinkInput');
-            input.select();
-            try {
-                document.execCommand('copy');
-                showToast("Link kado berhasil disalin ke clipboard! 🔗✨");
-                document.getElementById('copyBtnText').innerText = "Tersalin";
-                setTimeout(() => document.getElementById('copyBtnText').innerText = "Salin", 2000);
-            } catch(e) {
-                showToast("Gagal menyalin link.");
-            }
-        }
+            {activeTab === 'stickers' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-lg text-gray-900 mb-1">Stickers & Badges</h3>
+                  <p className="text-xs text-gray-500">Tap to place romantic stickers.</p>
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {STICKERS.map((emoji, i) => (
+                    <button
+                      key={i}
+                      onClick={() => updateGift({ stickers: [...giftData.stickers, { id: Date.now(), emoji, x: Math.random() * 80 + 10, y: Math.random() * 80 + 10 }] })}
+                      className="p-3 bg-gray-50 hover:bg-rose-50 rounded-2xl border border-gray-200 text-2xl transition-all cursor-pointer flex items-center justify-center"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+                <button 
+                  onClick={() => updateGift({ stickers: [] })}
+                  className="w-full py-2 rounded-xl bg-gray-100 text-gray-600 font-bold text-xs hover:bg-gray-200 transition-all cursor-pointer"
+                >
+                  Clear All Stickers
+                </button>
+              </div>
+            )}
+          </aside>
+        )}
+      </div>
 
-        function showToast(msg) {
-            const toast = document.getElementById('toastNotification');
-            document.getElementById('toastText').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
-        }
+      {/* Share Modal Dialog */}
+      {shareModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 text-center relative">
+            <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl mx-auto flex items-center justify-center shadow mb-4">
+              <Share2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-black text-gray-900 mb-2">Gift Ready to Share! 🎉</h3>
+            <p className="text-gray-600 text-sm mb-6">Your unique cloud gift link has been generated. Send it to {giftData.recipient}!</p>
+            
+            <div className="flex items-center gap-2 bg-gray-50 p-3 rounded-2xl border border-gray-200 mb-6">
+              <input 
+                type="text" 
+                readOnly 
+                value={`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`}
+                className="w-full bg-transparent text-xs text-gray-600 font-mono outline-none px-2"
+              />
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-xl hover:bg-rose-700 transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+              >
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? 'Copied!' : 'Copy Link'}
+              </button>
+            </div>
 
-        // ================= AUDIO LOFI PLAYER =================
-        let audioCtx = null;
-        let isPlaying = false;
-        let audioInterval = null;
-
-        function toggleMusic() {
-            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-
-            isPlaying = !isPlaying;
-            const btnText = document.getElementById('musicText');
-            const btn = document.getElementById('musicBtn');
-
-            if(isPlaying) {
-                btnText.innerText = "BGM: On 🎶";
-                btn.className = "bg-pink-500 text-white px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-md";
-                playLofiNote();
-                audioInterval = setInterval(playLofiNote, 3500);
-            } else {
-                btnText.innerText = "BGM: Off";
-                btn.className = "bg-pink-100 text-pink-600 px-3 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm";
-                clearInterval(audioInterval);
-            }
-        }
-
-        function playLofiNote() {
-            if(!isPlaying || !audioCtx) return;
-            try {
-                const now = audioCtx.currentTime;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(261.63, now); // C4
-                osc.frequency.setValueAtTime(329.63, now + 1.2); // E4
-                gain.gain.setValueAtTime(0.04, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 3.0);
-            } catch(e) {}
-        }
-    </script>
-</body>
-</html>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => {
+                  window.open(`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`, '_blank');
+                }}
+                className="flex-1 py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition-all cursor-pointer flex items-center justify-center gap-2 text-sm"
+              >
+                <ExternalLink className="w-4 h-4" /> Open Receiver Mode
+              </button>
+              <button 
+                onClick={() => setShareModalOpen(false)}
+                className="flex-1 py-3 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all cursor-pointer text-sm"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
