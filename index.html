@@ -1,969 +1,283 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { 
-  Gift, Sparkles, Heart, Music, Image as ImageIcon, Type, Gamepad2, 
-  Share2, Undo2, Redo2, Eye, Layout, Palette, Smile, Lock, Unlock, 
-  Check, Copy, ExternalLink, Play, RotateCcw, Volume2, VolumeX, 
-  Upload, Trash2, Move, Plus, ChevronRight, ChevronLeft, Star, 
-  Flame, Award, Bookmark, ArrowRight, ShieldCheck, Zap, Send, 
-  HelpCircle, RefreshCw, Layers, CheckCircle2, MessageCircle
-} from 'lucide-react';
+import { z } from 'zod';
 
-const THEMES = [
-  { id: 'romantic', name: 'Romantic Rose', bg: 'bg-rose-50', primary: 'bg-rose-600', text: 'text-rose-900', accent: '#e11d48', font: 'font-serif' },
-  { id: 'neon', name: 'Cyberpunk Neon', bg: 'bg-slate-950', primary: 'bg-cyan-500', text: 'text-cyan-400', accent: '#06b6d4', font: 'font-mono' },
-  { id: 'cozy', name: 'Cozy Autumn', bg: 'bg-amber-50', primary: 'bg-amber-700', text: 'text-amber-950', accent: '#b45309', font: 'font-serif' },
-  { id: 'pastel', name: 'Pastel Dream', bg: 'bg-purple-50', primary: 'bg-purple-400', text: 'text-purple-900', accent: '#c084fc', font: 'font-sans' },
-  { id: 'luxury', name: 'Gold Luxury', bg: 'bg-stone-900', primary: 'bg-amber-500', text: 'text-amber-200', accent: '#f59e0b', font: 'font-serif' },
-  { id: 'minimal', name: 'Clean Minimal', bg: 'bg-white', primary: 'bg-black', text: 'text-gray-950', accent: '#000000', font: 'font-sans' },
-  { id: 'galaxy', name: 'Deep Galaxy', bg: 'bg-indigo-950', primary: 'bg-indigo-500', text: 'text-indigo-200', accent: '#6366f1', font: 'font-mono' },
-  { id: 'sakura', name: 'Sakura Blossom', bg: 'bg-pink-50', primary: 'bg-pink-400', text: 'text-pink-950', accent: '#f472b6', font: 'font-serif' },
-  { id: 'emerald', name: 'Emerald Forest', bg: 'bg-emerald-950', primary: 'bg-emerald-600', text: 'text-emerald-100', accent: '#059669', font: 'font-serif' },
-  { id: 'sunset', name: 'Sunset Glow', bg: 'bg-orange-50', primary: 'bg-orange-500', text: 'text-orange-950', accent: '#f97316', font: 'font-sans' },
-  { id: 'lavender', name: 'Lavender Mist', bg: 'bg-violet-50', primary: 'bg-violet-500', text: 'text-violet-950', accent: '#8b5cf6', font: 'font-sans' },
-  { id: 'retro', name: '80s Retro', bg: 'bg-fuchsia-950', primary: 'bg-yellow-400', text: 'text-yellow-300', accent: '#facc15', font: 'font-mono' },
-  { id: 'ocean', name: 'Deep Ocean', bg: 'bg-sky-950', primary: 'bg-sky-500', text: 'text-sky-100', accent: '#0ea5e9', font: 'font-sans' },
-  { id: 'candy', name: 'Candy Pop', bg: 'bg-red-50', primary: 'bg-red-500', text: 'text-red-950', accent: '#ef4444', font: 'font-sans' },
-  { id: 'midnight', name: 'Midnight Sparkle', bg: 'bg-zinc-900', primary: 'bg-yellow-500', text: 'text-zinc-100', accent: '#eab308', font: 'font-serif' },
-];
+export const ThemeConfigSchema = z.object({
+  theme_mode: z.enum(['preset', 'custom']).default('preset'),
+  palette: z.object({
+    bg_color: z.string(),
+    text_color: z.string(),
+    accent_color: z.string(),
+    card_color: z.string(),
+  }),
+  font_family: z.string(),
+  decorations: z.array(z.string()),
+});
 
-const FONTS = [
-  { id: 'font-serif', name: 'Classic Serif', class: 'font-serif' },
-  { id: 'font-sans', name: 'Modern Sans', class: 'font-sans' },
-  { id: 'font-mono', name: 'Terminal Mono', class: 'font-mono' },
-];
+export const ModuleSchema = z.object({
+  module_id: z.string(),
+  order: z.number(),
+  title: z.string(),
+  type: z.enum(['unboxing', 'welcome_screen', 'letter', 'scrapbook_photos', 'mini_game', 'grand_finale']),
+  enabled: z.boolean().default(true),
+  is_locked: z.boolean().default(false),
+  config: z.record(z.any()),
+});
 
-const PLAYLISTS = [
-  { id: 'romantic', name: 'Romantic Acoustic Guitar', url: 'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg' },
-  { id: 'lofi', name: 'Lofi Chill Beats', url: 'https://actions.google.com/sounds/v1/weather/light_rain.ogg' },
-  { id: 'piano', name: 'Melodic Piano', url: 'https://actions.google.com/sounds/v1/ambiences/daytime_forest_bonfire.ogg' },
-  { id: 'upbeat', name: 'Happy Ukulele', url: 'https://actions.google.com/sounds/v1/ambiences/summer_park.ogg' }
-];
+export const GiftSchema = z.object({
+  schema_version: z.string().default('2.0.0'),
+  gift_id: z.string(),
+  theme_config: ThemeConfigSchema,
+  modules: z.array(ModuleSchema),
+});
 
-const STICKERS = ['❤️', '✨', '🌸', '🧸', '💌', '🌟', '🍫', '💍', '🥂', '🌹', '🦋', '🍰', '🎈', '🎁', '💖', '⭐'];
+export type GiftData = z.infer<typeof GiftSchema>;
+export type ModuleData = z.infer<typeof ModuleSchema>;
+  'use client';
+import React from 'react';
+import { z } from 'zod';
+import { ThemeConfigSchema } from '@/types/gift';
 
-const MINI_GAMES = [
-  { id: 'catch', name: 'Catch the Hearts', desc: 'Catch falling hearts before time runs out!', icon: '💖' },
-  { id: 'quiz', name: 'Couples / Friends Trivia', desc: 'Answer questions about each other!', icon: '🎯' },
-  { id: 'memory', name: 'Memory Card Match', desc: 'Find all matching pairs in fewest moves.', icon: '🃏' },
-  { id: 'scratch', name: 'Secret Scratch Card', desc: 'Scratch to reveal a hidden custom coupon!', icon: '🎫' },
-  { id: 'spinner', name: 'Compliment / Date Wheel', desc: 'Spin to win romantic coupons or compliments!', icon: '🎡' },
-  { id: 'puzzle', name: 'Love Slider Puzzle', desc: 'Unscramble the picture tile puzzle.', icon: '🧩' },
-  { id: 'balloon', name: 'Balloon Pop Surprises', desc: 'Pop balloons to reveal secret love notes.', icon: '🎈' },
-  { id: 'maze', name: 'Heart Maze Runner', desc: 'Guide the heart to the golden gift box.', icon: '🌀' }
-];
+type ThemeConfig = z.infer<typeof ThemeConfigSchema>;
 
-function CatchHeartsGame({ onWin }) {
-  const [score, setScore] = useState(0);
-  const [hearts, setHearts] = useState([]);
-  const [gameOver, setGameOver] = useState(false);
+export default function ThemeProvider({ theme, children }: { theme: ThemeConfig; children: React.ReactNode }) {
+  const { palette, font_family } = theme;
 
-  useEffect(() => {
-    if (gameOver) return;
-    const interval = setInterval(() => {
-      setHearts(prev => [
-        ...prev,
-        { id: Math.random(), x: Math.random() * 80 + 10, y: 0 }
-      ]);
-    }, 800);
-    return () => clearInterval(interval);
-  }, [gameOver]);
-
-  useEffect(() => {
-    if (gameOver) return;
-    const fallInterval = setInterval(() => {
-      setHearts(prev => prev.map(h => ({ ...h, y: h.y + 5 })).filter(h => {
-        if (h.y >= 90) {
-          return false;
-        }
-        return true;
-      }));
-    }, 100);
-    return () => clearInterval(fallInterval);
-  }, [gameOver]);
-
-  const catchHeart = (id) => {
-    setScore(s => {
-      const next = s + 1;
-      if (next >= 10) {
-        setGameOver(true);
-        if (onWin) onWin();
-      }
-      return next;
-    });
-    setHearts(prev => prev.filter(h => h.id !== id));
-  };
+  const themeStyles = {
+    '--gift-bg': palette.bg_color,
+    '--gift-text': palette.text_color,
+    '--gift-accent': palette.accent_color,
+    '--gift-card': palette.card_color,
+    fontFamily: font_family === 'Typewriter' ? 'Courier New, monospace' : 'sans-serif',
+  } as React.CSSProperties;
 
   return (
-    <div className="relative w-full h-72 bg-rose-950/10 rounded-2xl border border-rose-500/20 overflow-hidden flex flex-col items-center justify-between p-4">
-      <div className="flex justify-between w-full font-bold text-rose-600">
-        <span>Catch 10 Hearts!</span>
-        <span>Score: {score} / 10</span>
-      </div>
-      <div className="relative w-full flex-1">
-        {hearts.map(h => (
-          <button
-            key={h.id}
-            onClick={() => catchHeart(h.id)}
-            style={{ left: `${h.x}%`, top: `${h.y}%` }}
-            className="absolute text-3xl transform -translate-x-1/2 hover:scale-125 transition-transform animate-bounce cursor-pointer"
-          >
-            💖
-          </button>
-        ))}
-      </div>
-      {gameOver && (
-        <div className="absolute inset-0 bg-white/90 backdrop-blur flex flex-col items-center justify-center animate-fade-in">
-          <span className="text-4xl mb-2">🎉</span>
-          <h3 className="font-bold text-xl text-rose-700">You Won! Gift Unlocked!</h3>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function TriviaGame({ onWin }) {
-  const [step, setStep] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [correct, setCorrect] = useState(false);
-
-  const questions = [
-    { q: 'Where was our favorite date?', options: ['The Beach', 'Coffee Shop', 'Stargazing Park'], answer: 1 },
-    { q: 'What is my favorite snack?', options: ['Chocolate', 'Pizza', 'Sushi'], answer: 0 },
-    { q: 'Who said "I love you" first?', options: ['You did', 'I did', 'At the exact same time'], answer: 2 }
-  ];
-
-  const handleSelect = (idx) => {
-    setSelected(idx);
-    if (idx === questions[step].answer) {
-      setCorrect(true);
-      setTimeout(() => {
-        if (step + 1 < questions.length) {
-          setStep(s => s + 1);
-          setSelected(null);
-          setCorrect(false);
-        } else {
-          if (onWin) onWin();
-        }
-      }, 1000);
-    }
-  };
-
-  return (
-    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center">
-      {step < questions.length ? (
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-rose-500">Question {step + 1} of {questions.length}</span>
-          <h4 className="font-bold text-lg text-gray-800 mt-2 mb-4">{questions[step].q}</h4>
-          <div className="space-y-2">
-            {questions[step].options.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => handleSelect(i)}
-                className={`w-full py-3 px-4 rounded-xl border font-medium transition-all ${
-                  selected === i 
-                    ? i === questions[step].answer ? 'bg-emerald-500 text-white border-emerald-600' : 'bg-rose-500 text-white border-rose-600'
-                    : 'bg-white hover:bg-rose-50 border-gray-200 text-gray-700'
-                }`}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="py-8">
-          <span className="text-4xl">🏆</span>
-          <h4 className="font-bold text-xl text-rose-700 mt-2">All Trivia Answered Correctly!</h4>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ScratchGame({ onWin }) {
-  const [scratched, setScratched] = useState(false);
-  return (
-    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center flex flex-col items-center justify-center">
-      <h4 className="font-bold text-lg text-gray-800 mb-4">Scratch to Reveal Your Prize!</h4>
-      <div 
-        onClick={() => { setScratched(true); if (onWin) onWin(); }}
-        className={`relative w-64 h-32 rounded-2xl flex items-center justify-center cursor-pointer shadow-inner overflow-hidden transition-all duration-500 ${scratched ? 'bg-gradient-to-r from-amber-200 to-yellow-300' : 'bg-gradient-to-r from-gray-400 to-gray-600'}`}
-      >
-        {scratched ? (
-          <div className="text-center p-2 animate-fade-in">
-            <span className="text-2xl">🎟️</span>
-            <p className="font-bold text-rose-900 text-sm mt-1">Free Unlimited Hugs & Dinner Date!</p>
-          </div>
-        ) : (
-          <div className="text-white font-bold tracking-widest flex items-center gap-2">
-            <Sparkles className="w-5 h-5 animate-spin" /> Click to Scratch Here
-          </div>
-        )}
+    <div style={themeStyles} className="min-h-screen bg-[var(--gift-bg)] text-[var(--gift-text)] flex flex-col items-center justify-center p-4 transition-all duration-500">
+      <div className="w-full max-w-md mx-auto relative overflow-hidden shadow-2xl rounded-3xl bg-[var(--gift-card)] border border-black/5 flex flex-col min-h-[520px] p-6">
+        {children}
       </div>
     </div>
   );
 }
+  'use client';
+import { useState } from 'react';
+import confetti from 'canvas-confetti';
 
-function WheelGame({ onWin }) {
-  const [spinning, setSpinning] = useState(false);
-  const [result, setResult] = useState('Click Spin!');
+export default function UnboxingModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+  const [isOpened, setIsOpened] = useState(false);
 
-  const items = ['Romantic Dinner', 'Movie Night', 'Weekend Trip', 'Breakfast in Bed', 'Massage Voucher', 'Infinite Kisses'];
-
-  const spin = () => {
-    if (spinning) return;
-    setSpinning(true);
-    let count = 0;
-    const interval = setInterval(() => {
-      setResult(items[Math.floor(Math.random() * items.length)]);
-      count++;
-      if (count > 15) {
-        clearInterval(interval);
-        setSpinning(false);
-        if (onWin) onWin();
-      }
-    }, 100);
+  const handleOpen = () => {
+    setIsOpened(true);
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+    setTimeout(onComplete, 1200);
   };
 
   return (
-    <div className="w-full bg-white/85 p-6 rounded-2xl border border-rose-200 shadow-sm text-center flex flex-col items-center justify-center">
-      <h4 className="font-bold text-lg text-gray-800 mb-2">Lucky Date Wheel</h4>
-      <div className="w-48 h-48 rounded-full border-8 border-rose-500 bg-rose-50 flex items-center justify-center shadow-lg my-4 relative overflow-hidden">
-        <div className={`text-center font-bold text-rose-900 p-4 ${spinning ? 'animate-pulse' : ''}`}>
-          {result}
-        </div>
-      </div>
-      <button 
-        onClick={spin}
-        disabled={spinning}
-        className="px-6 py-2.5 bg-rose-600 text-white rounded-xl font-bold shadow hover:bg-rose-700 transition-all cursor-pointer"
-      >
-        {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
+      <p className="text-sm opacity-80 animate-pulse">{config.teaser_text}</p>
+      <button onClick={handleOpen} disabled={isOpened} className="px-8 py-4 bg-[var(--gift-accent)] text-white font-bold rounded-2xl shadow-lg transform active:scale-95 transition">
+        {isOpened ? 'Membuka...' : config.open_button_text}
       </button>
     </div>
   );
 }
+  'use client';
+export default function WelcomeModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
+      <h1 className="text-3xl font-extrabold tracking-tight">{config.greeting}</h1>
+      <p className="text-sm leading-relaxed opacity-90 px-4">{config.intro_message}</p>
+      <button onClick={onComplete} className="px-6 py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow transition">
+        {config.start_button_text}
+      </button>
+    </div>
+  );
+}
+  'use client';
+export default function LetterModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+  return (
+    <div className="flex flex-col justify-between flex-1 space-y-4">
+      <div>
+        <h2 className="text-xl font-bold mb-3 border-b border-black/10 pb-2">{config.title}</h2>
+        <p className="text-sm leading-relaxed whitespace-pre-line opacity-90">{config.content}</p>
+      </div>
+      <div className="text-right text-xs font-semibold italic mt-4 opacity-75">{config.signature}</div>
+      <button onClick={onComplete} className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow mt-4">
+        Lanjutkan Perjalanan →
+      </button>
+    </div>
+  );
+}
+  'use client';
+export default function PhotosModule({ config, onComplete }: { config: any; onComplete: () => void }) {
+  return (
+    <div className="flex flex-col justify-between flex-1 space-y-4">
+      <h2 className="text-xl font-bold text-center">Galeri Kenangan 📸</h2>
+      <div className="space-y-3 flex-1 overflow-y-auto max-h-[50vh] pr-1">
+        {config.photos.map((photo: any, index: number) => (
+          <div key={index} className="p-4 bg-white/60 rounded-2xl border border-black/5 shadow-sm space-y-1">
+            <div className="h-32 bg-gray-200 rounded-xl flex items-center justify-center text-xs text-gray-500 italic">[Foto Polaroid]</div>
+            <p className="text-xs font-medium pt-1">{photo.caption}</p>
+            <span className="text-[10px] opacity-65">{photo.date}</span>
+          </div>
+        ))}
+      </div>
+      <button onClick={onComplete} className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow">
+        Lanjut ke Mini-Game 🎮
+      </button>
+    </div>
+  );
+}
+  'use client';
+import { useEffect } from 'react';
+import confetti from 'canvas-confetti';
 
-const STORAGE_KEY = 'gift_builder_database_v1';
-
-const CloudDB = {
-  saveGift: (giftData) => {
-    try {
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      const id = giftData.id || Math.random().toString(36).substring(2, 9);
-      const record = { ...giftData, id, updatedAt: new Date().toISOString() };
-      existing[id] = record;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-      return record;
-    } catch (e) {
-      console.error('Storage save error:', e);
-      return null;
-    }
-  },
-  getGift: (id) => {
-    try {
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      return existing[id] || null;
-    } catch (e) {
-      console.error('Storage fetch error:', e);
-      return null;
-    }
-  }
-};
-
-export default function App() {
-  const [view, setView] = useState('landing'); // 'landing', 'builder', 'receiver'
-  const [currentGiftId, setCurrentGiftId] = useState(null);
-
-  // Gift Builder State
-  const [giftData, setGiftData] = useState({
-    title: 'For My Special Someone ❤️',
-    recipient: 'Alex',
-    sender: 'Sam',
-    theme: THEMES[0].id,
-    font: FONTS[0].id,
-    coverStyle: 'giftbox', // 'giftbox', 'envelope', 'polaroid', 'heartlock'
-    music: PLAYLISTS[0].url,
-    letter: 'Dearest Alex,\n\nI created this special virtual gift just for you because you mean the world to me. Every moment with you is pure magic. Happy anniversary/birthday!\n\nForever yours,\nSam',
-    photos: [
-      { id: 1, url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop', caption: 'Our first date ☕' },
-      { id: 2, url: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500&auto=format&fit=crop', caption: 'Sunset walk 🌅' }
-    ],
-    stickers: [
-      { id: 1, emoji: '❤️', x: 20, y: 30 },
-      { id: 2, emoji: '✨', x: 70, y: 60 }
-    ],
-    miniGame: MINI_GAMES[0].id,
-    unlocked: false
-  });
-
-  // History for Undo/Redo
-  const [history, setHistory] = useState([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-
-  // Active builder tab
-  const [activeTab, setActiveTab] = useState('cover'); // 'cover', 'theme', 'letter', 'photos', 'games', 'music', 'stickers'
-  const [previewMode, setPreviewMode] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [autosaveStatus, setAutosaveStatus] = useState('All changes saved');
-
-  // Handle URL parameters for Receiver mode on load
+export default function FinaleModule({ config }: { config: any }) {
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const giftId = params.get('gift');
-    if (giftId) {
-      const fetched = CloudDB.getGift(giftId);
-      if (fetched) {
-        setGiftData(fetched);
-        setCurrentGiftId(giftId);
-        setView('receiver');
-      }
-    }
+    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
   }, []);
 
-  // Autosave simulation
-  useEffect(() => {
-    if (view === 'builder') {
-      setAutosaveStatus('Saving...');
-      const timer = setTimeout(() => {
-        if (currentGiftId) {
-          CloudDB.saveGift({ ...giftData, id: currentGiftId });
-        }
-        setAutosaveStatus('All changes saved locally & cloud');
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [giftData, currentGiftId]);
+  return (
+    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-4">
+      <div className="text-4xl animate-pulse">🎉</div>
+      <h2 className="text-2xl font-black">{config.completion_message}</h2>
+      <p className="text-sm leading-relaxed opacity-90 px-2">{config.final_note}</p>
+      <div className="pt-4 text-xs font-bold opacity-60 uppercase tracking-widest">GiftVerse Studio</div>
+    </div>
+  );
+}'use client';
+import { useState } from 'react';
+import confetti from 'canvas-confetti';
 
-  const updateGift = (updates) => {
-    setHistory(prev => [...prev.slice(0, historyIndex + 1), giftData]);
-    setHistoryIndex(prev => prev + 1);
-    setGiftData(prev => ({ ...prev, ...updates }));
-  };
+export default function QuizGame({ data, onWin }: { data: any; onWin: () => void }) {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const handleUndo = () => {
-    if (historyIndex >= 0) {
-      setGiftData(history[historyIndex]);
-      setHistoryIndex(prev => prev - 1);
-    }
-  };
-
-  const handleRedo = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(prev => prev + 1);
-      setGiftData(history[historyIndex + 1]);
+  const handleSelect = (idx: number) => {
+    setSelected(idx);
+    const correct = idx === data.correct_index;
+    setIsCorrect(correct);
+    if (correct) {
+      confetti({ particleCount: 50, spread: 60 });
+      setTimeout(onWin, 1500);
     }
   };
-
-  const handleSaveAndShare = () => {
-    const saved = CloudDB.saveGift(giftData);
-    if (saved) {
-      setCurrentGiftId(saved.id);
-      setShareModalOpen(true);
-    }
-  };
-
-  const currentTheme = THEMES.find(t => t.id === giftData.theme) || THEMES[0];
-  const currentFont = FONTS.find(f => f.id === giftData.font) || FONTS[0];
-
-  if (view === 'landing') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-100 to-amber-50 text-gray-900 font-sans flex flex-col items-center justify-between p-6">
-        <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center text-white shadow-lg shadow-rose-600/30">
-              <Gift className="w-6 h-6 animate-pulse" />
-            </div>
-            <span className="font-bold text-2xl bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-              GiftCraft Studio
-            </span>
-          </div>
-          <button 
-            onClick={() => setView('builder')}
-            className="px-6 py-2.5 rounded-full bg-rose-600 text-white font-semibold shadow-lg shadow-rose-600/30 hover:bg-rose-700 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-          >
-            Create Free Gift ✨
-          </button>
-        </header>
-
-        <main className="max-w-4xl mx-auto text-center py-16 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100 text-rose-700 font-medium text-sm mb-6 animate-fade-in">
-            <Sparkles className="w-4 h-4" /> The Ultimate Immersive Digital Gift Experience
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 leading-tight mb-6">
-            Craft Unforgettable <span className="bg-gradient-to-r from-rose-600 via-pink-600 to-amber-600 bg-clip-text text-transparent">Digital Memories</span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10">
-            Build interactive, multimedia gift pages complete with customizable cover boxes, romantic letters, playable mini-games, polaroid photo memories, and custom background music.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-            <button 
-              onClick={() => setView('builder')}
-              className="px-8 py-4 rounded-2xl bg-rose-600 text-white font-bold text-lg shadow-xl shadow-rose-600/30 hover:bg-rose-700 transition-all transform hover:-translate-y-1 cursor-pointer flex items-center justify-center gap-3"
-            >
-              Start Building Now <ArrowRight className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={() => {
-                // Load demo gift
-                const demoId = 'demo_gift_123';
-                CloudDB.saveGift({
-                  id: demoId,
-                  title: 'Happy Anniversary, Love! 💖',
-                  recipient: 'Jessica',
-                  sender: 'Michael',
-                  theme: 'romantic',
-                  font: 'font-serif',
-                  coverStyle: 'giftbox',
-                  music: PLAYLISTS[0].url,
-                  letter: 'My dearest Jessica,\n\nEvery single day with you is a gift. I made this interactive space just to remind you how much I adore you!\n\nLove always,\nMichael',
-                  photos: [
-                    { id: 1, url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500&auto=format&fit=crop', caption: 'Magical Evening' }
-                  ],
-                  stickers: [{ id: 1, emoji: '💖', x: 30, y: 40 }],
-                  miniGame: 'catch'
-                });
-                window.location.search = `?gift=${demoId}`;
-              }}
-              className="px-8 py-4 rounded-2xl bg-white text-gray-800 font-bold text-lg border border-gray-200 shadow-md hover:bg-gray-50 transition-all cursor-pointer flex items-center justify-center gap-3"
-            >
-              Preview Sample Gift 🎁
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full text-left">
-            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 mb-4 font-bold text-xl">15+</div>
-              <h3 className="font-bold text-lg mb-1">Stunning Themes</h3>
-              <p className="text-gray-600 text-sm">Choose from Cyberpunk, Romantic Rose, Gold Luxury, Cozy Autumn and more.</p>
-            </div>
-            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600 mb-4">
-                <Gamepad2 className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-lg mb-1">Playable Mini-Games</h3>
-              <p className="text-gray-600 text-sm">Include catch games, quizzes, scratch cards, and lucky wheels that lock/unlock gifts.</p>
-            </div>
-            <div className="bg-white/70 backdrop-blur p-6 rounded-3xl border border-rose-100 shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 mb-4">
-                <Share2 className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-lg mb-1">Instant Share Links</h3>
-              <p className="text-gray-600 text-sm">Generate unique cloud links for your recipient to open with immersive animations.</p>
-            </div>
-          </div>
-        </main>
-
-        <footer className="text-sm text-gray-500 py-6">
-          GiftCraft Studio &bull; Built with React & Tailwind CSS
-        </footer>
-      </div>
-    );
-  }
-
-  if (view === 'receiver') {
-    return (
-      <div className={`min-h-screen ${currentTheme.bg} ${currentFont.class} flex flex-col items-center justify-center p-4 relative overflow-hidden transition-colors duration-700`}>
-        {/* Background ambient music player */}
-        <audio src={giftData.music} autoPlay loop />
-
-        {!giftData.unlocked ? (
-          <div className="max-w-md w-full bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/40 text-center animate-fade-in relative z-10">
-            <div className="w-20 h-20 bg-rose-100 text-rose-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg mb-6 transform hover:rotate-6 transition-transform">
-              <Gift className="w-10 h-10 animate-bounce" />
-            </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-500">Special Gift For {giftData.recipient}</span>
-            <h1 className="text-2xl md:text-3xl font-black text-gray-900 mt-2 mb-4">{giftData.title}</h1>
-            <p className="text-gray-600 mb-8 text-sm">Sent with love by <strong className="text-rose-600">{giftData.sender}</strong>. Complete the mini-challenge below to unlock your surprise!</p>
-
-            {/* Embedded Mini Game to Unlock */}
-            <div className="mb-6">
-              {giftData.miniGame === 'catch' && <CatchHeartsGame onWin={() => updateGift({ unlocked: true })} />}
-              {giftData.miniGame === 'quiz' && <TriviaGame onWin={() => updateGift({ unlocked: true })} />}
-              {giftData.miniGame === 'scratch' && <ScratchGame onWin={() => updateGift({ unlocked: true })} />}
-              {giftData.miniGame === 'spinner' && <WheelGame onWin={() => updateGift({ unlocked: true })} />}
-              {/* Fallback for other games */}
-              {!['catch', 'quiz', 'scratch', 'spinner'].includes(giftData.miniGame) && (
-                <div className="p-4 bg-rose-50 rounded-xl border border-rose-200">
-                  <p className="text-sm font-medium text-rose-800 mb-3">Mini-Game Challenge: Click below to instantly unlock!</p>
-                  <button 
-                    onClick={() => updateGift({ unlocked: true })}
-                    className="px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl shadow hover:bg-rose-700 transition-all"
-                  >
-                    Unlock Gift Box 🎁
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="max-w-2xl w-full bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl border border-white/50 animate-fade-in relative z-10 my-8">
-            <div className="absolute top-4 right-4 flex gap-2">
-              <span className="px-3 py-1 bg-rose-100 text-rose-700 text-xs font-bold rounded-full">Unlocked ✨</span>
-            </div>
-            <div className="text-center mb-8">
-              <span className="text-xs font-bold uppercase tracking-widest text-rose-500">From {giftData.sender} To {giftData.recipient}</span>
-              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{giftData.title}</h1>
-            </div>
-
-            {/* Letter Content */}
-            <div className="bg-rose-50/50 p-6 md:p-8 rounded-2xl border border-rose-100 mb-8 shadow-inner whitespace-pre-wrap text-gray-800 leading-relaxed text-lg">
-              {giftData.letter}
-            </div>
-
-            {/* Photos Section */}
-            {giftData.photos.length > 0 && (
-              <div className="mb-8">
-                <h3 className="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-rose-600" /> Memory Gallery
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {giftData.photos.map(p => (
-                    <div key={p.id} className="bg-white p-3 rounded-2xl shadow-md border border-gray-100 transform hover:rotate-1 transition-transform">
-                      <img src={p.url} alt="Memory" className="w-full h-48 object-cover rounded-xl mb-2" />
-                      <p className="text-xs font-medium text-gray-600 text-center">{p.caption}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="text-center pt-4 border-t border-gray-100">
-              <button 
-                onClick={() => setView('landing')}
-                className="text-sm font-bold text-rose-600 hover:text-rose-700 underline cursor-pointer"
-              >
-                Create Your Own Gift with GiftCraft Studio
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} ${currentFont.class} flex flex-col text-gray-900 selection:bg-rose-500 selection:text-white transition-colors duration-500`}>
-      {/* Top Navigation Bar */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30 px-6 py-3 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setView('landing')}
-            className="flex items-center gap-2 font-bold text-lg text-gray-900 hover:text-rose-600 transition-colors cursor-pointer"
-          >
-            <div className="w-8 h-8 rounded-xl bg-rose-600 flex items-center justify-center text-white shadow">
-              <Gift className="w-4 h-4" />
-            </div>
-            <span>GiftBuilder</span>
-          </button>
-          <span className="text-xs font-medium px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 hidden sm:inline-block">
-            {autosaveStatus}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-gray-100 rounded-xl p-1">
-            <button 
-              onClick={handleUndo} 
-              disabled={historyIndex < 0}
-              className="p-2 rounded-lg hover:bg-white text-gray-700 disabled:opacity-30 transition-all cursor-pointer"
-              title="Undo"
-            >
-              <Undo2 className="w-4 h-4" />
+    <div className="space-y-3">
+      <p className="font-semibold text-sm">{data.question}</p>
+      <div className="space-y-2">
+        {data.options.map((opt: string, idx: number) => {
+          let style = "bg-white/80 border border-black/10";
+          if (selected === idx) style = isCorrect ? "bg-green-500 text-white" : "bg-red-500 text-white";
+          return (
+            <button key={idx} onClick={() => handleSelect(idx)} className={`w-full p-3 rounded-xl text-left text-sm transition ${style}`}>
+              {opt}
             </button>
-            <button 
-              onClick={handleRedo} 
-              disabled={historyIndex >= history.length - 1}
-              className="p-2 rounded-lg hover:bg-white text-gray-700 disabled:opacity-30 transition-all cursor-pointer"
-              title="Redo"
-            >
-              <Redo2 className="w-4 h-4" />
-            </button>
-          </div>
-
-          <button 
-            onClick={() => setPreviewMode(!previewMode)}
-            className={`px-4 py-2 rounded-xl font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
-              previewMode ? 'bg-rose-600 text-white border-rose-600 shadow-md' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            <Eye className="w-4 h-4" /> {previewMode ? 'Edit Mode' : 'Live Preview'}
-          </button>
-
-          <button 
-            onClick={handleSaveAndShare}
-            className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold flex items-center gap-2 shadow-lg shadow-rose-600/30 hover:opacity-95 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-          >
-            <Share2 className="w-4 h-4" /> Share Gift Link
-          </button>
-        </div>
-      </header>
-
-      {/* Main Builder Workspace */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Left Sidebar Tools */}
-        {!previewMode && (
-          <aside className="w-full lg:w-80 bg-white/90 backdrop-blur border-r border-gray-200 flex flex-col p-4 gap-2 overflow-y-auto max-h-[calc(100vh-65px)]">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 py-1">Customization Tools</span>
-            
-            {[
-              { id: 'cover', name: 'Cover & Titles', icon: Layout },
-              { id: 'theme', name: 'Themes & Styles', icon: Palette },
-              { id: 'letter', name: 'Love Letter & Fonts', icon: Type },
-              { id: 'photos', name: 'Photo Gallery', icon: ImageIcon },
-              { id: 'games', name: 'Interactive Mini-Game', icon: Gamepad2 },
-              { id: 'music', name: 'Background Music', icon: Music },
-              { id: 'stickers', name: 'Stickers & Badges', icon: Smile },
-            ].map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold transition-all text-left cursor-pointer ${
-                    isActive 
-                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20' 
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{tab.name}</span>
-                </button>
-              );
-            })}
-          </aside>
-        )}
-
-        {/* Center Canvas Editor */}
-        <main className="flex-1 p-6 md:p-10 overflow-y-auto flex items-center justify-center">
-          <div className={`max-w-2xl w-full bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl border border-white/50 relative overflow-hidden transition-all duration-500`}>
-            
-            {/* Live interactive stickers overlay */}
-            {giftData.stickers.map(s => (
-              <div 
-                key={s.id} 
-                style={{ left: `${s.x}%`, top: `${s.y}%` }}
-                className="absolute text-3xl select-none pointer-events-none animate-bounce"
-              >
-                {s.emoji}
-              </div>
-            ))}
-
-            <div className="text-center mb-8">
-              <span className="text-xs font-bold uppercase tracking-widest text-rose-500">From {giftData.sender} To {giftData.recipient}</span>
-              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{giftData.title}</h1>
-            </div>
-
-            {/* Letter Preview in Editor */}
-            <div className="bg-rose-50/50 p-6 md:p-8 rounded-2xl border border-rose-100 mb-8 shadow-inner whitespace-pre-wrap text-gray-800 leading-relaxed text-lg">
-              {giftData.letter}
-            </div>
-
-            {/* Photos Preview in Editor */}
-            {giftData.photos.length > 0 && (
-              <div className="mb-8">
-                <h3 className="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-rose-600" /> Memory Gallery
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {giftData.photos.map(p => (
-                    <div key={p.id} className="bg-white p-3 rounded-2xl shadow-md border border-gray-100">
-                      <img src={p.url} alt="Memory" className="w-full h-40 object-cover rounded-xl mb-2" />
-                      <p className="text-xs font-medium text-gray-600 text-center">{p.caption}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center">
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 block mb-1">Attached Mini-Game</span>
-              <p className="font-bold text-gray-800">{MINI_GAMES.find(g => g.id === giftData.miniGame)?.name}</p>
-            </div>
-          </div>
-        </main>
-
-        {/* Right Inspector Panel (Controls based on activeTab) */}
-        {!previewMode && (
-          <aside className="w-full lg:w-96 bg-white/90 backdrop-blur border-l border-gray-200 p-6 overflow-y-auto max-h-[calc(100vh-65px)]">
-            {activeTab === 'cover' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Cover & Titles</h3>
-                  <p className="text-xs text-gray-500">Customize gift headings and recipient details.</p>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Gift Title</label>
-                    <input 
-                      type="text" 
-                      value={giftData.title}
-                      onChange={e => updateGift({ title: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Recipient Name</label>
-                    <input 
-                      type="text" 
-                      value={giftData.recipient}
-                      onChange={e => updateGift({ recipient: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Sender Name</label>
-                    <input 
-                      type="text" 
-                      value={giftData.sender}
-                      onChange={e => updateGift({ sender: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'theme' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Themes & Styles</h3>
-                  <p className="text-xs text-gray-500">Pick from 15+ gorgeous aesthetic themes.</p>
-                </div>
-                <div className="grid grid-cols-1 gap-2.5">
-                  {THEMES.map(t => (
-                    <button
-                      key={t.id}
-                      onClick={() => updateGift({ theme: t.id })}
-                      className={`w-full p-3 rounded-2xl border flex items-center justify-between font-semibold transition-all cursor-pointer ${
-                        giftData.theme === t.id ? 'border-rose-600 ring-2 ring-rose-500/20 bg-rose-50/50' : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-6 h-6 rounded-full ${t.primary}`} />
-                        <span>{t.name}</span>
-                      </div>
-                      {giftData.theme === t.id && <Check className="w-4 h-4 text-rose-600" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'letter' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Love Letter & Fonts</h3>
-                  <p className="text-xs text-gray-500">Write a heartfelt message and select your typography.</p>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Font Family</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {FONTS.map(f => (
-                        <button
-                          key={f.id}
-                          onClick={() => updateGift({ font: f.id })}
-                          className={`py-2 px-3 rounded-xl border font-semibold text-sm transition-all cursor-pointer ${
-                            giftData.font === f.id ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-                          }`}
-                        >
-                          {f.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Heartfelt Letter</label>
-                    <textarea 
-                      rows={8}
-                      value={giftData.letter}
-                      onChange={e => updateGift({ letter: e.target.value })}
-                      className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'photos' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Photo Gallery</h3>
-                  <p className="text-xs text-gray-500">Add cherished polaroid photo memories.</p>
-                </div>
-                <div className="space-y-4">
-                  {giftData.photos.map((p, i) => (
-                    <div key={p.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-2">
-                      <input 
-                        type="text" 
-                        value={p.url}
-                        onChange={e => {
-                          const updated = [...giftData.photos];
-                          updated[i].url = e.target.value;
-                          updateGift({ photos: updated });
-                        }}
-                        placeholder="Image URL"
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs bg-white"
-                      />
-                      <input 
-                        type="text" 
-                        value={p.caption}
-                        onChange={e => {
-                          const updated = [...giftData.photos];
-                          updated[i].caption = e.target.value;
-                          updateGift({ photos: updated });
-                        }}
-                        placeholder="Caption"
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs bg-white"
-                      />
-                      <button 
-                        onClick={() => updateGift({ photos: giftData.photos.filter(x => x.id !== p.id) })}
-                        className="text-xs text-rose-600 font-bold hover:underline"
-                      >
-                        Remove Photo
-                      </button>
-                    </div>
-                  ))}
-                  <button 
-                    onClick={() => updateGift({ photos: [...giftData.photos, { id: Date.now(), url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop', caption: 'New Memory' }] })}
-                    className="w-full py-2.5 rounded-xl border border-dashed border-rose-300 text-rose-600 font-bold text-sm hover:bg-rose-50 transition-all cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" /> Add Photo Memory
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'games' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Interactive Mini-Game</h3>
-                  <p className="text-xs text-gray-500">Select the unlocking challenge for your recipient.</p>
-                </div>
-                <div className="space-y-3">
-                  {MINI_GAMES.map(g => (
-                    <button
-                      key={g.id}
-                      onClick={() => updateGift({ miniGame: g.id })}
-                      className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
-                        giftData.miniGame === g.id ? 'border-rose-600 bg-rose-50/50 ring-2 ring-rose-500/20' : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className="text-2xl">{g.icon}</span>
-                      <div>
-                        <h4 className="font-bold text-sm text-gray-900">{g.name}</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">{g.desc}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'music' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Background Music</h3>
-                  <p className="text-xs text-gray-500">Set the emotional ambiance.</p>
-                </div>
-                <div className="space-y-2">
-                  {PLAYLISTS.map(m => (
-                    <button
-                      key={m.id}
-                      onClick={() => updateGift({ music: m.url })}
-                      className={`w-full p-3 rounded-2xl border flex items-center justify-between font-semibold transition-all cursor-pointer ${
-                        giftData.music === m.url ? 'border-rose-600 bg-rose-50/50' : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className="text-sm">{m.name}</span>
-                      <Music className={`w-4 h-4 ${giftData.music === m.url ? 'text-rose-600' : 'text-gray-400'}`} />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'stickers' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">Stickers & Badges</h3>
-                  <p className="text-xs text-gray-500">Tap to place romantic stickers.</p>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
-                  {STICKERS.map((emoji, i) => (
-                    <button
-                      key={i}
-                      onClick={() => updateGift({ stickers: [...giftData.stickers, { id: Date.now(), emoji, x: Math.random() * 80 + 10, y: Math.random() * 80 + 10 }] })}
-                      className="p-3 bg-gray-50 hover:bg-rose-50 rounded-2xl border border-gray-200 text-2xl transition-all cursor-pointer flex items-center justify-center"
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-                <button 
-                  onClick={() => updateGift({ stickers: [] })}
-                  className="w-full py-2 rounded-xl bg-gray-100 text-gray-600 font-bold text-xs hover:bg-gray-200 transition-all cursor-pointer"
-                >
-                  Clear All Stickers
-                </button>
-              </div>
-            )}
-          </aside>
-        )}
+          );
+        })}
       </div>
-
-      {/* Share Modal Dialog */}
-      {shareModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 text-center relative">
-            <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl mx-auto flex items-center justify-center shadow mb-4">
-              <Share2 className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-black text-gray-900 mb-2">Gift Ready to Share! 🎉</h3>
-            <p className="text-gray-600 text-sm mb-6">Your unique cloud gift link has been generated. Send it to {giftData.recipient}!</p>
-            
-            <div className="flex items-center gap-2 bg-gray-50 p-3 rounded-2xl border border-gray-200 mb-6">
-              <input 
-                type="text" 
-                readOnly 
-                value={`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`}
-                className="w-full bg-transparent text-xs text-gray-600 font-mono outline-none px-2"
-              />
-              <button 
-                onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                className="px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-xl hover:bg-rose-700 transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-              >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? 'Copied!' : 'Copy Link'}
-              </button>
-            </div>
-
-            <div className="flex gap-3">
-              <button 
-                onClick={() => {
-                  window.open(`${window.location.origin}${window.location.pathname}?gift=${currentGiftId}`, '_blank');
-                }}
-                className="flex-1 py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition-all cursor-pointer flex items-center justify-center gap-2 text-sm"
-              >
-                <ExternalLink className="w-4 h-4" /> Open Receiver Mode
-              </button>
-              <button 
-                onClick={() => setShareModalOpen(false)}
-                className="flex-1 py-3 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all cursor-pointer text-sm"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
+  );
+}
+    'use client';
+import { useState } from 'react';
+
+export default function MemoryGame({ data, onWin }: { data: any; onWin: () => void }) {
+  const [solved, setSolved] = useState(false);
+  return (
+    <div className="text-center space-y-4">
+      <p className="text-xs opacity-80">{data.instruction || "Klik tombol untuk mencocokkan kartu."}</p>
+      <button onClick={() => { setSolved(true); setTimeout(onWin, 1000); }} className="px-6 py-2 bg-[var(--gift-accent)] text-white rounded-xl text-sm font-bold">
+        {solved ? 'Berhasil Dicocokkan! ✨' : 'Selesaikan Game Memory'}
+      </button>
+    </div>
+  );
+}
+    'use client';
+import QuizGame from './QuizGame';
+import MemoryGame from './MemoryGame';
+
+const GAME_REGISTRY: Record<string, any> = {
+  quiz: QuizGame,
+  memory_card: MemoryGame,
+};
+
+export default function GameEngine({ config, onComplete }: { config: any; onComplete: () => void }) {
+  const SelectedGame = GAME_REGISTRY[config.game_type] || QuizGame;
+  return (
+    <div className="flex flex-col justify-between flex-1 space-y-4">
+      <div>
+        <h2 className="text-xl font-bold text-center mb-1">{config.title}</h2>
+        <p className="text-xs text-center opacity-80 mb-4">{config.instruction}</p>
+        <SelectedGame data={config} onWin={onComplete} />
+      </div>
+    </div>
+  );
+}
+  'use client';
+import { useState } from 'react';
+import { GiftData, ModuleData } from '@/types/gift';
+import ThemeProvider from '../themes/ThemeProvider';
+import UnboxingModule from '../modules/UnboxingModule';
+import WelcomeModule from '../modules/WelcomeModule';
+import LetterModule from '../modules/LetterModule';
+import PhotosModule from '../modules/PhotosModule';
+import GameEngine from '../games/GameEngine';
+import FinaleModule from '../modules/FinaleModule';
+
+const MODULE_REGISTRY: Record<string, any> = {
+  unboxing: UnboxingModule,
+  welcome_screen: WelcomeModule,
+  letter: LetterModule,
+  scrapbook_photos: PhotosModule,
+  mini_game: GameEngine,
+  grand_finale: FinaleModule,
+};
+
+export default function GiftRenderer({ gift }: { gift: GiftData }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const activeModule = gift.modules[currentIndex];
+  const ActiveComponent = MODULE_REGISTRY[activeModule.type];
+
+  return (
+    <ThemeProvider theme={gift.theme_config}>
+      <div className="w-full bg-gray-200 h-1.5 rounded-full mb-6 overflow-hidden">
+        <div className="bg-[var(--gift-accent)] h-full transition-all duration-300" style={{ width: `${((currentIndex + 1) / gift.modules.length) * 100}%` }} />
+      </div>
+      <div className="flex-1 flex flex-col">
+        <ActiveComponent config={activeModule.config} onComplete={() => setCurrentIndex((prev) => prev + 1)} />
+      </div>
+    </ThemeProvider>
+  );
+}
+  import GiftRenderer from '@/components/renderer/GiftRenderer';
+import { GiftSchema } from '@/types/gift';
+
+const mockGiftDB = {
+  schema_version: '2.0.0',
+  gift_id: 'andre-x7k29',
+  theme_config: {
+    theme_mode: 'preset',
+    palette: { bg_color: '#FDF2F8', text_color: '#831843', accent_color: '#DB2777', card_color: '#FFFFFF' },
+    font_family: 'Typewriter',
+    decorations: ['heart'],
+  },
+  modules: [
+    { module_id: 'm1', order: 1, title: 'Unboxing', type: 'unboxing', enabled: true, is_locked: false, config: { teaser_text: 'Seseorang meninggalkan sesuatu untukmu...', open_button_text: 'Buka Kado 🎁' } },
+    { module_id: 'm2', order: 2, title: 'Welcome', type: 'welcome_screen', enabled: true, is_locked: false, config: { greeting: 'Halo, Andre! ♡', intro_message: 'Selamat menikmati perjalanannya!', start_button_text: 'Mulai ✨' } },
+    { module_id: 'm3', order: 3, title: 'Letter', type: 'letter', enabled: true, is_locked: false, config: { title: 'Catatan Kecil', content: 'Terima kasih sudah jadi teman yang seru!', signature: '— Dari Creator' } },
+    { module_id: 'm4', order: 4, title: 'Photos', type: 'scrapbook_photos', enabled: true, is_locked: false, config: { photos: [{ caption: 'Momen bareng', date: '2026-06-01' }] } },
+    { module_id: 'm5', order: 5, title: 'Quiz', type: 'mini_game', enabled: true, is_locked: false, config: { game_type: 'quiz', title: 'Kuis', instruction: 'Jawab ya!', question: 'Di kota mana kita nongkrong?', options: ['Malang', 'Jakarta'], correct_index: 0 } },
+    { module_id: 'm6', order: 6, title: 'Finale', type: 'grand_finale', enabled: true, is_locked: false, config: { completion_message: 'Selesai! ♡', final_note: 'Semoga harimu menyenangkan!' } },
+  ],
+};
+
+export default function Page({ params }: { params: { giftId: string } }) {
+  const parsed = GiftSchema.safeParse(mockGiftDB);
+  if (!parsed.success) return <div className="p-10 text-center text-red-500">Invalid Schema</div>;
+
+  return (
+    <main className="w-full min-h-screen bg-black">
+      <GiftRenderer gift={parsed.data} />
+    </main>
   );
 }
