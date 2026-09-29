@@ -1,670 +1,1185 @@
-import { z } from 'zod';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Gift Cute Studio 🎀✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Cute Collection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Gaegu:wght@400;700&family=Nunito:wght@400;600;700;800;900&family=Pacifico&family=Poppins:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-export const ThemeConfigSchema = z.object({
-  theme_mode: z.enum(['preset', 'custom']).default('preset'),
-  palette: z.object({
-    bg_color: z.string(),
-    text_color: z.string(),
-    accent_color: z.string(),
-    card_color: z.string(),
-  }),
-  font_family: z.string(),
-  decorations: z.array(z.string()),
-});
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif'],
+                        quicksand: ['Quicksand', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                        pacifico: ['Pacifico', 'cursive'],
+                        caveat: ['Caveat', 'cursive'],
+                        gaegu: ['Gaegu', 'cursive'],
+                    },
+                    animation: {
+                        'bounce-cute': 'bounceCute 1.8s infinite ease-in-out',
+                        'float-slow': 'floatSlow 4s ease-in-out infinite',
+                        'wiggle': 'wiggle 2s ease-in-out infinite',
+                        'pulse-soft': 'pulseSoft 2s infinite',
+                        'spin-slow': 'spin 12s linear infinite'
+                    },
+                    keyframes: {
+                        bounceCute: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-12px) scale(1.03)' },
+                        },
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(3deg)' }
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' }
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                            '50%': { opacity: 0.85, transform: 'scale(1.02)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-export const ModuleSchema = z.object({
-  module_id: z.string(),
-  order: z.number(),
-  title: z.string(),
-  type: z.enum([
-    'unboxing',
-    'welcome_screen',
-    'letter',
-    'scrapbook_photos',
-    'mini_game',
-    'grand_finale'
-  ]),
-  enabled: z.boolean().default(true),
-  is_locked: z.boolean().default(false),
-  config: z.record(z.any()),
-});
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.4); border-radius: 20px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color, #ff85a2); border-radius: 20px; }
 
-export const GiftSchema = z.object({
-  schema_version: z.string().default('2.0.0'),
-  gift_id: z.string(),
-  theme_config: ThemeConfigSchema,
-  modules: z.array(ModuleSchema),
-});
+        :root {
+            --bg-color-1: #fff0f5;
+            --bg-color-2: #ffe4e9;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --accent-color: #ff85a2;
+            --accent-hover: #ff5c83;
+            --text-color: #5c3d46;
+            --border-color: #ffccd5;
+            --font-main: 'Nunito', sans-serif;
+        }
 
-export type GiftData = z.infer<typeof GiftSchema>;
-export type ModuleData = z.infer<typeof ModuleSchema>;
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
 
-'use client';
+        .dynamic-card {
+            background-color: var(--card-bg);
+            border: 3px solid var(--border-color);
+            color: var(--text-color);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(12px);
+        }
 
-import React from 'react';
-import { z } from 'zod';
-import { ThemeConfigSchema } from '@/types/gift';
+        .btn-cute-accent {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
 
-type ThemeConfig = z.infer<typeof ThemeConfigSchema>;
+        .btn-cute-accent:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
 
-export default function ThemeProvider({
-  theme,
-  children
-}: {
-  theme: ThemeConfig;
-  children: React.ReactNode
-}) {
-  const { palette, font_family } = theme;
+        .btn-cute-accent:active {
+            transform: translateY(1px) scale(0.98);
+        }
 
-  const themeStyles = {
-    '--gift-bg': palette.bg_color,
-    '--gift-text': palette.text_color,
-    '--gift-accent': palette.accent_color,
-    '--gift-card': palette.card_color,
-    fontFamily:
-      font_family === 'Typewriter'
-        ? 'Courier New, monospace'
-        : 'sans-serif',
-  } as React.CSSProperties;
+        #bgParticles {
+            pointer-events: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
 
-  return (
-    <div
-      style={themeStyles}
-      className="min-h-screen bg-[var(--gift-bg)] text-[var(--gift-text)] flex flex-col items-center justify-center p-4 transition-all duration-500"
-    >
-      <div className="w-full max-w-md mx-auto relative overflow-hidden shadow-2xl rounded-3xl bg-[var(--gift-card)] border border-black/5 flex flex-col min-h-[520px] p-6">
-        {children}
-      </div>
-    </div>
-  );
-}
+        .polaroid-frame {
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f3e8ee;
+            transition: transform 0.3s ease;
+        }
 
-'use client';
+        .polaroid-frame:hover {
+            transform: rotate(0deg) scale(1.05) !important;
+            z-index: 10;
+        }
 
-import { useState } from 'react';
-import confetti from 'canvas-confetti';
+        #scratchCanvas {
+            touch-action: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden antialiased">
 
-export default function UnboxingModule({
-  config,
-  onComplete
-}: {
-  config: any;
-  onComplete: () => void
-}) {
-  const [isOpened, setIsOpened] = useState(false);
+    <canvas id="bgParticles"></canvas>
 
-  const handleOpen = () => {
-    setIsOpened(true);
+    <header class="fixed top-0 inset-x-0 z-40 bg-white/70 backdrop-blur-md border-b-2 border-white/50 px-4 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-2xl bg-pink-400 text-white flex items-center justify-center font-bold text-xl shadow-md animate-bounce-cute">
+                🎀
+            </div>
+            <div>
+                <h1 class="font-bold text-base sm:text-lg tracking-wide bg-gradient-to-r from-pink-500 to-rose-400 bg-clip-text text-transparent">VirtualGift Cute Studio</h1>
+                <p class="text-[10px] text-pink-400 font-semibold -mt-1">Studio Hadiah Interaktif Imut ✨</p>
+            </div>
+        </div>
 
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: {
-        y: 0.6
-      }
-    });
-
-    setTimeout(onComplete, 1200);
-  };
-
-  return (
-    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
-      <p className="text-sm opacity-80 animate-pulse">
-        {config.teaser_text}
-      </p>
-
-      <button
-        onClick={handleOpen}
-        disabled={isOpened}
-        className="px-8 py-4 bg-[var(--gift-accent)] text-white font-bold rounded-2xl shadow-lg transform active:scale-95 transition"
-      >
-        {isOpened
-          ? 'Membuka...'
-          : config.open_button_text}
-      </button>
-    </div>
-  );
-}
-
-'use client';
-
-export default function WelcomeModule({
-  config,
-  onComplete
-}: {
-  config: any;
-  onComplete: () => void
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-6">
-      <h1 className="text-3xl font-extrabold tracking-tight">
-        {config.greeting}
-      </h1>
-
-      <p className="text-sm leading-relaxed opacity-90 px-4">
-        {config.intro_message}
-      </p>
-
-      <button
-        onClick={onComplete}
-        className="px-6 py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow transition"
-      >
-        {config.start_button_text}
-      </button>
-    </div>
-  );
-}
-
-'use client';
-
-export default function LetterModule({
-  config,
-  onComplete
-}: {
-  config: any;
-  onComplete: () => void
-}) {
-  return (
-    <div className="flex flex-col justify-between flex-1 space-y-4">
-      <div>
-        <h2 className="text-xl font-bold mb-3 border-b border-black/10 pb-2">
-          {config.title}
-        </h2>
-
-        <p className="text-sm leading-relaxed whitespace-pre-line opacity-90">
-          {config.content}
-        </p>
-      </div>
-
-      <div className="text-right text-xs font-semibold italic mt-4 opacity-75">
-        {config.signature}
-      </div>
-
-      <button
-        onClick={onComplete}
-        className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow mt-4"
-      >
-        Lanjutkan Perjalanan →
-      </button>
-    </div>
-  );
-}
-
-'use client';
-
-export default function PhotosModule({
-  config,
-  onComplete
-}: {
-  config: any;
-  onComplete: () => void
-}) {
-  return (
-    <div className="flex flex-col justify-between flex-1 space-y-4">
-      <h2 className="text-xl font-bold text-center">
-        Galeri Kenangan 📸
-      </h2>
-
-      <div className="space-y-3 flex-1 overflow-y-auto max-h-[50vh] pr-1">
-        {config.photos.map((photo: any, index: number) => (
-          <div
-            key={index}
-            className="p-4 bg-white/60 rounded-2xl border border-black/5 shadow-sm space-y-1"
-          >
-            <div className="h-32 bg-gray-200 rounded-xl flex items-center justify-center text-xs text-gray-500 italic">
-              [Foto Polaroid]
+        <div class="flex items-center gap-2">
+            <!-- Mode Selector Switcher -->
+            <div class="bg-pink-100/80 p-1 rounded-2xl flex items-center text-xs font-bold border border-pink-200">
+                <button id="btnTabDesign" onclick="switchMainTab('editor')" class="px-3 py-1.5 rounded-xl bg-white text-pink-600 shadow-sm transition flex items-center gap-1.5">
+                    <i data-lucide="palette" class="w-3.5 h-3.5"></i> Custom Design
+                </button>
+                <button id="btnTabPreview" onclick="switchMainTab('preview')" class="px-3 py-1.5 rounded-xl text-pink-400 hover:text-pink-600 transition flex items-center gap-1.5">
+                    <i data-lucide="eye" class="w-3.5 h-3.5"></i> Live Preview
+                </button>
             </div>
 
-            <p className="text-xs font-medium pt-1">
-              {photo.caption}
-            </p>
+            <button onclick="openShareModal()" class="btn-cute-accent px-3.5 py-2 rounded-2xl text-xs font-bold flex items-center gap-1.5 shadow-md">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Bagikan Ke Dia!</span>
+            </button>
+        </div>
+    </header>
 
-            <span className="text-[10px] opacity-65">
-              {photo.date}
-            </span>
-          </div>
-        ))}
-      </div>
+    <main class="pt-20 pb-24 px-3 sm:px-6 max-w-7xl mx-auto relative z-10 min-h-screen">
 
-      <button
-        onClick={onComplete}
-        className="w-full py-3 bg-[var(--gift-accent)] text-white font-medium rounded-xl shadow"
-      >
-        Lanjut ke Mini-Game 🎮
-      </button>
+        <!-- ================= EDITOR STUDIO VIEW ================= -->
+        <section id="studioEditorView" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Navigation Menu -->
+            <div class="lg:col-span-3 space-y-2 bg-white/80 backdrop-blur-md p-3 rounded-3xl border-2 border-pink-100 shadow-lg h-fit">
+                <p class="text-[11px] font-extrabold uppercase tracking-widest text-pink-400 px-3 py-1 flex items-center gap-1">
+                    <span>✨</span> Pilihan Kustomisasi
+                </p>
+                <nav class="space-y-1.5">
+                    <button onclick="showSubTab('colors')" class="subtab-btn active w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold transition bg-pink-100/80 text-pink-600">
+                        <i data-lucide="paint-bucket" class="w-4 h-4"></i> 1. Kustom Warna & Theme
+                    </button>
+                    <button onclick="showSubTab('content')" class="subtab-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold text-pink-400 hover:bg-pink-50 transition">
+                        <i data-lucide="mail-heart" class="w-4 h-4"></i> 2. Nama & Surat Cinta
+                    </button>
+                    <button onclick="showSubTab('gallery')" class="subtab-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold text-pink-400 hover:bg-pink-50 transition">
+                        <i data-lucide="image" class="w-4 h-4"></i> 3. Galeri Foto & Stiker
+                    </button>
+                    <button onclick="showSubTab('game')" class="subtab-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold text-pink-400 hover:bg-pink-50 transition">
+                        <i data-lucide="gamepad-2" class="w-4 h-4"></i> 4. Game Interaktif Cute
+                    </button>
+                    <button onclick="showSubTab('coupons')" class="subtab-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold text-pink-400 hover:bg-pink-50 transition">
+                        <i data-lucide="ticket" class="w-4 h-4"></i> 5. Kupon Hadiah Virtual
+                    </button>
+                    <button onclick="showSubTab('music')" class="subtab-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold text-pink-400 hover:bg-pink-50 transition">
+                        <i data-lucide="music" class="w-4 h-4"></i> 6. Musik Latar & Sound
+                    </button>
+                </nav>
+            </div>
+
+            <div class="lg:col-span-9 bg-white/85 backdrop-blur-md p-5 sm:p-7 rounded-3xl border-2 border-pink-100 shadow-xl space-y-6">
+                
+                <!-- SUBTAB 1: COLOR & STYLE CUSTOMIZER -->
+                <div id="subtabColors" class="subtab-content space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                            <i data-lucide="palette" class="w-5 h-5"></i> Preset Warna Cute
+                        </h2>
+                        <span class="text-xs bg-pink-100 text-pink-600 font-bold px-3 py-1 rounded-full">✨ Real-time Live!</span>
+                    </div>
+
+                    <!-- Preset Palette Quick Selector Buttons -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="presetPaletteGrid">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <hr class="border-pink-100">
+
+                    <h3 class="text-sm font-extrabold text-gray-700 flex items-center gap-1.5">
+                        <i data-lucide="sliders" class="w-4 h-4 text-pink-500"></i> Color Picker Manual (Kustom Bebas)
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-pink-50/60 rounded-2xl border-2 border-pink-100">
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Warna Utama (Accent)</label>
+                            <input type="color" id="pickerAccent" onchange="applyCustomColors()" class="w-full h-10 rounded-xl cursor-pointer border-2 border-white shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Gradient Latar 1</label>
+                            <input type="color" id="pickerBg1" onchange="applyCustomColors()" class="w-full h-10 rounded-xl cursor-pointer border-2 border-white shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Gradient Latar 2</label>
+                            <input type="color" id="pickerBg2" onchange="applyCustomColors()" class="w-full h-10 rounded-xl cursor-pointer border-2 border-white shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Warna Kartu & Teks</label>
+                            <div class="flex gap-2">
+                                <input type="color" id="pickerCardBg" onchange="applyCustomColors()" title="Latar Kartu" class="w-1/2 h-10 rounded-xl cursor-pointer border-2 border-white shadow-sm">
+                                <input type="color" id="pickerText" onchange="applyCustomColors()" title="Warna Teks" class="w-1/2 h-10 rounded-xl cursor-pointer border-2 border-white shadow-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Pilihan Font Cute & Aesthetic</label>
+                            <select id="cfgFontSelect" onchange="updateStudioConfig()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm focus:outline-none focus:border-pink-400">
+                                <option value="nunito">Nunito (Cute Modern Soft)</option>
+                                <option value="quicksand">Quicksand (Rounded Clean Cute)</option>
+                                <option value="poppins">Poppins (Friendly Bold)</option>
+                                <option value="pacifico">Pacifico (Cute Cursive Header)</option>
+                                <option value="caveat">Caveat (Handwriting Romantis)</option>
+                                <option value="gaegu">Gaegu (Korean Comic Doodle Style)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Efek Partikel Latar Belakang</label>
+                            <select id="cfgParticleSelect" onchange="updateStudioConfig()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm focus:outline-none focus:border-pink-400">
+                                <option value="hearts">💖 Hati & Cinta Berterbangan</option>
+                                <option value="stars">⭐ Bintang Cute Berpijar</option>
+                                <option value="flowers">🌸 Bunga Sakura Gugur</option>
+                                <option value="clouds">☁️ Awan & Bintang Fluffy</option>
+                                <option value="sparkles">✨ Sparkles Magic</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="subtabContent" class="subtab-content hidden space-y-6">
+                    <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                        <i data-lucide="mail-heart" class="w-5 h-5"></i> Nama & Isi Surat Cinta
+                    </h2>
+
+                    <div>
+                        <p class="text-xs font-extrabold mb-2 text-gray-600">Pilih Template Surat Siap Pakai:</p>
+                        <div class="flex flex-wrap gap-2" id="letterPresetButtons">
+                            <button onclick="useLetterPreset('birthday')" class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-pink-100 text-pink-600 hover:bg-pink-200">🎂 Ulang Tahun</button>
+                            <button onclick="useLetterPreset('anniversary')" class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-rose-100 text-rose-600 hover:bg-rose-200">🌹 Anniversary</button>
+                            <button onclick="useLetterPreset('cheerup')" class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-600 hover:bg-amber-200">✨ Semangat & Support</button>
+                            <button onclick="useLetterPreset('apology')" class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-purple-100 text-purple-600 hover:bg-purple-200">🥺 Maafkan Aku</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Nama Penerima (Panggilan Sayang)</label>
+                            <input type="text" id="cfgRecipientName" oninput="updateStudioConfig()" placeholder="misal: Princess Boba 🧋" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Nama Pengirim (Dari Siapa)</label>
+                            <input type="text" id="cfgSenderName" oninput="updateStudioConfig()" placeholder="misal: Beruang Kelinci 🐻🐰" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Judul Ucapan Pembuka</label>
+                        <input type="text" id="cfgGiftTitle" oninput="updateStudioConfig()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Isi Pesan Surat Cinta (Efek Typewriter Machine)</label>
+                        <textarea id="cfgLetterText" rows="6" oninput="updateStudioConfig()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 leading-relaxed shadow-sm"></textarea>
+                    </div>
+                </div>
+
+                <div id="subtabGallery" class="subtab-content hidden space-y-6">
+                    <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                        <i data-lucide="image" class="w-5 h-5"></i> Galeri Foto Polaroid & Stiker
+                    </h2>
+                    <p class="text-xs text-gray-500">Ganti URL foto memori manis kalian di sini (Gunakan URL gambar publik atau placeholder):</p>
+
+                    <div id="photoInputList" class="space-y-4">
+                        <!-- Photo item rows rendered via JS -->
+                    </div>
+                    <button onclick="addNewPhotoRow()" class="px-4 py-2 bg-pink-100 text-pink-600 rounded-xl font-extrabold text-xs flex items-center gap-1.5 hover:bg-pink-200">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Tambah Foto Baru
+                    </button>
+                </div>
+
+                <div id="subtabGame" class="subtab-content hidden space-y-6">
+                    <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                        <i data-lucide="gamepad-2" class="w-5 h-5"></i> Pilih Game Interaktif Cute
+                    </h2>
+
+                    <div>
+                        <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Pilih Jenis Mini Game Utama</label>
+                        <select id="cfgGameSelect" onchange="updateStudioConfig()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                            <option value="scratch">Kartu Gosok Rahasia Cute (Scratch Card)</option>
+                            <option value="catch">Love Catcher Game (Tangkap Hati Jatuh)</option>
+                            <option value="wheel">Spin The Wheel (Roda Keberuntungan Hadiah)</option>
+                            <option value="cookie">Fortune Cookie (Kue Keberuntungan)</option>
+                        </select>
+                    </div>
+
+                    <div id="gameCustomOptionsArea" class="p-4 bg-pink-50/60 rounded-2xl border-2 border-pink-100 space-y-3">
+                        <!-- Dynamic Options based on game selection -->
+                    </div>
+                </div>
+
+                <div id="subtabCoupons" class="subtab-content hidden space-y-6">
+                    <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                        <i data-lucide="ticket" class="w-5 h-5"></i> Kupon Hadiah Virtual (Dapat Diklaim)
+                    </h2>
+                    <p class="text-xs text-gray-500">Atur kupon imut yang bisa diklik dan diklaim langsung oleh dia:</p>
+
+                    <div id="couponsEditorList" class="space-y-3">
+                        <!-- Coupon rows -->
+                    </div>
+                </div>
+
+                <div id="subtabMusic" class="subtab-content hidden space-y-6">
+                    <h2 class="text-base sm:text-lg font-extrabold text-pink-600 flex items-center gap-2">
+                        <i data-lucide="music" class="w-5 h-5"></i> Pengaturan Musik Latar Cute
+                    </h2>
+
+                    <div>
+                        <label class="block text-xs font-extrabold mb-1.5 text-gray-700">Pilih Playlist Lagu Latar</label>
+                        <select id="cfgMusicSelect" onchange="onMusicChoiceChange()" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                            <option value="lofi">🌸 Cute Lofi Chill Beats</option>
+                            <option value="romantic">🎹 Sweet Piano Romance</option>
+                            <option value="ukulele">🪕 Happy Cute Ukulele</option>
+                            <option value="box">🧸 Sweet Music Box Melodies</option>
+                            <option value="custom">🔗 Input URL MP3 Sendiri</option>
+                        </select>
+                    </div>
+
+                    <div id="customMusicInputBox" class="hidden">
+                        <label class="block text-xs font-extrabold mb-1.5 text-gray-700">URL MP3 Audio Kustom</label>
+                        <input type="text" id="cfgCustomAudioUrl" oninput="updateStudioConfig()" placeholder="https://domain.com/musik-cute.mp3" class="w-full text-xs p-3 rounded-2xl border-2 border-pink-100 font-bold bg-white text-gray-700 shadow-sm">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ================= LIVE PREVIEW MODE CONTAINER ================= -->
+        <section id="studioPreviewView" class="hidden flex flex-col items-center">
+            
+            <!-- Mobile Shell Simulator Header Switcher -->
+            <div class="mb-4 flex items-center gap-2 bg-white/90 p-1.5 rounded-2xl border-2 border-pink-100 shadow-sm text-xs font-extrabold">
+                <span class="text-pink-400 px-2">Preview Simulator:</span>
+                <button onclick="setPreviewDevice('mobile')" id="btnDevMobile" class="px-3 py-1 rounded-xl bg-pink-400 text-white shadow-sm">📱 Layar HP</button>
+                <button onclick="setPreviewDevice('desktop')" id="btnDevDesktop" class="px-3 py-1 rounded-xl text-pink-400 hover:bg-pink-50">💻 Layar Penuh</button>
+            </div>
+
+            <!-- Main Preview Shell Box -->
+            <div id="previewDeviceFrame" class="w-full max-w-md transition-all duration-300">
+                <div id="mainGiftCard" class="dynamic-card p-6 sm:p-8 rounded-[2.5rem] relative overflow-hidden min-h-[560px] flex flex-col justify-between">
+                    
+                    <!-- Floating Audio Player Disk Badge -->
+                    <button id="musicDiskBtn" onclick="toggleCuteBgm()" class="absolute top-5 right-5 z-30 w-11 h-11 rounded-full bg-white/90 border-2 border-pink-200 shadow-md flex items-center justify-center text-pink-500 hover:scale-110 transition group">
+                        <i data-lucide="disc" id="musicDiscIcon" class="w-6 h-6"></i>
+                    </button>
+
+                    <!-- STEP 1: OPENING GIFT BOX COVER -->
+                    <div id="previewCoverStep" class="my-auto text-center space-y-6 py-6 animate-float-slow">
+                        <div class="relative w-36 h-36 mx-auto">
+                            <div class="w-full h-full rounded-full bg-pink-100 border-4 border-pink-200 flex items-center justify-center text-6xl shadow-inner">
+                                🎁
+                            </div>
+                            <span class="absolute -top-2 -right-2 text-2xl animate-wiggle">✨</span>
+                            <span class="absolute -bottom-1 -left-2 text-2xl animate-bounce-cute">💖</span>
+                        </div>
+
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-500 text-[11px] font-black uppercase tracking-widest">Ada Kejutan Untukmu!</span>
+                            <h2 id="pvRecipientDisplay" class="text-3xl font-black mt-2 text-pink-600">Princess Boba</h2>
+                        </div>
+
+                        <p id="pvTitleDisplay" class="text-xs opacity-80 px-4 font-bold">Seseorang mengirimkan kado virtual manis khusus buat kamu hari ini!</p>
+
+                        <button onclick="openUnboxingExperience()" class="btn-cute-accent px-8 py-4 rounded-full font-black text-sm shadow-lg flex items-center gap-2 mx-auto">
+                            <span>Buka Hadiah Manis</span>
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+
+                    <!-- STEP 2: UNBOXED CONTENT (SURAT, GALERI, GAME, KUPON) -->
+                    <div id="previewContentStep" class="hidden space-y-6 pt-2">
+                        
+                        <!-- Letter Card Box -->
+                        <div class="bg-white/70 p-5 rounded-3xl border-2 border-white/60 shadow-inner text-left relative">
+                            <i data-lucide="quote" class="absolute top-3 right-3 w-6 h-6 text-pink-300 opacity-40"></i>
+                            <div id="pvTypedLetterBody" class="text-xs sm:text-sm leading-relaxed min-h-[110px] font-bold">
+                                <!-- Typed via script -->
+                            </div>
+                            <p class="text-right mt-3 text-xs font-black text-pink-500">
+                                ~ Dari: <span id="pvSenderDisplay">Si Sayang</span> 💕
+                            </p>
+                        </div>
+
+                        <!-- Polaroid Gallery Carousel -->
+                        <div class="space-y-2">
+                            <p class="text-xs font-black text-center text-pink-500 flex items-center justify-center gap-1">
+                                <span>📸</span> Galeri Memori Indah
+                            </p>
+                            <div id="pvPolaroidGallery" class="flex gap-3 overflow-x-auto pb-3 pt-1 px-1 scrollbar-none">
+                                <!-- Polaroid cards inserted dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Mini Game Play Container -->
+                        <div class="bg-white/80 p-5 rounded-3xl border-2 border-pink-100 shadow-md space-y-3">
+                            <h3 id="pvGameTitle" class="font-extrabold text-xs text-center text-pink-600 flex items-center justify-center gap-1">
+                                <span>🎮</span> Mini Game Kejutan
+                            </h3>
+                            
+                            <div id="pvGameInteractiveArea" class="min-h-[160px] flex items-center justify-center">
+                                <!-- Rendered dynamically based on choice -->
+                            </div>
+                        </div>
+
+                        <!-- Claimable Virtual Coupons -->
+                        <div class="space-y-2">
+                            <p class="text-xs font-black text-center text-pink-500 flex items-center justify-center gap-1">
+                                <span>🎟️</span> Kupon Hadiah Khusus
+                            </p>
+                            <div id="pvCouponsArea" class="grid grid-cols-1 gap-2">
+                                <!-- Coupons rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Re-Trigger Confetti Button -->
+                        <button onclick="triggerCuteConfetti()" class="w-full py-3.5 btn-cute-accent font-black text-xs rounded-2xl shadow-md flex items-center justify-center gap-2">
+                            <i data-lucide="party-popper" class="w-4 h-4"></i> Rayakan Kebahagiaan Lagi! 💖
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- SHARE LINK & QR MODAL -->
+    <div id="shareModal" class="fixed inset-0 bg-pink-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border-4 border-pink-200 space-y-4 text-center">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-base text-pink-600 flex items-center gap-2">
+                    <span>🎀</span> Bagikan Kado Ke Dia!
+                </h3>
+                <button onclick="closeShareModal()" class="text-pink-300 hover:text-pink-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p class="text-xs font-bold text-gray-500">Scan QR code imut ini atau salin link kado untuk dikirimkan langsung:</p>
+
+            <div class="flex justify-center p-3 bg-pink-50 rounded-2xl border-2 border-pink-100">
+                <div id="qrcodeCanvas" class="p-2 bg-white rounded-xl shadow-sm"></div>
+            </div>
+
+            <div class="space-y-2">
+                <input type="text" id="shareUrlInput" readonly class="w-full text-[11px] p-3 rounded-xl border-2 border-pink-100 font-bold bg-pink-50 text-gray-600 text-center">
+                <button onclick="copyShareUrl()" class="w-full py-3.5 btn-cute-accent font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-2">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Salin Link Hadiah Cute
+                </button>
+            </div>
+        </div>
     </div>
-  );
-}
 
-'use client';
+    <!-- Background Audio Element -->
+    <audio id="bgmAudio" loop preload="auto"></audio>
 
-import { useEffect } from 'react';
-import confetti from 'canvas-confetti';
+    <script>
+        // Preset Colors Palette Collection
+        const cutePalettes = {
+            strawberry: {
+                id: 'strawberry',
+                name: 'Strawberry Milkshake 🍓',
+                bg1: '#fff0f5',
+                bg2: '#ffe4e9',
+                cardBg: '#ffffff',
+                accent: '#ff7597',
+                text: '#5c3d46',
+                border: '#ffccd5'
+            },
+            cotton: {
+                id: 'cotton',
+                name: 'Cotton Candy Sunset ☁️',
+                bg1: '#e0f2fe',
+                bg2: '#fbcfe8',
+                cardBg: '#ffffff',
+                accent: '#38bdf8',
+                text: '#1e3a8a',
+                border: '#bae6fd'
+            },
+            matcha: {
+                id: 'matcha',
+                name: 'Matcha Latte 🍵',
+                bg1: '#f0fdf4',
+                bg2: '#dcfce7',
+                cardBg: '#ffffff',
+                accent: '#4ade80',
+                text: '#14532d',
+                border: '#bbf7d0'
+            },
+            boba: {
+                id: 'boba',
+                name: 'Boba Milk Tea 🧋',
+                bg1: '#fef3c7',
+                bg2: '#fde68a',
+                cardBg: '#ffffff',
+                accent: '#d97706',
+                text: '#78350f',
+                border: '#fcd34d'
+            },
+            lavender: {
+                id: 'lavender',
+                name: 'Purrfect Lavender 🐱',
+                bg1: '#f3e8ff',
+                bg2: '#e9d5ff',
+                cardBg: '#ffffff',
+                accent: '#a855f7',
+                text: '#581c87',
+                border: '#ddd6fe'
+            }
+        };
 
-export default function FinaleModule({
-  config
-}: {
-  config: any
-}) {
-  useEffect(() => {
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: {
-        y: 0.5
-      }
-    });
-  }, []);
+        const letterPresets = {
+            birthday: {
+                recipient: "Princess Boba 🧋",
+                sender: "Si Beruang Lucu 🐻",
+                title: "Happy Birthday Sayang! 🎂✨",
+                body: "Selamat Ulang Tahun ya manisku! 🎂✨ Semoga di usiamu yang baru ini, kamu semakin bahagia, selalu diberikan kesehatan, dan semua keinginan indahmu bisa terwujud satu per satu. Terima kasih sudah hadir dan melengkapi hari-hariku!"
+            },
+            anniversary: {
+                recipient: "Manisku 💕",
+                sender: "Pasangan Setiamu ✨",
+                title: "Happy Anniversary! 🌹✨",
+                body: "Happy Anniversary ya sayang! 🌹 Tidak terasa kita sudah berjalan sejauh ini bersama. Terima kasih atas semua tawa, pelukan hangat, dan kesabaranmu. Aku bersyukur sekali punya kamu dalam hidupku!"
+            },
+            cheerup: {
+                recipient: "Sosok Paling Hebat 🌟",
+                sender: "Pendukung Nomer 1-mu 💖",
+                title: "Semangat Selalu Ya! 🌈✨",
+                body: "Halo manis! Kalau harimu terasa berat hari ini, ingat ya kalau kamu itu hebat dan luar biasa. Istirahat sejenak, minum air hangat, dan tersenyumlah. Aku selalu ada di sini buat kamu!"
+            },
+            apology: {
+                recipient: "Bintang Harapanku 🥺",
+                sender: "Aku Yang Meminta Maaf 💔",
+                title: "Maafkan Aku Ya... 🥺🌸",
+                body: "Dari hati yang paling dalam, aku minta maaf ya atas kesalahanku. Aku benar-benar menyesal dan tidak ingin membuatmu sedih. Tolong tersenyum lagi ya?"
+            }
+        };
 
-  return (
-    <div className="flex flex-col items-center justify-center flex-1 text-center space-y-4">
-      <div className="text-4xl animate-pulse">
-        🎉
-      </div>
+        const musicPresets = {
+            lofi: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+            romantic: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a82b3a.mp3?filename=romantic-piano-10881.mp3",
+            ukulele: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_848419615a.mp3?filename=ukulele-happy-112194.mp3",
+            box: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=music-box-sweet-112193.mp3"
+        };
 
-      <h2 className="text-2xl font-black">
-        {config.completion_message}
-      </h2>
+        // Master Application State
+        let studioConfig = {
+            paletteKey: 'strawberry',
+            bg1: '#fff0f5',
+            bg2: '#ffe4e9',
+            cardBg: '#ffffff',
+            accent: '#ff7597',
+            text: '#5c3d46',
+            font: 'nunito',
+            particle: 'hearts',
+            recipient: letterPresets.birthday.recipient,
+            sender: letterPresets.birthday.sender,
+            title: letterPresets.birthday.title,
+            letterText: letterPresets.birthday.body,
+            photos: [
+                { url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&auto=format&fit=crop&q=80', caption: 'Senyum Manismu ✨' },
+                { url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=300&auto=format&fit=crop&q=80', caption: 'Kenangan Indah 💕' }
+            ],
+            gameType: 'scratch',
+            scratchPrize: 'Bebas Minta Es Krim / Boba Bebas Varian! 🍦🧋',
+            wheelItems: ['Pelukan Warm 🤗', 'Boba Drink 🧋', 'Jalan-jalan 🚗', 'Bebas Marah 1 Hari 👑'],
+            coupons: [
+                { title: 'Kupon Pelukan Hangat', desc: 'Berlaku kapan saja saat kamu butuh!', claimed: false },
+                { title: 'Kupon Traktir Boba', desc: 'Klaim untuk 1 cup boba favoritmu!', claimed: false }
+            ],
+            musicPreset: 'lofi',
+            customMusicUrl: ''
+        };
 
-      <p className="text-sm leading-relaxed opacity-90 px-2">
-        {config.final_note}
-      </p>
+        let isAudioPlaying = false;
+        let particleAnimationFrame = null;
 
-      <div className="pt-4 text-xs font-bold opacity-60 uppercase tracking-widest">
-        GiftVerse Studio
-      </div>
-    </div>
-  );
-}
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadEncodedUrlState();
+            renderPresetPaletteGrid();
+            renderPhotoInputs();
+            renderCouponsInputs();
+            syncFormStateWithConfig();
+            updateStudioConfig();
+        });
 
-'use client';
+        function switchMainTab(mode) {
+            const btnDesign = document.getElementById('btnTabDesign');
+            const btnPreview = document.getElementById('btnTabPreview');
+            const edView = document.getElementById('studioEditorView');
+            const pvView = document.getElementById('studioPreviewView');
 
-import { useState } from 'react';
-import confetti from 'canvas-confetti';
+            if (mode === 'editor') {
+                btnDesign.className = "px-3 py-1.5 rounded-xl bg-white text-pink-600 shadow-sm transition flex items-center gap-1.5 font-bold";
+                btnPreview.className = "px-3 py-1.5 rounded-xl text-pink-400 hover:text-pink-600 transition flex items-center gap-1.5 font-bold";
+                edView.classList.remove('hidden');
+                pvView.classList.add('hidden');
+            } else {
+                btnPreview.className = "px-3 py-1.5 rounded-xl bg-white text-pink-600 shadow-sm transition flex items-center gap-1.5 font-bold";
+                btnDesign.className = "px-3 py-1.5 rounded-xl text-pink-400 hover:text-pink-600 transition flex items-center gap-1.5 font-bold";
+                edView.classList.add('hidden');
+                pvView.classList.remove('hidden');
+                setupPreviewScreen();
+            }
+        }
 
-export default function QuizGame({
-  data,
-  onWin
-}: {
-  data: any;
-  onWin: () => void
-}) {
-  const [selected, setSelected] =
-    useState<number | null>(null);
+        function showSubTab(tabName) {
+            document.querySelectorAll('.subtab-btn').forEach(btn => {
+                btn.classList.remove('bg-pink-100/80', 'text-pink-600');
+                btn.classList.add('text-pink-400');
+            });
+            document.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden'));
 
-  const [isCorrect, setIsCorrect] =
-    useState<boolean | null>(null);
+            event.currentTarget.classList.add('bg-pink-100/80', 'text-pink-600');
+            document.getElementById(`subtab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden');
+        }
 
-  const handleSelect = (idx: number) => {
-    setSelected(idx);
+        function renderPresetPaletteGrid() {
+            const grid = document.getElementById('presetPaletteGrid');
+            grid.innerHTML = '';
+            Object.values(cutePalettes).forEach(p => {
+                const item = document.createElement('div');
+                item.onclick = () => selectPalettePreset(p.id);
+                item.className = `cursor-pointer p-3 rounded-2xl border-2 transition hover:scale-105 shadow-sm bg-white text-left ${
+                    studioConfig.paletteKey === p.id ? 'border-pink-500 ring-2 ring-pink-300' : 'border-pink-100'
+                }`;
+                item.innerHTML = `
+                    <p class="font-extrabold text-xs text-gray-700 truncate mb-1.5">${p.name}</p>
+                    <div class="flex gap-1">
+                        <span class="w-3.5 h-3.5 rounded-full border border-black/10" style="background:${p.bg1}"></span>
+                        <span class="w-3.5 h-3.5 rounded-full border border-black/10" style="background:${p.accent}"></span>
+                        <span class="w-3.5 h-3.5 rounded-full border border-black/10" style="background:${p.text}"></span>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+        }
 
-    const correct =
-      idx === data.correct_index;
+        function selectPalettePreset(key) {
+            const pal = cutePalettes[key];
+            if (!pal) return;
+            studioConfig.paletteKey = key;
+            studioConfig.bg1 = pal.bg1;
+            studioConfig.bg2 = pal.bg2;
+            studioConfig.cardBg = pal.cardBg;
+            studioConfig.accent = pal.accent;
+            studioConfig.text = pal.text;
 
-    setIsCorrect(correct);
+            syncFormStateWithConfig();
+            renderPresetPaletteGrid();
+            updateStudioConfig();
+        }
 
-    if (correct) {
-      confetti({
-        particleCount: 50,
-        spread: 60
-      });
+        function applyCustomColors() {
+            studioConfig.accent = document.getElementById('pickerAccent').value;
+            studioConfig.bg1 = document.getElementById('pickerBg1').value;
+            studioConfig.bg2 = document.getElementById('pickerBg2').value;
+            studioConfig.cardBg = document.getElementById('pickerCardBg').value;
+            studioConfig.text = document.getElementById('pickerText').value;
+            studioConfig.paletteKey = 'custom';
 
-      setTimeout(onWin, 1500);
-    }
-  };
+            renderPresetPaletteGrid();
+            updateStudioConfig();
+        }
 
-  return (
-    <div className="space-y-3">
-      <p className="font-semibold text-sm">
-        {data.question}
-      </p>
+        function updateStudioConfig() {
+            // Read Form Controls
+            studioConfig.font = document.getElementById('cfgFontSelect').value;
+            studioConfig.particle = document.getElementById('cfgParticleSelect').value;
+            studioConfig.recipient = document.getElementById('cfgRecipientName').value;
+            studioConfig.sender = document.getElementById('cfgSenderName').value;
+            studioConfig.title = document.getElementById('cfgGiftTitle').value;
+            studioConfig.letterText = document.getElementById('cfgLetterText').value;
+            studioConfig.gameType = document.getElementById('cfgGameSelect').value;
+            studioConfig.musicPreset = document.getElementById('cfgMusicSelect').value;
+            studioConfig.customMusicUrl = document.getElementById('cfgCustomAudioUrl').value;
 
-      <div className="space-y-2">
-        {data.options.map(
-          (opt: string, idx: number) => {
-            let style =
-              "bg-white/80 border border-black/10";
+            // Apply Dynamic Root CSS CSS Variables
+            document.documentElement.style.setProperty('--bg-color-1', studioConfig.bg1);
+            document.documentElement.style.setProperty('--bg-color-2', studioConfig.bg2);
+            document.documentElement.style.setProperty('--card-bg', studioConfig.cardBg);
+            document.documentElement.style.setProperty('--accent-color', studioConfig.accent);
+            document.documentElement.style.setProperty('--text-color', studioConfig.text);
+            document.documentElement.style.setProperty('--border-color', studioConfig.accent + '55');
 
-            if (selected === idx) {
-              style = isCorrect
-                ? "bg-green-500 text-white"
-                : "bg-red-500 text-white";
+            // Apply Font
+            const fontFamilies = {
+                nunito: "'Nunito', sans-serif",
+                quicksand: "'Quicksand', sans-serif",
+                poppins: "'Poppins', sans-serif",
+                pacifico: "'Pacifico', cursive",
+                caveat: "'Caveat', cursive",
+                gaegu: "'Gaegu', cursive"
+            };
+            document.documentElement.style.setProperty('--font-main', fontFamilies[studioConfig.font] || "'Nunito', sans-serif");
+
+            // Audio Source Updates
+            const audio = document.getElementById('bgmAudio');
+            const targetAudioSrc = studioConfig.musicPreset === 'custom' ? studioConfig.customMusicUrl : musicPresets[studioConfig.musicPreset];
+            if (audio.src !== targetAudioSrc && targetAudioSrc) {
+                audio.src = targetAudioSrc;
             }
 
-            return (
-              <button
-                key={idx}
-                onClick={() =>
-                  handleSelect(idx)
+            renderGameOptionsArea();
+            initCuteParticles();
+            localStorage.setItem('virtual_gift_cute_config', JSON.stringify(studioConfig));
+        }
+
+        function syncFormStateWithConfig() {
+            document.getElementById('pickerAccent').value = studioConfig.accent;
+            document.getElementById('pickerBg1').value = studioConfig.bg1;
+            document.getElementById('pickerBg2').value = studioConfig.bg2;
+            document.getElementById('pickerCardBg').value = studioConfig.cardBg;
+            document.getElementById('pickerText').value = studioConfig.text;
+
+            document.getElementById('cfgFontSelect').value = studioConfig.font;
+            document.getElementById('cfgParticleSelect').value = studioConfig.particle;
+            document.getElementById('cfgRecipientName').value = studioConfig.recipient;
+            document.getElementById('cfgSenderName').value = studioConfig.sender;
+            document.getElementById('cfgGiftTitle').value = studioConfig.title;
+            document.getElementById('cfgLetterText').value = studioConfig.letterText;
+            document.getElementById('cfgGameSelect').value = studioConfig.gameType;
+            document.getElementById('cfgMusicSelect').value = studioConfig.musicPreset;
+            document.getElementById('cfgCustomAudioUrl').value = studioConfig.customMusicUrl || '';
+            onMusicChoiceChange();
+        }
+
+        function useLetterPreset(key) {
+            const p = letterPresets[key];
+            if (!p) return;
+            studioConfig.recipient = p.recipient;
+            studioConfig.sender = p.sender;
+            studioConfig.title = p.title;
+            studioConfig.letterText = p.body;
+            syncFormStateWithConfig();
+            updateStudioConfig();
+        }
+
+        function onMusicChoiceChange() {
+            const val = document.getElementById('cfgMusicSelect').value;
+            const box = document.getElementById('customMusicInputBox');
+            if (val === 'custom') box.classList.remove('hidden');
+            else box.classList.add('hidden');
+            updateStudioConfig();
+        }
+
+        function renderPhotoInputs() {
+            const container = document.getElementById('photoInputList');
+            container.innerHTML = '';
+            studioConfig.photos.forEach((ph, idx) => {
+                const row = document.createElement('div');
+                row.className = "flex gap-2 items-center bg-pink-50/50 p-3 rounded-2xl border border-pink-100";
+                row.innerHTML = `
+                    <div class="flex-1 space-y-1.5">
+                        <input type="text" value="${ph.url}" onchange="studioConfig.photos[${idx}].url=this.value; updateStudioConfig();" placeholder="URL Foto Gambar" class="w-full text-xs p-2 rounded-xl border font-bold">
+                        <input type="text" value="${ph.caption}" onchange="studioConfig.photos[${idx}].caption=this.value; updateStudioConfig();" placeholder="Caption Foto Manis" class="w-full text-xs p-2 rounded-xl border font-bold">
+                    </div>
+                    <button onclick="removePhotoRow(${idx})" class="p-2 text-pink-400 hover:text-pink-600">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                container.appendChild(row);
+            });
+            lucide.createIcons();
+        }
+
+        function addNewPhotoRow() {
+            studioConfig.photos.push({ url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&auto=format&fit=crop&q=80', caption: 'Kenangan Manis ✨' });
+            renderPhotoInputs();
+            updateStudioConfig();
+        }
+
+        function removePhotoRow(idx) {
+            if (studioConfig.photos.length <= 1) return alert('Minimal sertakan 1 foto memori ya!');
+            studioConfig.photos.splice(idx, 1);
+            renderPhotoInputs();
+            updateStudioConfig();
+        }
+
+        function renderCouponsInputs() {
+            const container = document.getElementById('couponsEditorList');
+            container.innerHTML = '';
+            studioConfig.coupons.forEach((cp, idx) => {
+                const row = document.createElement('div');
+                row.className = "flex gap-2 items-center bg-pink-50/50 p-3 rounded-2xl border border-pink-100";
+                row.innerHTML = `
+                    <div class="flex-1 space-y-1.5">
+                        <input type="text" value="${cp.title}" onchange="studioConfig.coupons[${idx}].title=this.value; updateStudioConfig();" placeholder="Judul Kupon" class="w-full text-xs p-2 rounded-xl border font-bold">
+                        <input type="text" value="${cp.desc}" onchange="studioConfig.coupons[${idx}].desc=this.value; updateStudioConfig();" placeholder="Keterangan Kupon" class="w-full text-xs p-2 rounded-xl border font-bold">
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderGameOptionsArea() {
+            const area = document.getElementById('gameCustomOptionsArea');
+            const gType = studioConfig.gameType;
+
+            if (gType === 'scratch') {
+                area.innerHTML = `
+                    <label class="block text-xs font-bold text-gray-700">Pesan Rahasia Kartu Gosok Cute:</label>
+                    <input type="text" value="${studioConfig.scratchPrize}" oninput="studioConfig.scratchPrize=this.value; updateStudioConfig();" class="w-full text-xs p-2.5 rounded-xl border font-bold">
+                `;
+            } else if (gType === 'wheel') {
+                area.innerHTML = `
+                    <label class="block text-xs font-bold text-gray-700">Daftar Hadiah Roda Spin (Dipisah koma):</label>
+                    <input type="text" value="${studioConfig.wheelItems.join(', ')}" oninput="studioConfig.wheelItems=this.value.split(',').map(s=>s.trim()); updateStudioConfig();" class="w-full text-xs p-2.5 rounded-xl border font-bold">
+                `;
+            } else {
+                area.innerHTML = `<p class="text-xs text-pink-500 font-bold italic">Game siap dimainkan dengan kejutan imut!</p>`;
+            }
+        }
+
+        function initCuteParticles() {
+            const canvas = document.getElementById('bgParticles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            if (particleAnimationFrame) cancelAnimationFrame(particleAnimationFrame);
+
+            const sets = {
+                hearts: ['💖', '💕', '🌸', '✨'],
+                stars: ['⭐', '🌟', '✨', '☁️'],
+                flowers: ['🌸', '🌺', '🌷', '✨'],
+                clouds: ['☁️', '⭐', '🫧', '✨'],
+                sparkles: ['✨', '💎', '🌟', '💖']
+            };
+
+            const icons = sets[studioConfig.particle] || ['💖'];
+            const particles = [];
+
+            for (let i = 0; i < 22; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 16 + 12,
+                    speedY: Math.random() * 0.8 + 0.3,
+                    speedX: Math.sin(Math.random()) * 0.4,
+                    icon: icons[Math.floor(Math.random() * icons.length)]
+                });
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    if (p.y > canvas.height + 20) p.y = -20;
+                    if (p.x > canvas.width + 20) p.x = -20;
+
+                    ctx.font = `${p.size}px sans-serif`;
+                    ctx.fillText(p.icon, p.x, p.y);
+                });
+                particleAnimationFrame = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        function setupPreviewScreen() {
+            document.getElementById('pvRecipientDisplay').innerText = studioConfig.recipient;
+            document.getElementById('pvTitleDisplay').innerText = studioConfig.title;
+            document.getElementById('pvSenderDisplay').innerText = studioConfig.sender;
+
+            document.getElementById('previewCoverStep').classList.remove('hidden');
+            document.getElementById('previewContentStep').classList.add('hidden');
+        }
+
+        function openUnboxingExperience() {
+            document.getElementById('previewCoverStep').classList.add('hidden');
+            document.getElementById('previewContentStep').classList.remove('hidden');
+            triggerCuteConfetti();
+
+            // Typewriter Letter Script
+            const target = document.getElementById('pvTypedLetterBody');
+            target.innerHTML = '';
+            let idx = 0;
+            const text = studioConfig.letterText;
+            const timer = setInterval(() => {
+                if (idx < text.length) {
+                    target.innerHTML += text.charAt(idx);
+                    idx++;
+                } else {
+                    clearInterval(timer);
                 }
-                className={`w-full p-3 rounded-xl text-left text-sm transition ${style}`}
-              >
-                {opt}
-              </button>
-            );
-          }
-        )}
-      </div>
-    </div>
-  );
-}
+            }, 40);
 
-'use client';
+            // Render Polaroid Gallery
+            const gallery = document.getElementById('pvPolaroidGallery');
+            gallery.innerHTML = '';
+            studioConfig.photos.forEach((ph, i) => {
+                const rot = (i % 2 === 0 ? 3 : -3);
+                const frame = document.createElement('div');
+                frame.className = "polaroid-frame min-w-[140px] max-w-[140px] p-2 rounded-2xl text-center space-y-1.5 flex-shrink-0 cursor-pointer";
+                frame.style.transform = `rotate(${rot}deg)`;
+                frame.innerHTML = `
+                    <div class="w-full h-28 rounded-xl overflow-hidden bg-pink-100">
+                        <img src="${ph.url}" onerror="this.src='https://placehold.co/300x300/ffccd5/5c3d46?text=Cute+Memory'" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] font-black text-gray-600 truncate">${ph.caption}</p>
+                `;
+                gallery.appendChild(frame);
+            });
 
-import { useState } from 'react';
+            // Render Game & Coupons
+            renderPreviewGameArea();
+            renderPreviewCoupons();
+        }
 
-export default function MemoryGame({
-  data,
-  onWin
-}: {
-  data: any;
-  onWin: () => void
-}) {
-  const [solved, setSolved] =
-    useState(false);
+        function renderPreviewGameArea() {
+            const container = document.getElementById('pvGameInteractiveArea');
+            const gType = studioConfig.gameType;
 
-  return (
-    <div className="text-center space-y-4">
-      <p className="text-xs opacity-80">
-        {data.instruction ||
-          "Klik tombol untuk mencocokkan kartu."}
-      </p>
+            if (gType === 'scratch') {
+                container.innerHTML = `
+                    <div class="relative w-full h-32 rounded-2xl overflow-hidden border-2 border-pink-200 shadow-inner flex items-center justify-center bg-pink-50">
+                        <p class="font-extrabold text-xs text-pink-600 px-4 text-center">${studioConfig.scratchPrize}</p>
+                        <canvas id="scratchCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                    </div>
+                `;
+                initScratchCardCanvas();
+            } else if (gType === 'wheel') {
+                container.innerHTML = `
+                    <div class="space-y-3 text-center">
+                        <div id="wheelCircle" class="w-28 h-28 rounded-full border-4 border-pink-400 mx-auto flex items-center justify-center font-black text-xs bg-pink-100 p-2 shadow-md transition-transform duration-1000">
+                            🎯 Putar Roda
+                        </div>
+                        <button onclick="spinWheelReward()" class="btn-cute-accent px-4 py-2 rounded-xl text-xs font-black shadow-md">Putar Roda Kejutan!</button>
+                    </div>
+                `;
+            } else if (gType === 'catch') {
+                container.innerHTML = `
+                    <div id="catchGameBox" onclick="catchHeartClick(this)" class="cursor-pointer text-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-200 hover:scale-105 transition">
+                        <span class="text-4xl animate-bounce-cute block">💖</span>
+                        <p class="text-xs font-black text-pink-600 mt-2">Ketuk Hati Terbang Ini!</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div onclick="crackFortuneCookie(this)" class="cursor-pointer text-center p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 hover:scale-105 transition">
+                        <span class="text-4xl block">🥠</span>
+                        <p class="text-xs font-black text-amber-800 mt-2">Buka Fortune Cookie Cute!</p>
+                    </div>
+                `;
+            }
+        }
 
-      <button
-        onClick={() => {
-          setSolved(true);
-          setTimeout(onWin, 1000);
-        }}
-        className="px-6 py-2 bg-[var(--gift-accent)] text-white rounded-xl text-sm font-bold"
-      >
-        {solved
-          ? 'Berhasil Dicocokkan! ✨'
-          : 'Selesaikan Game Memory'}
-      </button>
-    </div>
-  );
-}
+        function initScratchCardCanvas() {
+            const canvas = document.getElementById('scratchCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
 
-'use client';
+            ctx.fillStyle = '#ffccd5';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff4d6d';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('✨ Usap Layar Di Sini ✨', canvas.width / 2, canvas.height / 2 + 4);
 
-import QuizGame from './QuizGame';
-import MemoryGame from './MemoryGame';
+            let isScratching = false;
+            function scratch(e) {
+                if (!isScratching) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 16, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
-const GAME_REGISTRY: Record<string, any> = {
-  quiz: QuizGame,
-  memory_card: MemoryGame,
-};
+            canvas.addEventListener('mousedown', (e) => { isScratching = true; scratch(e); });
+            canvas.addEventListener('mousemove', scratch);
+            window.addEventListener('mouseup', () => { isScratching = false; });
+            canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); });
+            canvas.addEventListener('touchmove', scratch);
+            window.addEventListener('touchend', () => { isScratching = false; });
+        }
 
-export default function GameEngine({
-  config,
-  onComplete
-}: {
-  config: any;
-  onComplete: () => void
-}) {
-  const SelectedGame =
-    GAME_REGISTRY[config.game_type] ||
-    QuizGame;
+        function spinWheelReward() {
+            const circle = document.getElementById('wheelCircle');
+            const items = studioConfig.wheelItems;
+            const result = items[Math.floor(Math.random() * items.length)];
+            circle.style.transform = 'rotate(1080deg)';
+            setTimeout(() => {
+                circle.style.transform = 'rotate(0deg)';
+                circle.innerText = `🎉 ${result}`;
+                triggerCuteConfetti();
+            }, 1000);
+        }
 
-  return (
-    <div className="flex flex-col justify-between flex-1 space-y-4">
-      <div>
-        <h2 className="text-xl font-bold text-center mb-1">
-          {config.title}
-        </h2>
+        function catchHeartClick(el) {
+            el.innerHTML = `
+                <span class="text-4xl block">💖</span>
+                <p class="text-xs font-black text-pink-600 mt-2">Yay! Kamu Mendapatkan Hatiku! 🎉</p>
+            `;
+            triggerCuteConfetti();
+        }
 
-        <p className="text-xs text-center opacity-80 mb-4">
-          {config.instruction}
-        </p>
+        function crackFortuneCookie(el) {
+            el.innerHTML = `
+                <span class="text-4xl block">✨</span>
+                <p class="text-xs font-black text-pink-600 mt-2">"Hari Ini & Seterusnya Kamu Selalu Dicintai!"</p>
+            `;
+            triggerCuteConfetti();
+        }
 
-        <SelectedGame
-          data={config}
-          onWin={onComplete}
-        />
-      </div>
-    </div>
-  );
-}
+        function renderPreviewCoupons() {
+            const area = document.getElementById('pvCouponsArea');
+            area.innerHTML = '';
+            studioConfig.coupons.forEach((cp, idx) => {
+                const item = document.createElement('div');
+                item.className = "p-3 rounded-2xl border-2 border-dashed border-pink-300 bg-white/80 flex items-center justify-between";
+                item.innerHTML = `
+                    <div>
+                        <p class="text-xs font-black text-gray-700">${cp.title}</p>
+                        <p class="text-[10px] font-bold text-gray-500">${cp.desc}</p>
+                    </div>
+                    <button id="btnCouponClaim_${idx}" onclick="claimVirtualCoupon(${idx})" class="px-3 py-1.5 rounded-xl text-[10px] font-black btn-cute-accent">
+                        ${cp.claimed ? 'Sudah Diklaim 💖' : 'Klaim Sekarang 🎟️'}
+                    </button>
+                `;
+                area.appendChild(item);
+            });
+        }
 
-'use client';
+        function claimVirtualCoupon(idx) {
+            studioConfig.coupons[idx].claimed = true;
+            const btn = document.getElementById(`btnCouponClaim_${idx}`);
+            if (btn) {
+                btn.innerText = 'Sudah Diklaim 💖';
+                btn.classList.add('opacity-70');
+            }
+            triggerCuteConfetti();
+        }
 
-import { useState } from 'react';
-import { GiftData } from '@/types/gift';
+        function setPreviewDevice(type) {
+            const frame = document.getElementById('previewDeviceFrame');
+            const btnMob = document.getElementById('btnDevMobile');
+            const btnDesk = document.getElementById('btnDevDesktop');
 
-import ThemeProvider from '../themes/ThemeProvider';
-import UnboxingModule from '../modules/UnboxingModule';
-import WelcomeModule from '../modules/WelcomeModule';
-import LetterModule from '../modules/LetterModule';
-import PhotosModule from '../modules/PhotosModule';
-import GameEngine from '../games/GameEngine';
-import FinaleModule from '../modules/FinaleModule';
+            if (type === 'mobile') {
+                frame.className = "w-full max-w-md transition-all duration-300";
+                btnMob.className = "px-3 py-1 rounded-xl bg-pink-400 text-white shadow-sm font-bold";
+                btnDesk.className = "px-3 py-1 rounded-xl text-pink-400 hover:bg-pink-50 font-bold";
+            } else {
+                frame.className = "w-full max-w-2xl transition-all duration-300";
+                btnDesk.className = "px-3 py-1 rounded-xl bg-pink-400 text-white shadow-sm font-bold";
+                btnMob.className = "px-3 py-1 rounded-xl text-pink-400 hover:bg-pink-50 font-bold";
+            }
+        }
 
-const MODULE_REGISTRY: Record<string, any> = {
-  unboxing: UnboxingModule,
-  welcome_screen: WelcomeModule,
-  letter: LetterModule,
-  scrapbook_photos: PhotosModule,
-  mini_game: GameEngine,
-  grand_finale: FinaleModule,
-};
+        function toggleCuteBgm() {
+            const audio = document.getElementById('bgmAudio');
+            const icon = document.getElementById('musicDiscIcon');
 
-export default function GiftRenderer({
-  gift
-}: {
-  gift: GiftData
-}) {
-  const [currentIndex, setCurrentIndex] =
-    useState(0);
+            if (isAudioPlaying) {
+                audio.pause();
+                isAudioPlaying = false;
+                icon.classList.remove('animate-spin-slow');
+            } else {
+                audio.play().then(() => {
+                    isAudioPlaying = true;
+                    icon.classList.add('animate-spin-slow');
+                }).catch(() => {});
+            }
+        }
 
-  const activeModule =
-    gift.modules[currentIndex];
+        function triggerCuteConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 70,
+                    spread: 80,
+                    origin: { y: 0.65 }
+                });
+            }
+        }
 
-  const ActiveComponent =
-    MODULE_REGISTRY[
-      activeModule.type
-    ];
+        function openShareModal() {
+            const jsonStr = JSON.stringify(studioConfig);
+            const encoded = btoa(encodeURIComponent(jsonStr));
+            const shareUrl = `${window.location.origin}${window.location.pathname}#gift=${encoded}`;
 
-  return (
-    <ThemeProvider
-      theme={gift.theme_config}
-    >
-      <div className="w-full bg-gray-200 h-1.5 rounded-full mb-6 overflow-hidden">
-        <div
-          className="bg-[var(--gift-accent)] h-full transition-all duration-300"
-          style={{
-            width: `${
-              ((currentIndex + 1) /
-                gift.modules.length) *
-              100
-            }%`
-          }}
-        />
-      </div>
+            document.getElementById('shareUrlInput').value = shareUrl;
 
-      <div className="flex-1 flex flex-col">
-        <ActiveComponent
-          config={activeModule.config}
-          onComplete={() =>
-            setCurrentIndex(
-              (prev) => prev + 1
-            )
-          }
-        />
-      </div>
-    </ThemeProvider>
-  );
-}
+            const qrContainer = document.getElementById('qrcodeCanvas');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: shareUrl,
+                width: 120,
+                height: 120
+            });
 
-import GiftRenderer from '@/components/renderer/GiftRenderer';
-import { GiftSchema } from '@/types/gift';
+            document.getElementById('shareModal').classList.remove('hidden');
+        }
 
-const mockGiftDB = {
-  schema_version: '2.0.0',
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+        }
 
-  gift_id: 'andre-x7k29',
+        function copyShareUrl() {
+            const input = document.getElementById('shareUrlInput');
+            input.select();
+            document.execCommand('copy');
+            alert('Link kado virtual cute berhasil disalin! Salin dan kirimkan ke dia ya! 💖✨');
+        }
 
-  theme_config: {
-    theme_mode: 'preset',
+        function loadEncodedUrlState() {
+            if (window.location.hash.startsWith('#gift=')) {
+                try {
+                    const encoded = window.location.hash.replace('#gift=', '');
+                    const jsonStr = decodeURIComponent(atob(encoded));
+                    studioConfig = JSON.parse(jsonStr);
+                    switchMainTab('preview');
+                    return;
+                } catch(e) {}
+            }
 
-    palette: {
-      bg_color: '#FDF2F8',
-      text_color: '#831843',
-      accent_color: '#DB2777',
-      card_color: '#FFFFFF'
-    },
-
-    font_family: 'Typewriter',
-
-    decorations: ['heart'],
-  },
-
-  modules: [
-    {
-      module_id: 'm1',
-      order: 1,
-      title: 'Unboxing',
-      type: 'unboxing',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        teaser_text:
-          'Seseorang meninggalkan sesuatu untukmu...',
-
-        open_button_text:
-          'Buka Kado 🎁'
-      }
-    },
-
-    {
-      module_id: 'm2',
-      order: 2,
-      title: 'Welcome',
-      type: 'welcome_screen',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        greeting:
-          'Halo, Andre! ♡',
-
-        intro_message:
-          'Selamat menikmati perjalanannya!',
-
-        start_button_text:
-          'Mulai ✨'
-      }
-    },
-
-    {
-      module_id: 'm3',
-      order: 3,
-      title: 'Letter',
-      type: 'letter',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        title:
-          'Catatan Kecil',
-
-        content:
-          'Terima kasih sudah jadi teman yang seru!',
-
-        signature:
-          '— Dari Creator'
-      }
-    },
-
-    {
-      module_id: 'm4',
-      order: 4,
-      title: 'Photos',
-      type: 'scrapbook_photos',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        photos: [
-          {
-            caption:
-              'Momen bareng',
-
-            date:
-              '2026-06-01'
-          }
-        ]
-      }
-    },
-
-    {
-      module_id: 'm5',
-      order: 5,
-      title: 'Quiz',
-      type: 'mini_game',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        game_type:
-          'quiz',
-
-        title:
-          'Kuis',
-
-        instruction:
-          'Jawab ya!',
-
-        question:
-          'Di kota mana kita nongkrong?',
-
-        options: [
-          'Malang',
-          'Jakarta'
-        ],
-
-        correct_index: 0
-      }
-    },
-
-    {
-      module_id: 'm6',
-      order: 6,
-      title: 'Finale',
-      type: 'grand_finale',
-      enabled: true,
-      is_locked: false,
-
-      config: {
-        completion_message:
-          'Selesai! ♡',
-
-        final_note:
-          'Semoga harimu menyenangkan!'
-      }
-    }
-  ]
-};
-
-export default function Page() {
-  const parsed =
-    GiftSchema.safeParse(
-      mockGiftDB
-    );
-
-  if (!parsed.success) {
-    return (
-      <div className="p-10 text-center text-red-500">
-        Invalid Schema
-      </div>
-    );
-  }
-
-  return (
-    <main className="w-full min-h-screen bg-black">
-      <GiftRenderer
-        gift={parsed.data}
-      />
-    </main>
-  );
-}
+            const saved = localStorage.getItem('virtual_gift_cute_config');
+            if (saved) {
+                try { studioConfig = JSON.parse(saved); } catch(e) {}
+            }
+        }
+    </script>
+</body>
+</html>
