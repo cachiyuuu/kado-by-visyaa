@@ -5,408 +5,2331 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A Letter For You</title>
+<title>Little Gift</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    min-height: 100vh;
-    background: #eee7e9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
+html{
+    scroll-behavior:smooth;
 }
 
-/* =========================
-   BOOK
-========================= */
+body{
+    font-family:
+        "Poppins",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
-.book {
-    position: relative;
-    width: min(90vw, 900px);
-    aspect-ratio: 2 / 1.4;
-    perspective: 2500px;
+    background:#fff8fc;
+    color:#5d5061;
 }
 
-/* =========================
-   PAGE
-========================= */
 
-.page {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    right: 0;
+/* =====================================================
+   GLOBAL
+===================================================== */
 
-    transform-origin: left center;
-    transform-style: preserve-3d;
+button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+}
+
+.hidden{
+    display:none !important;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar{
+    height:70px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 6%;
+
+    background:rgba(255,255,255,.85);
+
+    backdrop-filter:blur(15px);
+
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+
+    z-index:1000;
+
+    border-bottom:1px solid #f2e5ed;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:700;
+    color:#9b76a7;
+}
+
+.nav-actions{
+    display:flex;
+    gap:10px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn{
+    padding:12px 22px;
+
+    border-radius:30px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.btn-primary{
+    background:#9b76a7;
+    color:white;
+
+    box-shadow:
+        0 8px 20px rgba(155,118,167,.25);
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 12px 25px rgba(155,118,167,.35);
+}
+
+.btn-secondary{
+    background:#f6eaf3;
+    color:#80668a;
+}
+
+.btn-secondary:hover{
+    background:#edddea;
+}
+
+.btn-white{
+    background:white;
+    color:#8d6a96;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.08);
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+.page{
+    min-height:100vh;
+}
+
+
+/* HERO */
+
+.hero{
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:
+        120px 25px
+        70px;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.hero::before{
+    content:"";
+
+    width:420px;
+    height:420px;
+
+    background:#f3d8e8;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    top:-150px;
+    left:-150px;
+
+    filter:blur(20px);
+
+    opacity:.55;
+}
+
+.hero::after{
+    content:"";
+
+    width:350px;
+    height:350px;
+
+    background:#ded0ee;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    bottom:-140px;
+    right:-100px;
+
+    filter:blur(25px);
+
+    opacity:.5;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+
+    max-width:720px;
+}
+
+.hero-small{
+    font-size:14px;
+    letter-spacing:2px;
+
+    color:#aa8cb1;
+
+    margin-bottom:18px;
+}
+
+.hero h1{
+    font-size:
+        clamp(42px,7vw,78px);
+
+    line-height:1.05;
+
+    color:#69586e;
+
+    margin-bottom:22px;
+}
+
+.hero p{
+    max-width:580px;
+
+    margin:auto;
+
+    line-height:1.8;
+
+    font-size:16px;
+
+    color:#817581;
+
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+
+/* =====================================================
+   TEMPLATES
+===================================================== */
+
+.templates{
+    padding:90px 6%;
+    background:white;
+}
+
+.section-title{
+    text-align:center;
+
+    margin-bottom:50px;
+}
+
+.section-title h2{
+    font-size:34px;
+
+    color:#69586e;
+
+    margin-bottom:10px;
+}
+
+.section-title p{
+    color:#8c7f88;
+}
+
+.template-grid{
+    max-width:1100px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:20px;
+}
+
+.template-card{
+    padding:30px 20px;
+
+    border:
+        1px solid #f0e2eb;
+
+    border-radius:22px;
+
+    background:#fffafe;
+
+    text-align:center;
+
+    transition:.3s;
+
+    cursor:pointer;
+}
+
+.template-card:hover{
+    transform:translateY(-6px);
+
+    box-shadow:
+        0 15px 35px rgba(91,70,100,.10);
+}
+
+.template-icon{
+    width:65px;
+    height:65px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin:0 auto 18px;
+
+    border-radius:20px;
+
+    background:#f7e8f1;
+
+    font-size:30px;
+}
+
+.template-card h3{
+    color:#69586e;
+
+    margin-bottom:8px;
+}
+
+.template-card p{
+    font-size:13px;
+
+    color:#94868f;
+
+    line-height:1.6;
+}
+
+
+/* =====================================================
+   CREATE PAGE
+===================================================== */
+
+#createPage{
+    padding-top:70px;
+
+    min-height:100vh;
+
+    background:#faf6fa;
+}
+
+.create-layout{
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:45px 25px;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:30px;
+}
+
+.panel{
+    background:white;
+
+    border:
+        1px solid #f0e5ed;
+
+    border-radius:24px;
+
+    padding:30px;
+
+    box-shadow:
+        0 10px 30px rgba(90,70,100,.06);
+}
+
+.panel-title{
+    font-size:22px;
+
+    color:#69586e;
+
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+
+    font-size:13px;
+    font-weight:600;
+
+    color:#766878;
+
+    margin-bottom:8px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+
+    border:
+        1px solid #eadde7;
+
+    background:#fffafd;
+
+    border-radius:14px;
+
+    padding:13px 15px;
+
+    font-family:inherit;
+
+    color:#5d5061;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#b899bf;
+
+    box-shadow:
+        0 0 0 4px #f6edf7;
+}
+
+textarea{
+    min-height:120px;
+
+    resize:vertical;
+}
+
+
+/* UPLOAD */
+
+.upload-area{
+    border:
+        2px dashed #dcc9df;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    text-align:center;
+
+    background:#fdf9fd;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.upload-area:hover{
+    background:#faf2fa;
+
+    border-color:#b89ac0;
+}
+
+.upload-area .upload-icon{
+    font-size:35px;
+
+    margin-bottom:10px;
+}
+
+.upload-area p{
+    font-size:13px;
+
+    color:#8b7c87;
+
+    line-height:1.6;
+}
+
+#pageUpload{
+    display:none;
+}
+
+
+/* IMAGE LIST */
+
+.image-list{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:8px;
+
+    margin-top:15px;
+}
+
+.image-item{
+    position:relative;
+
+    aspect-ratio:3/4;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    background:#f4edf4;
+}
+
+.image-item img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+/* =====================================================
+   BOOK PREVIEW
+===================================================== */
+
+.preview-wrapper{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-height:570px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #f8eaf3,
+            #eee5ee
+        );
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    padding:25px;
+}
+
+.book{
+    width:min(90%,420px);
+
+    aspect-ratio:3/4;
+
+    position:relative;
+
+    perspective:1800px;
+}
+
+.book-page{
+    position:absolute;
+
+    inset:0;
+
+    background:white;
+
+    border-radius:
+        4px 12px 12px 4px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 12px 30px rgba(50,30,50,.18);
+
+    transform-origin:left center;
+
+    transform-style:preserve-3d;
 
     transition:
-        transform 1.1s cubic-bezier(.65,.05,.36,1);
+        transform 1s
+        cubic-bezier(.65,.05,.36,1);
 
-    cursor: pointer;
+    cursor:pointer;
+
+    backface-visibility:hidden;
 }
 
-/* halaman yang sedang dibalik */
-
-.page.flipped {
-    transform: rotateY(-180deg);
+.book-page.flipped{
+    transform:
+        rotateY(-180deg);
 }
 
-/* =========================
-   FRONT & BACK
-========================= */
+.book-page img{
+    width:100%;
+    height:100%;
 
-.page-face {
-    position: absolute;
-    inset: 0;
+    object-fit:cover;
+}
 
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+.book-placeholder{
+    width:100%;
+    height:100%;
 
-    background: white;
+    display:flex;
 
-    overflow: hidden;
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    text-align:center;
+
+    padding:30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff5fa,
+            #f1e9f5
+        );
+}
+
+.book-placeholder .big{
+    font-size:55px;
+
+    margin-bottom:15px;
+}
+
+.book-placeholder h3{
+    font-size:23px;
+
+    color:#705d75;
+
+    margin-bottom:8px;
+}
+
+.book-placeholder p{
+    font-size:13px;
+
+    color:#91838e;
+}
+
+
+/* =====================================================
+   PREVIEW BUTTONS
+===================================================== */
+
+.book-controls{
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:18px;
+}
+
+
+/* =====================================================
+   SUCCESS PAGE
+===================================================== */
+
+#successPage{
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:100px 20px;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #f7dce9,
+            #fff8fc 50%
+        );
+}
+
+.success-card{
+    width:min(600px,100%);
+
+    background:white;
+
+    padding:50px 35px;
+
+    border-radius:30px;
+
+    text-align:center;
 
     box-shadow:
-        0 5px 20px rgba(0,0,0,.12);
+        0 20px 50px rgba(70,40,80,.12);
 }
 
-.page-face img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.success-icon{
+    font-size:65px;
+
+    margin-bottom:20px;
 }
 
-/* bagian belakang halaman */
+.success-card h1{
+    color:#69586e;
 
-.page-back {
-    transform: rotateY(180deg);
+    margin-bottom:12px;
 }
 
-/* =========================
-   COVER
-========================= */
+.success-card p{
+    color:#8c7d87;
 
-.cover {
-    position: absolute;
-    inset: 0;
+    line-height:1.7;
 
-    background: white;
+    margin-bottom:25px;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.link-box{
+    display:flex;
 
-    overflow: hidden;
+    gap:8px;
+
+    margin-bottom:15px;
+}
+
+.link-box input{
+    flex:1;
+
+    background:#faf6fa;
+}
+
+.success-actions{
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+
+/* =====================================================
+   GIFT VIEW
+===================================================== */
+
+#giftPage{
+    min-height:100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #f7dfeb,
+            #fff8fc 60%
+        );
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:50px 20px;
+}
+
+.gift-container{
+    width:min(900px,100%);
+
+    text-align:center;
+}
+
+.gift-container h1{
+    font-size:42px;
+
+    color:#69586e;
+
+    margin-bottom:10px;
+}
+
+.gift-container > p{
+    color:#897a84;
+
+    margin-bottom:35px;
+}
+
+
+/* GIFT BOOK */
+
+.gift-book{
+    margin:auto;
+
+    width:min(500px,90vw);
+
+    aspect-ratio:3/4;
+
+    perspective:2000px;
+
+    position:relative;
+}
+
+.gift-book-page{
+    position:absolute;
+
+    inset:0;
+
+    background:white;
+
+    border-radius:5px 15px 15px 5px;
+
+    overflow:hidden;
 
     box-shadow:
-        0 15px 40px rgba(0,0,0,.2);
+        0 20px 45px rgba(50,30,50,.18);
 
-    z-index: 100;
+    transform-origin:left center;
+
+    transform-style:preserve-3d;
+
+    transition:
+        transform 1.1s
+        cubic-bezier(.65,.05,.36,1);
+
+    cursor:pointer;
 }
 
-.cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.gift-book-page.flipped{
+    transform:
+        rotateY(-180deg);
 }
 
-.cover.hidden {
-    pointer-events: none;
+.gift-book-page img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
 }
 
-/* =========================
-   CONTROLS
-========================= */
+.gift-text-page{
+    width:100%;
+    height:100%;
 
-.controls {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
+    padding:45px 35px;
 
-    display: flex;
-    gap: 12px;
+    display:flex;
 
-    z-index: 999;
+    flex-direction:column;
+
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8fc,
+            #f5edf8
+        );
 }
 
-button {
-    border: none;
+.gift-text-page h2{
+    color:#705d75;
 
-    padding: 11px 18px;
-
-    border-radius: 30px;
-
-    background: rgba(255,255,255,.9);
-
-    color: #594d54;
-
-    font-size: 14px;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.1);
-
-    transition: .2s;
+    margin-bottom:18px;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    background: white;
+.gift-text-page p{
+    color:#756773;
+
+    line-height:1.9;
+
+    white-space:pre-wrap;
 }
 
-/* =========================
-   PAGE NUMBER
-========================= */
+.gift-controls{
+    margin-top:25px;
 
-.page-number {
-    position: fixed;
-    top: 20px;
-    left: 50%;
+    display:flex;
 
-    transform: translateX(-50%);
+    justify-content:center;
 
-    font-size: 13px;
-
-    color: #71656c;
-
-    z-index: 999;
+    gap:10px;
 }
 
-/* =========================
-   MOBILE
-========================= */
 
-@media (max-width: 700px) {
+/* =====================================================
+   FOOTER
+===================================================== */
 
-    .book {
-        width: 94vw;
-        aspect-ratio: 0.72 / 1;
+footer{
+    text-align:center;
+
+    padding:35px;
+
+    color:#a0929c;
+
+    font-size:12px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+    .template-grid{
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
-    .page {
-        width: 100%;
-        right: 0;
+    .create-layout{
+        grid-template-columns:1fr;
     }
 
-    .controls {
-        bottom: 15px;
-    }
-
-    button {
-        padding: 9px 14px;
-        font-size: 12px;
-    }
 }
+
+@media(max-width:600px){
+
+    .navbar{
+        padding:0 18px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .hero h1{
+        font-size:43px;
+    }
+
+    .hero p{
+        font-size:14px;
+    }
+
+    .templates{
+        padding:
+            70px 20px;
+    }
+
+    .template-grid{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:20px;
+    }
+
+    .preview-wrapper{
+        min-height:450px;
+    }
+
+    .success-card{
+        padding:35px 20px;
+    }
+
+    .link-box{
+        flex-direction:column;
+    }
+
+}
+
 </style>
 </head>
 
 
 <body>
 
-<div class="page-number">
-    <span id="pageNumber">Cover</span>
-</div>
 
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
 
-<div class="book" id="book">
+<nav class="navbar">
 
-    <!-- COVER -->
-
-    <div class="cover" id="cover">
-        <img src="pages/cover.png" alt="Cover">
+    <div class="logo">
+        little.gift ✿
     </div>
 
+    <div class="nav-actions">
 
-    <!-- PAGE 1 -->
+        <button
+            class="btn btn-secondary"
+            onclick="showHome()">
 
-    <div class="page" data-page="1">
+            Home
 
-        <div class="page-face">
-            <img src="pages/page1.png">
-        </div>
+        </button>
 
-        <div class="page-face page-back">
-            <img src="pages/page2.png">
-        </div>
+        <button
+            class="btn btn-primary"
+            onclick="showCreate()">
 
-    </div>
+            Create Gift
 
-
-    <!-- PAGE 2 -->
-
-    <div class="page" data-page="2">
-
-        <div class="page-face">
-            <img src="pages/page3.png">
-        </div>
-
-        <div class="page-face page-back">
-            <img src="pages/page4.png">
-        </div>
+        </button>
 
     </div>
 
+</nav>
 
-    <!-- PAGE 3 -->
 
-    <div class="page" data-page="3">
+<!-- =====================================================
+     HOME
+===================================================== -->
 
-        <div class="page-face">
-            <img src="pages/page5.png">
+<main id="homePage" class="page">
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-small">
+                A LITTLE SOMETHING FOR SOMEONE SPECIAL
+            </div>
+
+            <h1>
+                Make a gift<br>
+                they can keep.
+            </h1>
+
+            <p>
+                Buat hadiah digital yang personal,
+                manis, dan bisa kamu kirim lewat satu
+                link sederhana.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="showCreate()">
+
+                    ✨ Create a Gift
+
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="scrollToTemplates()">
+
+                    Explore Templates
+
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="page-face page-back">
-            <img src="pages/page6.png">
+    </section>
+
+
+    <section
+        id="templates"
+        class="templates">
+
+        <div class="section-title">
+
+            <h2>
+                Choose your little gift
+            </h2>
+
+            <p>
+                Mulai dari template yang paling
+                cocok dengan ceritamu.
+            </p>
+
+        </div>
+
+
+        <div class="template-grid">
+
+
+            <div
+                class="template-card"
+                onclick="chooseTemplate('book')">
+
+                <div class="template-icon">
+                    📖
+                </div>
+
+                <h3>
+                    Digital Book
+                </h3>
+
+                <p>
+                    Jadikan foto dan tulisanmu
+                    sebuah buku digital.
+                </p>
+
+            </div>
+
+
+            <div
+                class="template-card"
+                onclick="chooseTemplate('letter')">
+
+                <div class="template-icon">
+                    💌
+                </div>
+
+                <h3>
+                    Love Letter
+                </h3>
+
+                <p>
+                    Surat sederhana untuk
+                    seseorang yang spesial.
+                </p>
+
+            </div>
+
+
+            <div
+                class="template-card"
+                onclick="chooseTemplate('memory')">
+
+                <div class="template-icon">
+                    🌷
+                </div>
+
+                <h3>
+                    Memory
+                </h3>
+
+                <p>
+                    Simpan momen dan cerita
+                    dalam satu tempat.
+                </p>
+
+            </div>
+
+
+            <div
+                class="template-card"
+                onclick="chooseTemplate('box')">
+
+                <div class="template-icon">
+                    🎁
+                </div>
+
+                <h3>
+                    Gift Box
+                </h3>
+
+                <p>
+                    Sebuah kejutan kecil
+                    yang bisa dibagikan.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        made with a little bit of love ♡
+    </footer>
+
+</main>
+
+
+<!-- =====================================================
+     CREATE PAGE
+===================================================== -->
+
+<main
+    id="createPage"
+    class="page hidden">
+
+
+    <div class="create-layout">
+
+
+        <!-- EDITOR -->
+
+        <section class="panel">
+
+            <h2 class="panel-title">
+                Create your gift ✨
+            </h2>
+
+
+            <div class="form-group">
+
+                <label>
+                    Template
+                </label>
+
+                <select id="templateSelect">
+
+                    <option value="book">
+                        📖 Digital Book
+                    </option>
+
+                    <option value="letter">
+                        💌 Love Letter
+                    </option>
+
+                    <option value="memory">
+                        🌷 Memory
+                    </option>
+
+                    <option value="box">
+                        🎁 Gift Box
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Judul
+                </label>
+
+                <input
+                    id="giftTitle"
+                    type="text"
+                    placeholder="A Letter For You">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Untuk siapa?
+                </label>
+
+                <input
+                    id="recipient"
+                    type="text"
+                    placeholder="Nama penerima">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Pesan
+                </label>
+
+                <textarea
+                    id="giftMessage"
+                    placeholder="Tulis sesuatu yang ingin kamu sampaikan..."></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Upload halaman Canva
+                </label>
+
+
+                <label
+                    class="upload-area"
+                    for="pageUpload">
+
+                    <div class="upload-icon">
+                        🖼️
+                    </div>
+
+                    <p>
+                        Klik untuk upload halaman
+                        Canva.<br>
+                        Bisa pilih beberapa gambar sekaligus.
+                    </p>
+
+                </label>
+
+
+                <input
+                    id="pageUpload"
+                    type="file"
+                    accept="image/*"
+                    multiple>
+
+                <div
+                    id="imageList"
+                    class="image-list">
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn btn-primary"
+                style="width:100%"
+                onclick="publishGift()">
+
+                ✨ Create My Gift
+
+            </button>
+
+        </section>
+
+
+        <!-- PREVIEW -->
+
+        <section class="panel">
+
+            <h2 class="panel-title">
+                Preview 👀
+            </h2>
+
+
+            <div class="preview-wrapper">
+
+                <div
+                    class="book"
+                    id="previewBook">
+
+                    <div
+                        class="book-page"
+                        id="previewPage">
+
+                        <div
+                            class="book-placeholder">
+
+                            <div class="big">
+                                📖
+                            </div>
+
+                            <h3 id="previewTitle">
+                                A Letter For You
+                            </h3>
+
+                            <p id="previewRecipient">
+                                untuk seseorang yang spesial
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="book-controls">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="previewPrevious()">
+
+                    ←
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="previewNext()">
+
+                    →
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     SUCCESS PAGE
+===================================================== -->
+
+<main
+    id="successPage"
+    class="page hidden">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            🎁
+        </div>
+
+        <h1>
+            Your gift is ready!
+        </h1>
+
+        <p>
+            Gift kamu sudah dibuat.
+            Sekarang tinggal salin link-nya
+            dan kirim ke orang yang kamu mau.
+        </p>
+
+
+        <div class="link-box">
+
+            <input
+                id="generatedLink"
+                readonly>
+
+            <button
+                class="btn btn-primary"
+                onclick="copyGiftLink()">
+
+                📋 Salin Link
+
+            </button>
+
+        </div>
+
+
+        <div class="success-actions">
+
+            <button
+                class="btn btn-secondary"
+                onclick="openGift()">
+
+                👀 Lihat Gift
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="showCreate()">
+
+                + Buat Gift Lagi
+
+            </button>
+
         </div>
 
     </div>
 
-</div>
+</main>
 
 
-<!-- CONTROLS -->
+<!-- =====================================================
+     GIFT PAGE
+===================================================== -->
 
-<div class="controls">
+<main
+    id="giftPage"
+    class="page hidden">
 
-    <button onclick="previousPage()">
-        ← Sebelumnya
-    </button>
+    <div class="gift-container">
 
-    <button onclick="nextPage()">
-        Selanjutnya →
-    </button>
+        <h1 id="giftViewTitle">
+            A Letter For You
+        </h1>
 
-</div>
+        <p id="giftViewRecipient">
+            untuk seseorang yang spesial
+        </p>
+
+
+        <div
+            class="gift-book"
+            id="giftBook">
+
+            <div
+                class="gift-book-page"
+                id="giftPageDisplay">
+
+                <div
+                    class="gift-text-page">
+
+                    <h2>
+                        A little message
+                    </h2>
+
+                    <p id="giftViewMessage">
+                        ...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="gift-controls">
+
+            <button
+                class="btn btn-secondary"
+                onclick="giftPrevious()">
+
+                ← Sebelumnya
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="giftNext()">
+
+                Selanjutnya →
+
+            </button>
+
+        </div>
+
+    </div>
+
+</main>
 
 
 <script>
 
-const pages = document.querySelectorAll(".page");
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
 
-const cover = document.getElementById("cover");
+let uploadedPages = [];
 
-const pageNumber =
-    document.getElementById("pageNumber");
+let previewIndex = 0;
 
-let currentPage = 0;
+let giftIndex = 0;
 
-
-/* =========================
-   NEXT PAGE
-========================= */
-
-function nextPage() {
-
-    if (currentPage < pages.length) {
-
-        pages[currentPage].classList.add("flipped");
-
-        currentPage++;
-
-        updatePage();
-
-    }
-}
+let currentGiftId = null;
 
 
-/* =========================
-   PREVIOUS PAGE
-========================= */
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
 
-function previousPage() {
+function hideAllPages(){
 
-    if (currentPage > 0) {
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
 
-        currentPage--;
+            page.classList.add("hidden");
 
-        pages[currentPage].classList.remove("flipped");
-
-        updatePage();
-
-    }
+        });
 
 }
 
 
-/* =========================
-   UPDATE
-========================= */
+function showHome(){
 
-function updatePage() {
+    hideAllPages();
 
-    if (currentPage === 0) {
+    document
+        .getElementById("homePage")
+        .classList.remove("hidden");
 
-        pageNumber.textContent = "Cover";
+    window.scrollTo(0,0);
 
-    } else {
+}
 
-        pageNumber.textContent =
-            "Halaman " + currentPage;
+
+function showCreate(){
+
+    hideAllPages();
+
+    document
+        .getElementById("createPage")
+        .classList.remove("hidden");
+
+    window.scrollTo(0,0);
+
+}
+
+
+function scrollToTemplates(){
+
+    document
+        .getElementById("templates")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+}
+
+
+function chooseTemplate(type){
+
+    showCreate();
+
+    document
+        .getElementById("templateSelect")
+        .value = type;
+
+}
+
+
+/* =====================================================
+   FORM LIVE PREVIEW
+===================================================== */
+
+const giftTitle =
+    document.getElementById("giftTitle");
+
+const recipient =
+    document.getElementById("recipient");
+
+giftTitle.addEventListener(
+    "input",
+    updatePreview
+);
+
+recipient.addEventListener(
+    "input",
+    updatePreview
+);
+
+
+function updatePreview(){
+
+    const title =
+        giftTitle.value.trim()
+        || "A Letter For You";
+
+    const name =
+        recipient.value.trim()
+        || "untuk seseorang yang spesial";
+
+
+    document
+        .getElementById("previewTitle")
+        .textContent = title;
+
+
+    document
+        .getElementById("previewRecipient")
+        .textContent = name;
+
+}
+
+
+/* =====================================================
+   IMAGE UPLOAD
+===================================================== */
+
+document
+    .getElementById("pageUpload")
+    .addEventListener(
+        "change",
+        function(event){
+
+            const files =
+                Array.from(event.target.files);
+
+
+            uploadedPages = [];
+
+
+            files.forEach(
+                (file,index) => {
+
+                    const reader =
+                        new FileReader();
+
+
+                    reader.onload =
+                        function(e){
+
+                            uploadedPages.push({
+                                name:file.name,
+                                src:e.target.result,
+                                index:index
+                            });
+
+
+                            uploadedPages.sort(
+                                (a,b) =>
+                                a.index-b.index
+                            );
+
+
+                            renderImageList();
+
+                            previewIndex = 0;
+
+                            renderPreviewPage();
+
+                        };
+
+
+                    reader.readAsDataURL(file);
+
+                });
+
+        }
+    );
+
+
+function renderImageList(){
+
+    const container =
+        document.getElementById("imageList");
+
+    container.innerHTML = "";
+
+
+    uploadedPages.forEach(
+        page => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "image-item";
+
+
+            const img =
+                document.createElement("img");
+
+            img.src =
+                page.src;
+
+
+            item.appendChild(img);
+
+            container.appendChild(item);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PREVIEW BOOK
+===================================================== */
+
+function renderPreviewPage(){
+
+    const page =
+        document.getElementById(
+            "previewPage"
+        );
+
+
+    if(
+        uploadedPages.length === 0
+    ){
+
+        page.innerHTML = `
+
+            <div class="book-placeholder">
+
+                <div class="big">
+                    📖
+                </div>
+
+                <h3 id="previewTitle">
+                    A Letter For You
+                </h3>
+
+                <p id="previewRecipient">
+                    untuk seseorang yang spesial
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const image =
+        uploadedPages[previewIndex];
+
+
+    page.innerHTML = `
+
+        <img
+            src="${image.src}"
+            alt="Page">
+
+    `;
+
+}
+
+
+function previewNext(){
+
+    if(
+        uploadedPages.length === 0
+    )
+        return;
+
+
+    if(
+        previewIndex <
+        uploadedPages.length - 1
+    ){
+
+        const page =
+            document.getElementById(
+                "previewPage"
+            );
+
+
+        page.classList.add("flipped");
+
+
+        setTimeout(
+            () => {
+
+                previewIndex++;
+
+                page.classList.remove(
+                    "flipped"
+                );
+
+                renderPreviewPage();
+
+            },
+            450
+        );
 
     }
 
 }
 
 
-/* =========================
-   COVER CLICK
-========================= */
+function previewPrevious(){
 
-cover.addEventListener("click", () => {
-
-    cover.style.transform =
-        "rotateY(-180deg)";
-
-    cover.style.transformOrigin =
-        "left center";
-
-    cover.style.transition =
-        "transform 1.1s cubic-bezier(.65,.05,.36,1)";
-
-    setTimeout(() => {
-
-        cover.style.display = "none";
-
-    }, 1100);
-
-    currentPage = 0;
-
-    pageNumber.textContent = "Halaman 1";
-
-});
+    if(
+        uploadedPages.length === 0
+    )
+        return;
 
 
-/* =========================
-   KEYBOARD
-========================= */
+    if(previewIndex > 0){
 
-document.addEventListener("keydown", (event) => {
+        previewIndex--;
 
-    if (event.key === "ArrowRight") {
-
-        nextPage();
+        renderPreviewPage();
 
     }
 
-    if (event.key === "ArrowLeft") {
+}
 
-        previousPage();
+
+/* =====================================================
+   GENERATE RANDOM ID
+===================================================== */
+
+function generateGiftId(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+
+    let id = "";
+
+
+    for(
+        let i=0;
+        i<7;
+        i++
+    ){
+
+        id +=
+            chars[
+                Math.floor(
+                    Math.random()
+                    * chars.length
+                )
+            ];
 
     }
 
-});
+
+    return id;
+
+}
+
+
+/* =====================================================
+   PUBLISH GIFT
+===================================================== */
+
+function publishGift(){
+
+    const title =
+        giftTitle.value.trim()
+        || "A Letter For You";
+
+
+    const name =
+        recipient.value.trim()
+        || "Seseorang yang spesial";
+
+
+    const message =
+        document
+            .getElementById("giftMessage")
+            .value
+            .trim()
+        || "Ada sesuatu yang ingin aku sampaikan untukmu.";
+
+
+    const template =
+        document
+            .getElementById("templateSelect")
+            .value;
+
+
+    const id =
+        generateGiftId();
+
+
+    const gift = {
+
+        id:id,
+
+        title:title,
+
+        recipient:name,
+
+        message:message,
+
+        template:template,
+
+        pages:uploadedPages,
+
+        createdAt:
+            new Date().toISOString()
+
+    };
+
+
+    /*
+        PROTOTYPE STORAGE
+
+        Untuk sekarang gift disimpan
+        di browser.
+    */
+
+    localStorage.setItem(
+        "gift_" + id,
+        JSON.stringify(gift)
+    );
+
+
+    currentGiftId = id;
+
+
+    const url =
+        window.location.origin
+        + window.location.pathname
+        + "?gift="
+        + id;
+
+
+    document
+        .getElementById("generatedLink")
+        .value = url;
+
+
+    hideAllPages();
+
+
+    document
+        .getElementById("successPage")
+        .classList.remove(
+            "hidden"
+        );
+
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =====================================================
+   COPY LINK
+===================================================== */
+
+async function copyGiftLink(){
+
+    const input =
+        document
+            .getElementById("generatedLink");
+
+
+    const link =
+        input.value;
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            link
+        );
+
+        showCopied();
+
+    }
+    catch(error){
+
+        input.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        showCopied();
+
+    }
+
+}
+
+
+function showCopied(){
+
+    const button =
+        document.querySelector(
+            ".link-box button"
+        );
+
+
+    const original =
+        button.innerHTML;
+
+
+    button.innerHTML =
+        "✓ Link Tersalin!";
+
+
+    setTimeout(
+        () => {
+
+            button.innerHTML =
+                original;
+
+        },
+        1800
+    );
+
+}
+
+
+/* =====================================================
+   OPEN GIFT
+===================================================== */
+
+function openGift(){
+
+    if(!currentGiftId)
+        return;
+
+
+    window.location.href =
+        window.location.pathname
+        + "?gift="
+        + currentGiftId;
+
+}
+
+
+/* =====================================================
+   LOAD GIFT
+===================================================== */
+
+function loadGift(id){
+
+    const raw =
+        localStorage.getItem(
+            "gift_" + id
+        );
+
+
+    if(!raw){
+
+        showHome();
+
+        alert(
+            "Gift tidak ditemukan di browser ini."
+        );
+
+        return;
+
+    }
+
+
+    const gift =
+        JSON.parse(raw);
+
+
+    document
+        .getElementById("giftViewTitle")
+        .textContent =
+            gift.title;
+
+
+    document
+        .getElementById("giftViewRecipient")
+        .textContent =
+            "untuk " + gift.recipient;
+
+
+    document
+        .getElementById("giftViewMessage")
+        .textContent =
+            gift.message;
+
+
+    const book =
+        document.getElementById(
+            "giftBook"
+        );
+
+
+    book.innerHTML = "";
+
+
+    /*
+        TEXT PAGE
+    */
+
+    const messagePage =
+        document.createElement(
+            "div"
+        );
+
+
+    messagePage.className =
+        "gift-book-page";
+
+
+    messagePage.innerHTML = `
+
+        <div class="gift-text-page">
+
+            <h2>
+                Untuk ${escapeHTML(gift.recipient)}
+            </h2>
+
+            <p>
+                ${escapeHTML(gift.message)}
+            </p>
+
+        </div>
+
+    `;
+
+
+    book.appendChild(
+        messagePage
+    );
+
+
+    /*
+        CANVA PAGES
+    */
+
+    if(
+        gift.pages &&
+        gift.pages.length
+    ){
+
+        gift.pages.forEach(
+            pageData => {
+
+                const page =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                page.className =
+                    "gift-book-page";
+
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                img.src =
+                    pageData.src;
+
+
+                page.appendChild(img);
+
+                book.appendChild(page);
+
+            }
+        );
+
+    }
+
+
+    giftIndex = 0;
+
+
+    hideAllPages();
+
+
+    document
+        .getElementById("giftPage")
+        .classList.remove(
+            "hidden"
+        );
+
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =====================================================
+   GIFT PAGE FLIP
+===================================================== */
+
+function giftNext(){
+
+    const pages =
+        document.querySelectorAll(
+            "#giftBook .gift-book-page"
+        );
+
+
+    if(
+        giftIndex <
+        pages.length - 1
+    ){
+
+        pages[
+            giftIndex
+        ].classList.add(
+            "flipped"
+        );
+
+
+        giftIndex++;
+
+    }
+
+}
+
+
+function giftPrevious(){
+
+    const pages =
+        document.querySelectorAll(
+            "#giftBook .gift-book-page"
+        );
+
+
+    if(giftIndex > 0){
+
+        giftIndex--;
+
+        pages[
+            giftIndex
+        ].classList.remove(
+            "flipped"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(text){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =====================================================
+   CHECK URL
+===================================================== */
+
+function checkGiftURL(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const giftId =
+        params.get("gift");
+
+
+    if(giftId){
+
+        loadGift(giftId);
+
+    }
+    else{
+
+        showHome();
+
+    }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+checkGiftURL();
 
 </script>
 
