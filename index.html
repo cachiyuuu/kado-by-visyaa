@@ -1,557 +1,512 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Little Message ♡</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    font-family: "Quicksand", sans-serif;
-    background: #dff3e6;
-}
-
-/* =========================
-   VIDEO FRAME
-========================= */
-
-.scene {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    background:
-        linear-gradient(
-            to bottom,
-            #bde8f5 0%,
-            #d9f4ee 48%,
-            #a8d99d 49%,
-            #80c477 100%
-        );
-}
-
-/* matahari */
-
-.sun {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #ffe9a8;
-    top: 9%;
-    right: 13%;
-    box-shadow: 0 0 50px #ffe8a5;
-}
-
-/* awan */
-
-.cloud {
-    position: absolute;
-    width: 130px;
-    height: 45px;
-    background: rgba(255,255,255,.72);
-    border-radius: 50px;
-    filter: blur(.3px);
-}
-
-.cloud::before,
-.cloud::after {
-    content: "";
-    position: absolute;
-    background: inherit;
-    border-radius: 50%;
-}
-
-.cloud::before {
-    width: 55px;
-    height: 55px;
-    left: 20px;
-    bottom: 12px;
-}
-
-.cloud::after {
-    width: 70px;
-    height: 70px;
-    right: 15px;
-    bottom: 8px;
-}
-
-.cloud.one {
-    top: 16%;
-    left: 7%;
-    animation: cloudMove 15s linear infinite;
-}
-
-.cloud.two {
-    top: 27%;
-    right: -30px;
-    transform: scale(.7);
-    animation: cloudMove2 18s linear infinite;
-}
-
-@keyframes cloudMove {
-    from { transform: translateX(-30px); }
-    to { transform: translateX(80px); }
-}
-
-@keyframes cloudMove2 {
-    from { transform: translateX(0); }
-    to { transform: translateX(-180px); }
-}
-
-/* =========================
-   BACKGROUND
-========================= */
-
-.hill {
-    position: absolute;
-    bottom: 29%;
-    width: 80%;
-    height: 28%;
-    background: #9bd28d;
-    border-radius: 50% 50% 0 0;
-}
-
-.hill.left {
-    left: -25%;
-}
-
-.hill.right {
-    right: -25%;
-    background: #8bc87e;
-}
-
-.ground {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 35%;
-    background: #83c775;
-}
-
-/* jalan */
-
-.path {
-    position: absolute;
-    bottom: -12%;
-    left: 30%;
-    width: 40%;
-    height: 50%;
-    background: #d9c7a0;
-    transform: perspective(300px) rotateX(35deg);
-    border-radius: 50% 50% 0 0;
-    opacity: .8;
-}
-
-/* bunga */
-
-.flower {
-    position: absolute;
-    bottom: 18%;
-    font-size: 25px;
-    animation: flowerMove 3s ease-in-out infinite;
-}
-
-.flower:nth-child(1) { left: 8%; }
-.flower:nth-child(2) { left: 17%; animation-delay: .5s; }
-.flower:nth-child(3) { right: 12%; animation-delay: 1s; }
-.flower:nth-child(4) { right: 22%; animation-delay: 1.5s; }
-
-@keyframes flowerMove {
-    50% { transform: translateY(-5px) rotate(3deg); }
-}
-
-/* =========================
-   BUNNY
-========================= */
-
-.bunny {
-    position: absolute;
-    bottom: 17%;
-    left: 13%;
-    width: 90px;
-    height: 80px;
-    animation: bunnyJump 2.2s ease-in-out infinite;
-    z-index: 5;
-}
-
-.bunny-body {
-    position: absolute;
-    bottom: 0;
-    left: 15px;
-    width: 62px;
-    height: 48px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 5px 0 rgba(0,0,0,.04);
-}
-
-.bunny-head {
-    position: absolute;
-    left: 28px;
-    top: 5px;
-    width: 52px;
-    height: 48px;
-    background: white;
-    border-radius: 50%;
-}
-
-.ear {
-    position: absolute;
-    width: 17px;
-    height: 48px;
-    background: white;
-    border-radius: 50%;
-    top: -31px;
-}
-
-.ear.left {
-    left: 4px;
-    transform: rotate(-10deg);
-}
-
-.ear.right {
-    right: 4px;
-    transform: rotate(10deg);
-}
-
-.eye {
-    position: absolute;
-    width: 5px;
-    height: 7px;
-    background: #594d4d;
-    border-radius: 50%;
-    top: 20px;
-}
-
-.eye.left { left: 15px; }
-.eye.right { right: 15px; }
-
-.nose {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: #e89aa4;
-    border-radius: 50%;
-    left: 24px;
-    top: 28px;
-}
-
-.tail {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background: white;
-    border-radius: 50%;
-    right: 0;
-    bottom: 20px;
-}
-
-@keyframes bunnyJump {
-    0%,100% {
-        transform: translateY(0);
-    }
-    45% {
-        transform: translateY(-28px);
-    }
-}
-
-/* =========================
-   CHARACTERS
-========================= */
-
-.characters {
-    position: absolute;
-    bottom: 13%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: flex-end;
-    gap: 20px;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 1s ease;
-}
-
-.characters.show {
-    opacity: 1;
-}
-
-.person {
-    position: relative;
-    width: 95px;
-    height: 180px;
-}
-
-.head {
-    position: absolute;
-    top: 0;
-    left: 20px;
-    width: 58px;
-    height: 62px;
-    background: #ffd9c2;
-    border-radius: 48% 48% 45% 45%;
-    z-index: 3;
-}
-
-/* rambut */
-
-.girl .hair {
-    position: absolute;
-    width: 70px;
-    height: 82px;
-    left: 14px;
-    top: -9px;
-    background: #493936;
-    border-radius: 50% 50% 40% 40%;
-    z-index: 2;
-}
-
-.boy .hair {
-    position: absolute;
-    width: 63px;
-    height: 55px;
-    left: 18px;
-    top: -5px;
-    background: #4a403d;
-    border-radius: 55% 55% 35% 35%;
-    z-index: 4;
-}
-
-.eye-person {
-    position: absolute;
-    top: 29px;
-    width: 6px;
-    height: 8px;
-    background: #4d4140;
-    border-radius: 50%;
-    z-index: 5;
-}
-
-.eye-person.left { left: 17px; }
-.eye-person.right { right: 17px; }
-
-.mouth {
-    position: absolute;
-    top: 42px;
-    left: 27px;
-    width: 8px;
-    height: 5px;
-    border-bottom: 2px solid #b96c75;
-    border-radius: 50%;
-    z-index: 5;
-}
-
-.body-person {
-    position: absolute;
-    top: 57px;
-    left: 13px;
-    width: 70px;
-    height: 100px;
-    border-radius: 25px 25px 12px 12px;
-}
-
-.girl .body-person {
-    background: #f4b9c5;
-}
-
-.boy .body-person {
-    background: #9ec5e8;
-}
-
-.arm {
-    position: absolute;
-    width: 18px;
-    height: 75px;
-    background: #ffd9c2;
-    border-radius: 20px;
-    top: 67px;
-    z-index: 1;
-}
-
-.girl .arm.left {
-    left: 3px;
-    transform: rotate(12deg);
-}
-
-.girl .arm.right {
-    right: 3px;
-    transform: rotate(-12deg);
-}
-
-.boy .arm.left {
-    left: 3px;
-    transform: rotate(12deg);
-}
-
-.boy .arm.right {
-    right: 3px;
-    transform: rotate(-12deg);
-}
-
-/* kaki */
-
-.leg {
-    position: absolute;
-    width: 23px;
-    height: 48px;
-    background: #6f6a72;
-    bottom: -10px;
-    border-radius: 0 0 15px 15px;
-}
-
-.leg.left { left: 27px; }
-.leg.right { right: 27px; }
-
-/* =========================
-   BUBBLE
-========================= */
-
-.bubble {
-    position: absolute;
-    top: 13%;
-    left: 50%;
-    transform: translateX(-50%) scale(.85);
-    min-width: 280px;
-    max-width: 470px;
-    padding: 20px 28px;
-    background: rgba(255,255,255,.92);
-    border-radius: 30px;
-    text-align: center;
-    color: #65575a;
-    font-size: clamp(16px, 2vw, 23px);
-    font-weight: 600;
-    line-height: 1.5;
-    box-shadow: 0 10px 30px rgba(82,72,70,.13);
-    opacity: 0;
-    z-index: 20;
-    transition:
-        opacity .7s ease,
-        transform .7s ease;
-}
-
-.bubble::after {
-    content: "";
-    position: absolute;
-    bottom: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 17px solid rgba(255,255,255,.92);
-}
-
-.bubble.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-
-/* =========================
-   TITLE
-========================= */
-
-.title {
-    position: absolute;
-    top: 9%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 15;
-    color: #66595a;
-    transition: opacity 1s ease;
-}
-
-.title h1 {
-    font-size: clamp(30px, 5vw, 58px);
-    font-weight: 700;
-}
-
-.title p {
-    margin-top: 7px;
-    font-size: 15px;
-    opacity: .7;
-}
-
-/* =========================
-   HUG
-========================= */
-
-.characters.hug {
-    gap: 0;
-}
-
-.characters.hug .girl {
-    transform: translateX(17px);
-}
-
-.characters.hug .boy {
-    transform: translateX(-17px);
-}
-
-.characters.hug .girl .arm.right {
-    transform: rotate(-65deg);
-    transform-origin: top;
-}
-
-.characters.hug .boy .arm.left {
-    transform: rotate(65deg);
-    transform-origin: top;
-}
-
-/* =========================
-   ENDING
-========================= */
-
-.ending {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        #f6c6b7,
-        #f9d9b7,
-        #b6d69e
-    );
-    z-index: 50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.5s ease;
-}
-
-.ending.show {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.ending h2 {
-    color: #65575a;
-    font-size: clamp(27px, 5vw, 55px);
-    text-align: center;
-}
-
-.ending p {
-    margin-top: 12px;
-    color: #756567;
-    font-size: 17px;
-}
-
-.replay {
-    margin-top: 35px;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 30px;
-    background
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Storybook Showcase - Pastel Friendship</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Quicksand & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastelPink: '#ffd1dc',
+                        pastelPeach: '#ffe5b4',
+                        sageGreen: '#d4e0b9',
+                        babyBlue: '#c1f0f7',
+                        warmYellow: '#fef3c7',
+                        creamBg: '#fffbf7',
+                        softBrown: '#5c4033',
+                        deepBlush: '#f472b6'
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fffbf7;
+            color: #4a403a;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+        @keyframes floatPetal {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        .petal {
+            position: fixed;
+            background: #ffd1dc;
+            border-radius: 150% 0 150% 0;
+            pointer-events: none;
+            z-index: 10;
+            animation: floatPetal linear infinite;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 209, 220, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col relative selection:bg-pastelPink selection:text-softBrown">
+
+    <div id="petals-container"></div>
+
+    <header class="w-full glass-card sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-pastelPink flex items-center justify-center text-softBrown shadow-inner">
+                    <i class="fa-solid fa-book-open-reader text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading text-lg sm:text-xl font-bold tracking-tight text-stone-700">Pastel Storybook</h1>
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sageGreen text-stone-800">Animated Project</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="switchTab('player')" id="nav-player" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-pastelPink/60 text-stone-800 shadow-sm">
+                    <i class="fa-solid fa-play mr-1.5"></i> Story Player
+                </button>
+                <button onclick="switchTab('gallery')" id="nav-gallery" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition text-stone-600 hover:bg-pastelPink/30">
+                    <i class="fa-solid fa-images mr-1.5"></i> Scene Gallery
+                </button>
+                <button onclick="switchTab('prompts')" id="nav-prompts" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition text-stone-600 hover:bg-pastelPink/30">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> AI Prompts
+                </button>
+                <button onclick="switchTab('guide')" id="nav-guide" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition text-stone-600 hover:bg-pastelPink/30">
+                    <i class="fa-solid fa-graduation-cap mr-1.5"></i> Free AI Guide
+                </button>
+            </nav>
+            <div class="md:hidden flex items-center">
+                <button onclick="toggleMobileMenu()" class="p-2 rounded-xl text-stone-600 hover:bg-pastelPink/40">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 bg-white/95 border-b border-pastelPink/40">
+            <button onclick="switchTab('player'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-xl font-medium text-stone-700 hover:bg-pastelPink/30">Story Player</button>
+            <button onclick="switchTab('gallery'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-xl font-medium text-stone-700 hover:bg-pastelPink/30">Scene Gallery</button>
+            <button onclick="switchTab('prompts'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-xl font-medium text-stone-700 hover:bg-pastelPink/30">AI Prompts</button>
+            <button onclick="switchTab('guide'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-xl font-medium text-stone-700 hover:bg-pastelPink/30">Free AI Guide</button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- VIEW 1: STORY PLAYER / SIMULATOR -->
+        <section id="view-player" class="view-section space-y-6">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold tracking-widest uppercase px-3 py-1 bg-pastelPeach text-stone-700 rounded-full inline-block">Interactive Simulator</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-stone-800">Animated Storybook Viewer</h2>
+                <p class="text-stone-600 text-sm sm:text-base">Rasakan pengalaman menonton animasi persahabatan chibi yang lembut, aesthetic, dan warm layaknya dongeng interaktif.</p>
+            </div>
+
+            <!-- Simulated Video Player Frame -->
+            <div class="max-w-4xl mx-auto glass-card rounded-3xl overflow-hidden shadow-xl border-2 border-pastelPink/60 relative">
+                <div class="absolute top-4 left-4 z-20 flex items-center space-x-2 bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-white text-xs font-medium">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse"></span>
+                    <span id="player-scene-badge">Scene 1 of 9</span>
+                </div>
+                
+                <!-- Player Screen -->
+                <div id="player-screen" class="relative w-full h-[320px] sm:h-[450px] bg-gradient-to-br from-amber-50 via-emerald-50 to-sky-100 flex flex-col items-center justify-center p-6 sm:p-12 text-center transition-all duration-700 overflow-hidden">
+                    <!-- Background Visual Decor -->
+                    <div class="absolute inset-0 opacity-25 bg-[radial-gradient(#f472b6_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                    
+                    <div id="player-content" class="relative z-10 max-w-xl space-y-4 transition-all duration-500 transform translate-y-0 opacity-100">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full bg-white/80 shadow-md flex items-center justify-center text-4xl sm:text-5xl text-pink-400 border border-pastelPink">
+                            <i id="player-icon" class="fa-solid fa-seedling"></i>
+                        </div>
+                        <h3 id="player-title" class="font-heading text-2xl sm:text-3xl font-bold text-stone-800">SCENE 1 — OPENING</h3>
+                        <p id="player-desc" class="text-stone-600 text-sm sm:text-lg leading-relaxed">Taman pastel yang sangat indah pada pagi hari. Kelinci putih kecil melompat di antara bunga. Angin sepoi-sepoi meniup rumput dan daun dengan lembut.</p>
+                        <div id="player-quote-box" class="hidden mt-4 p-4 bg-white/90 rounded-2xl shadow-sm border border-pastelPink text-stone-700 italic font-medium">
+                            <p id="player-quote-text" class="text-base sm:text-xl font-heading text-pink-600">"Thank you for being my friend ♡"</p>
+                            <p id="player-quote-sub" class="text-xs text-stone-500 mt-1">always be happy & take care</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Controls -->
+                <div class="bg-white/90 backdrop-blur-md px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-pastelPink/40 gap-4">
+                    <div class="flex items-center space-x-3 w-full sm:w-auto justify-center">
+                        <button onclick="prevScene()" class="w-10 h-10 rounded-full bg-pastelPink/50 hover:bg-pastelPink text-stone-700 flex items-center justify-center transition shadow-sm">
+                            <i class="fa-solid fa-backward-step"></i>
+                        </button>
+                        <button id="play-pause-btn" onclick="togglePlay()" class="w-12 h-12 rounded-full bg-pink-400 hover:bg-pink-500 text-white flex items-center justify-center transition shadow-md text-lg">
+                            <i id="play-icon" class="fa-solid fa-play"></i>
+                        </button>
+                        <button onclick="nextScene()" class="w-10 h-10 rounded-full bg-pastelPink/50 hover:bg-pastelPink text-stone-700 flex items-center justify-center transition shadow-sm">
+                            <i class="fa-solid fa-forward-step"></i>
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full sm:w-64 bg-stone-200 h-2 rounded-full overflow-hidden cursor-pointer" onclick="seekScene(event)">
+                        <div id="player-progress" class="bg-pink-400 h-full w-[11%] transition-all duration-300"></div>
+                    </div>
+
+                    <div class="text-xs font-semibold text-stone-500 whitespace-nowrap">
+                        <span id="current-time-counter">00:05</span> / <span id="total-time-counter">00:54</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: SCENE GALLERY -->
+        <section id="view-gallery" class="view-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold tracking-widest uppercase px-3 py-1 bg-sageGreen text-stone-800 rounded-full inline-block">Storyboard Breakdown</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-stone-800">9 Scene Gallery</h2>
+                <p class="text-stone-600 text-sm sm:text-base">Rincian adegan demi adegan dari storyboard original yang dirancang dengan transisi lembut dan estetika pastel warm.</p>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: AI PROMPTS & GUIDELINES -->
+        <section id="view-prompts" class="view-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold tracking-widest uppercase px-3 py-1 bg-pastelPink text-stone-800 rounded-full inline-block">Ready-to-Use Prompt</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-stone-800">Prompt & Style Guide</h2>
+                <p class="text-stone-600 text-sm sm:text-base">Salin prompt bahasa Inggris ini ke generator AI (seperti PixVerse atau Kling AI) untuk menghasilkan video per scene.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto glass-card p-6 sm:p-8 rounded-3xl shadow-md space-y-6">
+                <div class="bg-pastelPeach/40 p-5 rounded-2xl border border-pastelPeach">
+                    <h3 class="font-heading font-bold text-lg text-stone-800 mb-2"><i class="fa-solid fa-palette text-amber-500 mr-2"></i> Global Style Rules (Wajib Disertakan)</h3>
+                    <p class="text-xs sm:text-sm text-stone-700 bg-white/80 p-3 rounded-xl border border-amber-200 font-mono select-all">
+                        cute pastel anime/chibi, dreamy, soft cinematic, warm friendship atmosphere, animated storybook, gentle natural movement, smooth camera movement, soft sunlight, pastel colors, highly detailed, wholesome friendship, aesthetic and emotional, 2D chibi illustration.
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-heading font-bold text-lg text-stone-800">Prompt Per Scene (English AI Prompt):</h3>
+                    <div id="prompt-list" class="space-y-3">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: FREE AI TOOL GUIDE -->
+        <section id="view-guide" class="view-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold tracking-widest uppercase px-3 py-1 bg-babyBlue text-stone-800 rounded-full inline-block">Tutorial Pembuatan</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-stone-800">Cara Merakit Video Gratis</h2>
+                <p class="text-stone-600 text-sm sm:text-base">Langkah praktis menggunakan alat AI gratis untuk mewujudkan storyboard kamu menjadi video utuh.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="glass-card p-6 rounded-3xl shadow-sm border border-pastelPink/50 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pastelPink flex items-center justify-center text-stone-800 font-bold text-lg mb-4">1</div>
+                        <h3 class="font-heading font-bold text-lg text-stone-800">Gunakan AI Image-to-Video Gratis</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 mt-2">Gunakan platform gratis seperti <span class="font-semibold text-stone-800">PixVerse</span>, <span class="font-semibold text-stone-800">Kling AI</span>, atau <span class="font-semibold text-stone-800">Hailuo AI</span>.</p>
+                    </div>
+                    <ul class="text-xs text-stone-500 space-y-1.5 pt-2 border-t border-stone-100">
+                        <li>• Upload gambar panel storyboard satu persatu.</li>
+                        <li>• Masukkan prompt bahasa Inggris dari tab AI Prompts.</li>
+                        <li>• Unduh video klip berdurasi 5-6 detik.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl shadow-sm border border-pastelPink/50 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-sageGreen flex items-center justify-center text-stone-800 font-bold text-lg mb-4">2</div>
+                        <h3 class="font-heading font-bold text-lg text-stone-800">Gabungkan di CapCut (Gratis)</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 mt-2">Buka aplikasi CapCut di HP atau PC, lalu import semua klip video dari Scene 1 sampai Scene 9 secara berurutan.</p>
+                    </div>
+                    <ul class="text-xs text-stone-500 space-y-1.5 pt-2 border-t border-stone-100">
+                        <li>• Atur urutan klip dari Scene 1 ke Scene 9.</li>
+                        <li>• Tambahkan transisi lembut (fade in/out).</li>
+                        <li>• Pastikan total durasi pas 45-60 detik.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl shadow-sm border border-pastelPink/50 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pastelPeach flex items-center justify-center text-stone-800 font-bold text-lg mb-4">3</div>
+                        <h3 class="font-heading font-bold text-lg text-stone-800">Musik & Ending Quote</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 mt-2">Tambahkan background music (BGM) bernuansa akustik yang hangat, calm, dan dreamy.</p>
+                    </div>
+                    <ul class="text-xs text-stone-500 space-y-1.5 pt-2 border-t border-stone-100">
+                        <li>• Masukkan teks quote penutup di Scene 9.</li>
+                        <li>• "Thank you for being my friend ♡"</li>
+                        <li>• Export video dengan kualitas 1080p.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-auto py-8 text-center text-xs text-stone-500 border-t border-pastelPink/30">
+        <p>Animated Storybook Showcase • Designed with soft pastel & whimsical aesthetic ♡</p>
+    </footer>
+
+    <script>
+        const scenesData = [
+            {
+                id: 1,
+                title: "SCENE 1 — OPENING",
+                desc: "Taman pastel yang sangat indah pada pagi hari. Kelinci putih kecil melompat di antara bunga. Rumput, bunga, dan daun bergerak lembut terkena angin.",
+                icon: "fa-seedling",
+                color: "from-emerald-50 to-teal-100",
+                prompt: "Cute pastel anime style, serene and beautiful morning garden, small white rabbits hopping gently among flowers, grass and leaves swaying softly in gentle breeze, cinematic slow push-in camera, warm sunlight, dreamy storybook atmosphere."
+            },
+            {
+                id: 2,
+                title: "SCENE 2 — RABBIT",
+                desc: "Close-up kelinci kecil yang melompat melewati bunga. Kelinci berhenti sebentar, melihat ke arah kamera, lalu melompat lagi.",
+                icon: "fa-paw",
+                color: "from-amber-50 to-orange-100",
+                prompt: "Close-up of a cute small white rabbit hopping past pastel flowers, soft depth of field, rabbit stops and looks at camera briefly then hops away, floating flower petals, gentle breeze, storybook aesthetic, warm pastel tones."
+            },
+            {
+                id: 3,
+                title: "SCENE 3 — MEETING",
+                desc: "Karakter perempuan dan laki-laki masuk ke taman, saling melihat lalu tersenyum. Rambut dan pakaian bergerak sangat halus.",
+                icon: "fa-people-group",
+                color: "from-pink-50 to-rose-100",
+                prompt: "Chibi cute girl with dark brown long hair and boy with short brown hair walking into the garden, meeting each other, smiling warmly, natural hair and clothing swaying in breeze, slow cinematic zoom, wholesome friendship, pastel palette."
+            },
+            {
+                id: 4,
+                title: "SCENE 4 — TOGETHER",
+                desc: "Mereka duduk bersama di bangku taman, ngobrol santai dan tertawa kecil. Kelinci kecil berada di dekat mereka.",
+                icon: "fa-bench-tree",
+                color: "from-sky-50 to-indigo-100",
+                prompt: "Chibi girl and boy sitting together on a park bench, chatting and laughing softly, small white rabbit nearby, subtle natural movements of hands and hair, cozy comfortable friendship atmosphere, detailed background garden, soft cinematic style."
+            },
+            {
+                id: 5,
+                title: "SCENE 5 — HAPPY MOMENT",
+                desc: "Mereka berjalan bersama melewati taman sambil tertawa. Kelinci kecil melompat mengikuti dengan kamera tracking shot.",
+                icon: "fa-child-reaching",
+                color: "from-yellow-50 to-amber-100",
+                prompt: "Chibi characters walking together through the pastel garden laughing happily, small white rabbit hopping along, butterflies and floating petals, smooth tracking camera movement, warm sunlight, playful and cute friendship."
+            },
+            {
+                id: 6,
+                title: "SCENE 6 — FRIENDSHIP",
+                desc: "Mereka duduk di rumput dan ngobrol santai dengan ekspresi persahabatan yang tulus dan hangat.",
+                icon: "fa-comments",
+                color: "from-emerald-50 to-green-100",
+                prompt: "Chibi girl and boy sitting on lush green grass talking casually, smiling warmly at each other, wholesome friendship expression, gentle breeze, detailed pastel flowers and background leaves, soft lighting."
+            },
+            {
+                id: 7,
+                title: "SCENE 7 — QUIET MOMENT",
+                desc: "Suasana tenang menikmati taman. Cahaya matahari menembus pepohonan dengan gerakan daun yang pelan dan dreamy.",
+                icon: "fa-sun",
+                color: "from-orange-50 to-rose-50",
+                prompt: "Peaceful quiet moment in the garden, small white rabbit resting nearby, sun rays filtering through tree leaves, slow dreamy camera movement, pastel anime aesthetic, serene and heartwarming atmosphere."
+            },
+            {
+                id: 8,
+                title: "SCENE 8 — SUNSET",
+                desc: "Waktu perlahan berubah menjadi sore dengan langit pastel peach dan pink. Kamera slow zoom out memperlihatkan taman.",
+                icon: "fa-cloud-sun",
+                color: "from-pink-100 to-amber-100",
+                prompt: "Sunset time in the pastel garden, sky turning warm peach, pink, orange, and lavender, chibi characters sitting together watching sunset, slow cinematic zoom out revealing beautiful wide garden, gentle wind blowing hair."
+            },
+            {
+                id: 9,
+                title: "SCENE 9 — HUG & ENDING",
+                desc: "Mereka saling berpelukan hangat sebagai tanda persahabatan. Quote penutup muncul di akhir.",
+                icon: "fa-heart",
+                color: "from-rose-100 to-pink-200",
+                prompt: "Chibi characters standing and hugging warmly as best friends, smiling happily, golden sunset lighting, small white rabbit nearby, falling flower petals, slow cinematic camera push in, wholesome emotional ending."
+            }
+        ];
+
+        let currentSceneIndex = 0;
+        let isPlaying = false;
+        let playInterval = null;
+
+        // Create floating petals
+        function initPetals() {
+            const container = document.getElementById('petals-container');
+            const count = 15;
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                const size = Math.random() * 10 + 10;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size * 1.4}px`;
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.top = `-20px`;
+                petal.style.animationDuration = `${Math.random() * 8 + 6}s`;
+                petal.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(petal);
+            }
+        }
+
+        // Tab Navigation
+        function switchTab(tabName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-pastelPink/60', 'text-stone-800', 'shadow-sm');
+                el.classList.add('text-stone-600');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-pastelPink/60', 'text-stone-800', 'shadow-sm');
+                activeBtn.classList.remove('text-stone-600');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Render Gallery & Prompts
+        function renderContent() {
+            // Gallery Grid
+            const galleryGrid = document.getElementById('gallery-grid');
+            galleryGrid.innerHTML = scenesData.map(scene => `
+                <div class="glass-card rounded-3xl p-6 shadow-sm border border-pastelPink/40 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-pastelPink/50 rounded-full text-xs font-bold text-stone-700">Scene ${scene.id}</span>
+                            <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-pink-500">
+                                <i class="fa-solid ${scene.icon}"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-stone-800 mb-2">${scene.title}</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">${scene.desc}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between">
+                        <button onclick=" jumpToScene(${scene.id - 1})" class="text-xs font-semibold text-pink-600 hover:text-pink-700 flex items-center">
+                            <i class="fa-solid fa-play mr-1.5"></i> Play in Simulator
+                        </button>
+                        <span class="text-xs text-stone-400">5-7 sec</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Prompt List
+            const promptList = document.getElementById('prompt-list');
+            promptList.innerHTML = scenesData.map(scene => `
+                <div class="bg-white/90 p-4 rounded-2xl border border-pastelPink/30 space-y-2 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="font-heading font-bold text-sm text-stone-800">${scene.title}</span>
+                        <button onclick="navigator.clipboard.writeText('${scene.prompt.replace(/'/g, "\\'")}'); alert('Prompt copied!');" class="text-xs px-3 py-1 rounded-lg bg-pastelPink/40 hover:bg-pastelPink text-stone-700 font-medium transition">
+                            <i class="fa-regular fa-copy mr-1"></i> Copy Prompt
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-600 font-mono bg-stone-50 p-3 rounded-xl border border-stone-200">${scene.prompt}</p>
+                </div>
+            `).join('');
+        }
+
+        // Simulator Logic
+        function updatePlayer() {
+            const scene = scenesData[currentSceneIndex];
+            const screen = document.getElementById('player-screen');
+            
+            // Background gradient update
+            screen.className = `relative w-full h-[320px] sm:h-[450px] bg-gradient-to-br ${scene.color} flex flex-col items-center justify-center p-6 sm:p-12 text-center transition-all duration-700 overflow-hidden`;
+
+            document.getElementById('player-scene-badge').innerText = `Scene ${scene.id} of 9`;
+            document.getElementById('player-icon').className = `fa-solid ${scene.icon}`;
+            document.getElementById('player-title').innerText = scene.title;
+            document.getElementById('player-desc').innerText = scene.desc;
+
+            // Quote display on Scene 9
+            const quoteBox = document.getElementById('player-quote-box');
+            if (scene.id === 9) {
+                quoteBox.classList.remove('hidden');
+                document.getElementById('player-quote-text').innerText = `"Thank you for being my friend ♡"`;
+                document.getElementById('player-quote-sub').innerText = `always be happy & take care`;
+            } else {
+                quoteBox.classList.add('hidden');
+            }
+
+            // Progress bar
+            const progress = ((currentSceneIndex + 1) / scenesData.length) * 100;
+            document.getElementById('player-progress').style.width = `${progress}%`;
+            
+            // Time counter estimation (6 sec per scene)
+            const currentTimeSec = (currentSceneIndex * 6) + 5;
+            document.getElementById('current-time-counter').innerText = `00:${currentTimeSec < 10 ? '0' + currentTimeSec : currentTimeSec}`;
+        }
+
+        function nextScene() {
+            currentSceneIndex = (currentSceneIndex + 1) % scenesData.length;
+            updatePlayer();
+        }
+
+        function prevScene() {
+            currentSceneIndex = (currentSceneIndex - 1 + scenesData.length) % scenesData.length;
+            updatePlayer();
+        }
+
+        function jumpToScene(index) {
+            currentSceneIndex = index;
+            updatePlayer();
+            switchTab('player');
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const playIcon = document.getElementById('play-icon');
+            if (isPlaying) {
+                playIcon.className = "fa-solid fa-pause";
+                playInterval = setInterval(() => {
+                    if (currentSceneIndex < scenesData.length - 1) {
+                        nextScene();
+                    } else {
+                        currentSceneIndex = 0;
+                        updatePlayer();
+                    }
+                }, 5000);
+            } else {
+                playIcon.className = "fa-solid fa-play";
+                clearInterval(playInterval);
+            }
+        }
+
+        function seekScene(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = clickX / width;
+            currentSceneIndex = Math.floor(percentage * scenesData.length);
+            if(currentSceneIndex >= scenesData.length) currentSceneIndex = scenesData.length - 1;
+            if(currentSceneIndex < 0) currentSceneIndex = 0;
+            updatePlayer();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initPetals();
+            renderContent();
+            updatePlayer();
+        };
+    </script>
+</body>
+</html>
