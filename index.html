@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff4f7">
+<title>Sebuah Kejutan Kecil untuk Mikoyy ♡</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
+:root{--pink:#f2b8ca;--pink2:#f8dce5;--rose:#b76e88;--ink:#594650;--cream:#fffaf6;--white:#fff;--lilac:#e7ddf4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 15%,#fff 0,transparent 30%),linear-gradient(145deg,#fff7f5,#fff0f6 52%,#f8f0ff);overflow-x:hidden}
+button,a{font:inherit}
+button{cursor:pointer}
+#confetti,#floaties{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10}
+.floaty{position:absolute;bottom:-50px;opacity:0;animation:floatUp linear forwards;filter:drop-shadow(0 4px 8px #d79db333)}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0) scale(.7);opacity:0}12%{opacity:.85}85%{opacity:.75}100%{transform:translateY(-115vh) rotate(35deg) scale(1.2);opacity:0}}
+.sparkle{position:fixed;color:#d99ab2;pointer-events:none;animation:sparkle .8s ease-out forwards;z-index:20}
+@keyframes sparkle{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2);opacity:1}100%{transform:scale(.2) rotate(80deg);opacity:0}}
+.page{min-height:100svh;display:none;align-items:center;justify-content:center;padding:28px 18px;position:relative}
+.page.active{display:flex;animation:pageIn .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+.wrap{width:min(100%,700px);text-align:center;position:relative;z-index:1}
+.kicker{letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;font-weight:700;color:var(--rose)}
+h1,h2{font-family:'Playfair Display',serif;font-weight:600;line-height:1.15;margin:.6rem 0 1rem}
+h1{font-size:clamp(2.4rem,8vw,4.7rem)}h2{font-size:clamp(2rem,6vw,3.25rem)}
+p{line-height:1.85;font-size:clamp(.97rem,2.8vw,1.07rem);margin:.7rem 0}
+.sub{max-width:520px;margin:0 auto;color:#806b76}
+.primary,.secondary{border:0;border-radius:999px;padding:14px 23px;transition:transform .2s,box-shadow .2s;background:var(--rose);color:white;box-shadow:0 10px 25px #b76e8830;font-weight:700}
+.primary:hover,.secondary:hover{transform:translateY(-3px);box-shadow:0 14px 28px #b76e8844}
+.secondary{background:#fff;border:1px solid #efd2dc;color:var(--rose);box-shadow:none}
+.btnrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.tiny{font-size:.82rem;color:#9c8790;margin-top:17px}
+.hero-art{height:220px;display:grid;place-items:center;margin:4px auto 20px;position:relative}
+.envelope{width:180px;height:125px;position:relative;filter:drop-shadow(0 18px 16px #c88da633);animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+.env-back{position:absolute;inset:0;background:#edb4c7;border-radius:12px}
+.env-paper{position:absolute;left:18px;right:18px;top:-26px;height:92px;background:#fffaf8;border-radius:7px;box-shadow:0 3px 10px #a76a7a1c;display:grid;place-items:center;font-size:1.8rem;transform:rotate(-3deg)}
+.env-front{position:absolute;inset:0;background:linear-gradient(140deg,#f6cad8,#eaa8bf);clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%);border-radius:10px}
+.heart-seal{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-size:2rem;filter:drop-shadow(0 2px 2px #9b5b7233)}
+.orbit{position:absolute;font-size:1.4rem;animation:orbit 7s linear infinite}
+.orbit.one{left:calc(50% - 130px);top:35px}.orbit.two{right:calc(50% - 130px);top:70px;animation-delay:-2s}.orbit.three{left:calc(50% + 65px);bottom:10px;animation-delay:-4s}
+@keyframes orbit{50%{transform:translateY(-14px) rotate(15deg)}}
+.paper-card{background:#fffdfb;border:1px solid #f3dce4;border-radius:24px;padding:clamp(23px,5vw,42px);box-shadow:0 22px 70px #b76e8818;position:relative;text-align:left;overflow:hidden}
+.paper-card:before{content:"";position:absolute;inset:9px;border:1px dashed #efd4de;border-radius:17px;pointer-events:none}
+.paper-content{position:relative;z-index:1}
+.letter-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;color:#b27a8d;font-size:.83rem}
+.stamp{width:42px;height:42px;display:grid;place-items:center;background:#fff0f5;border-radius:50%;font-size:1.3rem}
+.letter-text p{margin:0 0 14px}
+.sign{font-family:'Playfair Display',serif;font-size:1.45rem;color:var(--rose);margin-top:20px}
+.progress{display:flex;gap:6px;justify-content:center;margin:20px 0 0}
+.dot{width:7px;height:7px;border-radius:99px;background:#e8cbd5;transition:all .3s}.dot.on{width:23px;background:var(--rose)}
+.gift-box{width:160px;height:150px;position:relative;margin:35px auto 20px;animation:bob 2.8s ease-in-out infinite;cursor:pointer;transition:transform .25s}
+.gift-box:hover{transform:scale(1.05) rotate(-2deg)}
+.gift-lid{position:absolute;top:15px;left:-8px;width:176px;height:35px;border-radius:8px;background:#d88eaa;z-index:2;box-shadow:0 5px 0 #c87b98}
+.gift-base{position:absolute;top:48px;left:8px;width:144px;height:100px;border-radius:0 0 12px 12px;background:linear-gradient(90deg,#f1bfd0,#e8a6bf);box-shadow:0 16px 25px #b76e8829}
+.gift-ribbon{position:absolute;left:67px;top:15px;width:26px;height:133px;background:#fff0c9;z-index:3;border-radius:4px}
+.bow{position:absolute;top:-5px;left:55px;width:52px;height:31px;z-index:4}
+.bow:before,.bow:after{content:"";position:absolute;width:29px;height:23px;border:8px solid #fff0c9;border-radius:80% 20% 70% 30%;transform:rotate(25deg)}
+.bow:after{left:22px;transform:scaleX(-1) rotate(25deg)}
+.gift-box.opened{animation:giftPop .6s ease forwards}
+@keyframes giftPop{50%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(.9) translateY(10px);opacity:.3}}
+.reveal{display:none;background:#fff;border:1px solid #efd2dc;border-radius:20px;padding:22px;margin:18px auto 0;max-width:480px;animation:pageIn .5s ease both}
+.reveal.show{display:block}
+.link-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;background:var(--rose);color:white;border-radius:999px;padding:14px 22px;font-weight:700;box-shadow:0 10px 25px #b76e8830;transition:transform .2s}
+.link-button:hover{transform:translateY(-3px)}
+.footer-note{font-size:.78rem;color:#a38d97;margin-top:24px}
+.music-toggle{position:fixed;right:14px;top:14px;z-index:30;border:1px solid #efd2dc;background:#ffffffc9;backdrop-filter:blur(8px);border-radius:99px;padding:10px 13px;color:var(--rose);font-size:.82rem}
+.hidden{display:none!important}
+@media(max-width:480px){.page{padding:62px 17px 28px}.hero-art{height:195px}.envelope{transform:scale(.9)}.paper-card{border-radius:20px}.letter-top{font-size:.75rem}.btnrow>*{width:100%}.music-toggle{top:10px;right:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="floaties" aria-hidden="true"></div><div id="confetti" aria-hidden="true"></div>
+<button class="music-toggle" id="musicBtn" aria-label="Nyalakan musik">♫ Musik: mati</button>
+
+<main>
+<section class="page active" id="page1" aria-labelledby="title1">
+ <div class="wrap">
+  <div class="kicker">ada sesuatu buat kamu</div>
+  <div class="hero-art" aria-hidden="true">
+   <span class="orbit one">✦</span><span class="orbit two">♡</span><span class="orbit three">✿</span>
+   <div class="envelope"><div class="env-back"></div><div class="env-paper">buat kamu ♡</div><div class="env-front"></div><div class="heart-seal">♥</div></div>
+  </div>
+  <h1 id="title1">Haiii, Mikoyy!</h1>
+  <p class="sub">Aku punya sesuatu kecil yang pengen aku kasih ke kamu. Nggak perlu nebak-nebak dulu, langsung buka aja, yaa.</p>
+  <div class="btnrow"><button class="primary" id="openLetter">Buka suratnya ♡</button></div>
+  <div class="tiny">dibuat khusus, dengan sedikit malu-malu wkwk</div>
+ </div>
+</section>
+
+<section class="page" id="page2" aria-labelledby="title2">
+ <div class="wrap">
+  <div class="kicker">hal kecil dari aku</div>
+  <div class="paper-card">
+   <div class="paper-content">
+    <div class="letter-top"><span>✉ surat kecil untuk Mikoyy</span><span class="stamp">♡</span></div>
+    <h2 id="title2">Haiii, Mikoyy-nya ade!</h2>
+    <div class="letter-text">
+     <p>Jadi, aku mau kasih hadiah kecil ini buat kamu, wkwkwk. Aku harap kamu bisa baca semuanya pelan-pelan dan coba pahami maksud dari setiap halamannya, yaa.</p>
+     <p>Jujur, aku tuh seneng banget bikin sesuatu dari hasil karyaku sendiri, apalagi kalau buat orang yang aku sayang. Ada rasa seneng tersendiri ketika bisa bikin sesuatu yang memang aku siapin khusus buat kamu.</p>
+     <p>Mungkin hadiahnya sederhana, tapi aku harap kamu suka dan bisa senyum pas bacanya. Jadi, terima dengan senang hati, yaa. Jangan merasa sungkan atau nggak enak hati, karena aku bikin ini memang karena aku mau dan seneng ngelakuinnya.</p>
+     <p>Aku juga pengen kamu inget satu hal: kamu nggak sendirian, yaa. Ada orang yang beneran peduli sama kamu, yang mungkin ke depannya bakal sering ngerepotin kamu, wkwkwk. Tapi aku juga siap dengerin cerita-cerita kamu, entah itu hal menyenangkan, keluh kesah, atau hal random yang tiba-tiba pengen kamu ceritain.</p>
+     <p>Aku tahu mungkin hari-hari kemarin cukup berat buat kamu. Kamu udah berusaha mencapai hal-hal yang kamu targetin, tapi hasilnya belum tentu sesuai harapan. Gapapa, yaa. Nggak semua hal harus berjalan sesuai rencana kita. Siapa tahu, di balik hal-hal yang belum berhasil kamu capai, Allah lagi nyiapin sesuatu yang jauh lebih baik. Aku bantu aamiin-in dari sini, deh. Semoga hal-hal baik segera datang ke hidup kamu. Aamiin paling serius! 🤍</p>
+    </div>
+    <div class="sign">Dari aku, yang nyiapin ini buat kamu ♡</div>
+   </div>
+  </div>
+  <div class="progress" aria-label="Langkah 2 dari 3"><span class="dot"></span><span class="dot on"></span><span class="dot"></span></div>
+  <div class="btnrow"><button class="secondary" id="backHome">← Balik sebentar</button><button class="primary" id="toGift">Masih ada satu lagi… →</button></div>
+ </div>
+</section>
+
+<section class="page" id="page3" aria-labelledby="title3">
+ <div class="wrap">
+  <div class="kicker">last but not least</div>
+  <h2 id="title3">Eh, jangan pergi dulu!</h2>
+  <p class="sub">Aku masih punya satu kejutan lagi. Coba buka kotaknya, deh. Penasaran, kan? WKWKWK.</p>
+  <button class="gift-box" id="giftBox" aria-label="Buka kotak hadiah">
+   <span class="gift-lid"></span><span class="gift-base"></span><span class="gift-ribbon"></span><span class="bow"></span>
+  </button>
+  <p class="tiny" id="giftHint">Klik kotaknya buat buka hadiah ♡</p>
+  <div class="reveal" id="reveal">
+   <div style="font-size:2rem;margin-bottom:8px">🎁 💌 ✨</div>
+   <h2 style="font-size:1.8rem">Yeay, ketemu juga!</h2>
+   <p>Ini hadiah yang udah aku siapin buat kamu. Semoga kamu suka, yaa. Bukanya pelan-pelan, jangan lupa senyum sedikit buat aku, wkwkwk.</p>
+   <a class="link-button" href="https://canva.link/l0hvcl6khsetc5j" target="_blank" rel="noopener noreferrer">Buka hadiah utamanya ↗</a>
+   <p class="tiny">dibuka di halaman baru supaya kamu nggak kehilangan halaman ini</p>
+  </div>
+  <div class="progress" aria-label="Langkah 3 dari 3"><span class="dot"></span><span class="dot"></span><span class="dot on"></span></div>
+  <div class="btnrow"><button class="secondary" id="backLetter">← Baca surat lagi</button></div>
+  <div class="footer-note">dibuat dengan sayang, khusus buat Mikoyy ♡</div>
+ </div>
+</section>
+</main>
+<script>
+const pages=[...document.querySelectorAll('.page')];
+function showPage(n){pages.forEach((p,i)=>p.classList.toggle('active',i===n-1));window.scrollTo({top:0,behavior:'smooth'});burst(window.innerWidth/2,window.innerHeight*.45,14)}
+document.getElementById('openLetter').addEventListener('click',()=>showPage(2));
+document.getElementById('backHome').addEventListener('click',()=>showPage(1));
+document.getElementById('toGift').addEventListener('click',()=>showPage(3));
+document.getElementById('backLetter').addEventListener('click',()=>showPage(2));
+const floaties=document.getElementById('floaties');
+const symbols=['♡','✦','✿','♥','✧','୨୧'];
+function floaty(){const el=document.createElement('span');el.className='floaty';el.textContent=symbols[Math.floor(Math.random()*symbols.length)];el.style.left=Math.random()*100+'%';el.style.fontSize=(14+Math.random()*19)+'px';el.style.animationDuration=(7+Math.random()*7)+'s';floaties.appendChild(el);setTimeout(()=>el.remove(),15000)}
+setInterval(floaty,900);for(let i=0;i<8;i++)setTimeout(floaty,i*180);
+function burst(x,y,count=12){const layer=document.getElementById('confetti');for(let i=0;i<count;i++){const e=document.createElement('span');e.className='sparkle';e.textContent=['✦','♡','✧','♥'][Math.floor(Math.random()*4)];e.style.left=(x+(Math.random()-.5)*180)+'px';e.style.top=(y+(Math.random()-.5)*100)+'px';e.style.fontSize=(12+Math.random()*15)+'px';layer.appendChild(e);setTimeout(()=>e.remove(),850)}}
+document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.pointerType==='mouse')burst(e.clientX,e.clientY,4)});
+const box=document.getElementById('giftBox'),reveal=document.getElementById('reveal'),hint=document.getElementById('giftHint');
+box.addEventListener('click',()=>{if(reveal.classList.contains('show'))return;box.classList.add('opened');hint.textContent='Tadaaa! Hadiahnya udah kebuka ♡';setTimeout(()=>{reveal.classList.add('show');burst(window.innerWidth/2,window.innerHeight*.55,34);reveal.scrollIntoView({behavior:'smooth',block:'center'})},420)});
+/* Optional gentle Web Audio melody; starts only after the visitor taps the music control. */
+let audioCtx=null,oscillators=[],musicOn=false,timer=null;
+function playNote(freq,start,duration,gain=.025){const osc=audioCtx.createOscillator(),g=audioCtx.createGain();osc.type='sine';osc.frequency.value=freq;g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(gain,start+.04);g.gain.exponentialRampToValueAtTime(.0001,start+duration);osc.connect(g);g.connect(audioCtx.destination);osc.start(start);osc.stop(start+duration+.02)}
+function melody(){if(!musicOn||!audioCtx)return;const now=audioCtx.currentTime;[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46].forEach((n,i)=>playNote(n,now+i*.32,.28,.018));timer=setTimeout(melody,2700)}
+document.getElementById('musicBtn').addEventListener('click',async()=>{const btn=document.getElementById('musicBtn');if(!musicOn){audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();musicOn=true;btn.textContent='♫ Musik: nyala';melody()}else{musicOn=false;clearTimeout(timer);if(audioCtx)await audioCtx.suspend();btn.textContent='♫ Musik: mati'}});
+</script>
+</body>
+</html>
